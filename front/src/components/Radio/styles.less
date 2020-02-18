@@ -1,0 +1,30 @@
+@import '../../styles/variables.less';
+
+.radio {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.radio__option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  font-weight: 600;
+  font-size: 15px;
+  color: @color-blue-2;
+  border: 3px solid @color-blue-2;
+  border-radius: 2px;
+  cursor: pointer;
+
+  &--active {
+    color: @color-blue-1;
+    border-color: @color-blue-1;
+  }
+
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
+}

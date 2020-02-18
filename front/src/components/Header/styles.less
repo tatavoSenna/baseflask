@@ -1,0 +1,82 @@
+@import '../../styles/variables.less';
+
+.header {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 80px);
+  height: 80px;
+  padding: 0 40px;
+  left: 0;
+  top: 0;
+
+  &:focus {
+    outline: 0;
+  }
+
+  div {
+    display: none;
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+
+      &:last-child {
+        font-size: 10px;
+        text-transform: uppercase;
+        margin-top: 5px;
+
+        a {
+          color: @color-blue-1;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+  }
+
+  svg {
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      * {
+        color: @color-blue-1;
+      }
+    }
+  }
+}
+
+.header__logo {
+  width: 140px;
+}
+
+.header__menu {
+  display: flex;
+  cursor: pointer;
+
+  &--active {
+    * {
+      color: @color-blue-1;
+    }
+  }
+}
+
+@media (min-width: @screen-lg) {
+  .header {
+    width: calc(100% - 380px);
+
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    svg {
+      display: none;
+    }
+  }
+}

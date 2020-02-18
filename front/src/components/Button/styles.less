@@ -1,0 +1,45 @@
+@import '../../styles/variables.less';
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  // padding: 15px 22px;
+  font-size: 12px;
+  font-weight: 400;
+  color: white;
+  text-transform: uppercase;
+  background-color: @color-blue-1;
+  border: 0px;
+  border-radius: 2px;
+  opacity: 1;
+  cursor: pointer;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: default;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  svg {
+    width: 20px;
+    margin-left: 10px;
+
+    * {
+      color: white;
+    }
+  }
+}

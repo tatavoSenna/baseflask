@@ -1,0 +1,139 @@
+@import '../../styles/variables.less';
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: @color-blue-3;
+}
+
+.app__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  padding: 0 40px;
+
+  h1 {
+    text-align: center;
+  }
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  .button {
+    margin-top: 30px;
+  }
+
+  .textarea {
+    margin-top: 30px;
+  }
+
+  .radio {
+    margin-top: 30px;
+  }
+
+  .input {
+    margin-top: 30px;
+  }
+}
+
+.app__side-bar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 40px);
+  height: calc(100vh - 80px);
+  top: 80px;
+  left: 100%;
+  padding: 0 20px;
+  background-color: white;
+  transition: left 1s ease;
+
+  &--active {
+    left: 0;
+  }
+
+  h3 {
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+}
+
+.app__document {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid @color-blue-3;
+  cursor: pointer;
+
+  &:last-child {
+    border: 0px !important;
+  }
+
+  &:hover, &--active {
+    * {
+      color: @color-blue-1;
+    }
+  }
+
+  svg {
+    min-width: 20px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 10px;
+    line-height: 1.3em;
+  }
+}
+
+.app__log {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid @color-blue-3;
+
+  &:last-child {
+    border: 0;
+  }
+
+  .button {
+    width: 70px;
+    height: 32px;
+    font-size: 9px;
+  }
+
+  p {
+    font-size: 12px;
+    font-weight: 500;
+    width: calc(100% - 10px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    // line-height: 1.3em;
+    color: @color-grey-1;
+
+    &:nth-child(2) {
+      font-size: 10px;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-top: 7px;
+    }
+  }
+}
+
+@media (min-width: @screen-lg) {
+  .app__side-bar {
+    position: relative;
+    width: 270px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transition: right 0s ease;
+  }
+}
