@@ -17,10 +17,10 @@ application.debug = True
 application.config['SECRET_KEY'] = 'nevergiveup!'
 CORS(application)
 
-application.config['MYSQL_DATABASE_USER'] = 'root'
-application.config['MYSQL_DATABASE_PASSWORD'] = '93j1n381n23#1b123weoiuq!'
-application.config['MYSQL_DATABASE_DB'] = 'doing_law'
-application.config['MYSQL_DATABASE_HOST'] = 'doing-law.c5bqmmiwpltq.us-east-1.rds.amazonaws.com'
+application.config['MYSQL_DATABASE_USER'] = 'lawing_local'
+application.config['MYSQL_DATABASE_PASSWORD'] = 'hf8JGTRD'
+application.config['MYSQL_DATABASE_DB'] = 'lawing_local'
+application.config['MYSQL_DATABASE_HOST'] = 'mysql'
 
 mysql.init_app(application)
 conn = mysql.connect()
@@ -70,8 +70,10 @@ def login():
 
     if not email or not password:
         return jsonify({'message': 'Value is missing.'}), 404
-
+    print(email)
+    print(password)
     user = get_user(mysql, email, password)
+    print(user)
 
     if user:
         token = jwt.encode(user[0], application.config['SECRET_KEY'])
