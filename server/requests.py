@@ -1,6 +1,7 @@
 import json
+from application import User, Document, Log
 
-
+'''
 def get_user(mysql, email, password):
     conn = mysql.connect()
     cursor = conn.cursor()
@@ -77,3 +78,21 @@ def create_log(mysql, group_id, user_id, document, questions):
     conn.close()
 
     return
+'''
+
+def get_user(db, email):
+    return db.session.query(User).filter_by(email=email)
+
+def get_documents(db, group_id, *id):
+    if id:
+        return db.session.query(Document).filter(group_id=group_id, id=id)
+    else:
+        return db.session.query(Document).filter(group_id=group_id)
+
+def get_logs(db, group_id):
+    return db.session.query(Log).join(Document, Log.document_id=Document.id).filter(group_id=group_id).order_by(Log.created_at.desc()).limit(5)
+
+def create_log(db, group_id, user_id, document_id, questions):
+    log = Log('user_id', 'group_id', 'document_id', 'questions')
+    db.session.add(log)
+    db.session.commit()
