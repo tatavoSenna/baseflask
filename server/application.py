@@ -19,15 +19,7 @@ application.debug = True
 application.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 CORS(application)
 
-<<<<<<< HEAD
-application.config['MYSQL_DATABASE_USER'] = 'lawing_local'
-application.config['MYSQL_DATABASE_PASSWORD'] = 'hf8JGTRD'
-application.config['MYSQL_DATABASE_DB'] = 'lawing_local'
-application.config['MYSQL_DATABASE_HOST'] = 'mysql'
-application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://lawing_local:hf8JGTRD@server/lawing_local'
-=======
 application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
->>>>>>> 9802826bb06cc110d54eeacaf3e328c2d0b68a7e
 
 db = SQLAlchemy(application)
 
@@ -79,16 +71,8 @@ def login():
 
     if not email or not password:
         return jsonify({'message': 'Value is missing.'}), 404
-<<<<<<< HEAD
-    print(email)
-    print(password)
     #user = get_user(mysql, email, password)
     user = get_user(db, email)
-    print(user)
-=======
-    #user = get_user(mysql, email, password)
-    user = get_user(db, email)
->>>>>>> 9802826bb06cc110d54eeacaf3e328c2d0b68a7e
 
     if user:
         token = jwt.encode(user[0], application.config['SECRET_KEY'])
