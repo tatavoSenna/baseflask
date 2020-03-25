@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from flaskext.mysql import MySQL
@@ -14,13 +15,13 @@ import datetime
 mysql = MySQL(cursorclass=DictCursor)
 application = Flask(__name__)
 application.debug = True
-application.config['SECRET_KEY'] = 'nevergiveup!'
+application.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 CORS(application)
 
-application.config['MYSQL_DATABASE_USER'] = 'lawing_local'
-application.config['MYSQL_DATABASE_PASSWORD'] = 'hf8JGTRD'
-application.config['MYSQL_DATABASE_DB'] = 'lawing_local'
-application.config['MYSQL_DATABASE_HOST'] = 'mysql'
+application.config['MYSQL_DATABASE_USER'] = os.getenv('MYSQL_DATABASE_USER')
+application.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_DATABASE_PASSWORD')
+application.config['MYSQL_DATABASE_DB'] = os.getenv('MYSQL_DATABASE_DB')
+application.config['MYSQL_DATABASE_HOST'] = os.getenv('MYSQL_DATABASE_HOST')
 
 mysql.init_app(application)
 conn = mysql.connect()
