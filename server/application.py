@@ -71,11 +71,8 @@ def login():
 
     if not email or not password:
         return jsonify({'message': 'Value is missing.'}), 404
-    print(email)
-    print(password)
     #user = get_user(mysql, email, password)
     user = get_user(db, email)
-    print(user)
 
     if user:
         token = jwt.encode(user[0], application.config['SECRET_KEY'])
