@@ -71,6 +71,7 @@ def login():
 
     if not email or not password:
         return jsonify({'message': 'Value is missing.'}), 404
+
     #user = get_user(mysql, email, password)
     user = get_user(db, email)
 
@@ -165,46 +166,6 @@ def create(current_user):
         as_attachment=True,
         attachment_filename="")
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), unique=False, nullable=False)
-    surname = db.Column(db.String(255), unique=False, nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), unique=False, nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('Group.id'), nullable=True)
-
-    def __repr__(self):
-        return '<User %r>' % self.name
-
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), unique=False, nullable=False)
-
-    def __repr__(self):
-        return '<Group %r>' % self.name
-
-class Log(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('Group.id'), nullable=False)
-    document_id = db.Column(db.Integer, db.ForeignKey('Document.id'), nullable=False)
-    questions = db.Column(db.Text, unique=False, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-class Document(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer, db.ForeignKey('Group.id'), nullable=True)
-    name = db.Column(db.String(255), unique=False, nullable=False)
-    filename = db.Column(db.String(255), unique=False, nullable=True)
-
-    def __repr__(self):
-        return '<Document %r>' % self.name
-
-class Auth(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    token = db.Column(db.String(255), unique=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
 
 if __name__ == '__main__':
     application.run(debug=True)
