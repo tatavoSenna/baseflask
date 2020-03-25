@@ -17,12 +17,7 @@ import reducers from './reducers'
 // Containers or components
 import App from './containers/App'
 
-if (document.location.hostname.indexOf('localhost') !== -1) {
-  axios.defaults.baseURL = 'http://localhost:5000'
-  // axios.defaults.baseURL = 'http://doing-law-server.us-east-1.elasticbeanstalk.com'
-} else {
-  axios.defaults.baseURL = 'https://server.lawing.com.br'
-}
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 const store = createStore(
   reducers,
