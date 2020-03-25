@@ -25,5 +25,7 @@ services:
     environment:
       - FLASK_APP=application.py
       - FLASK_ENV=development
+      - SECRET_KEY=nf9w8**HytG
+      - SQLALCHEMY_DATABASE_URI=mysql://lawing_local:hf8JGTRD@mysql/lawing_local
     command:
       flask run --host=0.0.0.0
