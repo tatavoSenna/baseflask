@@ -1,98 +1,63 @@
 import json
-from application import User, Document, Log
+from app.models.user import User
+from app.models.document import Document
+from app.models.log import Log
+from app import db 
 
-'''
-def get_user(mysql, email, password):
-    conn = mysql.connect()
-    cursor = conn.cursor()
+def get_user(email):
+    user = User.query.filter_by(email=email).first()
 
-    cursor.execute("""
-        SELECT id, name, surname, group_id
-        FROM user
-        WHERE email = %s AND password = %s
-    """, (email, password))
-    response = cursor.fetchall()
+    data = {
+        "id": user.id,
+        "name": user.name,
+        "surname": user.surname,
+        "group_id": user.group_id,
+    }
 
-    cursor.close()
-    conn.close()
-    return response
+    return data
 
-
-def get_documents(mysql, group_id, *id):
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    sql = """
-        SELECT *
-        FROM document
-        WHERE group_id = %s
-    """
-    variables = (group_id)
-
-    if id:
-        sql += ' AND id = %s'
-        variables = (group_id, id)
-
-    cursor.execute(sql, variables)
-    response = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return response
-
-
-def get_logs(mysql, group_id):
-    conn = mysql.connect()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT l.*, d.name, d.filename
-        FROM log l
-        JOIN document d ON d.id = l.document_id
-        WHERE l.group_id = %s
-        ORDER BY l.created_at DESC
-        LIMIT 5
-    """, (group_id))
-    response = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-    return response
-
-
-def create_log(mysql, group_id, user_id, document, questions):
-    conn = mysql.connect()
-    cursor = conn.cursor()
-    sql = """
-        INSERT INTO log (group_id, user_id, document_id, questions, created_at)
-        VALUES (%s, %s, %s, %s, NOW())
-    """
-
-    # Transform json into text
-    questions = json.dumps(questions)
-
-    cursor.execute(sql, (group_id, user_id, document, questions))
-    conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    return
-'''
-
-def get_user(db, email):
-    return db.session.query(User).filter_by(email=email)
-
-def get_documents(db, group_id, *id):
-    if id:
-        return db.session.query(Document).filter(group_id=group_id, id=id)
+def get_documents(group_id, *doc_id):
+    if doc_id:
+        documents = Document.query.filter_by(group_id=group_id, id=doc_id).all()
     else:
-        return db.session.query(Document).filter(group_id=group_id)
+        documents = Document.query.filter_by(group_id=group_id).all()
+        
+    data = []
+    for document in documents:
+        data.append(
+            {
+            "id": document.id,
+            "group_id": document.group_id,
+            "name": document.name,
+            "filename": document.filename,
+            }
+        )
 
-def get_logs(db, group_id):
-    return db.session.query(Log).join(Document, Log.document_id=Document.id).filter(group_id=group_id).order_by(Log.created_at.desc()).limit(5)
+    return data
 
-def create_log(db, group_id, user_id, document_id, questions):
+def get_logs(group_id):
+    logs = Log.query.filter_by(group_id=group_id).join(Document, Log.document_id==Document.id).order_by(Log.created_at.desc()).limit(5)
+
+    data = []
+    for log in logs:
+        document = Document.query.get(log.document_id)
+        data.append(
+            {
+            "id": log.id,
+            "group_id": log.group_id,
+            "user_id": log.user_id,
+            "document_id": log.document_id,
+            "questions": log.questions,
+            "created_at": log.created_at,
+            "name": document.name,
+            "filename": document.filename,
+            }
+        )
+
+    return data
+
+def create_log(group_id, user_id, document_id, questions):
     log = Log('user_id', 'group_id', 'document_id', 'questions')
     db.session.add(log)
     db.session.commit()
+    

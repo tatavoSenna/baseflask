@@ -1,32 +1,15 @@
-import os
-from flask import Flask, jsonify, request, send_file
-from flask_cors import CORS
-from flaskext.mysql import MySQL
-from pymysql.cursors import DictCursor
+from flask import jsonify, request, send_file, current_app as application
 from functools import wraps
 from docxtpl import DocxTemplate
-from requests import get_user, get_documents, get_logs, create_log
-from constants import months
-from flask_sqlalchemy import SQLAlchemy
+from app.requests import get_user, get_documents, get_logs, create_log
+from app.constants import months
 import jwt
 import io
 import json
 import datetime
+from app import db, create_app
 
-mysql = MySQL(cursorclass=DictCursor)
-application = Flask(__name__)
-application.debug = True
-application.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-CORS(application)
-
-application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-
-db = SQLAlchemy(application)
-
-mysql.init_app(application)
-conn = mysql.connect()
-cursor = conn.cursor()
-
+application = create_app()
 
 def check_for_token(func):
     @wraps(func)
@@ -39,7 +22,6 @@ def check_for_token(func):
         try:
             data = jwt.decode(token, application.config['SECRET_KEY'])
         except Exception as error:
-            print(error)
             return jsonify({'message': 'Token is invalid.'}), 403
 
         return func(data, *args, **kwargs)
@@ -72,13 +54,12 @@ def login():
     if not email or not password:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    #user = get_user(mysql, email, password)
-    user = get_user(db, email)
+    user = get_user(email)
 
     if user:
-        token = jwt.encode(user[0], application.config['SECRET_KEY'])
+        token = jwt.encode(user, application.config['SECRET_KEY'])
 
-        return jsonify({'token': token.decode('UTF-8'), 'user': user[0]})
+        return jsonify({'token': token.decode('UTF-8'), 'user': user})
 
     return jsonify({'message': 'Cannot be authenticated.'}), 401
 
@@ -86,8 +67,8 @@ def login():
 @application.route('/documents', methods=['GET'])
 @check_for_token
 def documents(current_user):
-    #documents = get_documents(mysql, current_user['group_id'])
-    documents = get_documents(db, current_user['group_id'])
+
+    documents = get_documents(current_user['group_id'])
 
     return jsonify(documents)
 
@@ -95,8 +76,8 @@ def documents(current_user):
 @application.route('/logs', methods=['GET'])
 @check_for_token
 def logs(current_user):
-    #logs = get_logs(mysql, current_user['group_id'])
-    logs = get_logs(db, current_user['group_id'])
+
+    logs = get_logs(current_user['group_id'])
 
     return jsonify(logs)
 
@@ -125,7 +106,6 @@ def create(current_user):
     if not document or not questions:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    #response = get_documents(mysql, current_user['group_id'], document)
     response = get_documents(current_user['group_id'], document)
 
     if not response:
@@ -152,14 +132,11 @@ def create(current_user):
 
     doc.render(context)
 
-    print(context)
-
     buffer = io.BytesIO()
     doc.save(buffer)
     buffer.seek(0)
 
-    #create_log(mysql, current_user['group_id'], current_user['id'], document, questions)
-    create_log(db, current_user['group_id'], current_user['id'], document.id, questions)
+    create_log(current_user['group_id'], current_user['id'], document.id, questions)
 
     return send_file(
         buffer,
