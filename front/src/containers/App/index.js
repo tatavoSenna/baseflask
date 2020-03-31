@@ -79,7 +79,7 @@ class App extends Component {
         <LoadingOverlay
           active={loading}
           spinner
-          text='Loading your content...'
+          text='Aguarde enquanto geramos seu contrato...'
         >
           {isAuthenticated ?
             <div className="app">
@@ -128,7 +128,7 @@ class App extends Component {
                       </div>
                       <Button
                         disabled={loading}
-                        children={loading ? <i className="fa fa-refresh fa-spin" style={{ marginRight: "5px" }} /> : 'Recriar'}
+                        children={'Recriar'}
                         onClick={() => { this.downloadFile(createDocument, document, questions, filename) }}>
                       </Button>
                     </div>
