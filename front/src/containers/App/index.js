@@ -54,7 +54,7 @@ class App extends Component {
     })
     new Promise(async (resolve, reject) => {
       createDocument(document, questions, filename)
-      setTimeout(() => resolve(), 2000);
+      setTimeout(() => resolve(), 1500);
     })
       .then(() => {
         this.setState({
@@ -79,7 +79,7 @@ class App extends Component {
         <LoadingOverlay
           active={loading}
           spinner
-          text='Aguarde enquanto geramos seu contrato...'
+          text={<p style={{color: '#fff'}}>Aguarde enquanto geramos seu contrato...</p>}
         >
           {isAuthenticated ?
             <div className="app">
