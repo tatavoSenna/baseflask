@@ -1,6 +1,7 @@
 // Libs
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import LoadingOverlay from 'react-loading-overlay';
 import { File } from 'react-feather'
 import _ from 'lodash'
 
@@ -20,14 +21,46 @@ import { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQues
 import { formatDate } from './constants'
 
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      loading: false
+    }
+
+    this.downloadFile = this.downloadFile.bind(this)
+
+  }
   componentWillReceiveProps(nextProps) {
     const { isAuthenticated, fetchDocuments, fetchLogs } = this.props
     const { isAuthenticated: nextIsAuthenticated } = nextProps
 
-    if(!isAuthenticated && nextIsAuthenticated) {
+    if (!isAuthenticated && nextIsAuthenticated) {
       fetchDocuments()
       fetchLogs()
     }
+  }
+
+  componentDidMount() {
+    this.setState({
+      loading: false
+    })
+  }
+
+  downloadFile(createDocument, document, questions, filename) {
+    this.setState({
+      loading: true
+    })
+    new Promise(async (resolve, reject) => {
+      createDocument(document, questions, filename)
+      setTimeout(() => resolve(), 1500);
+    })
+      .then(() => {
+        this.setState({
+          loading: false
+        })
+      });
   }
 
   render() {
@@ -36,69 +69,77 @@ class App extends Component {
     // TODO: temporary solution for filename not being send from server
     let filename = 'documento'
 
-    if(document) {
+    let { loading } = this.state
+    if (document) {
       filename = documents.filter(item => document === item.id)[0]['filename']
     }
 
     return (
       <div>
-        {isAuthenticated ?
-          <div className="app">
-            <div className="app__wrapper">
-              <Header
-                user={user}
-                isSideBarActived={isSideBarActived}
-                handleSideBar={() => changeIsSideBarActived(!isSideBarActived)}
-                handleLogout={() => changeIsAuthenticated(false)}/>
-              {!_.isEmpty(questions) &&
-                <Question
-                  number={question + 1}
-                  question={questions[question]}
-                  handleNext={index => changeQuestion(index)}
-                  handlePrevious={index => changeQuestion(index)}
-                  handleChange={answer => changeAnswer(question, answer)}
-                  handleCreate={() => createDocument(document, questions, filename)} />
-              }
-            </div>
-            <div className={
+        <LoadingOverlay
+          active={loading}
+          spinner
+          text={<p style={{color: '#fff'}}>Aguarde enquanto geramos seu contrato...</p>}
+        >
+          {isAuthenticated ?
+            <div className="app">
+              <div className="app__wrapper">
+                <Header
+                  user={user}
+                  isSideBarActived={isSideBarActived}
+                  handleSideBar={() => changeIsSideBarActived(!isSideBarActived)}
+                  handleLogout={() => changeIsAuthenticated(false)} />
+                {!_.isEmpty(questions) &&
+                  <Question
+                    number={question + 1}
+                    question={questions[question]}
+                    handleNext={index => changeQuestion(index)}
+                    handlePrevious={index => changeQuestion(index)}
+                    handleChange={answer => changeAnswer(question, answer)}
+                    handleCreate={() => this.downloadFile(createDocument, document, questions, filename)} />
+                }
+              </div>
+              <div className={
                 isSideBarActived ?
-                "app__side-bar app__side-bar--active" :
-                "app__side-bar"
+                  "app__side-bar app__side-bar--active" :
+                  "app__side-bar"
               }>
-              <div className="app__documents">
-                <h3>Documentos</h3>
-                {documents.map(({id, name}, idx) => (
-                  <div
-                    key={id}
-                    className={id === document ? "app__document app__document--active" : "app__document"}
-                    onClick={() => selectDocument(id)}>
-                    <File size={20} />
-                    <p key={id}>{name}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="app__logs">
-                <h3>Últimos Documentos</h3>
-                {logs.map(({ id, name, filename, created_at }) => (
-                  <div
-                    key={id}
-                    className="app__log">
-                    <div>
-                      <p>{name}</p>
-                      <p>{formatDate(created_at, true)}</p>
+                <div className="app__documents">
+                  <h3>Documentos</h3>
+                  {documents.map(({ id, name }, idx) => (
+                    <div
+                      key={id}
+                      className={id === document ? "app__document app__document--active" : "app__document"}
+                      onClick={() => selectDocument(id)}>
+                      <File size={20} />
+                      <p key={id}>{name}</p>
                     </div>
-                    <Button onClick={() => createDocument(document, questions, filename)}>
-                      Recriar
-                    </Button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div className="app__logs">
+                  <h3>Últimos Documentos</h3>
+                  {logs.map(({ id, name, filename, created_at }) => (
+                    <div
+                      key={id}
+                      className="app__log">
+                      <div>
+                        <p>{name}</p>
+                        <p>{formatDate(created_at, true)}</p>
+                      </div>
+                      <Button
+                        disabled={loading}
+                        children={'Recriar'}
+                        onClick={() => { this.downloadFile(createDocument, document, questions, filename) }}>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-          :
-          <Login>Login</Login>
-        }
-
+            :
+            <Login>Login</Login>
+          }
+        </LoadingOverlay>
       </div>
     )
   }
