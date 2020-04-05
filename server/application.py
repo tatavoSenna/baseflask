@@ -100,18 +100,18 @@ def questions(current_user):
 @check_for_token
 def create(current_user):
     content = request.json
-    document = content['document']
+    document_id = content['document']
     questions = content['questions']
 
-    if not document or not questions:
+    if not document_id or not questions:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    response = get_documents(current_user['group_id'], document)
+    response = get_documents(current_user['group_id'], document_id)
 
     if not response:
         return jsonify({'message': 'Document is missing.'}), 404
 
-    doc = DocxTemplate('template/%s.docx' % document)
+    doc = DocxTemplate('template/%s.docx' % document_id)
 
     context = {}
 
@@ -136,7 +136,7 @@ def create(current_user):
     doc.save(buffer)
     buffer.seek(0)
 
-    create_log(current_user['group_id'], current_user['id'], document.id, questions)
+    create_log(current_user['group_id'], current_user['id'], document_id, questions)
 
     return send_file(
         buffer,

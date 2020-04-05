@@ -2,6 +2,7 @@ import json
 from app.models.user import User
 from app.models.document import Document
 from app.models.log import Log
+from app.models.group import Group
 from app import db 
 
 def get_user(email):
@@ -57,7 +58,7 @@ def get_logs(group_id):
     return data
 
 def create_log(group_id, user_id, document_id, questions):
-    log = Log('user_id', 'group_id', 'document_id', 'questions')
+    log = Log(user_id=user_id, group_id=group_id, document_id=document_id, questions=str(questions))
     db.session.add(log)
     db.session.commit()
     
