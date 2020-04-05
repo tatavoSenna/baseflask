@@ -12,6 +12,7 @@ def get_user(email):
         "id": user.id,
         "name": user.name,
         "surname": user.surname,
+        "email": user.email,
         "group_id": user.group_id,
     }
 

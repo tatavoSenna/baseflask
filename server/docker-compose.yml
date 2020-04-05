@@ -27,5 +27,8 @@ services:
       - FLASK_ENV=development
       - SECRET_KEY=nf9w8**HytG
       - SQLALCHEMY_DATABASE_URI=mysql://lawing_local:hf8JGTRD@mysql/lawing_local
+      - AWS_ACCESS_KEY_ID=AKIAIRXAMWKHW6GMRH7A
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_DEFAULT_REGION=sa-east-1
     command:
       flask run --host=0.0.0.0
