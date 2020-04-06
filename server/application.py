@@ -171,54 +171,55 @@ def create(current_user):
     document_buffer.seek(0)
     base64_document = base64.b64encode(document_buffer.read()).decode('ascii')
 
-    # create the DocuSign document object
-    document = Document(  
-        document_base64 = base64_document, 
-        name = 'Acordo Procon',
-        file_extension = 'docx',
-        document_id = 1
-    )
-
-    signers = []
-    for index, signer_data in enumerate(signers_data):
-        # Create the signer recipient model 
-        signer = Signer( # The signer
-            email = signer_data['email'], name = signer_data['name'], recipient_id = str(index + 1), routing_order = "1")
-
-        # Create a sign_here tab (field on the document)
-        sign_here = SignHere( # DocuSign SignHere field/tab 
-            recipient_id = '1', tab_label = 'assine aqui',
-            anchor_string = signer_data['anchor_string'],
-            anchor_x_offset = signer_data['anchor_x_offset'],
-            anchor_y_offset = signer_data['anchor_y_offset'],
-            anchor_ignore_if_not_present = "false",
-            anchor_units = "inches"
-            )
-
-        # Add the tabs model (including the sign_here tab) to the signer
-        signer.tabs = Tabs(sign_here_tabs = [sign_here]) # The Tabs object wants arrays of the different field/tab types
-
-        signers.append(signer)
-
-    # Next, create the top level envelope definition and populate it.
-    envelope_definition = EnvelopeDefinition(
-        email_subject = "Acordo Procon",
-        documents = [document], # The order in the docs array determines the order in the envelope
-        recipients = Recipients(signers = signers), # The Recipients object wants arrays for each recipient type
-        status = "sent" # requests that the envelope be created and sent.
-    )
-    
-    # Ready to go: send the envelope request
-    api_client = ApiClient()
-    api_client.host = 'https://demo.docusign.net/restapi'
-    api_client.set_default_header(
-        "Authorization", 
-        "Bearer " + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjY4MTg1ZmYxLTRlNTEtNGNlOS1hZjFjLTY4OTgxMjIwMzMxNyJ9.eyJUb2tlblR5cGUiOjUsIklzc3VlSW5zdGFudCI6MTU4NjEwNTAzMCwiZXhwIjoxNTg2MTMzODMwLCJVc2VySWQiOiIzZDYyODY4Yy04Yjg4LTQ2NTMtYTU0Ny00MjY3MTY2MWI2NzQiLCJzaXRlaWQiOjEsInNjcCI6WyJzaWduYXR1cmUiLCJjbGljay5tYW5hZ2UiLCJvcmdhbml6YXRpb25fcmVhZCIsInJvb21fZm9ybXMiLCJncm91cF9yZWFkIiwicGVybWlzc2lvbl9yZWFkIiwidXNlcl9yZWFkIiwidXNlcl93cml0ZSIsImFjY291bnRfcmVhZCIsImRvbWFpbl9yZWFkIiwiaWRlbnRpdHlfcHJvdmlkZXJfcmVhZCIsImR0ci5yb29tcy5yZWFkIiwiZHRyLnJvb21zLndyaXRlIiwiZHRyLmRvY3VtZW50cy5yZWFkIiwiZHRyLmRvY3VtZW50cy53cml0ZSIsImR0ci5wcm9maWxlLnJlYWQiLCJkdHIucHJvZmlsZS53cml0ZSIsImR0ci5jb21wYW55LnJlYWQiLCJkdHIuY29tcGFueS53cml0ZSJdLCJhdWQiOiJmMGYyN2YwZS04NTdkLTRhNzEtYTRkYS0zMmNlY2FlM2E5NzgiLCJhenAiOiJmMGYyN2YwZS04NTdkLTRhNzEtYTRkYS0zMmNlY2FlM2E5NzgiLCJpc3MiOiJodHRwczovL2FjY291bnQtZC5kb2N1c2lnbi5jb20vIiwic3ViIjoiM2Q2Mjg2OGMtOGI4OC00NjUzLWE1NDctNDI2NzE2NjFiNjc0IiwiYW1yIjpbImludGVyYWN0aXZlIl0sImF1dGhfdGltZSI6MTU4NjEwNTAyNywicHdpZCI6Ijc2NTA4ZTdjLTU0NmEtNDZmZS1hMDUxLWViMGI5ODFhMmQwZSJ9.3JAKYbnYiKxYMMjCavQsvEPoic4FC88vnCHNbgYPIRked-NB3k1rNpaPF73Xf5FyaOJWYEcAADCQnryZwdTuoULQ0wAbCEYenvOIUfOR4yiKG889qlYKJxajcuyJPtFU6Ej9_tT72hoa_UWJL_W6C132t2YMd0iDgwbS3zsPj5mc5xo03VLUe8oryqbXw5tasfVOHEvY2XAsNN61GPpV58akEmv_hXl5dVhapDD08lLXQHnCvqJl1nhnm0UxPijvW9zCOCmJt7Tnx8Qk6EQ-DKezUT6kLrceOJuWQRpXTnj2uBQYe7oJ63dN21yEPE_kngEKadaXG-W9fbTLYT5QhQ'
+    if len(signers_data) > 0:
+        
+        # create the DocuSign document object
+        document = Document(  
+            document_base64 = base64_document, 
+            name = 'Acordo Procon',
+            file_extension = 'docx',
+            document_id = 1
         )
 
-    envelope_api = EnvelopesApi(api_client)
-    results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
-    print(results)
+        signers = []
+        for index, signer_data in enumerate(signers_data):
+            # Create the signer recipient model 
+            signer = Signer( # The signer
+                email = signer_data['email'], name = signer_data['name'], recipient_id = str(index + 1), routing_order = "1")
+
+            # Create a sign_here tab (field on the document)
+            sign_here = SignHere( # DocuSign SignHere field/tab 
+                recipient_id = '1', tab_label = 'assine aqui',
+                anchor_string = signer_data['anchor_string'],
+                anchor_x_offset = signer_data['anchor_x_offset'],
+                anchor_y_offset = signer_data['anchor_y_offset'],
+                anchor_ignore_if_not_present = "false",
+                anchor_units = "inches"
+                )
+
+            # Add the tabs model (including the sign_here tab) to the signer
+            signer.tabs = Tabs(sign_here_tabs = [sign_here]) # The Tabs object wants arrays of the different field/tab types
+
+            signers.append(signer)
+
+        # Next, create the top level envelope definition and populate it.
+        envelope_definition = EnvelopeDefinition(
+            email_subject = "Acordo Procon",
+            documents = [document], # The order in the docs array determines the order in the envelope
+            recipients = Recipients(signers = signers), # The Recipients object wants arrays for each recipient type
+            status = "sent" # requests that the envelope be created and sent.
+        )
+        
+        # Ready to go: send the envelope request
+        api_client = ApiClient()
+        api_client.host = 'https://demo.docusign.net/restapi'
+        api_client.set_default_header(
+            "Authorization", 
+            "Bearer " + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjY4MTg1ZmYxLTRlNTEtNGNlOS1hZjFjLTY4OTgxMjIwMzMxNyJ9.eyJUb2tlblR5cGUiOjUsIklzc3VlSW5zdGFudCI6MTU4NjEwNTAzMCwiZXhwIjoxNTg2MTMzODMwLCJVc2VySWQiOiIzZDYyODY4Yy04Yjg4LTQ2NTMtYTU0Ny00MjY3MTY2MWI2NzQiLCJzaXRlaWQiOjEsInNjcCI6WyJzaWduYXR1cmUiLCJjbGljay5tYW5hZ2UiLCJvcmdhbml6YXRpb25fcmVhZCIsInJvb21fZm9ybXMiLCJncm91cF9yZWFkIiwicGVybWlzc2lvbl9yZWFkIiwidXNlcl9yZWFkIiwidXNlcl93cml0ZSIsImFjY291bnRfcmVhZCIsImRvbWFpbl9yZWFkIiwiaWRlbnRpdHlfcHJvdmlkZXJfcmVhZCIsImR0ci5yb29tcy5yZWFkIiwiZHRyLnJvb21zLndyaXRlIiwiZHRyLmRvY3VtZW50cy5yZWFkIiwiZHRyLmRvY3VtZW50cy53cml0ZSIsImR0ci5wcm9maWxlLnJlYWQiLCJkdHIucHJvZmlsZS53cml0ZSIsImR0ci5jb21wYW55LnJlYWQiLCJkdHIuY29tcGFueS53cml0ZSJdLCJhdWQiOiJmMGYyN2YwZS04NTdkLTRhNzEtYTRkYS0zMmNlY2FlM2E5NzgiLCJhenAiOiJmMGYyN2YwZS04NTdkLTRhNzEtYTRkYS0zMmNlY2FlM2E5NzgiLCJpc3MiOiJodHRwczovL2FjY291bnQtZC5kb2N1c2lnbi5jb20vIiwic3ViIjoiM2Q2Mjg2OGMtOGI4OC00NjUzLWE1NDctNDI2NzE2NjFiNjc0IiwiYW1yIjpbImludGVyYWN0aXZlIl0sImF1dGhfdGltZSI6MTU4NjEwNTAyNywicHdpZCI6Ijc2NTA4ZTdjLTU0NmEtNDZmZS1hMDUxLWViMGI5ODFhMmQwZSJ9.3JAKYbnYiKxYMMjCavQsvEPoic4FC88vnCHNbgYPIRked-NB3k1rNpaPF73Xf5FyaOJWYEcAADCQnryZwdTuoULQ0wAbCEYenvOIUfOR4yiKG889qlYKJxajcuyJPtFU6Ej9_tT72hoa_UWJL_W6C132t2YMd0iDgwbS3zsPj5mc5xo03VLUe8oryqbXw5tasfVOHEvY2XAsNN61GPpV58akEmv_hXl5dVhapDD08lLXQHnCvqJl1nhnm0UxPijvW9zCOCmJt7Tnx8Qk6EQ-DKezUT6kLrceOJuWQRpXTnj2uBQYe7oJ63dN21yEPE_kngEKadaXG-W9fbTLYT5QhQ'
+            )
+
+        envelope_api = EnvelopesApi(api_client)
+        results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
     
     create_log(current_user['group_id'], current_user['id'], document_id, questions)
 
