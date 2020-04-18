@@ -3,7 +3,7 @@ import boto3
 from botocore.exceptions import ClientError
 from functools import wraps
 from docxtpl import DocxTemplate
-from app.requests import get_user, get_documents, get_logs, create_log
+from app.requests import get_user, get_document_models, get_documents, create_document
 from app.constants import months
 import jwt
 import io
@@ -73,29 +73,30 @@ def login():
 @check_for_token
 def documents(current_user):
 
-    documents = get_documents(current_user['group_id'])
+    document_models = get_document_models(current_user['client_id'])
 
-    return jsonify(documents)
+    return jsonify(document_models)
 
 
 @application.route('/logs', methods=['GET'])
 @check_for_token
 def logs(current_user):
 
-    logs = get_logs(current_user['group_id'])
+    documents = get_documents(current_user['client_id'])
 
-    return jsonify(logs)
+    return jsonify(documents)
 
 
 @application.route('/questions', methods=['GET'])
 @check_for_token
 def questions(current_user):
-    document = request.args.get('document')
+    # TODO: change parameter to 'model'
+    document_model = request.args.get('document')
 
-    if not document:
+    if not document_model:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    with open('questions/%s.json' % document, encoding='utf-8') as json_file:
+    with open('questions/%s.json' % document_model, encoding='utf-8') as json_file:
         questions = json.load(json_file)
 
         return jsonify(questions)
@@ -105,18 +106,18 @@ def questions(current_user):
 @check_for_token
 def create(current_user):
     content = request.json
-    document_id = content['document']
+    document_model_id = content['document']
     questions = content['questions']
 
-    if not document_id or not questions:
+    if not document_model_id or not questions:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    response = get_documents(current_user['group_id'], document_id)
+    response = get_document_models(current_user['client_id'], document_model_id)
 
     if not response:
-        return jsonify({'message': 'Document is missing.'}), 404
+        return jsonify({'message': 'Document model is missing.'}), 404
 
-    doc = DocxTemplate('template/%s.docx' % document_id)
+    doc = DocxTemplate('template/%s.docx' % document_model_id)
 
     context = {}
     signers_data = []
@@ -221,7 +222,7 @@ def create(current_user):
         envelope_api = EnvelopesApi(api_client)
         results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
     
-    create_log(current_user['group_id'], current_user['id'], document_id, questions)
+    create_document(current_user['client_id'], current_user['id'], document_model_id, questions)
 
     buffer_document = io.BytesIO()
     doc.save(buffer_document)
