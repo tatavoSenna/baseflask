@@ -1,22 +1,21 @@
 version: '3'
 
 services:
-  mysql:
-    image: mysql/mysql-server:5.7.29
+  postgres:
+    image: postgres:12.2
     environment:
-      MYSQL_DATABASE: lawing_local
-      MYSQL_USER: lawing_local
-      MYSQL_PASSWORD: hf8JGTRD
-      MYSQL_ROOT_PASSWORD: 7hayTGfrc$F
+      POSTGRES_USER: local_user
+      POSTGRES_DB: lawing_local
+      POSTGRES_PASSWORD: password
     ports:
-      - 3306:3306
+      - 5432:5432
 
   app:
     build: ./
     restart: always
     tty: true
     links:
-      - mysql
+      - postgres
     ports:
       - 5000:5000
     volumes:
@@ -26,7 +25,7 @@ services:
       - FLASK_APP=application.py
       - FLASK_ENV=development
       - SECRET_KEY=nf9w8**HytG
-      - SQLALCHEMY_DATABASE_URI=mysql://lawing_local:hf8JGTRD@mysql/lawing_local
+      - SQLALCHEMY_DATABASE_URI=postgres://local_user:password@postgres/lawing_local
       - AWS_ACCESS_KEY_ID=AKIAIRXAMWKHW6GMRH7A
       - AWS_SECRET_ACCESS_KEY=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
       - AWS_DEFAULT_REGION=sa-east-1
