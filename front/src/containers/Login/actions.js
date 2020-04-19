@@ -33,7 +33,7 @@ export const login = (email, password) => {
         console.log(user)
 
         // Change reducer
-        dispatch(changeIsAuthenticated(true))
+        dispatch(changeIsAuthenticated(true, token))
         dispatch(changeUser(user))
       })
       .catch(e => {

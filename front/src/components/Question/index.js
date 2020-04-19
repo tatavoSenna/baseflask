@@ -16,7 +16,7 @@ const Question = ({ number, question, length, handleNext, handlePrevious, handle
   let component
   let children
   let childIndex = 1
-
+  console.log(question)
   switch (question.type) {
     case "radio":
       component = (

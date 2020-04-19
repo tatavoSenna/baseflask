@@ -2,10 +2,14 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
+import createSagaMiddleware from 'redux-saga'
 import thunk from 'redux-thunk'
+import documentSaga from './sagas/DocumentSaga'
 import axios from 'axios'
 
 // Styles
@@ -19,10 +23,13 @@ import App from './containers/App'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
+const sagaMiddleware = createSagaMiddleware()
 const store = createStore(
   reducers,
-  composeWithDevTools(applyMiddleware(thunk))
+  composeWithDevTools( applyMiddleware(thunk), applyMiddleware(sagaMiddleware) )
 )
+const persistor = persistStore(store)
+sagaMiddleware.run(documentSaga)
 
 axios.interceptors.response.use(
   response => {
@@ -39,7 +46,9 @@ axios.interceptors.response.use(
 render(
   <Provider store={store}>
     <BrowserRouter>
-      <Route path='/' component={() => <App />} />
+      <PersistGate persistor={persistor}> 
+        <Route path='/' component={() => <App />} />
+      </PersistGate>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

@@ -12,10 +12,17 @@ export const CHANGE_IS_AUTHENTICATED = 'change_is_authenticated'
 export const CHANGE_IS_SIDE_BAR_ACTIVED = 'change_is_side_bar_actived'
 export const CHANGE_ANSWER = 'change_answer'
 export const CHANGE_QUESTION = 'change_question'
-export const CHANGE_QUESTIONS = 'change_questions'
-export const CHANGE_DOCUMENT = 'change_document'
+export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
 export const CHANGE_DOCUMENTS = 'change_documents'
 export const CHANGE_LOGS = 'change_logs'
+export const NEW_DOCUMENT_API_CALL = "new_document_api_call"  
+export const NEW_DOCUMENT_CALL_FAILED = "new_document_call_failed"
+export const NEW_DOCUMENT_CALL_SUCCEEDED = "new_document_call_succeeded"
+export const LOADING_FINISHED = "loading_finished"
+export const LOADING_STARTED = "loading_started"
+export const GET_DECISION_TREE_CALL_SUCCEEDED = "get_decision_tree_call_succeeded"
+export const GET_DECISION_TREE_CALL_FAILED = "get_decision_tree_call_failed"
+export const NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD = "new_document_finish_without_download"
 
 export const changeUser = (user) => {
   return {
@@ -24,10 +31,10 @@ export const changeUser = (user) => {
   }
 }
 
-export const changeIsAuthenticated = (isAuthenticated) => {
+export const changeIsAuthenticated = (isAuthenticated, token) => {
   return {
     type: CHANGE_IS_AUTHENTICATED,
-    payload: isAuthenticated
+    payload: { isAuthenticated, token }
   }
 }
 
@@ -53,20 +60,6 @@ export const changeQuestion = (question) => {
   }
 }
 
-export const changeQuestions = (questions) => {
-  return {
-    type: CHANGE_QUESTIONS,
-    payload: questions
-  }
-}
-
-export const changeDocument = (document) => {
-  return {
-    type: CHANGE_DOCUMENT,
-    payload: document
-  }
-}
-
 export const changeDocuments = (documents) => {
   return {
     type: CHANGE_DOCUMENTS,
@@ -82,10 +75,9 @@ export const changeLogs = (logs) => {
 }
 
 export const selectDocument = (document, filename) => {
-  return dispatch => {
-    dispatch(changeQuestion(0))
-    dispatch(changeDocument(document))
-    dispatch(fetchQuestions(document))
+  return {
+    type: SHOW_NEW_DOCUMENT_FORM,
+    payload: {document, filename}
   }
 }
 
@@ -97,7 +89,6 @@ export const fetchDocuments = () => {
 
         if(!_.isEmpty(data)) {
           dispatch(changeDocuments(data))
-          dispatch(selectDocument(data[0].id))
         }
       })
       .catch(e => {
@@ -122,41 +113,17 @@ export const fetchLogs = () => {
   }
 }
 
-export const fetchQuestions = (document) => {
-  return dispatch => {
-    axios.get(`/questions?document=${document}`)
-    .then(response => {
-      const { data } = response
-      let questions = []
-
-      data.map((item, idx) => {
-        questions = [...questions, {...item, children: findChildren(data, idx)}]
-
-        return item
-      })
-
-      dispatch(changeQuestions(questions))
-    })
-    .catch(e => {
-      console.log(e)
-    })
+export const createDocument = (document, questions, filename) => {
+  return {
+    type: NEW_DOCUMENT_API_CALL,
+    payload: { document, questions } 
   }
 }
 
-export const createDocument = (document, questions, filename) => {
-  return dispatch => {
-    axios.post('/create', { document, questions }, {
-      responseType: 'arraybuffer'
-    })
-    .then(response => {
-      const { data } = response
-
-      fileDownload(data, `${filename}.docx`)
-
-      dispatch(fetchLogs())
-    })
-    .catch(e => {
-      console.log(e)
-    })
+export const finishWithoutDownload = () => {
+  console.log ( 'uai' )
+  return {
+    type: NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
+    payload: false
   }
 }

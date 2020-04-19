@@ -58,8 +58,22 @@ def get_documents(client_id):
 
     return data
 
-def create_document(client_id, user_id, document_model_id, questions):
-    document = Document(user_id=user_id, client_id=client_id, document_model_id=document_model_id, questions=str(questions))
-    db.session.add(document)
+def create_document(client_id, user_id, document_model_id, questions, file_url):
+    data = []
+    new_document = Document(user_id=user_id, client_id=client_id, document_model_id=document_model_id, questions=str(questions))
+    db.session.add(new_document)
     db.session.commit()
+    data.append(
+        {
+        "id": new_document.id,
+        "client_id": new_document.client_id,
+        "user_id": new_document.user_id,
+        "file_url": file_url,
+        # "questions": new_document.questions,
+        # "created_at": new_document.created_at,
+        # "name": new_document.name,
+        # "filename": new_document.filename,
+        }
+    )
+    return data
     

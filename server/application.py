@@ -1,3 +1,4 @@
+import logging
 from flask import jsonify, request, send_file, current_app as application
 import boto3
 from botocore.exceptions import ClientError
@@ -159,7 +160,7 @@ def create(current_user):
 
     s3_client = boto3.client('s3')
     try:
-        response = s3_client.upload_fileobj(document_buffer, 'lawing-documents', 'testfile2.docx')
+        response = s3_client.upload_fileobj(document_buffer, 'lawing-documents', '  ')
     except ClientError as e:
         print('error uploading to s3')
 
@@ -220,18 +221,22 @@ def create(current_user):
             )
 
         envelope_api = EnvelopesApi(api_client)
-        results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
+        try:
+            results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
+        except Exception as e:
+            logging.error(e)
+
+    document_url = s3_client.generate_presigned_url(
+        'get_object',
+        Params={
+            'Bucket': 'lawing-documents',
+            'Key': 'testfile2.docx'
+            },
+        ExpiresIn=180)
+
+    new_document = create_document(current_user['client_id'], current_user['id'], document_model_id, questions, document_url)   
     
-    create_document(current_user['client_id'], current_user['id'], document_model_id, questions)
-
-    buffer_document = io.BytesIO()
-    doc.save(buffer_document)
-    buffer_document.seek(0)
-    return send_file(
-        buffer_document,
-        as_attachment=True,
-        attachment_filename="")
-
+    return jsonify(document_url)
 
 if __name__ == '__main__':
     application.run(debug=True)
