@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from flask import jsonify, request, send_file, current_app as application
 import boto3
@@ -13,6 +14,7 @@ import datetime
 from app import db, create_app
 import os
 import base64
+from slugify import slugify
 from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document
 
 application = create_app()
@@ -98,9 +100,28 @@ def questions(current_user):
         return jsonify({'message': 'Value is missing.'}), 404
 
     with open('questions/%s.json' % document_model, encoding='utf-8') as json_file:
-        questions = json.load(json_file)
+        decision_tree = json.load(json_file)
 
-        return jsonify(questions)
+    # Initialize the decision tree with the title input field
+    augumented_decision_tree = [{
+            "label": "",
+            "variable": "title",
+            "option": "",
+            "type": "input",
+            "value": "Qual o título do Documento?",
+            "answer": "",
+            "parentIndex": None,
+            "childIndex": 1
+        }]
+    
+    for field in decision_tree:
+        print(field)
+        field['parentIndex'] = 0 if field['parentIndex'] == None else field['parentIndex'] + 1
+        if 'childIndex' in field and field['childIndex']:
+            field['childIndex'] = field['childIndex'] +  1
+        augumented_decision_tree.append(field)
+
+    return jsonify(augumented_decision_tree)
 
 
 @application.route('/create', methods=['POST'])
@@ -113,11 +134,13 @@ def create(current_user):
     if not document_model_id or not questions:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    response = get_document_models(current_user['client_id'], document_model_id)
-
-    if not response:
+    # get and validate the document type
+    document_model = get_document_models(current_user['client_id'], document_model_id)
+    print(document_model)
+    if not document_model:
         return jsonify({'message': 'Document model is missing.'}), 404
 
+    # get the decision tree 
     doc = DocxTemplate('template/%s.docx' % document_model_id)
 
     context = {}
@@ -135,6 +158,14 @@ def create(current_user):
 
         if variable and answer:
             context[variable] = answer
+
+            # creates the filename from the document_title
+            s3_object_key = slugify(document_model.filename)
+            if variable['variale'] == 'title':
+                s3_object_key = slugify(question['variable'])
+            s3_object_key = f'{s3_object_key}_{datetime.now().timestamp()}'
+
+            # Look for signers
             if variable.find('signer') >= 0:
                 if 'docusign_data' in question:
                     signer_data = question['docusign_data']
@@ -166,7 +197,7 @@ def create(current_user):
 
     try:
         document_buffer = io.BytesIO()
-        s3_client.download_fileobj('lawing-documents', 'testfile2.docx', document_buffer)
+        s3_client.download_fileobj('lawing-documents', f'{s3_object_key}.docx', document_buffer)
     except ClientError as e:
         print(e)
 

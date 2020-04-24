@@ -19,7 +19,16 @@ class Document(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(255), unique=False, nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     document_model_id = db.Column(db.Integer, db.ForeignKey('document_model.id'), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+
+class DocumentVersion(db.Model):
+    __tablename__ = 'document_version'
+
+    id = db.Column(db.Integer, primary_key=True)
+    document_id = db.Column(db.Integer, db.ForeignKey('document.id'), nullable=False)
+    filename = db.Column(db.String(255), unique=False, nullable=True)
     questions = db.Column(db.Text, unique=False, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
