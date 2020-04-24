@@ -98,7 +98,21 @@ def questions(current_user):
         return jsonify({'message': 'Value is missing.'}), 404
 
     with open('questions/%s.json' % document_model, encoding='utf-8') as json_file:
-        questions = json.load(json_file)
+        decision_tree = json.load(json_file)
+
+    # Initialize the decision tree with the title input field
+    augumented_decision_tree = [
+        {
+            "label": "",
+            "variable": "Título do Documento",
+            "option": "",
+            "type": "input",
+            "value": "Qual o título do Documento?",
+            "answer": "",
+            "parentIndex": null,
+            "childIndex": 1
+        }
+    ]
 
         return jsonify(questions)
 
