@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from flask import jsonify, request, send_file, current_app as application
 import boto3
@@ -10,12 +11,11 @@ import jwt
 import io
 import json
 import datetime
-from app import db, create_app
+from app import db, application
 import os
 import base64
+from slugify import slugify
 from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document
-
-application = create_app()
 
 def check_for_token(func):
     @wraps(func)
@@ -101,20 +101,25 @@ def questions(current_user):
         decision_tree = json.load(json_file)
 
     # Initialize the decision tree with the title input field
-    augumented_decision_tree = [
-        {
+    augumented_decision_tree = [{
             "label": "",
-            "variable": "Título do Documento",
+            "variable": "title",
             "option": "",
             "type": "input",
             "value": "Qual o título do Documento?",
             "answer": "",
-            "parentIndex": null,
+            "parentIndex": None,
             "childIndex": 1
-        }
-    ]
+        }]
+    
+    for field in decision_tree:
+        print(field)
+        field['parentIndex'] = 0 if field['parentIndex'] == None else field['parentIndex'] + 1
+        if 'childIndex' in field and field['childIndex']:
+            field['childIndex'] = field['childIndex'] +  1
+        augumented_decision_tree.append(field)
 
-        return jsonify(questions)
+    return jsonify(augumented_decision_tree)
 
 
 @application.route('/create', methods=['POST'])
@@ -127,11 +132,13 @@ def create(current_user):
     if not document_model_id or not questions:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    response = get_document_models(current_user['client_id'], document_model_id)
-
-    if not response:
+    # get and validate the document type
+    document_model = get_document_models(current_user['client_id'], document_model_id)
+    print(document_model)
+    if not document_model:
         return jsonify({'message': 'Document model is missing.'}), 404
 
+    # get the decision tree 
     doc = DocxTemplate('template/%s.docx' % document_model_id)
 
     context = {}
@@ -149,12 +156,21 @@ def create(current_user):
 
         if variable and answer:
             context[variable] = answer
+
+            # creates the filename from the document_title
+            title = document_model.name
+            if variable['variale'] == 'title':
+                title = question['variable']
+            s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+
+            # Look for signers
             if variable.find('signer') >= 0:
                 if 'docusign_data' in question:
                     signer_data = question['docusign_data']
                     signer_data['name'] = context[question['docusign_data']['name_variable']]
                     signer_data['email'] = question['answer']
 
+                    # TODO: hardcoded decisions
                     if variable == 'witness_1_signer':
                         signer_data['anchor_x_offset'] = '0'
                         signer_data['anchor_y_offset'] = '0.2'
@@ -166,23 +182,17 @@ def create(current_user):
 
     context = add_variables(context)
 
+    # generate document template with decision tree variables to a memory buffer
     doc.render(context)
-
     document_buffer = io.BytesIO()
     doc.save(document_buffer)
     document_buffer.seek(0)
 
-    s3_client = boto3.client('s3')
-    try:
-        response = s3_client.upload_fileobj(document_buffer, 'lawing-documents', '  ')
-    except ClientError as e:
-        print('error uploading to s3')
-
-    try:
-        document_buffer = io.BytesIO()
-        s3_client.download_fileobj('lawing-documents', 'testfile2.docx', document_buffer)
-    except ClientError as e:
-        print(e)
+    # try:
+    #     document_buffer = io.BytesIO()
+    #     s3_client.download_fileobj('lawing-documents', f'{s3_object_key}.docx', document_buffer)
+    # except ClientError as e:
+    #     print(e)
 
     document_buffer.seek(0)
     base64_document = base64.b64encode(document_buffer.read()).decode('ascii')
@@ -240,15 +250,29 @@ def create(current_user):
         except Exception as e:
             logging.error(e)
 
-    document_url = s3_client.generate_presigned_url(
-        'get_object',
-        Params={
-            'Bucket': 'lawing-documents',
-            'Key': 'testfile2.docx'
-            },
-        ExpiresIn=180)
+    # save generated document to an s3 
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
+    except ClientError as e:
+        print('error uploading to s3')
 
-    new_document = create_document(current_user['client_id'], current_user['id'], document_model_id, questions, document_url)   
+    # document_url = s3_client.generate_presigned_url(
+    #     'get_object',
+    #     Params={
+    #         'Bucket': 'lawing-documents',
+    #         'Key': 'testfile2.docx'
+    #         },
+    #     ExpiresIn=180)
+
+    new_document = create_document(
+        current_user['client_id'],
+        current_user['id'],
+        title, 
+        document_model_id, 
+        questions,
+        s3_client,
+        ) 
     
     return jsonify(document_url)
 
