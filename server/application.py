@@ -3,11 +3,9 @@ import logging
 from flask import jsonify, request, send_file, current_app as application, blueprints
 import boto3
 from botocore.exceptions import ClientError
-from functools import wraps
 from docxtpl import DocxTemplate
 from app.requests import get_user, get_document_models, get_documents, create_document
 from app.constants import months
-import jwt
 import io
 import json
 from app import db, application
@@ -18,26 +16,9 @@ from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, 
 from app.models.documents import DocumentModel
 from app.serializers.document_serializers import DocumentSerializer
 from app.documents.blueprint import documents_api
+from app.auth.services import check_for_token
 
 application.register_blueprint(documents_api, url_prefix='/documents')
-
-def check_for_token(func):
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        token = request.headers.get('X-Auth-Token')
-
-        if not token:
-            return jsonify({'message': 'Token is missing.'}), 403
-
-        try:
-            data = jwt.decode(token, application.config['SECRET_KEY'])
-        except Exception as error:
-            return jsonify({'message': 'Token is invalid.'}), 403
-
-        return func(data, *args, **kwargs)
-
-    return wrapped
-
 
 def add_variables(context):
     # Add day, month and year
