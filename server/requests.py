@@ -4,6 +4,7 @@ from app import db
 from app.models.client import Client
 from app.models.documents import Document, DocumentModel, DocumentVersion
 from app.models.user import User
+from app.serializers.document_serializers import DocumentSerializer
 
 
 def get_user(email):
@@ -65,34 +66,23 @@ def get_documents(client_id):
     return data
 
 
-def create_document(client_id, user_id, title, document_model_id, questions, filename):
+def create_document(client_id, user_id, title, document_model_id, answers, filename):
     data = []
     new_document = Document(
         user_id=user_id,
         client_id=client_id,
         title=title,
-        document_model_id=document_model_id,
-        questions=str(questions))
+        document_model_id=document_model_id
+    )
     db.session.add(new_document)
     db.session.commit()
     first_version = DocumentVersion(
-        document_id = new_document.id,
         filename = filename,
-        questions = questions
+        answers = answers,
+        document = new_document
     )
     db.session.add(first_version)
     db.session.commit()
+    db.session.refresh(new_document)
 
-    data.append(
-        {
-            "id": new_document.id,
-            "client_id": new_document.client_id,
-            "user_id": new_document.user_id,
-            "file_url": file_url,
-            # "questions": new_document.questions,
-            # "created_at": new_document.created_at,
-            # "name": new_document.name,
-            # "filename": new_document.filename,
-        }
-    )
-    return data
+    return DocumentSerializer().dump(new_document)

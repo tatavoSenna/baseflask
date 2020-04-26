@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from flask import jsonify, request, send_file, current_app as application
+from flask import jsonify, request, send_file, current_app as application, blueprints
 import boto3
 from botocore.exceptions import ClientError
 from functools import wraps
@@ -10,12 +10,16 @@ from app.constants import months
 import jwt
 import io
 import json
-import datetime
 from app import db, application
 import os
 import base64
 from slugify import slugify
-from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document
+from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document as DocusignDocument
+from app.models.documents import DocumentModel
+from app.serializers.document_serializers import DocumentSerializer
+from app.documents.blueprint import documents_api
+
+application.register_blueprint(documents_api, url_prefix='/documents')
 
 def check_for_token(func):
     @wraps(func)
@@ -37,7 +41,7 @@ def check_for_token(func):
 
 def add_variables(context):
     # Add day, month and year
-    now = datetime.datetime.now()
+    now = datetime.now()
 
     context['day'] = str(now.day).zfill(2)
     context['month'] = months[now.month - 1]
@@ -125,24 +129,30 @@ def questions(current_user):
 @application.route('/create', methods=['POST'])
 @check_for_token
 def create(current_user):
-    content = request.json
-    document_model_id = content['document']
-    questions = content['questions']
+    # check if content_type is json
+    if not request.is_json: 
+        return jsonify({'message': 'Accepts only content-type json.'}), 400
+    else:
+        content = request.json
 
+    # check for required parameters
+    document_model_id = content.get('document', None)
+    questions = content.get('questions', None)
     if not document_model_id or not questions:
-        return jsonify({'message': 'Value is missing.'}), 404
+        return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
 
-    # get and validate the document type
-    document_model = get_document_models(current_user['client_id'], document_model_id)
+    # loads the document model
+    document_model = DocumentModel.query.get(8)
     print(document_model)
     if not document_model:
         return jsonify({'message': 'Document model is missing.'}), 404
 
-    # get the decision tree 
-    doc = DocxTemplate('template/%s.docx' % document_model_id)
+    # loads the template
+    doc = DocxTemplate(f'template/{document_model_id}.docx')
 
     context = {}
     signers_data = []
+    title = document_model.name
 
     for question in questions:
         variable = None
@@ -157,11 +167,9 @@ def create(current_user):
         if variable and answer:
             context[variable] = answer
 
-            # creates the filename from the document_title
-            title = document_model.name
-            if variable['variale'] == 'title':
-                title = question['variable']
-            s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+            # gets the title fromt he user's answeers and  the filename from the document_title
+            if variable == 'title':
+                title = answer
 
             # Look for signers
             if variable.find('signer') >= 0:
@@ -200,7 +208,7 @@ def create(current_user):
     if len(signers_data) > 0:
 
         # create the DocuSign document object
-        document = Document(  
+        document = DocusignDocument(  
             document_base64 = base64_document, 
             name = 'Acordo Procon',
             file_extension = 'docx',
@@ -252,18 +260,12 @@ def create(current_user):
 
     # save generated document to an s3 
     s3_client = boto3.client('s3')
+    s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+    document_buffer.seek(0)
     try:
         response = s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
     except ClientError as e:
         print('error uploading to s3')
-
-    # document_url = s3_client.generate_presigned_url(
-    #     'get_object',
-    #     Params={
-    #         'Bucket': 'lawing-documents',
-    #         'Key': 'testfile2.docx'
-    #         },
-    #     ExpiresIn=180)
 
     new_document = create_document(
         current_user['client_id'],
@@ -271,10 +273,10 @@ def create(current_user):
         title, 
         document_model_id, 
         questions,
-        s3_client,
+        s3_object_key,
         ) 
-    
-    return jsonify(document_url)
+    return new_document
+
 
 if __name__ == '__main__':
     application.run(debug=True)

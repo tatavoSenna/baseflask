@@ -3,7 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
-from flask_marshmellow import Marshmellow
+from flask_marshmallow import Marshmallow
 
 application = Flask(__name__)
 application.debug = True
@@ -13,7 +13,5 @@ CORS(application)
 
 db = SQLAlchemy(application)
 migrate = Migrate(application, db)
-ma = Marshmellow(application)
-
-    return application
+ma = Marshmallow(application)
     
