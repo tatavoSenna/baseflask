@@ -5,12 +5,13 @@ import {
   CHANGE_ANSWER,
   CHANGE_QUESTION,
   GET_DECISION_TREE_CALL_SUCCEEDED,
-  CHANGE_DOCUMENTS,
   CHANGE_LOGS,
   LOADING_STARTED,
   LOADING_FINISHED,
   NEW_DOCUMENT_CALL_SUCCEEDED,
-  NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD
+  NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
+  GET_DOCUMENT_MODELS_CALL_SUCCEEDED,
+  CANCEL_NEW_DOCUMENT
 } from './actions'
 
 import { findChildren } from './constants'
@@ -22,7 +23,7 @@ export default function (state = {
   question: '',
   questions: [],
   document: '',
-  documents: [],
+  models: [],
   logs: [],
   loading: false,
   isCreating: false,
@@ -54,8 +55,8 @@ export default function (state = {
         return item
       })
       return { ...state, questions, question: 0, document, isCreating: true, }
-    case CHANGE_DOCUMENTS:
-      return { ...state, documents: action.payload }
+    case GET_DOCUMENT_MODELS_CALL_SUCCEEDED:
+      return { ...state, models: action.payload }
     case CHANGE_LOGS:
       return { ...state, logs: action.payload }
     case LOADING_STARTED:
@@ -66,8 +67,9 @@ export default function (state = {
       const { fileURL } = action.payload
       return {...state, fileURL, isCreating:false, new_document_download_dialog_open: true }
     case NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD:
-      console.log('reduce')
       return {...state, new_document_download_dialog_open:action.payload}
+    case CANCEL_NEW_DOCUMENT:
+      return {...state, isCreating: false}
     default:
       return state
   }

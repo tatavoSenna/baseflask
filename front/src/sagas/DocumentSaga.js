@@ -10,8 +10,7 @@ import {
     NEW_DOCUMENT_CALL_FAILED,
     SHOW_NEW_DOCUMENT_FORM,
     GET_DECISION_TREE_CALL_SUCCEEDED,
-    GET_DECISION_TREE_CALL_FAILED,
-    CHANGE_QUESTION
+    GET_DECISION_TREE_CALL_FAILED
 } from '../containers/App/actions'
 
 function* sendNewDocumentToServer(action) {
@@ -34,7 +33,7 @@ function* sendNewDocumentToServer(action) {
 }
 
 function* loadNewDocumentTemplateFromServer(action){
-    const { document } = action.payload
+    const document = action.payload
     yield put({type: LOADING_STARTED})
 
     try {

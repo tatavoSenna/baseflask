@@ -23,7 +23,7 @@ def download(current_user, document_id):
 
     try:
         last_version = DocumentVersion.query.filter_by(document_id=document_id).joinedload(DocumentVersion.document).order_by(DocumentVersion.version_number).first()
-    except Exception as e:
+    except Exception:
         abort(404, 'Document not Found')
 
     s3_client = boto3.client('s3')

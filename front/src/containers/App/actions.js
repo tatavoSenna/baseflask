@@ -13,16 +13,24 @@ export const CHANGE_IS_SIDE_BAR_ACTIVED = 'change_is_side_bar_actived'
 export const CHANGE_ANSWER = 'change_answer'
 export const CHANGE_QUESTION = 'change_question'
 export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
-export const CHANGE_DOCUMENTS = 'change_documents'
+export const GET_DOCUMENTS_LIST_CALL_SUCCEEDED = 'get_documents_list_call_succeeded'
+export const GET_DOCUMENTS_LIST_CALL_FAILED = 'get_documents_list_call_failed'
+export const GET_DOCUMENT_MODELS_CALL_SUCCEEDED = 'get_document_models_call_succeeded'
+export const GET_DOCUMENT_MODELS_CALL_FAILED = 'get_document_models_call_failed'
 export const CHANGE_LOGS = 'change_logs'
+
+// global loading indicator control
+export const LOADING_FINISHED = "loading_finished"
+export const LOADING_STARTED = "loading_started"
+
+// new document actions
+export const GET_DECISION_TREE_CALL_SUCCEEDED = "get_decision_tree_call_succeeded"
+export const GET_DECISION_TREE_CALL_FAILED = "get_decision_tree_call_failed"
 export const NEW_DOCUMENT_API_CALL = "new_document_api_call"  
 export const NEW_DOCUMENT_CALL_FAILED = "new_document_call_failed"
 export const NEW_DOCUMENT_CALL_SUCCEEDED = "new_document_call_succeeded"
-export const LOADING_FINISHED = "loading_finished"
-export const LOADING_STARTED = "loading_started"
-export const GET_DECISION_TREE_CALL_SUCCEEDED = "get_decision_tree_call_succeeded"
-export const GET_DECISION_TREE_CALL_FAILED = "get_decision_tree_call_failed"
 export const NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD = "new_document_finish_without_download"
+export const CANCEL_NEW_DOCUMENT = "cancel_new_document"
 
 export const changeUser = (user) => {
   return {
@@ -60,13 +68,6 @@ export const changeQuestion = (question) => {
   }
 }
 
-export const changeDocuments = (documents) => {
-  return {
-    type: CHANGE_DOCUMENTS,
-    payload: documents
-  }
-}
-
 export const changeLogs = (logs) => {
   return {
     type: CHANGE_LOGS,
@@ -74,32 +75,39 @@ export const changeLogs = (logs) => {
   }
 }
 
-export const selectDocument = (document, filename) => {
+export const newDocumentFromModel = (document_model) => {
   return {
     type: SHOW_NEW_DOCUMENT_FORM,
-    payload: {document, filename}
+    payload: document_model
+  }
+}
+
+export const fetchDocumentModels = () => {
+  console.log('cheguei')
+  return dispatch => {
+    axios.get('/models')
+      .then(response => {
+        console.log(data)
+        const { data } = response
+        if(!_.isEmpty(data)) {
+          dispatch({
+            type: GET_DOCUMENT_MODELS_CALL_SUCCEEDED,
+            payload: data
+          })
+        }
+      })
+      .catch(e => {
+        dispatch({
+          type: GET_DOCUMENT_MODELS_CALL_FAILED,
+          payload: e
+        })
+      })
   }
 }
 
 export const fetchDocuments = () => {
   return dispatch => {
     axios.get('/documents')
-      .then(response => {
-        const { data } = response
-
-        if(!_.isEmpty(data)) {
-          dispatch(changeDocuments(data))
-        }
-      })
-      .catch(e => {
-        console.log(e)
-      })
-  }
-}
-
-export const fetchLogs = () => {
-  return dispatch => {
-    axios.get('/logs')
       .then(response => {
         const { data } = response
 
@@ -121,9 +129,14 @@ export const createDocument = (document, questions, filename) => {
 }
 
 export const finishWithoutDownload = () => {
-  console.log ( 'uai' )
   return {
     type: NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
     payload: false
+  }
+}
+
+export const cancelNewDocument = () => {
+  return {
+    type: CANCEL_NEW_DOCUMENT
   }
 }

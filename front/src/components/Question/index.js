@@ -12,7 +12,7 @@ import Input from '../../components/Input'
 import Textarea from '../../components/Textarea'
 import Radio from '../../components/Radio'
 
-const Question = ({ number, question, length, handleNext, handlePrevious, handleChange, handleCreate, ...props }) => {
+const Question = ({ number, question, length, handleNext, handlePrevious, handleChange, handleCreate, handleCancel, ...props }) => {
   let component
   let children
   let childIndex = 1
@@ -72,6 +72,10 @@ const Question = ({ number, question, length, handleNext, handlePrevious, handle
           onClick={handleCreate}>Criar
         </Button>
       }
+      <Button
+        className="button--secondary"
+        onClick={handleCancel}>Cancelar
+      </Button>
       {number !== 1 &&
         <p className="question__previous" onClick={() => handlePrevious(question.parentIndex)}>Voltar</p>
       }

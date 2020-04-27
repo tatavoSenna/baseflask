@@ -1,5 +1,4 @@
 // Libs
-import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import LoadingOverlay from 'react-loading-overlay'
 import { File } from 'react-feather'
@@ -14,9 +13,10 @@ import Login from '../Login'
 import Button from '../../components/Button'
 import Header from '../../components/Header'
 import Question from '../../components/Question'
+import React, { Component } from 'react'
 
 // Actions
-import { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, selectDocument, fetchDocuments, fetchLogs, createDocument, finishWithoutDownload } from './actions'
+import { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, newDocumentFromModel, fetchDocumentModels, fetchDocuments, createDocument, finishWithoutDownload, cancelNewDocument } from './actions'
 
 // Constants
 import { formatDate } from './constants'
@@ -27,15 +27,18 @@ class App extends Component {
     super(props)
     this.createDocumentButtonPressed = this.createDocumentButtonPressed.bind(this)
     this.finishWithoutDownloadButtonPressed = this.finishWithoutDownloadButtonPressed.bind(this)
+    this.cancelNewDocumentButtonPressed = this.cancelNewDocumentButtonPressed.bind(this)
     axios.defaults.headers.common['X-Auth-Token'] = this.props.token
   }
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, fetchDocuments, fetchLogs } = this.props
+
+    const { isAuthenticated, fetchDocumentModels, fetchDocuments } = this.props
     const { isAuthenticated: nextIsAuthenticated } = nextProps
 
+    console.log('teste')
     if (!isAuthenticated && nextIsAuthenticated) {
-      fetchDocuments()
-      fetchLogs() 
+      fetchDocumentModels()
+      fetchDocuments() 
     }
   }
 
@@ -47,6 +50,10 @@ class App extends Component {
     finishWithoutDownload()
   }
 
+  cancelNewDocumentButtonPressed(cancelNewDocument){
+    cancelNewDocument()
+  }
+
   render() {
     const {
       user,
@@ -55,28 +62,23 @@ class App extends Component {
       question,
       questions,
       document,
-      documents,
+      models,
       logs,
       changeIsAuthenticated,
       changeIsSideBarActived,
       changeAnswer,
       changeQuestion,
-      selectDocument,
+      newDocumentFromModel,
       createDocument,
       finishWithoutDownload,
       loading,
       isCreating,
-      isViewing,
-      fileURL,
-      new_document_download_dialog_open
+      new_document_download_dialog_open,
+      cancelNewDocument
     } = this.props
 
     // TODO: temporary solution for filename not being send from server
     let filename = 'documento'
-
-    if (document) {
-      filename = documents.filter(item => document === item.id)[0]['filename']
-    }
 
     return (
       <div>
@@ -94,9 +96,7 @@ class App extends Component {
                   Contrato Gerado com Sucesso!
                   <Button
                     children={'continuar'}
-                    onClick={() => { console.log('cliqeui')
-                    this.finishWithoutDownloadButtonPressed(finishWithoutDownload)
-                    } }>
+                    onClick={() => { this.finishWithoutDownloadButtonPressed(finishWithoutDownload) } }>
                   </Button>
                 </div>
               </div>
@@ -114,7 +114,8 @@ class App extends Component {
                     handleNext={index => changeQuestion(index)}
                     handlePrevious={index => changeQuestion(index)}
                     handleChange={answer => changeAnswer(question, answer)}
-                    handleCreate={() => this.createDocumentButtonPressed(createDocument, document, questions, filename)} />
+                    handleCreate={() => this.createDocumentButtonPressed(createDocument, document, questions, filename)}
+                    handleCancel={() => this.cancelNewDocumentButtonPressed(cancelNewDocument)} />
                 }
                 {!isCreating &&
                   <div className="app__logs">
@@ -142,12 +143,12 @@ class App extends Component {
                   "app__side-bar"
               }>
                 <div className="app__documents">
-                  <h3>Documentos</h3>
-                  {documents.map(({ id, name }, idx) => (
+                  <h3>Selecione um modelo</h3>
+                  {models.map(({ id, name }, idx) => (
                     <div
                       key={id}
                       className={id === document ? "app__document app__document--active" : "app__document"}
-                      onClick={() => selectDocument(id)}>
+                      onClick={() => newDocumentFromModel(id)}>
                       <File size={20} />
                       <p key={id}>{name}</p>
                     </div>
@@ -173,7 +174,7 @@ App = connect(
       question: state.app.question,
       questions: state.app.questions,
       document: state.app.document,
-      documents: state.app.documents,
+      models: state.app.models,
       logs: state.app.logs,
       loading: state.app.loading,
       isCreating: state.app.isCreating,
@@ -183,7 +184,7 @@ App = connect(
       new_document_download_dialog_open: state.app.new_document_download_dialog_open 
     }
   },
-  { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, selectDocument, fetchDocuments, fetchLogs, createDocument, finishWithoutDownload }
+  { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, newDocumentFromModel, fetchDocuments, fetchDocumentModels, fetchDocuments, createDocument, finishWithoutDownload, cancelNewDocument }
 )(App)
 
 export default App

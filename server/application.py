@@ -8,6 +8,7 @@ from app.requests import get_user, get_document_models, get_documents, create_do
 from app.constants import months
 import io
 import json
+import jwt
 from app import db, application
 import os
 import base64
@@ -55,7 +56,7 @@ def login():
     return jsonify({'message': 'Cannot be authenticated.'}), 401
 
 
-@application.route('/documents', methods=['GET'])
+@application.route('/models', methods=['GET'])
 @check_for_token
 def documents(current_user):
 
@@ -63,10 +64,6 @@ def documents(current_user):
 
     return jsonify(document_models)
 
-
-@application.route('/logs', methods=['GET'])
-@check_for_token
-def logs(current_user):
 
     documents = get_documents(current_user['client_id'])
 
@@ -98,7 +95,6 @@ def questions(current_user):
         }]
     
     for field in decision_tree:
-        print(field)
         field['parentIndex'] = 0 if field['parentIndex'] == None else field['parentIndex'] + 1
         if 'childIndex' in field and field['childIndex']:
             field['childIndex'] = field['childIndex'] +  1
@@ -124,7 +120,6 @@ def create(current_user):
 
     # loads the document model
     document_model = DocumentModel.query.get(8)
-    print(document_model)
     if not document_model:
         return jsonify({'message': 'Document model is missing.'}), 404
 

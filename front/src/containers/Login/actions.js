@@ -30,8 +30,6 @@ export const login = (email, password) => {
         // Change axios 'Authorization' header
         axios.defaults.headers.common['X-Auth-Token'] = token
 
-        console.log(user)
-
         // Change reducer
         dispatch(changeIsAuthenticated(true, token))
         dispatch(changeUser(user))
