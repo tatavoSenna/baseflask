@@ -5,13 +5,13 @@ import {
   CHANGE_ANSWER,
   CHANGE_QUESTION,
   GET_DECISION_TREE_CALL_SUCCEEDED,
-  CHANGE_LOGS,
   LOADING_STARTED,
   LOADING_FINISHED,
   NEW_DOCUMENT_CALL_SUCCEEDED,
   NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
   GET_DOCUMENT_MODELS_CALL_SUCCEEDED,
-  CANCEL_NEW_DOCUMENT
+  GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
+  CANCEL_NEW_DOCUMENT,
 } from './actions'
 
 import { findChildren } from './constants'
@@ -57,7 +57,7 @@ export default function (state = {
       return { ...state, questions, question: 0, document, isCreating: true, }
     case GET_DOCUMENT_MODELS_CALL_SUCCEEDED:
       return { ...state, models: action.payload }
-    case CHANGE_LOGS:
+    case GET_DOCUMENTS_LIST_CALL_SUCCEEDED:
       return { ...state, logs: action.payload }
     case LOADING_STARTED:
       return {...state, loading: true}

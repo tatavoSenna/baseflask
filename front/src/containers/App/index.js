@@ -35,7 +35,6 @@ class App extends Component {
     const { isAuthenticated, fetchDocumentModels, fetchDocuments } = this.props
     const { isAuthenticated: nextIsAuthenticated } = nextProps
 
-    console.log('teste')
     if (!isAuthenticated && nextIsAuthenticated) {
       fetchDocumentModels()
       fetchDocuments() 
@@ -120,18 +119,40 @@ class App extends Component {
                 {!isCreating &&
                   <div className="app__logs">
                     <h3>Documentos</h3>
-                    {logs.map(({ id, name, filename, created_at }) => (
+                    <div
+                        className="app__log">
+                        <div>
+                          <p>Título</p>
+                        </div>
+                        <div>
+                          <p>Criado por</p>
+                        </div>
+                        <div>
+                          <p>Data de Criação</p>
+                        </div>
+                        <div>
+                          <p>Ações</p>
+                        </div>
+                      </div>
+                    {logs.map(({ id, title, user, created_at }) => (
                       <div
                         key={id}
                         className="app__log">
                         <div>
-                          <p>{name}</p>
-                          <p>{formatDate(created_at, true)}</p>
+                          <p>{title}</p>
                         </div>
-                        <Button
-                          children={'Recriar'}
-                          onClick={() => { this.createDocumentButtonPressed(createDocument, document, questions, filename) }}>  
-                        </Button>
+                        <div>
+                          <p>{user.name + user.surname}</p>
+                        </div>
+                        <div>
+                          <p>{formatDate(created_at, false)}</p>
+                        </div>
+                        <div>
+                          <Button
+                            children={'Download'}
+                            onClick={() => {  }}>  
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>

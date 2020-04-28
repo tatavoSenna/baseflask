@@ -13,11 +13,12 @@ export const CHANGE_IS_SIDE_BAR_ACTIVED = 'change_is_side_bar_actived'
 export const CHANGE_ANSWER = 'change_answer'
 export const CHANGE_QUESTION = 'change_question'
 export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
+
+// load initial data - documents and models
 export const GET_DOCUMENTS_LIST_CALL_SUCCEEDED = 'get_documents_list_call_succeeded'
 export const GET_DOCUMENTS_LIST_CALL_FAILED = 'get_documents_list_call_failed'
 export const GET_DOCUMENT_MODELS_CALL_SUCCEEDED = 'get_document_models_call_succeeded'
 export const GET_DOCUMENT_MODELS_CALL_FAILED = 'get_document_models_call_failed'
-export const CHANGE_LOGS = 'change_logs'
 
 // global loading indicator control
 export const LOADING_FINISHED = "loading_finished"
@@ -68,13 +69,6 @@ export const changeQuestion = (question) => {
   }
 }
 
-export const changeLogs = (logs) => {
-  return {
-    type: CHANGE_LOGS,
-    payload: logs
-  }
-}
-
 export const newDocumentFromModel = (document_model) => {
   return {
     type: SHOW_NEW_DOCUMENT_FORM,
@@ -83,11 +77,9 @@ export const newDocumentFromModel = (document_model) => {
 }
 
 export const fetchDocumentModels = () => {
-  console.log('cheguei')
   return dispatch => {
     axios.get('/models')
       .then(response => {
-        console.log(data)
         const { data } = response
         if(!_.isEmpty(data)) {
           dispatch({
@@ -107,16 +99,21 @@ export const fetchDocumentModels = () => {
 
 export const fetchDocuments = () => {
   return dispatch => {
-    axios.get('/documents')
+    axios.get('/documents/')
       .then(response => {
         const { data } = response
-
         if(!_.isEmpty(data)) {
-          dispatch(changeLogs(data))
+          dispatch({
+            type: GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
+            payload: data
+          })
         }
       })
       .catch(e => {
-        console.log(e)
+        dispatch({
+          type: GET_DOCUMENTS_LIST_CALL_FAILED,
+          payload: e
+        })
       })
   }
 }

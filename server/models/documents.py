@@ -24,6 +24,7 @@ class Document(db.Model):
     document_model_id = db.Column(db.Integer, db.ForeignKey('document_model.id'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     versions = relationship('DocumentVersion', back_populates='document')
+    user = relationship('User')
 
 class DocumentVersion(db.Model):
     __tablename__ = 'document_version'
