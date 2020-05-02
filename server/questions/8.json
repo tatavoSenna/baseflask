@@ -195,7 +195,7 @@
       "name_variable": "witness_name_1",
       "anchor_string":"Testemunhas:",
       "anchor_x_offset": "0",
-      "anchor_y_offset": "0.3"
+      "anchor_y_offset": "0.2"
     }
 },
   {
@@ -240,8 +240,8 @@
     "docusign_data": {
       "name_variable": "witness_name_2",
       "anchor_string":"Testemunhas:",
-      "anchor_x_offset": "1",
-      "anchor_y_offset": "0.3"
+      "anchor_x_offset": "3.2",
+      "anchor_y_offset": "0.2"
     }
 }
 ]

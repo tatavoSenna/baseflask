@@ -1,10 +1,7 @@
 // Libs
 import axios from 'axios'
 import _ from 'lodash'
-import fileDownload from 'js-file-download'
 
-// Constants
-import { findChildren } from './constants'
 
 // Actions Types
 export const CHANGE_USER = 'change_user'
@@ -14,11 +11,15 @@ export const CHANGE_ANSWER = 'change_answer'
 export const CHANGE_QUESTION = 'change_question'
 export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
 
-// load initial data - documents and models
-export const GET_DOCUMENTS_LIST_CALL_SUCCEEDED = 'get_documents_list_call_succeeded'
-export const GET_DOCUMENTS_LIST_CALL_FAILED = 'get_documents_list_call_failed'
+// document list
 export const GET_DOCUMENT_MODELS_CALL_SUCCEEDED = 'get_document_models_call_succeeded'
 export const GET_DOCUMENT_MODELS_CALL_FAILED = 'get_document_models_call_failed'
+export const GET_DOCUMENT_DOWNLOAD_URL = 'get_document_download_url'
+export const REQUEST_DOCUMENT_SIGN = "request_document_sign"
+
+//document models list
+export const GET_DOCUMENTS_LIST_CALL_SUCCEEDED = 'get_documents_list_call_succeeded'
+export const GET_DOCUMENTS_LIST_CALL_FAILED = 'get_documents_list_call_failed'
 
 // global loading indicator control
 export const LOADING_FINISHED = "loading_finished"
@@ -135,5 +136,19 @@ export const finishWithoutDownload = () => {
 export const cancelNewDocument = () => {
   return {
     type: CANCEL_NEW_DOCUMENT
+  }
+}
+
+export const downloadDocument = (document_id) => {
+  return {
+    type: GET_DOCUMENT_DOWNLOAD_URL,
+    payload: document_id
+  }
+}
+
+export const signDocument = (document_id) => {
+  return {
+    type: REQUEST_DOCUMENT_SIGN,
+    payload: document_id
   }
 }

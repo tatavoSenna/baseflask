@@ -10,7 +10,9 @@ import {
     NEW_DOCUMENT_CALL_FAILED,
     SHOW_NEW_DOCUMENT_FORM,
     GET_DECISION_TREE_CALL_SUCCEEDED,
-    GET_DECISION_TREE_CALL_FAILED
+    GET_DECISION_TREE_CALL_FAILED,
+    GET_DOCUMENT_DOWNLOAD_URL,
+    REQUEST_DOCUMENT_SIGN
 } from '../containers/App/actions'
 
 function* sendNewDocumentToServer(action) {
@@ -45,9 +47,39 @@ function* loadNewDocumentTemplateFromServer(action){
     yield put({type: LOADING_FINISHED})
 }
 
+function* downloadDocument(action){
+    yield put({type: LOADING_STARTED})
+    const document_id = action.payload
+            try {
+        const url_response = yield axios.get(`/documents/${document_id}/download`)
+        const document_url = url_response.data
+        const file_data_response = yield axios.get(document_url, { responseType: 'arraybuffer' })
+        const {data} = file_data_response   
+        fileDownload(data, `${document_id}.docx`)
+    }
+    catch (e) { 
+        console.log(e)
+    }
+    yield put({type: LOADING_FINISHED})
+}
+
+function* signDocument(action){
+    yield put({type: LOADING_STARTED})
+    const document_id = action.payload
+    try {
+        yield axios.get(`/documents/${document_id}/sign`)
+    }
+    catch (e) {
+        console.log(e)
+    }
+    yield put({type: LOADING_FINISHED})
+}
+
 function* documentSaga() {
-  yield takeLatest(NEW_DOCUMENT_API_CALL, sendNewDocumentToServer);
-  yield takeLatest(SHOW_NEW_DOCUMENT_FORM, loadNewDocumentTemplateFromServer);
+    yield takeLatest(NEW_DOCUMENT_API_CALL, sendNewDocumentToServer);
+    yield takeLatest(SHOW_NEW_DOCUMENT_FORM, loadNewDocumentTemplateFromServer);
+    yield takeLatest(GET_DOCUMENT_DOWNLOAD_URL, downloadDocument);
+    yield takeLatest(REQUEST_DOCUMENT_SIGN, signDocument);
 }
 
 export default documentSaga;

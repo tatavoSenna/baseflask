@@ -1,56 +1,73 @@
 // Libs
-import { connect } from 'react-redux'
-import LoadingOverlay from 'react-loading-overlay'
-import { File } from 'react-feather'
-import axios from 'axios';
-import 'react-dialog/css/index.css'
+import { connect } from "react-redux";
+import LoadingOverlay from "react-loading-overlay";
+import { File, FileText } from "react-feather";
+import axios from "axios";
+import "react-dialog/css/index.css";
 
 // Styles
-import './index.less'
+import "./index.less";
 
 // Containers or components
-import Login from '../Login'
-import Button from '../../components/Button'
-import Header from '../../components/Header'
-import Question from '../../components/Question'
-import React, { Component } from 'react'
+import Login from "../Login";
+import Button from "../../components/Button";
+import Header from "../../components/Header";
+import Question from "../../components/Question";
+import React, { Component } from "react";
 
 // Actions
-import { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, newDocumentFromModel, fetchDocumentModels, fetchDocuments, createDocument, finishWithoutDownload, cancelNewDocument } from './actions'
+import {
+  changeIsAuthenticated,
+  changeIsSideBarActived,
+  changeAnswer,
+  changeQuestion,
+  newDocumentFromModel,
+  fetchDocumentModels,
+  fetchDocuments,
+  createDocument,
+  finishWithoutDownload,
+  cancelNewDocument,
+  downloadDocument,
+  signDocument
+} from "./actions";
 
 // Constants
-import { formatDate } from './constants'
+import { formatDate } from "./constants";
 
 class App extends Component {
-
   constructor(props) {
-    super(props)
-    this.createDocumentButtonPressed = this.createDocumentButtonPressed.bind(this)
-    this.finishWithoutDownloadButtonPressed = this.finishWithoutDownloadButtonPressed.bind(this)
-    this.cancelNewDocumentButtonPressed = this.cancelNewDocumentButtonPressed.bind(this)
-    axios.defaults.headers.common['X-Auth-Token'] = this.props.token
+    super(props);
+    this.createDocumentButtonPressed = this.createDocumentButtonPressed.bind(
+      this
+    );
+    this.finishWithoutDownloadButtonPressed = this.finishWithoutDownloadButtonPressed.bind(
+      this
+    );
+    this.cancelNewDocumentButtonPressed = this.cancelNewDocumentButtonPressed.bind(
+      this
+    );
+    axios.defaults.headers.common["X-Auth-Token"] = this.props.token;
   }
   componentWillReceiveProps(nextProps) {
-
-    const { isAuthenticated, fetchDocumentModels, fetchDocuments } = this.props
-    const { isAuthenticated: nextIsAuthenticated } = nextProps
+    const { isAuthenticated, fetchDocumentModels, fetchDocuments } = this.props;
+    const { isAuthenticated: nextIsAuthenticated } = nextProps;
 
     if (!isAuthenticated && nextIsAuthenticated) {
-      fetchDocumentModels()
-      fetchDocuments() 
+      fetchDocumentModels();
+      fetchDocuments();
     }
   }
 
   createDocumentButtonPressed(createDocument, document, questions, filename) {
-    createDocument(document, questions, filename)
+    createDocument(document, questions, filename);
   }
 
   finishWithoutDownloadButtonPressed(finishWithoutDownload) {
-    finishWithoutDownload()
+    finishWithoutDownload();
   }
 
-  cancelNewDocumentButtonPressed(cancelNewDocument){
-    cancelNewDocument()
+  cancelNewDocumentButtonPressed(cancelNewDocument) {
+    cancelNewDocument();
   }
 
   render() {
@@ -73,71 +90,95 @@ class App extends Component {
       loading,
       isCreating,
       new_document_download_dialog_open,
-      cancelNewDocument
-    } = this.props
+      cancelNewDocument,
+      downloadDocument,
+      signDocument
+    } = this.props;
 
     // TODO: temporary solution for filename not being send from server
-    let filename = 'documento'
+    let filename = "documento";
 
     return (
       <div>
         <LoadingOverlay
           active={loading}
           spinner
-          text={<p style={{color: '#fff'}}>Aguarde enquanto geramos o contrato...</p>}
+          text={
+            <p style={{ color: "#fff" }}>
+              Aguarde enquanto geramos o contrato...
+            </p>
+          }
         >
-          {isAuthenticated ?
+          {isAuthenticated ? (
             <div className="app">
-              {new_document_download_dialog_open && 
-              <div className="dialog__wrapper">
-                <div className="dialog__overlay" />
-                <div className="dialog__content">
-                  Contrato Gerado com Sucesso!
-                  <Button
-                    children={'continuar'}
-                    onClick={() => { this.finishWithoutDownloadButtonPressed(finishWithoutDownload) } }>
-                  </Button>
+              {new_document_download_dialog_open && (
+                <div className="dialog__wrapper">
+                  <div className="dialog__overlay" />
+                  <div className="dialog__content">
+                    Contrato Gerado com Sucesso!
+                    <Button
+                      children={"continuar"}
+                      onClick={() => {
+                        this.finishWithoutDownloadButtonPressed(
+                          finishWithoutDownload
+                        );
+                      }}
+                    ></Button>
+                  </div>
                 </div>
-              </div>
-              }
+              )}
               <div className="app__wrapper">
                 <Header
                   user={user}
                   isSideBarActived={isSideBarActived}
-                  handleSideBar={() => changeIsSideBarActived(!isSideBarActived)}
-                  handleLogout={() => changeIsAuthenticated(false)} />
-                {isCreating &&
+                  handleSideBar={() =>
+                    changeIsSideBarActived(!isSideBarActived)
+                  }
+                  handleLogout={() => changeIsAuthenticated(false)}
+                />
+                {isCreating && (
                   <Question
                     number={question + 1}
                     question={questions[question]}
-                    handleNext={index => changeQuestion(index)}
-                    handlePrevious={index => changeQuestion(index)}
-                    handleChange={answer => changeAnswer(question, answer)}
-                    handleCreate={() => this.createDocumentButtonPressed(createDocument, document, questions, filename)}
-                    handleCancel={() => this.cancelNewDocumentButtonPressed(cancelNewDocument)} />
-                }
-                {!isCreating &&
+                    handleNext={(index) => changeQuestion(index)}
+                    handlePrevious={(index) => changeQuestion(index)}
+                    handleChange={(answer) => changeAnswer(question, answer)}
+                    handleCreate={() =>
+                      this.createDocumentButtonPressed(
+                        createDocument,
+                        document,
+                        questions,
+                        filename
+                      )
+                    }
+                    handleCancel={() =>
+                      this.cancelNewDocumentButtonPressed(cancelNewDocument)
+                    }
+                  />
+                )}
+                {!isCreating && (
                   <div className="app__logs">
                     <h3>Documentos</h3>
-                    <div
-                        className="app__log">
-                        <div>
-                          <p>Título</p>
-                        </div>
-                        <div>
-                          <p>Criado por</p>
-                        </div>
-                        <div>
-                          <p>Data de Criação</p>
-                        </div>
-                        <div>
-                          <p>Ações</p>
-                        </div>
+                    <div className="app__log">
+                      <div/>
+                      <div>
+                        <p>Título</p>
                       </div>
+                      <div>
+                        <p>Criado por</p>
+                      </div>
+                      <div>
+                        <p>Data de Criação</p>
+                      </div>
+                      <div>
+                        <p>Ações</p>
+                      </div>
+                    </div>
                     {logs.map(({ id, title, user, created_at }) => (
-                      <div
-                        key={id}
-                        className="app__log">
+                      <div key={id} className="app__log">
+                        <div>
+                          <FileText/>
+                        </div>
                         <div>
                           <p>{title}</p>
                         </div>
@@ -149,27 +190,38 @@ class App extends Component {
                         </div>
                         <div>
                           <Button
-                            children={'Download'}
-                            onClick={() => {  }}>  
-                          </Button>
+                            children={"Download"}
+                            onClick={() => { downloadDocument(id) }}
+                          ></Button>
+                          <Button
+                            children={"Assinar"}
+                            onClick={() => { signDocument(id) }}
+                          ></Button>
                         </div>
                       </div>
                     ))}
                   </div>
-                }
+                )}
               </div>
-              <div className={
-                isSideBarActived ?
-                  "app__side-bar app__side-bar--active" :
-                  "app__side-bar"
-              }>
+              <div
+                className={
+                  isSideBarActived
+                    ? "app__side-bar app__side-bar--active"
+                    : "app__side-bar"
+                }
+              >
                 <div className="app__documents">
                   <h3>Selecione um modelo</h3>
                   {models.map(({ id, name }, idx) => (
                     <div
                       key={id}
-                      className={id === document ? "app__document app__document--active" : "app__document"}
-                      onClick={() => newDocumentFromModel(id)}>
+                      className={
+                        id === document
+                          ? "app__document app__document--active"
+                          : "app__document"
+                      }
+                      onClick={() => newDocumentFromModel(id)}
+                    >
                       <File size={20} />
                       <p key={id}>{name}</p>
                     </div>
@@ -177,17 +229,17 @@ class App extends Component {
                 </div>
               </div>
             </div>
-            : 
+          ) : (
             <Login>Login</Login>
-          }
+          )}
         </LoadingOverlay>
       </div>
-    )
+    );
   }
 }
 
 App = connect(
-  state => {
+  (state) => {
     return {
       user: state.app.user,
       isAuthenticated: state.app.isAuthenticated,
@@ -202,10 +254,24 @@ App = connect(
       token: state.app.token,
       fileURL: state.app.fileURL,
       isViewing: state.app.isViewing,
-      new_document_download_dialog_open: state.app.new_document_download_dialog_open 
-    }
+      new_document_download_dialog_open:
+        state.app.new_document_download_dialog_open,
+    };
   },
-  { changeIsAuthenticated, changeIsSideBarActived, changeAnswer, changeQuestion, newDocumentFromModel, fetchDocuments, fetchDocumentModels, fetchDocuments, createDocument, finishWithoutDownload, cancelNewDocument }
-)(App)
+  {
+    changeIsAuthenticated,
+    changeIsSideBarActived,
+    changeAnswer,
+    changeQuestion,
+    newDocumentFromModel,
+    fetchDocumentModels,
+    fetchDocuments,
+    createDocument,
+    finishWithoutDownload,
+    cancelNewDocument,
+    downloadDocument,
+    signDocument
+  }
+)(App);
 
-export default App
+export default App;
