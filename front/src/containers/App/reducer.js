@@ -8,7 +8,6 @@ import {
   LOADING_STARTED,
   LOADING_FINISHED,
   NEW_DOCUMENT_CALL_SUCCEEDED,
-  NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
   GET_DOCUMENT_MODELS_CALL_SUCCEEDED,
   GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
   CANCEL_NEW_DOCUMENT,
@@ -26,10 +25,7 @@ export default function (state = {
   models: [],
   logs: [],
   loading: false,
-  isCreating: false,
-  isViewing: false,
-  fileURL: null,
-  new_document_download_dialog_open: false
+  isCreating: false
 }, action) {
   switch (action.type) {
     case CHANGE_USER:
@@ -64,10 +60,7 @@ export default function (state = {
     case LOADING_FINISHED:
       return { ...state, loading: false}
     case NEW_DOCUMENT_CALL_SUCCEEDED:
-      const { fileURL } = action.payload
-      return {...state, fileURL, isCreating:false, new_document_download_dialog_open: true }
-    case NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD:
-      return {...state, new_document_download_dialog_open:action.payload}
+      return {...state, isCreating:false}
     case CANCEL_NEW_DOCUMENT:
       return {...state, isCreating: false}
     default:

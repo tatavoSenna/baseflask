@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import LoadingOverlay from "react-loading-overlay";
 import { File, FileText } from "react-feather";
 import axios from "axios";
-import "react-dialog/css/index.css";
 
 // Styles
 import "./index.less";
@@ -13,6 +12,7 @@ import Login from "../Login";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import Question from "../../components/Question";
+import Dialog from "../../components/Dialog"
 import React, { Component } from "react";
 
 // Actions
@@ -25,7 +25,6 @@ import {
   fetchDocumentModels,
   fetchDocuments,
   createDocument,
-  finishWithoutDownload,
   cancelNewDocument,
   downloadDocument,
   signDocument
@@ -37,15 +36,6 @@ import { formatDate } from "./constants";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.createDocumentButtonPressed = this.createDocumentButtonPressed.bind(
-      this
-    );
-    this.finishWithoutDownloadButtonPressed = this.finishWithoutDownloadButtonPressed.bind(
-      this
-    );
-    this.cancelNewDocumentButtonPressed = this.cancelNewDocumentButtonPressed.bind(
-      this
-    );
     axios.defaults.headers.common["X-Auth-Token"] = this.props.token;
   }
   componentWillReceiveProps(nextProps) {
@@ -60,10 +50,6 @@ class App extends Component {
 
   createDocumentButtonPressed(createDocument, document, questions, filename) {
     createDocument(document, questions, filename);
-  }
-
-  finishWithoutDownloadButtonPressed(finishWithoutDownload) {
-    finishWithoutDownload();
   }
 
   cancelNewDocumentButtonPressed(cancelNewDocument) {
@@ -86,10 +72,8 @@ class App extends Component {
       changeQuestion,
       newDocumentFromModel,
       createDocument,
-      finishWithoutDownload,
       loading,
       isCreating,
-      new_document_download_dialog_open,
       cancelNewDocument,
       downloadDocument,
       signDocument
@@ -111,22 +95,7 @@ class App extends Component {
         >
           {isAuthenticated ? (
             <div className="app">
-              {new_document_download_dialog_open && (
-                <div className="dialog__wrapper">
-                  <div className="dialog__overlay" />
-                  <div className="dialog__content">
-                    Contrato Gerado com Sucesso!
-                    <Button
-                      children={"continuar"}
-                      onClick={() => {
-                        this.finishWithoutDownloadButtonPressed(
-                          finishWithoutDownload
-                        );
-                      }}
-                    ></Button>
-                  </div>
-                </div>
-              )}
+              <Dialog/>
               <div className="app__wrapper">
                 <Header
                   user={user}
@@ -267,7 +236,6 @@ App = connect(
     fetchDocumentModels,
     fetchDocuments,
     createDocument,
-    finishWithoutDownload,
     cancelNewDocument,
     downloadDocument,
     signDocument

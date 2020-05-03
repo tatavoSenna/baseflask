@@ -71,13 +71,13 @@ const Question = ({ number, question, length, handleNext, handlePrevious, handle
           onClick={handleCreate}>Criar
         </Button>
       }
+      {number !== 1 &&
+        <p className="question__previous" onClick={() => handlePrevious(question.parentIndex)}>Voltar</p>
+      }
       <Button
         className="button--secondary"
         onClick={handleCancel}>Cancelar
       </Button>
-      {number !== 1 &&
-        <p className="question__previous" onClick={() => handlePrevious(question.parentIndex)}>Voltar</p>
-      }
     </div>
   )
 }

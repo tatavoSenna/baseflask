@@ -127,7 +127,6 @@ def create(current_user):
     doc = DocxTemplate(f'template/{document_model_id}.docx')
 
     context = {}
-    signers_data = []
     title = document_model.name
 
     for question in questions:
@@ -147,92 +146,12 @@ def create(current_user):
             if variable == 'title':
                 title = answer
 
-            # Look for signers
-            if variable.find('signer') >= 0:
-                if 'docusign_data' in question:
-                    signer_data = question['docusign_data']
-                    signer_data['name'] = context[question['docusign_data']['name_variable']]
-                    signer_data['email'] = question['answer']
-
-                    # TODO: hardcoded decisions
-                    if variable == 'witness_1_signer':
-                        signer_data['anchor_x_offset'] = '0'
-                        signer_data['anchor_y_offset'] = '0.2'
-                    if variable == 'witness_2_signer':
-                        signer_data['anchor_x_offset'] = '3.2'
-                        signer_data['anchor_y_offset'] = '0.2'
-                    
-                    signers_data.append(signer_data)
-
     context = add_variables(context)
 
     # generate document template with decision tree variables to a memory buffer
     doc.render(context)
     document_buffer = io.BytesIO()
     doc.save(document_buffer)
-    document_buffer.seek(0)
-
-    # try:
-    #     document_buffer = io.BytesIO()
-    #     s3_client.download_fileobj('lawing-documents', f'{s3_object_key}.docx', document_buffer)
-    # except ClientError as e:
-    #     print(e)
-
-    document_buffer.seek(0)
-    base64_document = base64.b64encode(document_buffer.read()).decode('ascii')
-
-    if len(signers_data) > 0:
-
-        # create the DocuSign document object
-        document = DocusignDocument(  
-            document_base64 = base64_document, 
-            name = 'Acordo Procon',
-            file_extension = 'docx',
-            document_id = 1
-        )
-
-        signers = []
-        for index, signer_data in enumerate(signers_data):
-            # Create the signer recipient model 
-            signer = Signer( # The signer
-                email = signer_data['email'], name = signer_data['name'], recipient_id = str(index + 1), routing_order = "1")
-
-            # Create a sign_here tab (field on the document)
-            sign_here = SignHere( # DocuSign SignHere field/tab 
-                recipient_id = '1', tab_label = 'assine aqui',
-                anchor_string = signer_data['anchor_string'],
-                anchor_x_offset = signer_data['anchor_x_offset'],
-                anchor_y_offset = signer_data['anchor_y_offset'],
-                anchor_ignore_if_not_present = "false",
-                anchor_units = "inches"
-                )
-
-            # Add the tabs model (including the sign_here tab) to the signer
-            signer.tabs = Tabs(sign_here_tabs = [sign_here]) # The Tabs object wants arrays of the different field/tab types
-
-            signers.append(signer)
-
-        # Next, create the top level envelope definition and populate it.
-        envelope_definition = EnvelopeDefinition(
-            email_subject = "Acordo Procon",
-            documents = [document], # The order in the docs array determines the order in the envelope
-            recipients = Recipients(signers = signers), # The Recipients object wants arrays for each recipient type
-            status = "sent" # requests that the envelope be created and sent.
-        )
-        
-        # Ready to go: send the envelope request
-        api_client = ApiClient()
-        api_client.host = 'https://demo.docusign.net/restapi'
-        api_client.set_default_header(
-            "Authorization", 
-            "Bearer " + os.getenv('DOCUSIGN_TOKEN')
-            )
-
-        envelope_api = EnvelopesApi(api_client)
-        try:
-            results = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
-        except Exception as e:
-            logging.error(e)
 
     # save generated document to an s3 
     s3_client = boto3.client('s3')

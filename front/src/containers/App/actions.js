@@ -1,6 +1,7 @@
 // Libs
 import axios from 'axios'
 import _ from 'lodash'
+import { OPEN_DIALOG } from '../../components/Dialog/actions'
 
 
 // Actions Types
@@ -31,7 +32,6 @@ export const GET_DECISION_TREE_CALL_FAILED = "get_decision_tree_call_failed"
 export const NEW_DOCUMENT_API_CALL = "new_document_api_call"  
 export const NEW_DOCUMENT_CALL_FAILED = "new_document_call_failed"
 export const NEW_DOCUMENT_CALL_SUCCEEDED = "new_document_call_succeeded"
-export const NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD = "new_document_finish_without_download"
 export const CANCEL_NEW_DOCUMENT = "cancel_new_document"
 
 export const changeUser = (user) => {
@@ -126,13 +126,6 @@ export const createDocument = (document, questions, filename) => {
   }
 }
 
-export const finishWithoutDownload = () => {
-  return {
-    type: NEW_DOCUMENT_FINISH_WITHOUT_DOWNLOAD,
-    payload: false
-  }
-}
-
 export const cancelNewDocument = () => {
   return {
     type: CANCEL_NEW_DOCUMENT
@@ -148,7 +141,15 @@ export const downloadDocument = (document_id) => {
 
 export const signDocument = (document_id) => {
   return {
-    type: REQUEST_DOCUMENT_SIGN,
-    payload: document_id
+    type: OPEN_DIALOG,
+    payload: {
+      message: "Requerer assinatura do Documento ?",
+      cancelLabel: "Cancelar",
+      actionLabel: "Confirmar",
+      actionData: {
+        type: REQUEST_DOCUMENT_SIGN,
+        payload: document_id
+      }
+    }
   }
 }
