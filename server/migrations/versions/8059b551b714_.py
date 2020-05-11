@@ -28,7 +28,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['document_id'], ['document.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.add_column('document', sa.Column('title', sa.String(length=255), nullable=False))
+    op.add_column('document', sa.Column('title', sa.String(length=255), nullable=True))
     op.drop_column('document', 'questions')
     # ### end Alembic commands ###
 
