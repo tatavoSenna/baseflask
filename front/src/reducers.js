@@ -7,7 +7,7 @@ import loginReducer from './containers/Login/reducer'
 import dialogReducer from './components/Dialog/reducer' 
 
 const reducers = combineReducers({
-  app: persistReducer({ key: 'app', storage, blacklist: ['loading', 'new_document_download_dialog_open'] }, appReducer),
+  app: persistReducer({ key: 'app', storage, blacklist: ['loading', 'logs'] }, appReducer),
   login: loginReducer,
   dialog: dialogReducer
 })

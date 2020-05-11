@@ -38,13 +38,12 @@ class App extends Component {
     super(props);
     axios.defaults.headers.common["X-Auth-Token"] = this.props.token;
   }
-  componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, fetchDocumentModels, fetchDocuments } = this.props;
-    const { isAuthenticated: nextIsAuthenticated } = nextProps;
-
-    if (!isAuthenticated && nextIsAuthenticated) {
+  componentDidMount(nextProps) {
+    const { fetchDocumentModels, fetchDocuments, logs } = this.props;
+    console.log('logs')
+    if (!logs.dataUpToDate) {
       fetchDocumentModels();
-      fetchDocuments();
+      fetchDocuments(1);
     }
   }
 
@@ -76,12 +75,17 @@ class App extends Component {
       isCreating,
       cancelNewDocument,
       downloadDocument,
-      signDocument
+      signDocument,
+      fetchDocuments
     } = this.props;
 
     // TODO: temporary solution for filename not being send from server
     let filename = "documento";
 
+    var pages = [];
+    for (let index = 1; index < logs.total / logs.per_page; index++) {
+      pages.push(index)
+    }
     return (
       <div>
         <LoadingOverlay
@@ -143,7 +147,7 @@ class App extends Component {
                         <p>Ações</p>
                       </div>
                     </div>
-                    {logs.map(({ id, title, user, created_at }) => (
+                    {logs.items.map(({ id, title, user, created_at }) => (
                       <div key={id} className="app__log">
                         <div>
                           <FileText/>
@@ -169,6 +173,15 @@ class App extends Component {
                         </div>
                       </div>
                     ))}
+                    <div className="app__logs__pagination__wrapper">
+                      <div className="app_logs_pages_buttons">
+                        {pages.map((pageNumber) => (
+                          <a key={pageNumber} onClick={() => {
+                            fetchDocuments(pageNumber)
+                          }}> {pageNumber == 1 ? pageNumber : '| ' + pageNumber + ' '} </a>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -220,11 +233,7 @@ App = connect(
       logs: state.app.logs,
       loading: state.app.loading,
       isCreating: state.app.isCreating,
-      token: state.app.token,
-      fileURL: state.app.fileURL,
-      isViewing: state.app.isViewing,
-      new_document_download_dialog_open:
-        state.app.new_document_download_dialog_open,
+      token: state.app.token
     };
   },
   {

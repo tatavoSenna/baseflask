@@ -2,8 +2,7 @@ import os
 import io
 import logging
 import base64
-from flask import Blueprint
-from flask import abort, jsonify
+from flask import request, Blueprint, abort, jsonify
 import boto3
 from botocore.exceptions import ClientError
 
@@ -18,8 +17,18 @@ documents_api = Blueprint('documents', __name__)
 @documents_api.route('/')
 @check_for_token
 def get_document_list(current_user):
-    client_documents_list = Document.query.filter_by(client_id=current_user['client_id']).order_by(desc(Document.created_at))
-    return jsonify(DocumentSerializer(many=True).dump(client_documents_list))
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 20))
+    except:
+        abort(400, "invalid parameters")
+    paginated_query = Document.query.filter_by(client_id=current_user['client_id']).order_by(desc(Document.created_at)).paginate(page=page, per_page=per_page)
+    return jsonify({
+        'page': paginated_query.page,
+        'per_page': paginated_query.per_page,
+        'total': paginated_query.total,
+        'items': DocumentSerializer(many=True).dump(paginated_query.items)
+    })
 
 @documents_api.route('/<int:document_id>/download')
 @check_for_token

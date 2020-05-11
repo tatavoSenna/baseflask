@@ -1,6 +1,7 @@
 import axios from 'axios'
 import fileDownload from 'js-file-download'
 import { put, takeLatest } from 'redux-saga/effects'
+import _ from 'lodash'
 
 import {
     LOADING_STARTED,
@@ -12,7 +13,10 @@ import {
     GET_DECISION_TREE_CALL_SUCCEEDED,
     GET_DECISION_TREE_CALL_FAILED,
     GET_DOCUMENT_DOWNLOAD_URL,
-    REQUEST_DOCUMENT_SIGN
+    REQUEST_DOCUMENT_SIGN,
+    LOAD_DOCUMENTS_LIST,
+    GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
+    GET_DOCUMENTS_LIST_CALL_FAILED
 } from '../containers/App/actions'
 import {
         OPEN_DIALOG,
@@ -106,6 +110,28 @@ function* signDocument(action){
     yield put({type: LOADING_FINISHED})
 }
 
+function* loadDocuments(action) {
+    const {page} = action.payload
+    yield put({ type: LOADING_STARTED })
+    try {
+        console.log(action.payload)
+        const response = yield axios.get('/documents/', { params: { per_page: 20, page } })
+        const { data } = response
+        if(!_.isEmpty(data)) {
+            yield put({
+                type: GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
+                payload: data
+            })
+        }
+    } catch (e) {
+        yield put({
+            type: GET_DOCUMENTS_LIST_CALL_FAILED,
+            payload: e
+        })
+    }
+    yield put({ type: LOADING_FINISHED })
+}
+
 function* dialogAction(action) {
     console.log(action.payload)
     const actionData = action.payload
@@ -119,6 +145,7 @@ function* documentSaga() {
     yield takeLatest(GET_DOCUMENT_DOWNLOAD_URL, downloadDocument);
     yield takeLatest(REQUEST_DOCUMENT_SIGN, signDocument);
     yield takeLatest(CLOSE_DIALOG_WITH_ACTION, dialogAction);
+    yield takeLatest(LOAD_DOCUMENTS_LIST, loadDocuments)
 }
 
 export default documentSaga;

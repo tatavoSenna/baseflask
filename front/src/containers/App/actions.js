@@ -12,13 +12,14 @@ export const CHANGE_ANSWER = 'change_answer'
 export const CHANGE_QUESTION = 'change_question'
 export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
 
-// document list
+// document models list
 export const GET_DOCUMENT_MODELS_CALL_SUCCEEDED = 'get_document_models_call_succeeded'
 export const GET_DOCUMENT_MODELS_CALL_FAILED = 'get_document_models_call_failed'
 export const GET_DOCUMENT_DOWNLOAD_URL = 'get_document_download_url'
 export const REQUEST_DOCUMENT_SIGN = "request_document_sign"
 
-//document models list
+//document list
+export const LOAD_DOCUMENTS_LIST = 'load_documents_list'
 export const GET_DOCUMENTS_LIST_CALL_SUCCEEDED = 'get_documents_list_call_succeeded'
 export const GET_DOCUMENTS_LIST_CALL_FAILED = 'get_documents_list_call_failed'
 
@@ -98,24 +99,10 @@ export const fetchDocumentModels = () => {
   }
 }
 
-export const fetchDocuments = () => {
-  return dispatch => {
-    axios.get('/documents/')
-      .then(response => {
-        const { data } = response
-        if(!_.isEmpty(data)) {
-          dispatch({
-            type: GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
-            payload: data
-          })
-        }
-      })
-      .catch(e => {
-        dispatch({
-          type: GET_DOCUMENTS_LIST_CALL_FAILED,
-          payload: e
-        })
-      })
+export const fetchDocuments = (page) => {
+  return {
+    type: LOAD_DOCUMENTS_LIST,
+    payload: {page}
   }
 }
 

@@ -10,11 +10,11 @@
 }
 
 .app__wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flext-start;
+  display: box;
   flex-grow: 1;
-  padding: 0 40px;
+  padding: 0 40px 0 40px;
+  overflow-y: scroll;
+  height: 100%;
 
   h1 {
     text-align: center;
@@ -156,6 +156,19 @@
       }
     }
   }
+
+  .app__logs__pagination__wrapper {
+    
+    display: flex;
+    justify-content: center;
+
+    .app_logs_pages_buttons {
+      padding: 30px 10px;
+      cursor: pointer;
+    }
+
+  }
+
 }
 
 @media (min-width: @screen-lg) {

@@ -23,7 +23,11 @@ export default function (state = {
   questions: [],
   document: '',
   models: [],
-  logs: [],
+  logs: {
+    items: [],
+    dataUpToDate: false,
+    lastUpdate: null
+  },
   loading: false,
   isCreating: false
 }, action) {
@@ -31,7 +35,17 @@ export default function (state = {
     case CHANGE_USER:
       return { ...state, user: action.payload }
     case CHANGE_IS_AUTHENTICATED:
-      return { ...state, isAuthenticated: action.payload.isAuthenticated, token: action.payload.token }
+      const { isAuthenticated, token } = action.payload
+      return {
+        ...state,
+        isAuthenticated,
+        token,
+        logs: {
+          items: [],
+          dataUpToDate: false,
+          lastUpdate: null
+        }
+       }
     case CHANGE_IS_SIDE_BAR_ACTIVED:
       return { ...state, isSideBarActived: action.payload }
     case CHANGE_ANSWER:
@@ -54,7 +68,8 @@ export default function (state = {
     case GET_DOCUMENT_MODELS_CALL_SUCCEEDED:
       return { ...state, models: action.payload }
     case GET_DOCUMENTS_LIST_CALL_SUCCEEDED:
-      return { ...state, logs: action.payload }
+      const newLogs = action.payload
+      return { ...state, logs: { ...newLogs, dataUpToDate: true, lastUpdate: Date.now() } }
     case LOADING_STARTED:
       return {...state, loading: true}
     case LOADING_FINISHED:
