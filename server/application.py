@@ -4,7 +4,7 @@ from flask import jsonify, request, send_file, current_app as application, bluep
 import boto3
 from botocore.exceptions import ClientError
 from docxtpl import DocxTemplate
-from app.requests import get_user, get_document_models, get_documents, create_document
+from app.controllers import get_user, get_document_models, get_documents, create_document
 from app.constants import months
 import io
 import json
@@ -17,9 +17,11 @@ from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, 
 from app.models.documents import DocumentModel
 from app.serializers.document_serializers import DocumentSerializer
 from app.documents.blueprint import documents_api
+from app.docusign.blueprint import docusign_api
 from app.auth.services import check_for_token
 
 application.register_blueprint(documents_api, url_prefix='/documents')
+application.register_blueprint(docusign_api, url_prefix='/docusign')
 
 def add_variables(context):
     # Add day, month and year
@@ -63,11 +65,6 @@ def documents(current_user):
     document_models = get_document_models(current_user['client_id'])
 
     return jsonify(document_models)
-
-
-    documents = get_documents(current_user['client_id'])
-
-    return jsonify(documents)
 
 
 @application.route('/questions', methods=['GET'])

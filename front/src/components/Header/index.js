@@ -12,8 +12,27 @@ const Header = ({ user, isSideBarActived, handleSideBar, handleLogout, children,
   <div className="header">
     <img className="header__logo" src={logo} alt="Logo" />
     <div>
-      <p>{user.name} {user.surname}</p>
-      <p>Bem vindo, <a onClick={handleLogout}>sair</a></p>
+    <p>
+        Bem vindo, {user.name} {user.surname}
+      </p>
+      <p>
+        <a
+          onClick={() => {
+            window.location.assign(
+              process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
+                "/auth?response_type=code&scope=signature&client_id=" +
+                process.env.REACT_APP_DOCUSIGN_INTEGRATION_KEY +
+                "&redirect_uri=" +
+                process.env.REACT_APP_DOCUSIGN_REDIRECT_URL
+            );
+          }}
+        >
+          Docusign Auth
+        </a>
+      </p>
+      <p>
+        <a onClick={handleLogout}>Sair</a>
+      </p>
     </div>
     <Menu
       className={isSideBarActived ? "header__menu header__menu--active" : "header__menu"}

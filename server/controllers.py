@@ -15,7 +15,7 @@ def get_user(email):
         "name": user.name,
         "surname": user.surname,
         "email": user.email,
-        "client_id": user.client_id,
+        "client_id": user.client_id
     }
 
     return data
@@ -67,7 +67,6 @@ def get_documents(client_id):
 
 
 def create_document(client_id, user_id, title, document_model_id, answers, filename):
-    data = []
     new_document = Document(
         user_id=user_id,
         client_id=client_id,

@@ -11,6 +11,7 @@ from app.auth.services import check_for_token
 from app.serializers.document_serializers import DocumentSerializer
 from sqlalchemy import desc
 from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document as DocusignDocument
+from app.docusign.services import get_token 
 
 documents_api = Blueprint('documents', __name__)
 
@@ -137,8 +138,10 @@ def request_signatures(current_user, document_id):
         api_client.host = 'https://demo.docusign.net/restapi'
         api_client.set_default_header(
             "Authorization", 
-            "Bearer " + os.getenv('DOCUSIGN_TOKEN')
+            "Bearer " + get_token(current_user)
             )
+
+        print(get_token(current_user))
 
         envelope_api = EnvelopesApi(api_client)
         try:

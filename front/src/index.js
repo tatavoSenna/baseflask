@@ -48,6 +48,19 @@ render(
     <BrowserRouter>
       <PersistGate persistor={persistor}> 
         <Route path='/' component={() => <App />} />
+        <Route
+          path="/docusign-token"
+          component={() => {
+            console.log(window.location.search)
+            axios
+              .get(`/docusign/token${window.location.search}`)
+              .then((response) => {
+                window.location.replace(process.env.REACT_APP_BASE_URL);
+              });
+            return <App />;
+          }}
+        />
+
       </PersistGate>
     </BrowserRouter>
   </Provider>,
