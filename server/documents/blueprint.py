@@ -2,16 +2,20 @@ import os
 import io
 import logging
 import base64
+import json
 from flask import request, Blueprint, abort, jsonify
 import boto3
 from botocore.exceptions import ClientError
+
+from app import db
 
 from app.models.documents import Document, DocumentVersion
 from app.auth.services import check_for_token
 from app.serializers.document_serializers import DocumentSerializer
 from sqlalchemy import desc
 from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document as DocusignDocument
-from app.docusign.services import get_token 
+from app.docusign.services import get_token
+from app.docusign.serializers import EnvelopeSerializer
 
 documents_api = Blueprint('documents', __name__)
 
@@ -141,18 +145,22 @@ def request_signatures(current_user, document_id):
             "Bearer " + get_token(current_user)
             )
 
-        print(get_token(current_user))
-
         envelope_api = EnvelopesApi(api_client)
         try:
-            envelope_summary = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
-            result = jsonify({"envelope_id": envelope_summary.envelope_id})
+            envelope = envelope_api.create_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_definition=envelope_definition)
         except Exception as e:
             logging.error(e)
-            result = jsonify({'message': 'Error accessing docusign api.'}), 400
+            return jsonify({'message': 'Error accessing docusign api.'}), 400
+
+        print(envelope)
+
+        # save envelope data on document
+        document = Document.query.get(document_id)
+        document.envelope = json.dumps(EnvelopeSerializer().dump(envelope))
+        db.session.commit()     
 
         # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)
 
-        return result
+        return jsonify(DocumentSerializer().dump(document))
     else :
         return jsonify({'message': 'No signers.'}), 400

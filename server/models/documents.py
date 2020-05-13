@@ -25,6 +25,7 @@ class Document(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     versions = relationship('DocumentVersion', back_populates='document')
     user = relationship('User')
+    envelope = db.Column(JSON, nullable=True)
 
 class DocumentVersion(db.Model):
     __tablename__ = 'document_version'
