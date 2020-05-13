@@ -16,7 +16,10 @@ export const SHOW_NEW_DOCUMENT_FORM = 'show_new_document_form'
 export const GET_DOCUMENT_MODELS_CALL_SUCCEEDED = 'get_document_models_call_succeeded'
 export const GET_DOCUMENT_MODELS_CALL_FAILED = 'get_document_models_call_failed'
 export const GET_DOCUMENT_DOWNLOAD_URL = 'get_document_download_url'
+
+// document signing 
 export const REQUEST_DOCUMENT_SIGN = "request_document_sign"
+export const DOCUMENT_SIGNATURE_REQUEST_SUCCEEDED = "document_signature_request_succeeded"
 
 //document list
 export const LOAD_DOCUMENTS_LIST = 'load_documents_list'

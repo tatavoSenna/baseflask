@@ -14,6 +14,7 @@ import {
     GET_DECISION_TREE_CALL_FAILED,
     GET_DOCUMENT_DOWNLOAD_URL,
     REQUEST_DOCUMENT_SIGN,
+    DOCUMENT_SIGNATURE_REQUEST_SUCCEEDED,
     LOAD_DOCUMENTS_LIST,
     GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
     GET_DOCUMENTS_LIST_CALL_FAILED
@@ -29,9 +30,10 @@ function* sendNewDocumentToServer(action) {
     yield put({type: LOADING_STARTED})
     try {
         const { payload } = action;
-        const new_document =  yield axios.post('/create', payload);
-        const document_id = new_document.data.id;
-        yield put({type: NEW_DOCUMENT_CALL_SUCCEEDED});
+        const response =  yield axios.post('/create', payload);
+        const newDocument = response.data
+        const document_id = newDocument.id;
+        yield put({type: NEW_DOCUMENT_CALL_SUCCEEDED, payload: { newDocument }});
         yield put ({type: OPEN_DIALOG, payload:{
             message: "Arquivo Gerado com Sucesso",
             cancelLabel: "Continuar",
@@ -86,11 +88,16 @@ function* signDocument(action){
     yield put({type: LOADING_STARTED})
     const document_id = action.payload
     try {
-        yield axios.get(`/documents/${document_id}/sign`)
+        const response = yield axios.get(`/documents/${document_id}/sign`)
+        const signingDocument = response.data
+        yield put({ 
+            type: DOCUMENT_SIGNATURE_REQUEST_SUCCEEDED,
+            payload: {signingDocument}
+        })
         yield put({
             type: OPEN_DIALOG,
             payload: {
-                message: "Processo de assintura iniciado via docusign",
+                message: "Processo de assinatura iniciado via docusign",
                 cancelLabel: "Continuar",
                 actionData: false,
             }

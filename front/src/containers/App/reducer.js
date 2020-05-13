@@ -11,6 +11,8 @@ import {
   GET_DOCUMENT_MODELS_CALL_SUCCEEDED,
   GET_DOCUMENTS_LIST_CALL_SUCCEEDED,
   CANCEL_NEW_DOCUMENT,
+  DOCUMENT_SIGNATURE_REQUEST_SUCCEEDED,
+  signDocument
 } from './actions'
 
 import { findChildren } from './constants'
@@ -75,7 +77,17 @@ export default function (state = {
     case LOADING_FINISHED:
       return { ...state, loading: false}
     case NEW_DOCUMENT_CALL_SUCCEEDED:
-      return {...state, isCreating:false}
+      const { newDocument } = action.payload
+      const newDocumentLogs = state.logs
+      newDocumentLogs.items.unshift(newDocument)
+      return {...state, isCreating:false, log:newDocumentLogs}
+    case DOCUMENT_SIGNATURE_REQUEST_SUCCEEDED:
+      const { signingDocument } = action.payload
+      const signingDocumentLogs = state.logs
+      const signingDocumentIndex = signingDocumentLogs.items.findIndex(
+        (currentValue, index, array) => currentValue.id === signingDocument.id)
+      signingDocumentLogs.items[signingDocumentIndex] = signingDocument
+      return {...state, logs: signingDocumentLogs}
     case CANCEL_NEW_DOCUMENT:
       return {...state, isCreating: false}
     default:

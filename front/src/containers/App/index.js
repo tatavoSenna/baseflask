@@ -148,9 +148,7 @@ class App extends Component {
                         <p>Ações</p>
                       </div>
                     </div>
-                    {logs.items.map(({ id, title, user, created_at, envelope }) => {
-                      console.log((envelope !== null && envelope.status === 'sent').toString())
-                      return (
+                    {logs.items.map(({ id, title, user, created_at, envelope }) => (
                       <div key={id} className="app__log">
                         <div>
                           <FileText/>
@@ -176,7 +174,7 @@ class App extends Component {
                           ></Button>
                         </div>
                       </div>
-                    )})}
+                    ))}
                     <div className="app__logs__pagination__wrapper">
                       <div className="app_logs_pages_buttons">
                         {pages.map((pageNumber) => (
