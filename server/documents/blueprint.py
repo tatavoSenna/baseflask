@@ -152,7 +152,7 @@ def request_signatures(current_user, document_id):
             logging.error(e)
             return jsonify({'message': 'Error accessing docusign api.'}), 400
 
-        print(envelope)
+
 
         # save envelope data on document
         document = Document.query.get(document_id)
