@@ -148,7 +148,9 @@ class App extends Component {
                         <p>Ações</p>
                       </div>
                     </div>
-                    {logs.items.map(({ id, title, user, created_at }) => (
+                    {logs.items.map(({ id, title, user, created_at, envelope }) => {
+                      console.log((envelope !== null && envelope.status === 'sent').toString())
+                      return (
                       <div key={id} className="app__log">
                         <div>
                           <FileText/>
@@ -168,12 +170,13 @@ class App extends Component {
                             onClick={() => { downloadDocument(id) }}
                           ></Button>
                           <Button
+                            disabled={envelope !== null && envelope.status === 'sent'}
                             children={"Assinar"}
                             onClick={() => { signDocument(id) }}
                           ></Button>
                         </div>
                       </div>
-                    ))}
+                    )})}
                     <div className="app__logs__pagination__wrapper">
                       <div className="app_logs_pages_buttons">
                         {pages.map((pageNumber) => (
