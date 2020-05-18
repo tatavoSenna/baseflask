@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header /> Snapshot testing 1`] = `
+<DocumentFragment>
+  <header
+    class="ant-layout-header site-layout-background"
+    style="padding: 0px;"
+  >
+    <ul
+      align="end"
+      class="ant-menu ant-menu-light ant-menu-root ant-menu-horizontal"
+      role="menu"
+    >
+      <li
+        class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu"
+        role="menuitem"
+        style="display: none;"
+      >
+        <div
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="ant-menu-submenu-title"
+          role="button"
+        >
+          <span>
+            ···
+          </span>
+          <i
+            class="ant-menu-submenu-arrow"
+          />
+        </div>
+      </li>
+      <li
+        class="ant-menu-item ant-menu-item-only-child"
+        role="menuitem"
+      >
+        Docusign connect
+      </li>
+      <li
+        class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu"
+        role="menuitem"
+        style="display: none;"
+      >
+        <div
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="ant-menu-submenu-title"
+          role="button"
+        >
+          <span>
+            ···
+          </span>
+          <i
+            class="ant-menu-submenu-arrow"
+          />
+        </div>
+      </li>
+      <li
+        class="ant-menu-item ant-menu-item-only-child"
+        role="menuitem"
+      >
+        Sair
+      </li>
+      <li
+        class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu"
+        role="menuitem"
+        style="visibility: hidden; position: absolute; display: none;"
+      >
+        <div
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="ant-menu-submenu-title"
+          role="button"
+        >
+          <span>
+            ···
+          </span>
+          <i
+            class="ant-menu-submenu-arrow"
+          />
+        </div>
+      </li>
+    </ul>
+  </header>
+</DocumentFragment>
+`;

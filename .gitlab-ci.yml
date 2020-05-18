@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 build_back:
     image:
@@ -13,3 +14,12 @@ build_back:
         - tags
 
         
+=======
+test:
+  stage: test
+  image: node:alpine
+  script:
+    - cd front && yarn
+    - yarn test:ci
+    - echo "Tests Succeeded"
+>>>>>>> refactor to create react app babel
