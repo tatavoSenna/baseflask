@@ -1,0 +1,49 @@
+image: ubuntu:18.04
+
+variables:
+    AWS_ACCESS_KEY_ID: AKIAIRXAMWKHW6GMRH7A
+    AWS_SECRET_ACCESS_KEY: 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
+
+before_script:
+    - apt-get update -y -qq
+
+    # install docker
+    - echo $USER
+    - apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y -qq
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - apt-get update -y -qq
+    - apt-get install docker-ce docker-ce-cli containerd.io -y -qq
+    - newgrp docker
+
+    
+    # install aws cli 2
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - apt-get install unzip -y -qq
+    - unzip awscliv2.zip
+    - ./aws/install
+
+    # login to amazon ecr
+    - aws ecr get-login-password --region sa-east-1 | docker login --username AWS --password-stdin 045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api
+
+    # install nvm
+    - apt-get install build-essential libssl-dev -y -qq
+    - curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh -o install_nvm.sh
+    - ./install_nvm.sh
+    - nvm install 10
+    - nvm use 10
+
+build_back:
+    script:
+        - cd server
+        - docker build . -t 045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api:latest
+        - docker push 045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api:latest
+
+
+build_front:
+    script:
+        - cd front
+        - npm i
+        - npm build
+        - aws s3 cp ./build/* s3://lawing.com.br --recursive
+        - aws cloudfront create-invalidation --distribution-id E7HT38TZITGHF --paths /*
