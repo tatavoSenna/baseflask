@@ -4,7 +4,7 @@ import { Layout } from 'antd'
 
 import Header from '../header'
 import SideBar from '../sidebar'
-import Footer from '../footer'
+// import Footer from '../footer'
 
 function Wrapper({ children }) {
 	return (
@@ -13,7 +13,7 @@ function Wrapper({ children }) {
 			<Layout>
 				<Header />
 				{children}
-				<Footer />
+				{/* <Footer /> */}
 			</Layout>
 		</Layout>
 	)
