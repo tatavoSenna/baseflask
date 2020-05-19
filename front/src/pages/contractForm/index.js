@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { listQuestion, awnser } from '~/states/modules/question'
 import Loader from '~/components/loader'
+import InputFactory from '~/components/inputFactory'
 
 function ContractForm() {
 	const dispatch = useDispatch()
@@ -42,17 +43,11 @@ function ContractForm() {
 					{questions
 						.filter((x) => x.value)
 						.map((question) => (
-							<Form.Item
+							<InputFactory
 								name={question.variable}
 								label={question.value}
-								hasFeedback
-								colon={false}
-								// rules={[
-								// 	{ required: true, message: 'Este campo é obrigatório!' },
-								// ]}
-							>
-								<Input />
-							</Form.Item>
+								type={question.type}
+							/>
 						))}
 
 					<Form.Item {...tailLayout}>
