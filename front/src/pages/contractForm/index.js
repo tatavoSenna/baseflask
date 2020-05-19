@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Form, Input, Button } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -7,6 +8,7 @@ import Loader from '~/components/loader'
 
 function ContractForm() {
 	const dispatch = useDispatch()
+	const history = useHistory()
 	const [form] = Form.useForm()
 	const { questions, loading } = useSelector(({ question }) => question)
 
@@ -16,7 +18,7 @@ function ContractForm() {
 
 	const onSubmit = (data) => {
 		// console.log(data)
-		dispatch(awnser({ data }))
+		dispatch(awnser({ data, history }))
 	}
 
 	const layout = {

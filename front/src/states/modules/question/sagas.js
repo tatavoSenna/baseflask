@@ -27,18 +27,19 @@ function* listQuestionSaga({ payload = {} }) {
 	}
 }
 
-function* awnserSaga() {
+function* awnserSaga({ payload }) {
+	const { history } = payload
 	const { question } = yield select()
 
-	console.log(question.questions)
-
+	
 	try {
 		const { data } = yield call(api.post, `/create`, {
 			document: 8,
 			questions: question.questions,
 		})
-		console.log(data)
+
 		yield put(awnserSuccess(data))
+		history.push('/contracts')
 	} catch (error) {
 		yield put(awnserFailure(error))
 	}

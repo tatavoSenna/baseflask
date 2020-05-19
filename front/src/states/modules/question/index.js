@@ -27,12 +27,19 @@ const { actions, reducer } = createSlice({
 			}),
 		awnser: (state, { payload }) =>
 			extend(state, {
-				questions: map(state.questions, (v) =>
-					assign({}, v, { answer: payload.data[v.variable] || '' })
+				questions: map(
+					state.questions,
+					(v) => assign({}, v, { answer: payload.data[v.variable] || '' }) // no v.value maybe a problem
 				),
+				loading: true,
 			}),
-		awnserSuccess: (state, { payload }) => state,
-		awnserFailure: (state, { payload }) => state,
+		awnserSuccess: (state, { payload }) => extend(state, {
+			loading: false,
+		}),
+		awnserFailure: (state, { payload }) => extend(state, {
+			loading: false,
+			error: payload.error,
+		}),
 	},
 })
 
