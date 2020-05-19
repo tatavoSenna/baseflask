@@ -22,7 +22,7 @@ function Head() {
 				defaultSelectedKeys={['2']}
 				align="end"
 				theme="dark">
-				<Item style={styles.logoBox}>
+				<Item style={styles.logoBox} onClick={() => history.push('/')}>
 					<img src={logo} alt="logo" style={{ width: '140px' }} />
 				</Item>
 				<Item

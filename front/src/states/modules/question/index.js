@@ -33,13 +33,15 @@ const { actions, reducer } = createSlice({
 				),
 				loading: true,
 			}),
-		awnserSuccess: (state, { payload }) => extend(state, {
-			loading: false,
-		}),
-		awnserFailure: (state, { payload }) => extend(state, {
-			loading: false,
-			error: payload.error,
-		}),
+		awnserSuccess: (state, { payload }) =>
+			extend(state, {
+				loading: false,
+			}),
+		awnserFailure: (state, { payload }) =>
+			extend(state, {
+				loading: false,
+				error: payload.error,
+			}),
 	},
 })
 
