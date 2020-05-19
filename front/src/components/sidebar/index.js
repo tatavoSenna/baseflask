@@ -36,6 +36,8 @@ function SideBar() {
 			style={{
 				position: 'absolute',
 				height: '100%',
+				backgroundColor: 'fff',
+				zIndex: '1',
 			}}>
 			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
 				<Menu.Item
