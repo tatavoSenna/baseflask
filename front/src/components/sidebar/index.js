@@ -9,12 +9,10 @@ import {
 	FileDoneOutlined,
 } from '@ant-design/icons'
 
-import logo from '~/assets/logo.svg'
-
 function SideBar() {
 	const history = useHistory()
 	const { pathname } = useLocation()
-	const [collapsed, setCollapsed] = useState(false)
+	const [collapsed, setCollapsed] = useState(true)
 
 	const onCollapse = (e) => {
 		setCollapsed(e)
@@ -23,15 +21,23 @@ function SideBar() {
 	const { SubMenu } = Menu
 	const { Sider } = Layout
 	return (
-		<Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-			<div style={styles.logoBox}>
-				<img
-					src={logo}
-					alt="logo"
-					style={{ width: collapsed ? '60px' : '140px' }}
-				/>
-			</div>
-			<Menu theme="dark" defaultSelectedKeys={[`${pathname}`]} mode="inline">
+		<Sider
+			collapsible
+			collapsed={collapsed}
+			onCollapse={onCollapse}
+			collapsedWidth={0}
+			defaultCollapsed={true}
+			zeroWidthTriggerStyle={{
+				top: '10px',
+				color: '#fff',
+				backgroundColor: '#001529',
+			}}
+			theme="light"
+			style={{
+				position: 'absolute',
+				height: '100%',
+			}}>
+			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
 				<Menu.Item
 					key="/"
 					icon={<HomeOutlined />}
@@ -59,15 +65,6 @@ function SideBar() {
 			</Menu>
 		</Sider>
 	)
-}
-
-const styles = {
-	logoBox: {
-		padding: '20px 10px',
-		alignItems: 'center',
-		display: 'flex',
-		justifyContent: 'center',
-	},
 }
 
 export default SideBar

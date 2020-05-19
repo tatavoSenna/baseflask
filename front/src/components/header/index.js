@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 
 import { logout } from '~/states/modules/session'
+import logo from '~/assets/logo.svg'
 
 function Head() {
 	const history = useHistory()
@@ -16,7 +17,14 @@ function Head() {
 	const { Item } = Menu
 	return (
 		<Layout.Header className="site-layout-background" style={styles.header}>
-			<Menu mode="horizontal" defaultSelectedKeys={['2']} align="end">
+			<Menu
+				mode="horizontal"
+				defaultSelectedKeys={['2']}
+				align="end"
+				theme="dark">
+				<Item style={styles.logoBox}>
+					<img src={logo} alt="logo" style={{ width: '140px' }} />
+				</Item>
 				<Item
 					key="setting:1"
 					onClick={() => {

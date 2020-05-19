@@ -31,7 +31,6 @@ function* awnserSaga({ payload }) {
 	const { history } = payload
 	const { question } = yield select()
 
-	
 	try {
 		const { data } = yield call(api.post, `/create`, {
 			document: 8,
