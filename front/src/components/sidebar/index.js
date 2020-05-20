@@ -14,6 +14,11 @@ function SideBar({ collapsed, onCollapse }) {
 	const history = useHistory()
 	const { pathname } = useLocation()
 
+	function handleGoTo(path) {
+		onCollapse(true)
+		return history.push(path)
+	}
+
 	const { SubMenu } = Menu
 	const { Sider } = Layout
 	return (
@@ -39,20 +44,20 @@ function SideBar({ collapsed, onCollapse }) {
 				<Menu.Item
 					key="/"
 					icon={<HomeOutlined />}
-					onClick={() => history.push('/')}>
+					onClick={() => handleGoTo('/')}>
 					Home
 				</Menu.Item>
 				<SubMenu key="sub1" icon={<FileOutlined />} title="Contratos">
 					<Menu.Item
 						key="/contracts"
 						icon={<FileDoneOutlined />}
-						onClick={() => history.push('/contracts')}>
+						onClick={() => handleGoTo('/contracts')}>
 						Contratos
 					</Menu.Item>
 					<Menu.Item
 						key="/addContracts"
 						icon={<FileAddOutlined />}
-						onClick={() => history.push('/addContracts')}>
+						onClick={() => handleGoTo('/addContracts')}>
 						Novo contrato
 					</Menu.Item>
 				</SubMenu>
