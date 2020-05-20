@@ -49,6 +49,9 @@ function Head() {
 const styles = {
 	header: {
 		padding: 0,
+		position: 'fixed',
+		zIndex: 1,
+		width: '100%',
 	},
 }
 

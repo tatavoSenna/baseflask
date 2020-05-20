@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { bool, func } from 'prop-types'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import {
@@ -9,14 +10,9 @@ import {
 	FileDoneOutlined,
 } from '@ant-design/icons'
 
-function SideBar() {
+function SideBar({ collapsed, onCollapse }) {
 	const history = useHistory()
 	const { pathname } = useLocation()
-	const [collapsed, setCollapsed] = useState(true)
-
-	const onCollapse = (e) => {
-		setCollapsed(e)
-	}
 
 	const { SubMenu } = Menu
 	const { Sider } = Layout
@@ -37,7 +33,7 @@ function SideBar() {
 				position: 'absolute',
 				height: '100%',
 				backgroundColor: 'fff',
-				zIndex: '1',
+				zIndex: 2,
 			}}>
 			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
 				<Menu.Item
@@ -67,6 +63,11 @@ function SideBar() {
 			</Menu>
 		</Sider>
 	)
+}
+
+SideBar.propTypes = {
+	onCollapse: func.isRequired,
+	collapsed: bool.isRequired,
 }
 
 export default SideBar
