@@ -5,7 +5,7 @@ import { Breadcrumb } from 'antd'
 function BreadCrumb({ current, parent }) {
 	const { Item } = Breadcrumb
 	return (
-		<Breadcrumb style={{ margin: '16px 0' }}>
+		<Breadcrumb style={{ margin: '16px 30px' }}>
 			{parent && <Item>{parent}</Item>}
 			<Item data-testid="current">{current}</Item>
 		</Breadcrumb>

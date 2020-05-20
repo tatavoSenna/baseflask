@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Layout } from 'antd'
-import { Table, Button } from 'antd'
-import moment from 'moment'
-import 'moment/locale/pt-br'
+import { Skeleton, Card, Layout } from 'antd'
+import {
+	EditOutlined,
+	DownloadOutlined,
+	SettingOutlined,
+} from '@ant-design/icons'
+// import moment from 'moment'
+// import 'moment/locale/pt-br'
 
 import { listContract, viewContract } from '~/states/modules/contract'
 import BreadCrumb from '~/components/breadCrumb'
-import Loader from '~/components/loader'
 
 function Contracts() {
 	const dispatch = useDispatch()
@@ -18,77 +21,42 @@ function Contracts() {
 		dispatch(listContract())
 	}, [dispatch])
 
-	const { Content } = Layout
+	// const { Content } = Layout
+	const { Meta } = Card
 
 	function handleViewContract({ documentId }) {
 		dispatch(viewContract({ documentId }))
 	}
 
-	const columns = [
-		{
-			title: 'Nome',
-			dataIndex: 'title',
-			key: 'name',
-			render: (text) => <a>{text}</a>,
-		},
-		{
-			title: 'Autor',
-			dataIndex: ['user', 'name'],
-			key: 'author',
-		},
-		{
-			title: 'Email',
-			dataIndex: ['user', 'email'],
-			key: 'email',
-		},
-		{
-			title: 'Data de criação',
-			dataIndex: 'created_at',
-			key: 'createdAt',
-			render: (date) => {
-				moment.locale('pt-br')
-				return moment(date).fromNow()
-			},
-		},
-		{
-			title: '',
-			dataIndex: 'id',
-			key: 'configs',
-			render: (documentId) => (
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'flex-end',
-					}}>
-					<Button onClick={() => {}} style={{ marginRight: '15px' }}>
-						Editar
-					</Button>
-					<Button
-						type="primary"
-						onClick={() => handleViewContract({ documentId })}>
-						Download
-					</Button>
-				</div>
-			),
-		},
-	]
-
 	return (
-		<Layout style={{ padding: '0 24px 24px' }}>
-			<BreadCrumb current="Contratos" />
-			<Content
-				className="site-layout-background"
+		<Layout
+			style={{
+				padding: '0 24px 24px',
+			}}>
+			<BreadCrumb parent="Contratos" current="Lista" />
+			<Layout
 				style={{
-					padding: 24,
-					margin: 0,
-					minHeight: 280,
-					background: '#fff',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'flex-start',
 				}}>
-				{(loading && <Loader />) || (
-					<Table columns={columns} dataSource={contracts} />
-				)}
-			</Content>
+				{contracts.map((contract) => (
+					<Card
+						style={{ width: '100%', marginTop: 16, maxWidth: 800 }}
+						actions={[
+							<SettingOutlined key="setting" />,
+							<EditOutlined key="edit" />,
+							<DownloadOutlined
+								key="download"
+								onClick={() => handleViewContract({ documentId: contract.id })}
+							/>,
+						]}>
+						<Skeleton loading={loading} avatar active>
+							<Meta title={contract.title} description={contract.user.email} />
+						</Skeleton>
+					</Card>
+				))}
+			</Layout>
 		</Layout>
 	)
 }
