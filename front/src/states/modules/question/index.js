@@ -5,6 +5,7 @@ const initialState = {
 	questions: [],
 	error: null,
 	loading: false,
+	loadingAnswer: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -25,21 +26,21 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
-		awnser: (state, { payload }) =>
+		answer: (state, { payload }) =>
 			extend(state, {
 				questions: map(
 					state.questions,
 					(v) => assign({}, v, { answer: payload.data[v.variable] || '' }) // no v.value maybe a problem
 				),
-				loading: true,
+				loadingAnswer: true,
 			}),
-		awnserSuccess: (state, { payload }) =>
+		answerSuccess: (state, { payload }) =>
 			extend(state, {
-				loading: false,
+				loadingAnswer: false,
 			}),
-		awnserFailure: (state, { payload }) =>
+		answerFailure: (state, { payload }) =>
 			extend(state, {
-				loading: false,
+				loadingAnswer: false,
 				error: payload.error,
 			}),
 	},
@@ -49,9 +50,9 @@ export const {
 	listQuestion,
 	listQuestionSuccess,
 	listQuestionFailure,
-	awnser,
-	awnserSuccess,
-	awnserFailure,
+	answer,
+	answerSuccess,
+	answerFailure,
 } = actions
 
 export { default as questionSaga } from './sagas'

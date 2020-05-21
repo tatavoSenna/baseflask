@@ -3,16 +3,16 @@ import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Row, Col } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { listQuestion, awnser } from '~/states/modules/question'
+import { listQuestion, answer } from '~/states/modules/question'
 import Loader from '~/components/loader'
-import InputFactory from '~/components/inputFactory'
+// import InputFactory from '~/components/inputFactory'
 
 function ContractForm() {
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [expand, setExpand] = useState(false)
 	const [form] = Form.useForm()
-	const { questions, loading } = useSelector(({ question }) => question)
+	const { questions, loadingAnswer } = useSelector(({ question }) => question)
 
 	useEffect(() => {
 		dispatch(listQuestion({ documentId: 8 }))
@@ -20,7 +20,7 @@ function ContractForm() {
 
 	const onSubmit = (data) => {
 		console.log(data)
-		// dispatch(awnser({ data, history }))
+		dispatch(answer({ data, history }))
 	}
 
 	const layout = {
@@ -28,27 +28,32 @@ function ContractForm() {
 		wrapperCol: { span: 12 },
 	}
 
-	const tailLayout = {
-		wrapperCol: { offset: 10, span: 12 },
-	}
+	// const tailLayout = {
+	// 	wrapperCol: { offset: 10, span: 12 },
+	// }
 
 	const getFields = () => {
-		const count = expand ? 10 : 6
+		const count = expand ? 24 : 14
 		const children = []
 
 		for (let i = 0; i < count; i++) {
+			const { value, variable, type } = questions[i]
 			children.push(
-				<Col span={8} key={i}>
+				<Col span={20} key={i}>
 					<Form.Item
-						name={`field-${i}`}
-						label={`Field ${i}`}
-						rules={[
-							{
-								required: true,
-								message: 'Input something!',
-							},
-						]}>
-						<Input placeholder="placeholder" />
+						span={15}
+						name={variable}
+						label={value}
+						type={type}
+						colon={false}
+						// rules={[
+						// 	{
+						// 		required: true,
+						// 		message: 'Input something!',
+						// 	},
+						// ]}
+					>
+						<Input placeholder="" />
 					</Form.Item>
 				</Col>
 			)
@@ -57,20 +62,6 @@ function ContractForm() {
 		return children
 	}
 
-	/* {questions
-						.filter((x) => x.value)
-						.map((question) => {
-							// console.log(question.parentIndex)
-							return (
-								<InputFactory
-									name={question.variable}
-									label={question.value}
-									type={question.type}
-									callBack={}
-								/>
-							)
-						})} */
-
 	return (
 		<Form
 			{...layout}
@@ -78,33 +69,37 @@ function ContractForm() {
 			name="control-hooks"
 			onFinish={onSubmit}
 			initialValues={{ layout: 'inline' }}>
-			{(loading && <Loader />) || getFields()}
-			<Row>
-				<Col
-					span={24}
-					style={{
-						textAlign: 'right',
-					}}>
-					<Button type="primary" htmlType="submit">
-						Search
-					</Button>
-					<Button
+			{(questions.length === 0 && <Loader />) || getFields()}
+			{!loadingAnswer ? (
+				<Row>
+					<Col
+						span={24}
 						style={{
-							margin: '0 8px',
-						}}
-						onClick={() => {
-							form.resetFields()
+							textAlign: 'center',
 						}}>
-						Clear
-					</Button>
-					<Button
-						onClick={() => {
-							setExpand(!expand)
-						}}>
-						Collapse
-					</Button>
-				</Col>
-			</Row>
+						<Button type="primary" htmlType="submit">
+							Concluir
+						</Button>
+						<Button
+							style={{
+								margin: '0 8px',
+							}}
+							onClick={() => {
+								form.resetFields()
+							}}>
+							Clear
+						</Button>
+						<Button
+							onClick={() => {
+								setExpand(!expand)
+							}}>
+							Collapse
+						</Button>
+					</Col>
+				</Row>
+			) : (
+				<Loader />
+			)}
 		</Form>
 	)
 }

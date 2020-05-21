@@ -7,15 +7,24 @@ const AddContact = () => {
 	const { Content } = Layout
 	return (
 		<Layout style={{ padding: '0 24px 24px' }}>
-			<BreadCrumb current="Novo Contrato" />
+			<BreadCrumb parent="Contratos" current="Novo Contrato" />
 			<Content
-				className="site-layout-background"
 				style={{
-					padding: 30,
+					padding: 24,
 					margin: 0,
 					minHeight: 280,
+					height: '100%',
+					background: '#fff',
 				}}>
-				<ContractForm />
+				<Content
+					className="site-layout-background"
+					style={{
+						padding: 30,
+						margin: 0,
+						minHeight: 280,
+					}}>
+					<ContractForm />
+				</Content>
 			</Content>
 		</Layout>
 	)

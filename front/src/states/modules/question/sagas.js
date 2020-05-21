@@ -5,14 +5,14 @@ import {
 	listQuestion,
 	listQuestionSuccess,
 	listQuestionFailure,
-	awnser,
-	awnserSuccess,
-	awnserFailure,
+	answer,
+	answerSuccess,
+	answerFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(listQuestion, listQuestionSaga)
-	yield takeEvery(awnser, awnserSaga)
+	yield takeEvery(answer, answerSaga)
 }
 
 function* listQuestionSaga({ payload = {} }) {
@@ -27,7 +27,7 @@ function* listQuestionSaga({ payload = {} }) {
 	}
 }
 
-function* awnserSaga({ payload }) {
+function* answerSaga({ payload }) {
 	const { history } = payload
 	const { question } = yield select()
 
@@ -37,9 +37,9 @@ function* awnserSaga({ payload }) {
 			questions: question.questions,
 		})
 
-		yield put(awnserSuccess(data))
+		yield put(answerSuccess(data))
 		history.push('/contracts')
 	} catch (error) {
-		yield put(awnserFailure(error))
+		yield put(answerFailure(error))
 	}
 }
