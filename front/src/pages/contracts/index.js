@@ -6,8 +6,6 @@ import {
 	DownloadOutlined,
 	SettingOutlined,
 } from '@ant-design/icons'
-// import moment from 'moment'
-// import 'moment/locale/pt-br'
 
 import { listContract, viewContract } from '~/states/modules/contract'
 import BreadCrumb from '~/components/breadCrumb'
@@ -21,11 +19,19 @@ function Contracts() {
 		dispatch(listContract())
 	}, [dispatch])
 
-	// const { Content } = Layout
 	const { Meta } = Card
 
 	function handleViewContract({ documentId }) {
 		dispatch(viewContract({ documentId }))
+	}
+
+	function getDescription({ email, createdAt }) {
+		return (
+			<div>
+				<p>{email}</p>
+				<span>{createdAt}</span>
+			</div>
+		)
 	}
 
 	return (
@@ -51,8 +57,14 @@ function Contracts() {
 								onClick={() => handleViewContract({ documentId: contract.id })}
 							/>,
 						]}>
-						<Skeleton loading={loading} avatar active>
-							<Meta title={contract.title} description={contract.user.email} />
+						<Skeleton loading={loading} active>
+							<Meta
+								title={contract.title}
+								description={getDescription({
+									email: contract.authorEmail,
+									createdAt: contract.createdAt,
+								})}
+							/>
 						</Skeleton>
 					</Card>
 				))}

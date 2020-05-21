@@ -27,7 +27,7 @@ function* loginSaga({ payload }) {
 		api.defaults.headers['X-Auth-Token'] = data.token
 
 		yield put(loginSuccess(data))
-		history.push('/')
+		history.push('/contracts')
 	} catch (error) {
 		yield put(loginFailure(error))
 	}

@@ -1,6 +1,8 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { selectAllContracts } from './selectors'
+
 const initialState = {
 	contracts: [],
 	error: null,
@@ -17,7 +19,7 @@ const { actions, reducer } = createSlice({
 			}),
 		listContractSuccess: (state, { payload }) =>
 			extend(state, {
-				contracts: payload.items,
+				contracts: selectAllContracts(payload.items),
 				error: null,
 				loading: false,
 			}),

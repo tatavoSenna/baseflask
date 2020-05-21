@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import {
 	FileAddOutlined,
-	HomeOutlined,
+	// HomeOutlined,
 	FileOutlined,
 	TeamOutlined,
 	FileDoneOutlined,
@@ -41,12 +41,6 @@ function SideBar({ collapsed, onCollapse }) {
 				zIndex: 2,
 			}}>
 			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
-				<Menu.Item
-					key="/"
-					icon={<HomeOutlined />}
-					onClick={() => handleGoTo('/')}>
-					Home
-				</Menu.Item>
 				<SubMenu key="sub1" icon={<FileOutlined />} title="Contratos">
 					<Menu.Item
 						key="/contracts"
