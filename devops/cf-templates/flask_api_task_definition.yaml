@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    4c07c06c-9375-4c7a-958b-7edd26b83e7d:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 556
+        'y': 162
+      z: 0
+Resources:
+  FlaskApiTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:         
+      Family: 'lawing-api-flask'
+      NetworkMode: 'awsvpc'
+      ExecutionRoleArn: 'TaskExecutionRole'
+      Memory: 512
+      Cpu: 256
+      RequiresCompatibilities: ['FARGATE']
+      ContainerDefinitions:
+      - Name: lawing-flask-api
+        Image: '045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api:2'
+        Essential: true
+        Environment:
+        - Name: SECRET_KEY
+          Value: '3456yrtyr65!2@'
+        - Name: AWS_ACCESS_KEY_ID
+          Value: 'AKIAIRXAMWKHW6GMRH7A'
+        - Name: SQLALCHEMY_DATABASE_URI
+          Value: 'mysql://root:93j1n381n23#1b123weoiuq!@doing-law.c5bqmmiwpltq.us-east-1.rds.amazonaws.com/doing_law'
+        - Name: AWS_SECRET_ACCESS_KEY
+          Value: 'ziKkp6tjGpgTi7QYqKJbiuQnvNaUI+3Zz+HlDKPi'
+        PortMappings:
+          - ContainerPort: 5000
+            HostPort: 5000
+            Protocol: tcp
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: '4c07c06c-9375-4c7a-958b-7edd26b83e7d'
