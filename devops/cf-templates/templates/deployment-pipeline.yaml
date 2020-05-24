@@ -22,7 +22,6 @@ Parameters:
   Service:
     Type: String
 
-
 Resources:
   Repository:
     RepositoryName:

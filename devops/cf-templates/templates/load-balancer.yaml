@@ -31,6 +31,10 @@ Resources:
           IpProtocol: "TCP"
           FromPort: 80
           ToPort: 80
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "TCP"
+          FromPort: 5000
+          ToPort: 5000
       VpcId: !Ref VpcId
 
   LoadBalancer:
@@ -55,7 +59,7 @@ Resources:
     DependsOn: LoadBalancer
     Properties:
       VpcId: !Ref VpcId
-      Port: 80
+      Port: 5000
       Protocol: HTTP
       Matcher:
         HttpCode: 200-299
