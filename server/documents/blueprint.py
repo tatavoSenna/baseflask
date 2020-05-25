@@ -26,6 +26,7 @@ documents_api = Blueprint('documents', __name__)
 @documents_api.route('/')
 @check_for_token
 def get_document_list(current_user):
+
     try:
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 20))
@@ -38,6 +39,79 @@ def get_document_list(current_user):
         'total': paginated_query.total,
         'items': DocumentSerializer(many=True).dump(paginated_query.items)
     })
+
+@documents_api.route('/create', methods=['POST'])
+@check_for_token
+def create(current_user):
+    # check if content_type is json
+    if not request.is_json: 
+        return jsonify({'message': 'Accepts only content-type json.'}), 400
+    else:
+        content = request.json
+
+    # check for required parameters
+    document_model_id = content.get('document', None)
+    questions = content.get('questions', None)
+    if not document_model_id or not questions:
+        return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
+
+    # loads the document model
+    document_model = DocumentModel.query.get(8)
+    if not document_model:
+        return jsonify({'message': 'Document model is missing.'}), 404
+
+    # loads the template
+    doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
+
+    context = {}
+    title = document_model.name
+
+    for question in questions:
+        variable = None
+        answer = None
+
+        if 'variable' in question:
+            variable = question['variable']
+
+        if 'answer' in question:
+            answer = question['answer']
+
+        if variable and answer:
+            context[variable] = answer
+
+            # gets the title fromt he user's answeers and  the filename from the document_title
+            if variable == 'title':
+                title = answer
+
+    now = datetime.now()
+    context['day'] = str(now.day).zfill(2)
+    context['month'] = months[now.month - 1]
+    context['year'] = now.year
+
+    # generate document template with decision tree variables to a memory buffer
+    doc.render(context)
+    document_buffer = io.BytesIO()
+    doc.save(document_buffer)
+
+    # save generated document to an s3 
+    s3_client = boto3.client('s3')
+    s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+    document_buffer.seek(0)
+    try:
+        s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
+    except ClientError as e:
+        print(f'error uploading to s3 {e}')
+
+    new_document = create_document(
+        current_user['client_id'],
+        current_user['id'],
+        title, 
+        document_model_id, 
+        questions,
+        s3_object_key,
+        ) 
+    return new_document
+
 
 @documents_api.route('/<int:document_id>/download')
 @check_for_token
@@ -170,78 +244,6 @@ def request_signatures(current_user, document_id):
         return jsonify({'message': 'No signers.'}), 400
 
 
-@documents_api.route('/create', methods=['POST'])
-@check_for_token
-def create(current_user):
-    # check if content_type is json
-    if not request.is_json: 
-        return jsonify({'message': 'Accepts only content-type json.'}), 400
-    else:
-        content = request.json
-
-    # check for required parameters
-    document_model_id = content.get('document', None)
-    questions = content.get('questions', None)
-    if not document_model_id or not questions:
-        return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
-
-    # loads the document model
-    document_model = DocumentModel.query.get(8)
-    if not document_model:
-        return jsonify({'message': 'Document model is missing.'}), 404
-
-    # loads the template
-    doc = DocxTemplate(f'template/{document_model_id}.docx')
-
-    context = {}
-    title = document_model.name
-
-    for question in questions:
-        variable = None
-        answer = None
-
-        if 'variable' in question:
-            variable = question['variable']
-
-        if 'answer' in question:
-            answer = question['answer']
-
-        if variable and answer:
-            context[variable] = answer
-
-            # gets the title fromt he user's answeers and  the filename from the document_title
-            if variable == 'title':
-                title = answer
-
-    now = datetime.now()
-    context['day'] = str(now.day).zfill(2)
-    context['month'] = months[now.month - 1]
-    context['year'] = now.year
-
-    # generate document template with decision tree variables to a memory buffer
-    doc.render(context)
-    document_buffer = io.BytesIO()
-    doc.save(document_buffer)
-
-    # save generated document to an s3 
-    s3_client = boto3.client('s3')
-    s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
-    document_buffer.seek(0)
-    try:
-        s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
-    except ClientError as e:
-        print(f'error uploading to s3 {e}')
-
-    new_document = create_document(
-        current_user['client_id'],
-        current_user['id'],
-        title, 
-        document_model_id, 
-        questions,
-        s3_object_key,
-        ) 
-    return new_document
-
 
 @documents_api.route('/models', methods=['GET'])
 @check_for_token
@@ -261,7 +263,7 @@ def questions(current_user):
     if not document_model:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    with open('questions/%s.json' % document_model, encoding='utf-8') as json_file:
+    with open('app/documents/questions/%s.json' % document_model, encoding='utf-8') as json_file:
         decision_tree = json.load(json_file)
 
     # Initialize the decision tree with the title input field

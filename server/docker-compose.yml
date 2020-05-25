@@ -33,20 +33,20 @@ services:
       - 5000:5000
     volumes:
       - .:/app
-    # working_dir: /app
+    working_dir: /
     environment:
       - FLASK_APP=app/application.py
       - FLASK_ENV=development
       - SECRET_KEY=nf9w8**HytG
-      - SQLALCHEMY_DATABASE_URI=postgres://lawing_db_user:xUx42Ei5WKWMydzeS52h@lawing.cpl0g2bxvanv.us-east-1.rds.amazonaws.com/lawing
+      - SQLALCHEMY_DATABASE_URI=postgres://local_user:password@postgres/lawing_local
       - AWS_ACCESS_KEY_ID=AKIAIRXAMWKHW6GMRH7A
       - AWS_SECRET_ACCESS_KEY=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
       - AWS_DEFAULT_REGION=sa-east-1
       - DOCUSIGN_OAUTH_URI=https://account-d.docusign.com/oauth
       - DOCUSIGN_INTEGRATION_KEY=403ee112-39e5-4fea-ab30-5b7b6cdd58be
       - DOCUSIGN_SECRET_KEY=520c8913-e2e5-4dc1-baef-3ee2d97877a1
-    # command:
-    #   flask run --host=0.0.0.0
+    command:
+      flask run --host=0.0.0.0
     networks:
       - dev-network
 

@@ -6,7 +6,7 @@ import jwt
 
 auth_api = Blueprint('auth', __name__)
 
-@application.route('/login', methods=['POST'])
+@auth_api.route('/login', methods=['POST'])
 def login():
     content = request.json
     email = content['email']

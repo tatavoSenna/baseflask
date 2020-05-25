@@ -96,7 +96,7 @@ Resources:
       ExecutionRoleArn: !Ref TaskExecutionRole
       ContainerDefinitions:
         - Name: lawing-flask-api
-          Image: 833120502863.dkr.ecr.us-east-1.amazonaws.com/lawing-api:1
+          Image: 833120502863.dkr.ecr.us-east-1.amazonaws.com/lawing-api:2
           Essential: true
           Environment:
           - Name: SECRET_KEY
