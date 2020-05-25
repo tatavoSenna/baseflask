@@ -24,7 +24,6 @@ Parameters:
 
 Resources:
   Repository:
-    RepositoryName:
     Type: AWS::ECR::Repository
     DeletionPolicy: Retain
     RepositoryName: lawing-flask
