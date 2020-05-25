@@ -30,7 +30,7 @@ function* sendNewDocumentToServer(action) {
     yield put({type: LOADING_STARTED})
     try {
         const { payload } = action;
-        const response =  yield axios.post('/create', payload);
+        const response =  yield axios.post('documents/create', payload);
         const newDocument = response.data
         const document_id = newDocument.id;
         yield put({type: NEW_DOCUMENT_CALL_SUCCEEDED, payload: { newDocument }});
@@ -52,7 +52,7 @@ function* loadNewDocumentTemplateFromServer(action){
     yield put({type: LOADING_STARTED})
 
     try {
-        const decision_tree = yield axios.get(`/questions?document=${document}`)
+        const decision_tree = yield axios.get(`documents/questions?document=${document}`)
         yield put({type: GET_DECISION_TREE_CALL_SUCCEEDED, payload: { data: decision_tree.data, document }});
     } catch (e) {
         yield put({type: GET_DECISION_TREE_CALL_FAILED, message: e.message});
