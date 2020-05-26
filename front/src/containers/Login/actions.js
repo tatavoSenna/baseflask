@@ -23,7 +23,7 @@ export const changePassword = (password) => {
 
 export const login = (email, password) => {
   return dispatch => {
-    return axios.post('/login', { email, password })
+    return axios.post('auth/login', { email, password })
       .then(response => {
         const { token, user } = response.data
 
