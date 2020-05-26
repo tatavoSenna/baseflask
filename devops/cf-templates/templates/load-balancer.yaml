@@ -54,6 +54,19 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
 
+    LoadBalancerListener:
+      Type: AWS::ElasticLoadBalancingV2::Listener
+      Properties:
+        LoadBalancerArn: !Ref LoadBalancer
+        Port: 443
+        Protocol: HTTPS
+        SslPolicy: ELBSecurityPolicy-2016-08
+        Certificates:
+          - CertificateArn:  arn:aws:acm:sa-east-1:045089554220:certificate/995229ee-1fc7-44a5-85d7-3c61bea261bb
+        DefaultActions:
+          - Type: forward
+            TargetGroupArn: !Ref TargetGroup
+
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     DependsOn: LoadBalancer

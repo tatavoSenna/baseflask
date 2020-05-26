@@ -25,8 +25,8 @@ Parameters:
 Resources:
   Repository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Retain
-    RepositoryName: lawing-flask
+    Properties:
+      RepositoryName: lawing-flask-b
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role

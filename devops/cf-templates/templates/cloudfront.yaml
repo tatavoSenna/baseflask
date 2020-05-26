@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    Website:
+      Type: AWS::S3::Bucket
+      Properties:
+        WebsiteConfiguration:
+          ErrorDocument: index.html
+          IndexDocument: index.html
+        BucketName: lawing-app
+
+    Distribution:
+        Type: AWS::CloudFront::Distribution
+        Properties:
+            DistributionConfig:
+                Origins:
+                    - 
+                        # Use the Website as the CDN origin
+                        DomainName: !GetAtt Website.DomainName
+                        Id: !Ref Website
+                        CustomOriginConfig:
+                            HTTPPort: 80
+                            HTTPSPort: 443
+                            OriginProtocolPolicy: https-only
+                Enabled: true
+                DefaultRootObject: index.html
+            ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
+            # Configure the caching behavior for our CDN
+                ViewerCertificate:
+                    CloudFrontDefaultCertificate: 'true'
+                DefaultCacheBehavior: 
+                    AllowedMethods:
+                    - GET
+                    - HEAD
+                    - OPTIONS
+                    MinTTL: 86400  # 1 day
+                    MaxTTL: 31536000  # 1 year
+                    ForwardedValues: 
+                        QueryString: true
+                        Cookies:
+                            Forward: none
+                    ## The origin id defined above
+                    TargetOriginId: !Ref Website
+                    ViewerProtocolPolicy: "redirect-to-https"   # we want to force HTTPS
+                ## The certificate to use when viewers use HTTPS to request objects.
+            
+
+Outputs:
+    WebSiteUrl:
+        Value: !GetAtt Website.WebsiteURL
+    WebSiteBucket:
+        Value: !Ref Website

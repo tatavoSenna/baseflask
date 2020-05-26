@@ -130,6 +130,11 @@ Resources:
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
         Subnets: !GetAtt VPC.Outputs.Subnets
 
+  CloudFront:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cloudfront.yaml"
+
 
 Outputs:
   ServiceUrl:
