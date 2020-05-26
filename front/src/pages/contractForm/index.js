@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Row, Col } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { listQuestion, answer } from '~/states/modules/question'
+import { listQuestion } from '~/states/modules/question'
 import Loader from '~/components/loader'
 // import InputFactory from '~/components/inputFactory'
 
@@ -20,7 +20,7 @@ function ContractForm() {
 
 	const onSubmit = (data) => {
 		console.log(data)
-		dispatch(answer({ data, history }))
+		// dispatch(answer({ data, history }))
 	}
 
 	const layout = {

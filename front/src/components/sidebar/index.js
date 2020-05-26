@@ -51,9 +51,15 @@ function SideBar({ collapsed, onCollapse }) {
 					<Menu.Item
 						key="/addContracts"
 						icon={<FileAddOutlined />}
-						onClick={() => handleGoTo('/addContracts')}>
-						Novo contrato
+						onClick={() => handleGoTo('/form/pj')}>
+						Novo contrato New
 					</Menu.Item>
+					{/* <Menu.Item
+						key="/addContracts"
+						icon={<FileAddOutlined />}
+						onClick={() => handleGoTo('/addContracts')}>
+						Novo contrato Old
+					</Menu.Item> */}
 				</SubMenu>
 				<SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
 					<Menu.Item key="6">Team 1</Menu.Item>

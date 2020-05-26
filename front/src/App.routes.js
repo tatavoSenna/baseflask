@@ -7,6 +7,7 @@ import Login from './pages/login'
 import Home from './pages/home'
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
+import StepForm from './pages/form'
 
 import Wrapper from '~/components/wrapper'
 
@@ -15,6 +16,7 @@ export const ROUTES = {
 	home: '/',
 	contracts: '/contracts',
 	addContract: '/addContracts',
+	form: '/form/:current',
 }
 
 function Routes() {
@@ -30,12 +32,13 @@ function Routes() {
 						component={Contracts}
 						isPrivate
 					/>
-					<AdminRoute
+					<AdminRoute // TODO remove
 						exact
 						path={ROUTES.addContract}
 						component={AddContract}
 						isPrivate
 					/>
+					<AdminRoute exact path={ROUTES.form} component={StepForm} isPrivate />
 				</Wrapper>
 			</Switch>
 		</Router>

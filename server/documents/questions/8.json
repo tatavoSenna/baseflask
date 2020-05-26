@@ -1,247 +1,163 @@
-[
-  {
-      "label": "",
-      "variable": "concessionaries",
-      "option": "",
-      "type": "input",
-      "value": "Qual o nome da concessionária?",
-      "answer": "",
-      "parentIndex": null,
-      "childIndex": 1
-  },
-  {
-      "label": "",
-      "variable": "cnpj",
-      "option": "",
-      "type": "input",
-      "value": "Qual o CNPJ da concessionária?",
-      "answer": "",
-      "parentIndex": 0,
-      "childIndex": 2
-  },
-  {
-      "label": "",
-      "variable": "address",
-      "option": "",
-      "type": "input",
-      "value": "Qual o endereço da concessionária?",
-      "answer": "",
-      "parentIndex": 1,
-      "childIndex": 3
-  },
-  {
-    "label": "",
-    "variable": "concessionaire_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email do responsável pela concessionária?",
-    "answer": "",
-    "parentIndex": 2,
-    "childIndex": 4,
-    "docusign_data": {
-      "name_variable": "concessionaries",
-      "anchor_string":"(CONCESSION",
-      "anchor_x_offset": "-0.5",
-      "anchor_y_offset": "-0.4"
+{
+    "nodes": {
+      "pj": {
+        "questions": [
+            {
+                "id": 1,
+                "dependsOn": null,
+                "variable": "concessionaries",
+                "type": "input",
+                "value": "Qual o nome da concessionária?"
+            },
+            {
+                "id": 2,
+                "dependsOn": null,
+                "variable": "cnpj",
+                "type": "input",
+                "value": "Qual o CNPJ da concessionária?"
+            },
+            {
+                "id": 3,
+                "variable": "address",
+                "type": "input",
+                "value": "Qual o endereço da concessionária?"
+            }
+        ]
+      },
+      "pf": {
+        "questions": [
+            {
+                "id": 1,
+                "variable": "concessionaireSigner",
+                "type": "input",
+                "value": "Qual o email do responsável pela concessionária?"
+            },
+            {
+                "id": 2,
+                "variable": "client",
+                "type": "input",
+                "value": "Qual o nome do cliente?"
+            },
+            {
+                "id": 3,
+                "variable": "clientCpf",
+                "type": "input",
+                "value": "Qual o CPF do cliente?"
+            },
+            {
+                "id": 4,
+                "variable": "clientAddress",
+                "type": "input",
+                "value": "Qual o endereço do cliente?"
+            },
+            {
+                "id": 4,
+                "variable": "clientEmail",
+                "type": "input",
+                "value": "Qual o email do cliente?"
+            }
+        ]
+      },
+      "good": {
+          "questions": [
+              {
+                  "id": 1,
+                  "variable": "goodType",
+                  "type": "input",
+                  "value": "Qual o veículos adquirido?"
+                },
+                {
+                    "id": 2,
+                    "variable": "description",
+                    "type": "input",
+                    "value": "Demonstrou insatisfação com relação à?"
+                },
+                {
+                    "id": 3,
+                    "variable": "optFor",
+                    "type": "input",
+                    "value": "A concessionária optou por?"
+                },
+                {
+                    "id": 4,
+                    "variable": "benefit",
+                    "type": "input",
+                    "value": "Qual o benefício concedido pela concessionária?"
+                }
+            ]
+        },
+        "witness": {
+            "questions": [
+                {
+                    "id": 1,
+                    "variable": "hasWitness",
+                    "type": "radio",
+                    "options": ["sim", "não"],
+                    "value": "Necessita de testemunhas?"
+                }
+            ]
+        },
+        "witnessData": {
+            "questions": [
+                {
+                    "id": 1,
+                    "variable": "witnessName1",
+                    "type": "input",
+                    "value": "Qual o nome da primeira testemunha?"
+                },
+                {
+                    "id": 2,
+                    "variable": "witnessCpf1",
+                    "type": "input",
+                    "value": "Qual o cpf da primeira testemunha?"
+                },
+                {
+                    "id": 1,
+                    "variable": "witnessName2",
+                    "type": "input",
+                    "value": "Qual o nome da segunda testemunha?"
+                },
+                {
+                    "id": 2,
+                    "variable": "witnessCpf2",
+                    "type": "input",
+                    "value": "Qual o cpf da segunda testemunha?"
+                }
+            ]
+        }
+    },
+    "edges": {
+      "pj": {
+        "from": "pj",
+        "to": "pf",
+        "end": false,
+        "data": null
+      },
+      "pf": {
+        "from": "pf",
+        "to": "good",
+        "end": false,
+        "data": null
+      },
+      "good": {
+        "from": "good",
+        "to": "witness",
+        "end": false,
+        "data": null
+      },
+      "witness": {
+        "from": "witness",
+        "to": "witnessData",
+        "end": true,
+        "data": {
+            "hasWitness": true
+        }
+      },
+      "witnessData": {
+        "from": "witness",
+        "to": null,
+        "end": true,
+        "data": null
+      }
     }
-},
-  {
-      "label": "",
-      "variable": "client",
-      "option": "",
-      "type": "input",
-      "value": "Qual o nome do cliente?",
-      "answer": "",
-      "parentIndex": 3,
-      "childIndex": 5
-  },
-  {
-      "label": "",
-      "variable": "cpf",
-      "option": "",
-      "type": "input",
-      "value": "Qual o CPF do cliente?",
-      "answer": "",
-      "parentIndex": 4,
-      "childIndex": 6
-  },
-  {
-      "label": "",
-      "variable": "client_address",
-      "option": "",
-      "type": "input",
-      "value": "Qual o endereço do cliente?",
-      "answer": "",
-      "parentIndex": 5,
-      "childIndex": 7
-  },
-  {
-    "label": "",
-    "variable": "client_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email do cliente?",
-    "answer": "",
-    "parentIndex": 6,
-    "childIndex": 8,
-    "docusign_data": {
-      "name_variable": "client",
-      "anchor_string":"(CLIENTE)",
-      "anchor_x_offset": "-0.5",
-      "anchor_y_offset": "-0.4"
-    }
-},
-  {
-      "label": "",
-      "variable": "vehicle",
-      "option": "",
-      "type": "input",
-      "value": "Qual o veículos adquirido?",
-      "answer": "",
-      "parentIndex": 7,
-      "childIndex": 9
-  },
-  {
-      "label": "",
-      "variable": "description",
-      "option": "",
-      "type": "input",
-      "value": "Demonstrou insatisfação com relação à?",
-      "answer": "",
-      "parentIndex": 8,
-      "childIndex": 10
-  },
-  {
-      "label": "",
-      "variable": "opt_for",
-      "option": "",
-      "type": "input",
-      "value": "A concessionária optou por?",
-      "answer": "",
-      "parentIndex": 9,
-      "childIndex": 12
-  },
-  {
-      "label": "",
-      "variable": "benefit",
-      "option": "",
-      "type": "input",
-      "value": "Qual o benefício concedido pela concessionária?",
-      "answer": "",
-      "parentIndex": 10,
-      "childIndex": 13
-  },
-  {
-      "label": "",
-      "variable": "has_witness",
-      "option": "",
-      "type": "radio",
-      "value": "Necessita de testemunhas?",
-      "answer": "",
-      "parentIndex": 11
-  },
-  {
-      "label": "Sim",
-      "option": "yes",
-      "parentIndex": 12,
-      "childIndex": 15
-  },
-  {
-      "label": "Não",
-      "option": "no",
-      "parentIndex": 12,
-      "childIndex": null
-  },
-  {
-      "label": "",
-      "variable": "witness_name_1",
-      "option": "",
-      "type": "input",
-      "value": "Qual o nome da primeira testemunha?",
-      "answer": "",
-      "parentIndex": 13,
-      "childIndex": 16
-  },
-  {
-      "label": "",
-      "variable": "witness_rg_1",
-      "option": "",
-      "type": "input",
-      "value": "Qual o RG da primeira testemunha?",
-      "answer": "",
-      "parentIndex": 15,
-      "childIndex": 17
-  },
-  {
-      "label": "",
-      "variable": "witness_cpf_1",
-      "option": "",
-      "type": "input",
-      "value": "Qual o CPF da primeira testemunha?",
-      "answer": "",
-      "parentIndex": 16,
-      "childIndex": 18
-  },
-  {
-    "label": "",
-    "variable": "witness_1_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email da primeira testemunha?",
-    "answer": "",
-    "parentIndex": 17,
-    "childIndex": 19,
-    "docusign_data": {
-      "name_variable": "witness_name_1",
-      "anchor_string":"Testemunhas:",
-      "anchor_x_offset": "0",
-      "anchor_y_offset": "0.2"
-    }
-},
-  {
-      "label": "",
-      "variable": "witness_name_2",
-      "option": "",
-      "type": "input",
-      "value": "Qual o nome da segunda testemunha?",
-      "answer": "",
-      "parentIndex": 18,
-      "childIndex": 20
-  },
-  {
-      "label": "",
-      "variable": "witness_rg_2",
-      "option": "",
-      "type": "input",
-      "value": "Qual o RG da segunda testemunha?",
-      "answer": "",
-      "parentIndex": 19,
-      "childIndex": 21
-  },
-  {
-      "label": "",
-      "variable": "witness_cpf_2",
-      "option": "",
-      "type": "input",
-      "value": "Qual o CPF da segunda testemunha?",
-      "answer": "",
-      "parentIndex": 20,
-      "childIndex": 22
-  },
-  {
-    "label": "",
-    "variable": "witness_2_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email da segunda testemunha?",
-    "answer": "",
-    "parentIndex": 21,
-    "childIndex": null,
-    "docusign_data": {
-      "name_variable": "witness_name_2",
-      "anchor_string":"Testemunhas:",
-      "anchor_x_offset": "3.2",
-      "anchor_y_offset": "0.2"
-    }
-}
-]
+  }

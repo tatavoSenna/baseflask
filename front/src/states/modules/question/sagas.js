@@ -1,18 +1,15 @@
-import { call, put, takeEvery, select } from 'redux-saga/effects'
+import {
+	call,
+	put,
+	takeEvery,
+	// select
+} from 'redux-saga/effects'
 
 import api from '~/services/api'
-import {
-	listQuestion,
-	listQuestionSuccess,
-	listQuestionFailure,
-	answer,
-	answerSuccess,
-	answerFailure,
-} from '.'
+import { listQuestion, listQuestionSuccess, listQuestionFailure } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(listQuestion, listQuestionSaga)
-	yield takeEvery(answer, answerSaga)
 }
 
 function* listQuestionSaga({ payload = {} }) {
@@ -27,19 +24,19 @@ function* listQuestionSaga({ payload = {} }) {
 	}
 }
 
-function* answerSaga({ payload }) {
-	const { history } = payload
-	const { question } = yield select()
+// function* answerSaga({ payload }) {
+// 	const { history } = payload
+// 	const { question } = yield select()
 
-	try {
-		const { data } = yield call(api.post, `/create`, {
-			document: 8,
-			questions: question.questions,
-		})
+// 	try {
+// 		const { data } = yield call(api.post, `/create`, {
+// 			document: 8,
+// 			questions: question.questions,
+// 		})
 
-		yield put(answerSuccess(data))
-		history.push('/contracts')
-	} catch (error) {
-		yield put(answerFailure(error))
-	}
-}
+// 		yield put(answerSuccess(data))
+// 		history.push('/contracts')
+// 	} catch (error) {
+// 		yield put(answerFailure(error))
+// 	}
+// }

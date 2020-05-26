@@ -1,11 +1,10 @@
-import { extend, map, assign } from 'lodash'
+import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	questions: [],
+	questions: {},
 	error: null,
 	loading: false,
-	loadingAnswer: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -26,23 +25,23 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
-		answer: (state, { payload }) =>
-			extend(state, {
-				questions: map(
-					state.questions,
-					(v) => assign({}, v, { answer: payload.data[v.variable] || '' }) // no v.value maybe a problem
-				),
-				loadingAnswer: true,
-			}),
-		answerSuccess: (state, { payload }) =>
-			extend(state, {
-				loadingAnswer: false,
-			}),
-		answerFailure: (state, { payload }) =>
-			extend(state, {
-				loadingAnswer: false,
-				error: payload.error,
-			}),
+		// answer: (state, { payload }) =>
+		// 	extend(state, {
+		// 		questions: map(
+		// 			state.questions,
+		// 			(v) => assign({}, v, { answer: payload.data[v.variable] || '' }) // no v.value maybe a problem
+		// 		),
+		// 		loadingAnswer: true,
+		// 	}),
+		// answerSuccess: (state, { payload }) =>
+		// 	extend(state, {
+		// 		loadingAnswer: false,
+		// 	}),
+		// answerFailure: (state, { payload }) =>
+		// 	extend(state, {
+		// 		loadingAnswer: false,
+		// 		error: payload.error,
+		// 	}),
 	},
 })
 
@@ -50,9 +49,6 @@ export const {
 	listQuestion,
 	listQuestionSuccess,
 	listQuestionFailure,
-	answer,
-	answerSuccess,
-	answerFailure,
 } = actions
 
 export { default as questionSaga } from './sagas'
