@@ -33,6 +33,10 @@ Resources:
           ToPort: 80
         - CidrIp: "0.0.0.0/0"
           IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: "TCP"
           FromPort: 5000
           ToPort: 5000
       VpcId: !Ref VpcId
@@ -54,18 +58,18 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
 
-    LoadBalancerListener:
-      Type: AWS::ElasticLoadBalancingV2::Listener
-      Properties:
-        LoadBalancerArn: !Ref LoadBalancer
-        Port: 443
-        Protocol: HTTPS
-        SslPolicy: ELBSecurityPolicy-2016-08
-        Certificates:
-          - CertificateArn:  arn:aws:acm:sa-east-1:045089554220:certificate/995229ee-1fc7-44a5-85d7-3c61bea261bb
-        DefaultActions:
-          - Type: forward
-            TargetGroupArn: !Ref TargetGroup
+  LoadBalancerListenerhttps:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      SslPolicy: ELBSecurityPolicy-2016-08
+      Certificates:
+        - CertificateArn: arn:aws:acm:us-east-1:833120502863:certificate/8c2f95b8-781e-4f4c-9c46-94aef2b302c0
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -85,20 +89,6 @@ Resources:
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: 30
-
-  ListenerRule:
-    Type: AWS::ElasticLoadBalancingV2::ListenerRule
-    Properties:
-      ListenerArn: !Ref LoadBalancerListener
-      Priority: 1
-      Conditions:
-        - Field: path-pattern
-          Values:
-            - /
-      Actions:
-        - TargetGroupArn: !Ref TargetGroup
-          Type: forward
-
 
 Outputs:
   TargetGroup:

@@ -30,8 +30,6 @@ const env = getClientEnvironment(publicUrl);
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-console.log(env.stringified['process.env'].NODE_ENV)
-console.log(['"production"', '"staging"'].indexOf(env.stringified['process.env'].NODE_ENV))
 if (['"production"', '"staging"'].indexOf(env.stringified['process.env'].NODE_ENV) < 0 ) {
   throw new Error('Production builds must have NODE_ENV=production.');
 }
