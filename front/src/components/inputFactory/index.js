@@ -1,62 +1,35 @@
 import React from 'react'
-import { string, oneOf, bool, array } from 'prop-types'
+import { object } from 'prop-types'
 import { Form, Input, Radio } from 'antd'
 
-function InputFactory({ name, label, type, isRequired, tree }) {
-	console.log(name, label, type)
-	function callBack(e) {
-		console.log(e.target.value, tree)
-		if (e.target.value) {
-			tree.map((question) =>
-				InputFactory({
-					name: question.name,
-					label: question.label,
-					type: 'input',
-				})
+function InputFactory({ content }) {
+	const children = []
+
+	for (let i = 0; i < content.length; i++) {
+		const { value, variable, type, options } = content[i]
+		if (type === 'input') {
+			children.push(
+				<Form.Item name={variable} label={value} type={type} colon={false}>
+					<Input placeholder="" />
+				</Form.Item>
+			)
+		} else if (type === 'radio') {
+			children.push(
+				<Form.Item name={variable} label={value} type={type} colon={false}>
+					<Radio.Group>
+						<Radio value={true}>{options[0]}</Radio>
+						<Radio value={false}>{options[1]}</Radio>
+					</Radio.Group>
+				</Form.Item>
 			)
 		}
 	}
-	if (type === 'radio') {
-		return (
-			<Form.Item
-				name={name}
-				label={label}
-				type={type}
-				rules={[{ required: isRequired, message: 'Este campo é obrigatório!' }]}
-				hasFeedback
-				colon={false}>
-				<Radio.Group onChange={(e) => callBack(e)}>
-					<Radio value={true}>Sim</Radio>
-					<Radio value={false}>Nao</Radio>
-				</Radio.Group>
-			</Form.Item>
-		)
-	}
-	return (
-		<Form.Item
-			name={name}
-			label={label}
-			type={type}
-			rules={[{ required: isRequired, message: 'Este campo é obrigatório!' }]}
-			hasFeedback
-			colon={false}>
-			<Input />
-		</Form.Item>
-	)
+
+	return children
 }
 
 InputFactory.propTypes = {
-	name: string.isRequired,
-	label: string.isRequired,
-	isRequired: bool,
-	tree: array,
-	type: oneOf(['input', 'radio', 'checkbox', 'date']),
-}
-
-InputFactory.defaultProps = {
-	type: 'input',
-	isRequired: false,
-	tree: [{ name: 'tree', label: 'tree label' }],
+	name: object.isRequired,
 }
 
 export default InputFactory

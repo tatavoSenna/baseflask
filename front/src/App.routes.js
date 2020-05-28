@@ -6,7 +6,6 @@ import AdminRoute from './services/AdminRoutes'
 import Login from './pages/login'
 import Home from './pages/home'
 import Contracts from './pages/contracts'
-import AddContract from './pages/addContract'
 import StepForm from './pages/form'
 
 import Wrapper from '~/components/wrapper'
@@ -30,12 +29,6 @@ function Routes() {
 						exact
 						path={ROUTES.contracts}
 						component={Contracts}
-						isPrivate
-					/>
-					<AdminRoute // TODO remove
-						exact
-						path={ROUTES.addContract}
-						component={AddContract}
 						isPrivate
 					/>
 					<AdminRoute exact path={ROUTES.form} component={StepForm} isPrivate />

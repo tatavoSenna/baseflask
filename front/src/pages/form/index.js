@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Card, Steps } from 'antd'
+import { Layout } from 'antd'
+
+import BreadCrumb from '~/components/breadCrumb'
+import StepsFactory from './step'
 
 import { listQuestion } from '~/states/modules/question'
-
-import StepsFactory from './step'
 
 const getCurrentStepAndComponent = ({ edge, content }) => ({
 	step: 0,
@@ -16,7 +17,6 @@ function StepForm() {
 	const { current } = useParams()
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<StepsFactory />)
-	const [currentStep, setCurrentStep] = useState(0)
 	const { questions } = useSelector(({ question }) => question)
 
 	useEffect(() => {
@@ -28,23 +28,20 @@ function StepForm() {
 			content: questions.nodes ? questions.nodes[current] : null,
 			edge: questions.edges ? questions.edges[current] : null,
 		})
-		setCurrentStep(step)
+		// setCurrentStep(step)
 		setStepComponent(component)
 	}, [current, questions])
 
-	const { Step } = Steps
 	return (
-		<Card bordered={false}>
-			<>
-				<Steps current={currentStep}>
-					<Step />
-					<Step />
-					<Step />
-					<Step />
-				</Steps>
+		<Layout style={{ padding: '0 24px 24px' }}>
+			<BreadCrumb parent="Contatros" current="Novo Contrato" />
+			<Layout
+				style={{
+					padding: '50px 24px',
+				}}>
 				{stepComponent}
-			</>
-		</Card>
+			</Layout>
+		</Layout>
 	)
 }
 

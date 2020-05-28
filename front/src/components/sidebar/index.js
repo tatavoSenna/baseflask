@@ -4,11 +4,12 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import {
 	FileAddOutlined,
-	// HomeOutlined,
 	FileOutlined,
-	TeamOutlined,
 	FileDoneOutlined,
 } from '@ant-design/icons'
+
+// import logo from '~/assets/logo.svg'
+import styles from './index.module.scss'
 
 function SideBar({ collapsed, onCollapse }) {
 	const history = useHistory()
@@ -34,12 +35,8 @@ function SideBar({ collapsed, onCollapse }) {
 				backgroundColor: '#001529',
 			}}
 			theme="light"
-			style={{
-				position: 'absolute',
-				height: '100%',
-				backgroundColor: 'fff',
-				zIndex: 2,
-			}}>
+			className={styles.sidebar}>
+			{/* <svg src={logo} alt="Lawing" className={styles.logo} /> */}
 			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
 				<SubMenu key="sub1" icon={<FileOutlined />} title="Contratos">
 					<Menu.Item
@@ -52,18 +49,8 @@ function SideBar({ collapsed, onCollapse }) {
 						key="/addContracts"
 						icon={<FileAddOutlined />}
 						onClick={() => handleGoTo('/form/pj')}>
-						Novo contrato New
+						Novo contrato
 					</Menu.Item>
-					{/* <Menu.Item
-						key="/addContracts"
-						icon={<FileAddOutlined />}
-						onClick={() => handleGoTo('/addContracts')}>
-						Novo contrato Old
-					</Menu.Item> */}
-				</SubMenu>
-				<SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-					<Menu.Item key="6">Team 1</Menu.Item>
-					<Menu.Item key="8">Team 2</Menu.Item>
 				</SubMenu>
 			</Menu>
 		</Sider>

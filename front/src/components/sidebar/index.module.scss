@@ -1,0 +1,19 @@
+.logo {
+    path {
+        fill: #001529;
+        width: 50px;
+    }
+}
+
+.sidebar {
+    position: absolute;
+    height: 100%;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.puller {
+    top: 10px;
+    color: #fff;
+    background-color: #001529;
+}

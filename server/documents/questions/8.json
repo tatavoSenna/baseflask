@@ -1,4 +1,5 @@
 {
+    "start": "pj",
     "nodes": {
       "pj": {
         "questions": [

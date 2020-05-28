@@ -6,20 +6,17 @@ import {
 	useDispatch,
 	//useSelector
 } from 'react-redux'
-import { Form, Button, Divider, Input, Radio } from 'antd'
+import { Form, Button } from 'antd'
 
 import {
 	appendAnswer,
 	// answerRequest
 } from '~/states/modules/answer'
+import InputFactory from '~/components/inputFactory'
 
-const formItemLayout = {
-	labelCol: {
-		span: 5,
-	},
-	wrapperCol: {
-		span: 19,
-	},
+const layout = {
+	labelCol: { span: 8 },
+	wrapperCol: { span: 12 },
 }
 
 const StepsFactory = ({ content, edge }) => {
@@ -49,67 +46,61 @@ const StepsFactory = ({ content, edge }) => {
 		console.log(data)
 	}
 
-	const getFields = () => {
-		const children = []
+	// const getFields = () => {
+	// 	const children = []
 
-		for (let i = 0; i < content.length; i++) {
-			const { value, variable, type, options } = content[i]
-			if (type === 'input') {
-				children.push(
-					<Form.Item
-						span={15}
-						name={variable}
-						label={value}
-						type={type}
-						colon={false}>
-						<Input placeholder="" />
-					</Form.Item>
-				)
-			} else if (type === 'radio') {
-				children.push(
-					<Form.Item
-						span={15}
-						name={variable}
-						label={value}
-						type={type}
-						colon={false}>
-						<Radio.Group>
-							<Radio value={true}>{options[0]}</Radio>
-							<Radio value={false}>{options[1]}</Radio>
-						</Radio.Group>
-					</Form.Item>
-				)
-			}
-		}
+	// 	for (let i = 0; i < content.length; i++) {
+	// 		const { value, variable, type, options } = content[i]
+	// 		if (type === 'input') {
+	// 			children.push(
+	// 				<Form.Item name={variable} label={value} type={type} colon={false}>
+	// 					<Input placeholder="" />
+	// 				</Form.Item>
+	// 			)
+	// 		} else if (type === 'radio') {
+	// 			children.push(
+	// 				<Form.Item name={variable} label={value} type={type} colon={false}>
+	// 					<Radio.Group>
+	// 						<Radio value={true}>{options[0]}</Radio>
+	// 						<Radio value={false}>{options[1]}</Radio>
+	// 					</Radio.Group>
+	// 				</Form.Item>
+	// 			)
+	// 		}
+	// 	}
 
-		return children
-	}
+	// 	return children
+	// }
 
 	return (
-		<>
-			<Form
-				{...formItemLayout}
-				form={form}
-				layout="horizontal"
-				//className={styles.stepForm}
-				hideRequiredMark
-				onFinish={onSubmit}
-				// initialValues={data}
-			>
-				{content && content.length > 0 && getFields()}
-				<Button type="primary" onClick={() => history.goBack()}>
+		<Form
+			{...layout}
+			form={form}
+			layout="horizontal"
+			//className={styles.stepForm}
+			hideRequiredMark
+			onFinish={onSubmit}
+			// initialValues={data}
+		>
+			{content && content.length > 0 && InputFactory({ content })}
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					paddingBottom: '50px',
+				}}>
+				<Button
+					type="primary"
+					style={{ marginRight: '20px' }}
+					onClick={() => history.goBack()}>
 					Anterior
 				</Button>
 				<Button type="primary" htmlType="submit">
 					Próximo
 				</Button>
-			</Form>
-			<Divider
-				style={{
-					margin: '40px 0 24px',
-				}}
-			/>
-		</>
+			</div>
+		</Form>
 	)
 }
 
