@@ -37,16 +37,16 @@ function SideBar({ collapsed, onCollapse }) {
 			theme="light"
 			className={styles.sidebar}>
 			{/* <svg src={logo} alt="Lawing" className={styles.logo} /> */}
-			<Menu defaultSelectedKeys={[`${pathname}`]} mode="inline">
+			<Menu defaultSelectedKeys={[`${pathname.split('/')[1]}`]} mode="inline">
 				<SubMenu key="sub1" icon={<FileOutlined />} title="Contratos">
 					<Menu.Item
-						key="/contracts"
+						key=""
 						icon={<FileDoneOutlined />}
-						onClick={() => handleGoTo('/contracts')}>
+						onClick={() => handleGoTo('/')}>
 						Contratos
 					</Menu.Item>
 					<Menu.Item
-						key="/addContracts"
+						key="form"
 						icon={<FileAddOutlined />}
 						onClick={() => handleGoTo('/form/pj')}>
 						Novo contrato

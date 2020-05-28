@@ -12,14 +12,14 @@ import {
 	appendAnswer,
 	// answerRequest
 } from '~/states/modules/answer'
-import InputFactory from '~/components/inputFactory'
+import InputFactory from '../inputFactory'
 
 const layout = {
 	labelCol: { span: 8 },
 	wrapperCol: { span: 12 },
 }
 
-const StepsFactory = ({ content, edge }) => {
+const FormFactory = ({ content, edge }) => {
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
@@ -45,32 +45,6 @@ const StepsFactory = ({ content, edge }) => {
 		console.log('finished')
 		console.log(data)
 	}
-
-	// const getFields = () => {
-	// 	const children = []
-
-	// 	for (let i = 0; i < content.length; i++) {
-	// 		const { value, variable, type, options } = content[i]
-	// 		if (type === 'input') {
-	// 			children.push(
-	// 				<Form.Item name={variable} label={value} type={type} colon={false}>
-	// 					<Input placeholder="" />
-	// 				</Form.Item>
-	// 			)
-	// 		} else if (type === 'radio') {
-	// 			children.push(
-	// 				<Form.Item name={variable} label={value} type={type} colon={false}>
-	// 					<Radio.Group>
-	// 						<Radio value={true}>{options[0]}</Radio>
-	// 						<Radio value={false}>{options[1]}</Radio>
-	// 					</Radio.Group>
-	// 				</Form.Item>
-	// 			)
-	// 		}
-	// 	}
-
-	// 	return children
-	// }
 
 	return (
 		<Form
@@ -104,9 +78,13 @@ const StepsFactory = ({ content, edge }) => {
 	)
 }
 
-export default StepsFactory
+export default FormFactory
 
-StepsFactory.propTypes = {
-	content: array.isRequired,
-	edge: object.isRequired,
+FormFactory.propTypes = {
+	content: array,
+	edge: object,
+}
+FormFactory.defaultProps = {
+	content: [],
+	edge: {},
 }

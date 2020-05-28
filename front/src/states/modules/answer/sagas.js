@@ -1,7 +1,7 @@
-import { call, put, takeEvery, select } from 'redux-saga/effects'
+// import { call, put, takeEvery, select } from 'redux-saga/effects'
 
-import api from '~/services/api'
-import { answer, answerSuccess, answerFailure } from '.'
+// import api from '~/services/api'
+// import { answer, answerSuccess, answerFailure } from '.'
 
 export default function* rootSaga() {}
 

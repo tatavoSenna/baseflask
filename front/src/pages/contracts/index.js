@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Skeleton, Card, Layout } from 'antd'
+import { Skeleton, Card, Layout, Empty, Button } from 'antd'
 import {
 	EditOutlined,
 	DownloadOutlined,
@@ -11,6 +12,7 @@ import { listContract, viewContract } from '~/states/modules/contract'
 import BreadCrumb from '~/components/breadCrumb'
 
 function Contracts() {
+	const history = useHistory()
 	const dispatch = useDispatch()
 	const contracts = useSelector(({ contract }) => contract.contracts)
 	const loading = useSelector(({ contract }) => contract.loading)
@@ -68,6 +70,13 @@ function Contracts() {
 						</Skeleton>
 					</Card>
 				))}
+				{!loading && contracts.length === 0 && (
+					<Empty description={<span>Nenhum contrato encontrado</span>}>
+						<Button type="primary" onClick={() => history.push('/form/pj')}>
+							Criar contrato
+						</Button>
+					</Empty>
+				)}
 			</Layout>
 		</Layout>
 	)

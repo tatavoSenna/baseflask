@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import AdminRoute from './services/AdminRoutes'
 
 import Login from './pages/login'
-import Home from './pages/home'
+// import Home from './pages/home'
 import Contracts from './pages/contracts'
-import StepForm from './pages/form'
+import AddContract from './pages/addContract'
 
 import Wrapper from '~/components/wrapper'
 
@@ -24,14 +24,19 @@ function Routes() {
 			<Switch>
 				<AdminRoute path={ROUTES.login} component={Login} />
 				<Wrapper>
-					<AdminRoute exact path={ROUTES.home} component={Home} isPrivate />
+					{/* <AdminRoute exact path={ROUTES.home} component={Home} isPrivate /> */}
 					<AdminRoute
 						exact
-						path={ROUTES.contracts}
+						path={ROUTES.home}
 						component={Contracts}
 						isPrivate
 					/>
-					<AdminRoute exact path={ROUTES.form} component={StepForm} isPrivate />
+					<AdminRoute
+						exact
+						path={ROUTES.form}
+						component={AddContract}
+						isPrivate
+					/>
 				</Wrapper>
 			</Switch>
 		</Router>

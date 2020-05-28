@@ -4,19 +4,19 @@ import { useParams } from 'react-router-dom'
 import { Layout } from 'antd'
 
 import BreadCrumb from '~/components/breadCrumb'
-import StepsFactory from './step'
+import FormFactory from './components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
 
 const getCurrentStepAndComponent = ({ edge, content }) => ({
 	step: 0,
-	component: <StepsFactory content={content?.questions} edge={edge} />,
+	component: <FormFactory content={content?.questions} edge={edge} />,
 })
 
-function StepForm() {
+function AddContract() {
 	const { current } = useParams()
 	const dispatch = useDispatch()
-	const [stepComponent, setStepComponent] = useState(<StepsFactory />)
+	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { questions } = useSelector(({ question }) => question)
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ function StepForm() {
 	}, [dispatch])
 
 	useEffect(() => {
-		const { step, component } = getCurrentStepAndComponent({
+		const { component } = getCurrentStepAndComponent({
 			content: questions.nodes ? questions.nodes[current] : null,
 			edge: questions.edges ? questions.edges[current] : null,
 		})
@@ -45,4 +45,4 @@ function StepForm() {
 	)
 }
 
-export default StepForm
+export default AddContract
