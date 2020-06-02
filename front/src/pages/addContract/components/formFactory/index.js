@@ -8,10 +8,7 @@ import {
 } from 'react-redux'
 import { Form, Button } from 'antd'
 
-import {
-	appendAnswer,
-	// answerRequest
-} from '~/states/modules/answer'
+import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import InputFactory from '../inputFactory'
 
 const layout = {
@@ -41,9 +38,7 @@ const FormFactory = ({ content, edge }) => {
 			return history.push(to)
 		}
 
-		// TODO: answerRequest
-		console.log('finished')
-		console.log(data)
+		dispatch(answerRequest({ history }))
 	}
 
 	return (

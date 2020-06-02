@@ -17,7 +17,7 @@ function AddContract() {
 	const { current } = useParams()
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
-	const { questions } = useSelector(({ question }) => question)
+	const questions = useSelector(({ question }) => question.data)
 
 	useEffect(() => {
 		dispatch(listQuestion({ documentId: 8 }))

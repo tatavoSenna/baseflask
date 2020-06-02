@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { selectAllContracts } from './selectors'
 
 const initialState = {
-	contracts: [],
+	data: [],
 	error: null,
 	loading: false,
 }
@@ -19,7 +19,7 @@ const { actions, reducer } = createSlice({
 			}),
 		listContractSuccess: (state, { payload }) =>
 			extend(state, {
-				contracts: selectAllContracts(payload.items),
+				data: selectAllContracts(payload.items),
 				error: null,
 				loading: false,
 			}),

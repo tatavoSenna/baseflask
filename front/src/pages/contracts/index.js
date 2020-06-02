@@ -14,8 +14,7 @@ import BreadCrumb from '~/components/breadCrumb'
 function Contracts() {
 	const history = useHistory()
 	const dispatch = useDispatch()
-	const contracts = useSelector(({ contract }) => contract.contracts)
-	const loading = useSelector(({ contract }) => contract.loading)
+	const { data: contracts, loading } = useSelector(({ contract }) => contract)
 
 	useEffect(() => {
 		dispatch(listContract())

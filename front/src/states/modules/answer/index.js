@@ -2,7 +2,7 @@ import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	answer: {},
+	data: {},
 	error: null,
 	loading: false,
 }
@@ -13,7 +13,7 @@ const { actions, reducer } = createSlice({
 	reducers: {
 		appendAnswer: (state, { payload }) =>
 			extend(state, {
-				answer: extend(state.answer, payload.data),
+				data: extend(state.data, payload.data),
 			}),
 		answerRequest: (state) => state,
 		answerSuccess: (state, { payload }) =>

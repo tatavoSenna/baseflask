@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Layout, Menu, Divider } from 'antd'
+import { Layout, Menu } from 'antd'
 
 import { logout } from '~/states/modules/session'
 import logo from '~/assets/logo.svg'
