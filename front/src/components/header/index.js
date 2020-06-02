@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Divider } from 'antd'
 
 import { logout } from '~/states/modules/session'
 import logo from '~/assets/logo.svg'
@@ -22,7 +22,7 @@ function Head() {
 				defaultSelectedKeys={['2']}
 				align="end"
 				theme="dark">
-				<Item style={styles.logoBox} onClick={() => history.push('/')}>
+				<Item onClick={() => history.push('/')}>
 					<img src={logo} alt="logo" style={{ width: '140px' }} />
 				</Item>
 				<Item

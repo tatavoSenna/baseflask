@@ -4,8 +4,8 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import {
 	FileAddOutlined,
-	FileOutlined,
-	FileDoneOutlined,
+	FileTextOutlined,
+	FolderOpenOutlined,
 } from '@ant-design/icons'
 
 // import logo from '~/assets/logo.svg'
@@ -37,19 +37,27 @@ function SideBar({ collapsed, onCollapse }) {
 			theme="light"
 			className={styles.sidebar}>
 			{/* <svg src={logo} alt="Lawing" className={styles.logo} /> */}
-			<Menu defaultSelectedKeys={[`${pathname.split('/')[1]}`]} mode="inline">
-				<SubMenu key="sub1" icon={<FileOutlined />} title="Contratos">
-					<Menu.Item
-						key=""
-						icon={<FileDoneOutlined />}
-						onClick={() => handleGoTo('/')}>
-						Contratos
-					</Menu.Item>
+			<Menu
+				defaultSelectedKeys={[`${pathname.split('/')[1] || '/'}`]}
+				mode="inline">
+				<Menu.Item
+					key="/"
+					onClick={() => handleGoTo('/')}
+					icon={<FolderOpenOutlined />}>
+					Contratos
+				</Menu.Item>
+				<SubMenu key="sub1" icon={<FileAddOutlined />} title="Novo Contrato">
 					<Menu.Item
 						key="form"
-						icon={<FileAddOutlined />}
+						icon={<FileTextOutlined />}
 						onClick={() => handleGoTo('/form/pj')}>
-						Novo contrato
+						Mercado Livre
+					</Menu.Item>
+					<Menu.Item
+						key="form-2"
+						icon={<FileTextOutlined />}
+						onClick={() => handleGoTo('/form/pj')}>
+						Contrato 2
 					</Menu.Item>
 				</SubMenu>
 			</Menu>

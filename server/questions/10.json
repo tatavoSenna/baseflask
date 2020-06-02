@@ -1,0 +1,152 @@
+{
+  "start": "pj",
+  "nodes": {
+    "mercadoLivre": {
+      "questions": [
+          {
+              "id": 1,
+              "dependsOn": null,
+              "variable": "socialReason",
+              "type": "radio",
+              "options": [
+                    "MERCADO LIVRE.COM ATIVIDADES DE INERNET LTDA. (matriz), inscrita no CNPJ/MF sob o no. 03.361.252/0001-34, com endereço comercial na Avenida das Nações Unidas, 3003, Osasco, SP, CEP 06.233-903.",
+                    "EBAZAR.COM.BR LTDA. ATIVIDADES DE INTERNET LTDA. (matriz), inscrita no CNPJ/MF sob o no. 03.007.331/0001-41, com endereço comercial na Avenida das Nações Unidas, 3003, Osasco, SP, CEP 06.233-903.",
+                    "MERCADOPAGO.COM REPRESENTAÇÕES LTDA. (matriz), inscrita no CNPJ/MF sob o no. 10.573.521/0001-91, com endereço comercial na Avenida das Nações Unidas, 3003, Osasco, SP, CEP 06.233-903.",
+                    "MERCADO ENVIOS SERVIÇOS DE LOGÍSTIVA LTDA. (matriz), inscrita no CNPJ/MF sob o no. 20.121.850/0001-55, com endereço comercial na Avenida das Nações Unidas, 3003, Osasco, SP, CEP 06.233-903.",
+                    "IBAZAR.COM ATIVIDADES DE INTERNET LTDA. (matriz), inscrita no CNPJ/MF sob o no. 03.499.243/0001-04, com endereço comercial na Avenida das Nações Unidas, 3003, Osasco, SP, CEP 06.233-903."
+                ],
+              "value": "Qual razão social da Contratante?"
+          }
+      ]
+    },
+    "thirdParty": {
+      "questions": [
+          {
+              "id": 1,
+              "variable": "concessionaireSigner",
+              "type": "input",
+              "value": "Razão social da contratada"
+          },
+          {
+              "id": 2,
+              "variable": "client",
+              "type": "input",
+              "value": "Endereço da contratada"
+          },
+          {
+              "id": 3,
+              "variable": "clientCpf",
+              "type": "input",
+              "value": "CPNJ da contratada?"
+          },
+          {
+              "id": 3,
+              "variable": "clientCpf",
+              "type": "input",
+              "value": "Quais serão os serviços que estão sendo contratados?"
+          }
+      ]
+    },
+    "term": {
+        "questions": [
+            {
+                "id": 1,
+                "variable": "goodType",
+                "type": "input",
+                "value": "Qual o veículos adquirido?"
+              },
+              {
+                  "id": 2,
+                  "variable": "description",
+                  "type": "input",
+                  "value": "Demonstrou insatisfação com relação à?"
+              },
+              {
+                  "id": 3,
+                  "variable": "optFor",
+                  "type": "input",
+                  "value": "A concessionária optou por?"
+              },
+              {
+                  "id": 4,
+                  "variable": "benefit",
+                  "type": "input",
+                  "value": "Qual o benefício concedido pela concessionária?"
+              }
+          ]
+      },
+      "recission": {
+          "questions": [
+              {
+                  "id": 1,
+                  "variable": "hasWitness",
+                  "type": "radio",
+                  "options": ["sim", "não"],
+                  "value": "Necessita de testemunhas?"
+              }
+          ]
+      },
+      "witnessData": {
+          "questions": [
+              {
+                  "id": 1,
+                  "variable": "witnessName1",
+                  "type": "input",
+                  "value": "Qual o nome da primeira testemunha?"
+              },
+              {
+                  "id": 2,
+                  "variable": "witnessCpf1",
+                  "type": "input",
+                  "value": "Qual o cpf da primeira testemunha?"
+              },
+              {
+                  "id": 1,
+                  "variable": "witnessName2",
+                  "type": "input",
+                  "value": "Qual o nome da segunda testemunha?"
+              },
+              {
+                  "id": 2,
+                  "variable": "witnessCpf2",
+                  "type": "input",
+                  "value": "Qual o cpf da segunda testemunha?"
+              }
+          ]
+      }
+  },
+  "edges": {
+    "pj": {
+      "from": "pj",
+      "to": "pf",
+      "end": false,
+      "data": null
+    },
+    "pf": {
+      "from": "pf",
+      "to": "good",
+      "end": false,
+      "data": null
+    },
+    "good": {
+      "from": "good",
+      "to": "witness",
+      "end": false,
+      "data": null
+    },
+    "witness": {
+      "from": "witness",
+      "to": "witnessData",
+      "end": true,
+      "data": {
+          "hasWitness": true
+      }
+    },
+    "witnessData": {
+      "from": "witness",
+      "to": null,
+      "end": true,
+      "data": null
+    }
+  }
+}
