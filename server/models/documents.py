@@ -1,7 +1,9 @@
+import enum
 from app import db
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql.json import JSON
+from sqlalchemy.dialects.postgresql import ENUM
 
 class DocumentModel(db.Model):
     __tablename__ = 'document_model'
@@ -10,6 +12,11 @@ class DocumentModel(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
     filename = db.Column(db.String(255), unique=False, nullable=True)
+    model_type = db.Column(
+        ENUM('docx', 'pdf', name='model_template_file_type'),
+        default= 'docx',
+        nullable=False
+    )
 
     def __repr__(self):
         return '<Document Model %r>' % self.name
