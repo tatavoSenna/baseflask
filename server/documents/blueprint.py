@@ -3,25 +3,30 @@ import io
 import logging
 import base64
 import json
+from datetime import datetime
+from app.controllers import get_document_models, get_documents, create_document
+from app.constants import months 
 from flask import request, Blueprint, abort, jsonify
 import boto3
 from botocore.exceptions import ClientError
-
 from app import db
-
 from app.models.documents import Document, DocumentVersion
 from app.auth.services import check_for_token
+from app.models.documents import DocumentModel
 from app.serializers.document_serializers import DocumentSerializer
 from sqlalchemy import desc
 from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document as DocusignDocument
 from app.docusign.services import get_token
 from app.docusign.serializers import EnvelopeSerializer
+from slugify import slugify
+from docxtpl import DocxTemplate
 
 documents_api = Blueprint('documents', __name__)
 
 @documents_api.route('/')
 @check_for_token
 def get_document_list(current_user):
+
     try:
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 20))
@@ -34,6 +39,79 @@ def get_document_list(current_user):
         'total': paginated_query.total,
         'items': DocumentSerializer(many=True).dump(paginated_query.items)
     })
+
+@documents_api.route('/create', methods=['POST'])
+@check_for_token
+def create(current_user):
+    # check if content_type is json
+    if not request.is_json: 
+        return jsonify({'message': 'Accepts only content-type json.'}), 400
+    else:
+        content = request.json
+
+    # check for required parameters
+    document_model_id = content.get('document', None)
+    questions = content.get('questions', None)
+    if not document_model_id or not questions:
+        return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
+
+    # loads the document model
+    document_model = DocumentModel.query.get(8)
+    if not document_model:
+        return jsonify({'message': 'Document model is missing.'}), 404
+
+    # loads the template
+    doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
+
+    context = {}
+    title = document_model.name
+
+    for question in questions:
+        variable = None
+        answer = None
+
+        if 'variable' in question:
+            variable = question['variable']
+
+        if 'answer' in question:
+            answer = question['answer']
+
+        if variable and answer:
+            context[variable] = answer
+
+            # gets the title fromt he user's answeers and  the filename from the document_title
+            if variable == 'title':
+                title = answer
+
+    now = datetime.now()
+    context['day'] = str(now.day).zfill(2)
+    context['month'] = months[now.month - 1]
+    context['year'] = now.year
+
+    # generate document template with decision tree variables to a memory buffer
+    doc.render(context)
+    document_buffer = io.BytesIO()
+    doc.save(document_buffer)
+
+    # save generated document to an s3 
+    s3_client = boto3.client('s3')
+    s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+    document_buffer.seek(0)
+    try:
+        s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
+    except ClientError as e:
+        print(f'error uploading to s3 {e}')
+
+    new_document = create_document(
+        current_user['client_id'],
+        current_user['id'],
+        title, 
+        document_model_id, 
+        questions,
+        s3_object_key,
+        ) 
+    return new_document
+
 
 @documents_api.route('/<int:document_id>/download')
 @check_for_token
@@ -164,3 +242,46 @@ def request_signatures(current_user, document_id):
         return jsonify(DocumentSerializer().dump(document))
     else :
         return jsonify({'message': 'No signers.'}), 400
+
+
+
+@documents_api.route('/models', methods=['GET'])
+@check_for_token
+def documents(current_user):
+
+    document_models = get_document_models(current_user['client_id'])
+
+    return jsonify(document_models)
+
+
+@documents_api.route('/questions', methods=['GET'])
+@check_for_token
+def questions(current_user):
+    # TODO: change parameter to 'model'
+    document_model = request.args.get('document')
+
+    if not document_model:
+        return jsonify({'message': 'Value is missing.'}), 404
+
+    with open('app/documents/questions/%s.json' % document_model, encoding='utf-8') as json_file:
+        decision_tree = json.load(json_file)
+
+    # Initialize the decision tree with the title input field
+    augumented_decision_tree = [{
+            "label": "",
+            "variable": "title",
+            "option": "",
+            "type": "input",
+            "value": "Qual o título do Documento?",
+            "answer": "",
+            "parentIndex": None,
+            "childIndex": 1
+        }]
+    
+    for field in decision_tree:
+        field['parentIndex'] = 0 if field['parentIndex'] == None else field['parentIndex'] + 1
+        if 'childIndex' in field and field['childIndex']:
+            field['childIndex'] = field['childIndex'] +  1
+        augumented_decision_tree.append(field)
+
+    return jsonify(augumented_decision_tree)

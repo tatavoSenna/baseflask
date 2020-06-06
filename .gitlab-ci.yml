@@ -1,0 +1,15 @@
+
+build_back:
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    variables:
+        AWS_ACCESS_KEY_ID: AKIAIRXAMWKHW6GMRH7A
+        AWS_SECRET_ACCESS_KEY: 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
+    script:
+        - echo "{\"credsStore\":\"ecr-login\",\"credHelpers\":{\"045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api\":\"ecr-login\"}}" > /kaniko/.docker/config.json
+        - /kaniko/executor --context $CI_PROJECT_DIR/server --dockerfile $CI_PROJECT_DIR/server/Dockerfile --destination 045089554220.dkr.ecr.sa-east-1.amazonaws.com/lawing_api
+    only:
+        - tags
+
+        

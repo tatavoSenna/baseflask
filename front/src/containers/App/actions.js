@@ -83,7 +83,7 @@ export const newDocumentFromModel = (document_model) => {
 
 export const fetchDocumentModels = () => {
   return dispatch => {
-    axios.get('/models')
+    axios.get('/documents/models')
       .then(response => {
         const { data } = response
         if(!_.isEmpty(data)) {
