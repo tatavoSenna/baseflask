@@ -1,0 +1,32 @@
+[
+  {"label": "", "variable": "company", "option": "", "type": "radio", "value": "Qual a empresa?", "answer": "", "parentIndex": null},
+  {"label": "Mercado Livre", "option": "Mercado Livre", "parentIndex": 0, "childIndex": 6},
+  {"label": "EBazar", "option": "EBazar", "parentIndex": 0, "childIndex": 6},
+  {"label": "Mercado Pago", "option": "Mercado Pago", "parentIndex": 0, "childIndex": 6},
+  {"label": "Mercado Envios", "option": "Mercado Envios", "parentIndex": 0, "childIndex": 6},
+  {"label": "Ibazar", "option": "Ibazar", "parentIndex": 0, "childIndex": 6},
+
+  {"label": "", "variable": "contractor-name", "option": "", "type": "input", "value": "Qual a razão social da empresa?", "answer": "", "parentIndex": 0, "childIndex": 7},
+  {"label": "", "variable": "contractor-address", "option": "", "type": "input", "value": "Qual o endereço da contratada?", "answer": "", "parentIndex": 6, "childIndex": 8},
+  {"label": "", "variable": "contractor-cnpj", "option": "", "type": "input", "value": "Qual o CNPJ da contratada?", "answer": "", "parentIndex": 7, "childIndex": 9},
+
+  {"label": "", "variable": "service-description", "option": "", "type": "input", "value": "Quais serão os serviços que estão sendo contratados?", "answer": "", "parentIndex": 8, "childIndex": 10},
+  {"label": "", "variable": "contract-duration", "option": "", "type": "input", "value": "Qual será o prazo do contrato?", "answer": "", "parentIndex": 9, "childIndex": 11},
+  {"label": "", "variable": "contract-cancel-terms", "option": "", "type": "input", "value": "Quais as condições de rescisão imotivada?", "answer": "", "parentIndex": 10, "childIndex": 12},
+
+  {"label": "", "variable": "payment-model", "option": "", "type": "radio", "value": "Qual a modalidade de pagamento?", "answer": "", "parentIndex": 11},
+  {"label": "Fixo", "option": "fixed", "parentIndex": 12, "childIndex": 16},
+  {"label": "Variável", "option": "variable", "parentIndex": 12, "childIndex": 16},
+  {"label": "Fixo e variável", "option": "fixed-variable", "parentIndex":12, "childIndex": 16},
+
+  {"label": "", "variable": "payment-description", "option": "", "type": "input", "value": "Como será composto o pagamento?", "answer": "", "parentIndex": 12, "childIndex": 17},
+  {"label": "", "variable": "payment-price", "option": "", "type": "input", "value": "Qual o valor total pelos serviços?", "answer": "", "parentIndex": 16, "childIndex": 18},
+  {"label": "", "variable": "payment-terms", "option": "", "type": "input", "value": "Quais as condições de pagamento dos serviços?", "answer": "", "parentIndex": 17, "childIndex": 19},
+
+  {"label": "", "variable": "cnpj", "option": "", "type": "radio", "value": "Qual o valor máximo de alçada?", "answer": "", "parentIndex": 18},
+  {"label": "R$ 50.000,00", "option": "50k", "parentIndex":19, "childIndex": null},
+  {"label": "R$ 500.000,00", "option": "500k", "parentIndex":19, "childIndex": null},
+  {"label": "R$ 1.000.000,00", "option": "1M", "parentIndex":19, "childIndex": null},
+  {"label": "R$ 2.000.000,00", "option": "2M", "parentIndex":19, "childIndex": null}
+
+]
