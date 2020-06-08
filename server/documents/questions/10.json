@@ -6,6 +6,14 @@
   {"label": "Mercado Envios", "option": "Mercado Envios", "parentIndex": 0, "childIndex": 6},
   {"label": "Ibazar", "option": "Ibazar", "parentIndex": 0, "childIndex": 6},
 
+  {"label": "", "variable": "company-signer-1-name", "option": "", "type": "input", "value": "Qual o nome do primeiro responsável pela empresa?", "answer": "", "parentIndex": 0, "childIndex": 7},
+  {"label": "", "variable": "company-signer-1-job", "option": "", "type": "input", "value": "Qual o cargo do primeiro responsável pela empresa?", "answer": "", "parentIndex": 6, "childIndex": 8},
+  {"label": "", "variable": "company-signer-1-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela empresa?", "answer": "", "parentIndex": 7, "childIndex": 9},
+
+  {"label": "", "variable": "company-signer-2-name", "option": "", "type": "input", "value": "Qual o nome do primeiro responsável pela empresa?", "answer": "", "parentIndex": 8, "childIndex": 10},
+  {"label": "", "variable": "company-signer-2-job", "option": "", "type": "input", "value": "Qual o cargo do primeiro responsável pela empresa?", "answer": "", "parentIndex": 9, "childIndex": 11},
+  {"label": "", "variable": "company-signer-2-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela empresa?", "answer": "", "parentIndex": 10, "childIndex": 12},
+
   {"label": "", "variable": "contractor-name", "option": "", "type": "input", "value": "Qual a razão social da empresa?", "answer": "", "parentIndex": 0, "childIndex": 7},
   {"label": "", "variable": "contractor-address", "option": "", "type": "input", "value": "Qual o endereço da contratada?", "answer": "", "parentIndex": 6, "childIndex": 8},
   {"label": "", "variable": "contractor-cnpj", "option": "", "type": "input", "value": "Qual o CNPJ da contratada?", "answer": "", "parentIndex": 7, "childIndex": 9},

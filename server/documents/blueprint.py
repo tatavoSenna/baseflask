@@ -56,12 +56,9 @@ def create(current_user):
         return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
 
     # loads the document model
-    document_model = DocumentModel.query.get(8)
+    document_model = DocumentModel.query.get(document_model_id)
     if not document_model:
         return jsonify({'message': 'Document model is missing.'}), 404
-
-    # loads the template
-    doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
 
     context = {}
     title = document_model.name
@@ -88,12 +85,16 @@ def create(current_user):
     context['month'] = months[now.month - 1]
     context['year'] = now.year
 
-    # generate document template with decision tree variables to a memory buffer
-    doc.render(context)
-    document_buffer = io.BytesIO()
-    doc.save(document_buffer)
+    if document_model.model_type == 'docx':
+        # generate document template with decision tree variables to a memory buffer
+        doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
+        doc.render(context)
+        document_buffer = io.BytesIO()
+        doc.save(document_buffer)
+    elif document_model.model_type == 'pdf':
+        document_buffer = open(f'app/documents/template/{document_model_id}.pdf', 'rb')
 
-    # save generated document to an s3 
+    # save generated document to an s3
     s3_client = boto3.client('s3')
     s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
     document_buffer.seek(0)
@@ -192,14 +193,23 @@ def request_signatures(current_user, document_id):
             signer = Signer( # The signer
                 email = signer_data['email'], name = signer_data['name'], recipient_id = str(index + 1), routing_order = "1")
 
-            # Create a sign_here tab (field on the document)
-            sign_here = SignHere( # DocuSign SignHere field/tab 
-                recipient_id = '1', tab_label = 'assine aqui',
-                anchor_string = signer_data['anchor_string'],
-                anchor_x_offset = signer_data['anchor_x_offset'],
-                anchor_y_offset = signer_data['anchor_y_offset'],
-                anchor_ignore_if_not_present = "false",
-                anchor_units = "inches"
+            # Create a sign_here tab on the document, either relative to an anchor string or to the document page
+            if signer_data.get('anchor_string', None):
+                sign_here = SignHere(
+                    recipient_id = '1', tab_label = 'assine aqui',
+                    anchor_string = signer_data['anchor_string'],
+                    anchor_x_offset = signer_data['anchor_x_offset'],
+                    anchor_y_offset = signer_data['anchor_y_offset'],
+                    anchor_ignore_if_not_present = "false",
+                    anchor_units = "inches"
+                    )
+            else:
+                sign_here = SignHere(
+                    recipient_id = '1',
+                    tab_label = 'assine aqui',
+                    x_position = 100,
+                    y_position = 100,
+                    page_number = 1
                 )
 
             # Add the tabs model (including the sign_here tab) to the signer
@@ -242,8 +252,6 @@ def request_signatures(current_user, document_id):
         return jsonify(DocumentSerializer().dump(document))
     else :
         return jsonify({'message': 'No signers.'}), 400
-
-
 
 @documents_api.route('/models', methods=['GET'])
 @check_for_token
