@@ -130,7 +130,7 @@ Resources:
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
-                - printf '[{"name":"simple-app","imageUri":"%s"}]' "$IMAGE_URI" > images.json
+                - printf '[{"name":"lawing-api","imageUri":"%s"}]' "$IMAGE_URI" > images.json
           artifacts:
             files: images.json
       Environment:
