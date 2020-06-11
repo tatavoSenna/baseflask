@@ -19,6 +19,13 @@ Parameters:
       https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html
       to learn more about launch types.
 
+  Repository:
+    Type: String
+    Description: >
+      The Reporitory with the image for the main applications. It must already have an image
+      with the initial image tagged as 0.
+    Default: lawing-api
+
   GitHubUser:
     Type: String
     Description: The repository owner.
@@ -60,6 +67,8 @@ Metadata:
         default: "Personal Access Token"
       LaunchType:
         default: "Launch Type"
+      Repository:
+        default: "lawing-api"
     ParameterGroups:
       - Label:
           default: Cluster Configuration
@@ -100,6 +109,7 @@ Resources:
         GitHubToken: !Ref GitHubToken
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
+        Repository: !Ref Repository
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack

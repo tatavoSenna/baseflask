@@ -22,11 +22,10 @@ Parameters:
   Service:
     Type: String
 
-Resources:
   Repository:
-    Type: AWS::ECR::Repository
-    Properties:
-      RepositoryName: lawing-api
+    Type: String
+
+Resources:
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
