@@ -98,6 +98,12 @@ Resources:
         - Name: lawing-api
           Image: 833120502863.dkr.ecr.us-east-1.amazonaws.com/lawing-api:2
           Essential: true
+          LogConfiguration: 
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: !Ref AWS::StackName
           Environment:
           - Name: SECRET_KEY
             Value: '3456yrtyr65!2@'

@@ -1,5 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+    AppDomainName:
+        Type: String
+
 Resources:
     Website:
       Type: AWS::S3::Bucket
@@ -13,6 +17,8 @@ Resources:
         Type: AWS::CloudFront::Distribution
         Properties:
             DistributionConfig:
+                Aliases: 
+                    - !Ref AppDomainName
                 Origins:
                     - 
                         # Use the Website as the CDN origin
@@ -23,7 +29,8 @@ Resources:
                             HTTPSPort: 443
                             OriginProtocolPolicy: https-only
                 CustomErrorResponses:
-                    - ErrorCode: 404
+                    - 
+                        ErrorCode: 404
                         ResponseCode: 200
                         ResponsePagePath: /index.html
                 Enabled: true
@@ -31,7 +38,7 @@ Resources:
             ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
             # Configure the caching behavior for our CDN
                 ViewerCertificate:
-                    AcmCertificateArn: arn:aws:acm:us-east-1:833120502863:certificate/8c2f95b8-781e-4f4c-9c46-94aef2b302c0
+                    AcmCertificateArn: arn:aws:acm:us-east-1:833120502863:certificate/15bf796f-f638-40c3-b047-2b7ef047d904
                     SslSupportMethod: sni-only
                 DefaultCacheBehavior: 
                     AllowedMethods:
