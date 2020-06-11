@@ -5,6 +5,14 @@
     }
 }
 
+.logoWrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .sidebar {
     position: absolute;
     height: 100%;
@@ -12,8 +20,6 @@
     z-index: 2;
 }
 
-.puller {
-    top: 10px;
-    color: #fff;
-    background-color: #001529;
+.logo {
+  fill: rgba(255, 255, 255, 0.2);
 }

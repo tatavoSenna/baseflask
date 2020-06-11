@@ -36,10 +36,7 @@ function Contracts() {
 	}
 
 	return (
-		<Layout
-			style={{
-				padding: '0 24px 24px',
-			}}>
+		<Layout>
 			<BreadCrumb parent="Contratos" current="Lista" />
 			<Layout
 				style={{

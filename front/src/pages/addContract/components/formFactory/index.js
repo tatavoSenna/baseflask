@@ -12,7 +12,11 @@ import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import InputFactory from '../inputFactory'
 
 const layout = {
-	labelCol: { span: 8 },
+	labelCol: { span: 12 },
+	wrapperCol: { span: 12 },
+}
+
+const tailLayout = {
 	wrapperCol: { span: 12 },
 }
 
@@ -53,11 +57,12 @@ const FormFactory = ({ content, edge }) => {
 		>
 			{content && content.length > 0 && InputFactory({ content })}
 			<div
+				{...tailLayout}
 				style={{
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'center',
-					paddingBottom: '50px',
+					marginBottom: '20px',
 				}}>
 				<Button
 					type="primary"

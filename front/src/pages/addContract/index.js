@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Layout } from 'antd'
+import { Card, Layout } from 'antd'
 
 import BreadCrumb from '~/components/breadCrumb'
 import FormFactory from './components/formFactory'
@@ -17,10 +17,10 @@ function AddContract() {
 	const { current } = useParams()
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
-	const questions = useSelector(({ question }) => question.data)
+	const { data: questions, loading } = useSelector(({ question }) => question)
 
 	useEffect(() => {
-		dispatch(listQuestion({ documentId: 8 }))
+		dispatch(listQuestion({ documentId: 10 }))
 	}, [dispatch])
 
 	useEffect(() => {
@@ -33,13 +33,16 @@ function AddContract() {
 	}, [current, questions])
 
 	return (
-		<Layout style={{ padding: '0 24px 24px' }}>
+		<Layout>
 			<BreadCrumb parent="Contatros" current="Novo Contrato" />
-			<Layout
-				style={{
-					padding: '50px 24px',
-				}}>
-				{stepComponent}
+			<Layout>
+				<Card
+					style={{
+						width: '100%',
+					}}
+					loading={loading}>
+					{stepComponent}
+				</Card>
 			</Layout>
 		</Layout>
 	)

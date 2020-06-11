@@ -1,0 +1,37 @@
+.siteLayout {
+	background: #fff;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 24px;
+}
+
+.mobile {
+	background: #001529 !important;
+	padding-left: 50px;
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+	transition: color 0.1s;
+	&:hover {
+		color: #1890ff;
+	}
+}
+
+.profile {
+	cursor: pointer;
+	transition: color 0.1s;
+	&:hover {
+		color: #1890ff;
+	}
+}
+
+.profileMobile {
+	color: #fff;
+}
+
+.logo {
+	width: 100px;
+}

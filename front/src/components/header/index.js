@@ -1,12 +1,21 @@
 import React from 'react'
+import { func, bool } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Dropdown } from 'antd'
+import {
+	MenuUnfoldOutlined,
+	MenuFoldOutlined,
+	DownOutlined,
+	UserOutlined,
+} from '@ant-design/icons'
 
 import { logout } from '~/states/modules/session'
-import logo from '~/assets/logo.svg'
+import { classNames } from '~/utils'
 
-function Head() {
+import styles from './index.module.scss'
+
+function Head({ handleCollapsed, isCollapsed, isWeb }) {
 	const history = useHistory()
 	const dispatch = useDispatch()
 
@@ -14,19 +23,10 @@ function Head() {
 		dispatch(logout({ history }))
 	}
 
-	const { Item } = Menu
-	return (
-		<Layout.Header className="site-layout-background" style={styles.header}>
-			<Menu
-				mode="horizontal"
-				defaultSelectedKeys={['2']}
-				align="end"
-				theme="dark">
-				<Item onClick={() => history.push('/')}>
-					<img src={logo} alt="logo" style={{ width: '140px' }} />
-				</Item>
-				<Item
-					key="setting:1"
+	function getMenu() {
+		return (
+			<Menu style={{ zIndex: 1 }}>
+				<Menu.Item
 					onClick={() => {
 						window.location.assign(
 							process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
@@ -37,22 +37,48 @@ function Head() {
 						)
 					}}>
 					Docusign connect
-				</Item>
-				<Item key="setting:2" onClick={handleLogout}>
-					Sair
-				</Item>
+				</Menu.Item>
+				<Menu.Item onClick={handleLogout}>Sair</Menu.Item>
 			</Menu>
-		</Layout.Header>
+		)
+	}
+
+	const { Header } = Layout
+	return (
+		<Header
+			style={{ opacity: !isWeb && !isCollapsed ? 0.5 : 1 }}
+			className={classNames(styles.siteLayout, { [styles.mobile]: !isWeb })}>
+			{isWeb ? (
+				React.createElement(
+					isCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+					{
+						className: styles.trigger,
+						onClick: () => handleCollapsed(),
+					}
+				)
+			) : (
+				<div />
+			)}
+			<Dropdown overlay={() => getMenu()}>
+				<div
+					className={classNames(styles.profile, {
+						[styles.profileMobile]: !isWeb,
+					})}>
+					<UserOutlined /> <DownOutlined />
+				</div>
+			</Dropdown>
+		</Header>
 	)
 }
 
-const styles = {
-	header: {
-		padding: 0,
-		position: 'fixed',
-		zIndex: 1,
-		width: '100%',
-	},
+Head.propTypes = {
+	handleCollapsed: func.isRequired,
+	isCollapsed: bool.isRequired,
+	isWeb: bool,
+}
+
+Head.deafultProps = {
+	isWeb: true,
 }
 
 export default Head

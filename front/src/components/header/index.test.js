@@ -10,9 +10,10 @@ jest.mock('react-redux', () => ({
 
 describe('<Header />', () => {
 	it('Snapshot testing', () => {
+		const funcTest = jest.fn()
 		const { asFragment } = render(
 			<Router>
-				<Header />
+				<Header handleCollapsed={funcTest} isCollapsed={false} />
 			</Router>
 		)
 

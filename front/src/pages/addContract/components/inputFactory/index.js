@@ -7,6 +7,7 @@ function InputFactory({ content }) {
 
 	for (let i = 0; i < content.length; i++) {
 		const { value, variable, type, options, id } = content[i]
+		console.log(options)
 		if (type === 'input') {
 			children.push(
 				<Form.Item
@@ -26,13 +27,14 @@ function InputFactory({ content }) {
 					key={`${variable}_${id}`}
 					name={variable}
 					label={value}
-					hasFeedback
+					// hasFeedback
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
 					type={type}
 					colon={false}>
 					<Radio.Group>
-						<Radio value={true}>{options[0]}</Radio>
-						<Radio value={false}>{options[1]}</Radio>
+						{options.map((option) => (
+							<Radio value={option}>{option}</Radio>
+						))}
 					</Radio.Group>
 				</Form.Item>
 			)
