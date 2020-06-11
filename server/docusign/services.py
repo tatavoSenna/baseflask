@@ -9,7 +9,6 @@ from app.models.user import User
 def get_token(user_data):
     try:
         token = User.query.get(user_data['id']).docusign_token
-        print(token)
         return token
     except Exception as e:
         print(e)
