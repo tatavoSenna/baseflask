@@ -3,6 +3,8 @@ import io
 import logging
 import base64
 import json
+import uuid
+import pdfrw
 from datetime import datetime
 from app.controllers import get_document_models, get_documents, create_document
 from app.constants import months 
@@ -67,11 +69,18 @@ def create(current_user):
         variable = None
         answer = None
 
+        # basic ( docx ) variables and ansers
         if 'variable' in question:
             variable = question['variable']
 
         if 'answer' in question:
             answer = question['answer']
+
+
+        # add treatment for pdf checkboxes 
+        if 'pdf_option_type' in question and question['pdf_option_type'] == 'check_boxes':
+            variable = question.get('answer', '')
+            answer = pdfrw.PdfName('Sim')
 
         if variable and answer:
             context[variable] = answer
@@ -84,15 +93,30 @@ def create(current_user):
     context['day'] = str(now.day).zfill(2)
     context['month'] = months[now.month - 1]
     context['year'] = now.year
+    context['today'] = f'{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}' 
 
     if document_model.model_type == 'docx':
-        # generate document template with decision tree variables to a memory buffer
+        # generate document from docx_template
         doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
         doc.render(context)
         document_buffer = io.BytesIO()
         doc.save(document_buffer)
     elif document_model.model_type == 'pdf':
-        document_buffer = open(f'app/documents/template/{document_model_id}.pdf', 'rb')
+        # generate document from pdf
+        pdf_template = pdfrw.PdfReader(f'/app/documents/template/{document_model_id}.pdf')
+        for page in pdf_template.Root.Pages.Kids:
+            if page.Annots:
+                for field in page.Annots:
+                    print(f'{field["/T"]} - {field["/V"]}')
+                    if field['/T'] and field['/T'][1:-1] in context.keys():
+                        kwargs = {'V': context[field['/T'][1:-1]]}
+                        field.update(pdfrw.PdfDict(**kwargs))
+        pdf_template.Root.AcroForm.update(pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
+        temp_file_name = f'{uuid.uuid1()}_temp.pdf'
+        pdfrw.PdfWriter().write(temp_file_name, pdf_template)
+        document_buffer = open(temp_file_name, 'rb')
+        document_buffer.read()
+        os.remove(temp_file_name)
 
     # save generated document to an s3
     s3_client = boto3.client('s3')
