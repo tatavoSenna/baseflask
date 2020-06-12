@@ -113,6 +113,12 @@ Resources:
             Value: 'postgres://lawing_db_user:xUx42Ei5WKWMydzeS52h@lawing.cpl0g2bxvanv.us-east-1.rds.amazonaws.com/lawing'
           - Name: AWS_SECRET_ACCESS_KEY
             Value: 'ziKkp6tjGpgTi7QYqKJbiuQnvNaUI+3Zz+HlDKPi'
+          - Name: DOCUSIGN_OAUTH_URI
+            Value: https://account-d.docusign.com/oauth
+          - Name: DOCUSIGN_SECRET_KEY
+            Value: 520c8913-e2e5-4dc1-baef-3ee2d97877a1
+          - Name: DOCUSIGN_INTEGRATION_KEY
+            Value: 403ee112-39e5-4fea-ab30-5b7b6cdd58be
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000
