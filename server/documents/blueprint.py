@@ -103,11 +103,10 @@ def create(current_user):
         doc.save(document_buffer)
     elif document_model.model_type == 'pdf':
         # generate document from pdf
-        pdf_template = pdfrw.PdfReader(f'/app/documents/template/{document_model_id}.pdf')
+        pdf_template = pdfrw.PdfReader(f'app/documents/template/{document_model_id}.pdf')
         for page in pdf_template.Root.Pages.Kids:
             if page.Annots:
                 for field in page.Annots:
-                    print(f'{field["/T"]} - {field["/V"]}')
                     if field['/T'] and field['/T'][1:-1] in context.keys():
                         kwargs = {'V': context[field['/T'][1:-1]]}
                         field.update(pdfrw.PdfDict(**kwargs))
