@@ -80,7 +80,7 @@ def create(current_user):
         # add treatment for pdf checkboxes 
         if 'pdf_option_type' in question and question['pdf_option_type'] == 'check_boxes':
             variable = question.get('answer', '')
-            answer = pdfrw.PdfName('Sim')
+            answer = pdfrw.PdfName('On')
 
         if variable and answer:
             context[variable] = answer
@@ -204,9 +204,9 @@ def request_signatures(current_user, document_id):
 
         # create the DocuSign document object
         document = DocusignDocument(  
-            document_base64 = base64_document, 
-            name = 'Acordo Procon',
-            file_extension = 'docx',
+            document_base64 = base64_document,
+            name = last_version.document.title,
+            file_extension = last_version.document.model.model_type,
             document_id = 1
         )
 
@@ -229,10 +229,11 @@ def request_signatures(current_user, document_id):
             else:
                 sign_here = SignHere(
                     recipient_id = '1',
+                    document_id = 1,
                     tab_label = 'assine aqui',
-                    x_position = 100,
-                    y_position = 100,
-                    page_number = 1
+                    x_position = signer_data['x_position'],
+                    y_position = signer_data['y_position'],
+                    page_number = signer_data['page_number']
                 )
 
             # Add the tabs model (including the sign_here tab) to the signer
@@ -242,7 +243,7 @@ def request_signatures(current_user, document_id):
 
         # Next, create the top level envelope definition and populate it.
         envelope_definition = EnvelopeDefinition(
-            email_subject = "Acordo Procon",
+            email_subject = last_version.document.title,
             documents = [document], # The order in the docs array determines the order in the envelope
             recipients = Recipients(signers = signers), # The Recipients object wants arrays for each recipient type
             status = "sent" # requests that the envelope be created and sent.

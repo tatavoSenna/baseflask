@@ -33,16 +33,3 @@ def docusign_refresh_token(current_user):
     set_user_token(current_user.get('id'), access_token,
                    refresh_token, token_obtain_date)
     return {'success': True}
-
-
-'''Step 3: Retrieve user account data'''
-# @application.route('/docusignuserinfo/', methods=['GET'])
-# # @check_for_token
-# def docusign_userinfo():
-#     headers = {
-#         'content-type': 'application/x-www-form-urlencoded',
-#         'Authorization': 'Bearer {}'.format(ACCESS_TOKEN)}
-#     print(headers)
-#     response = http.get(
-#         '{}/userinfo'.format(DOCUSIGN_OAUTH_BASE_URI), headers=headers)
-#     return response.json()
