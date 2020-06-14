@@ -10,11 +10,11 @@ In the project directory, you can run:
 
 To run the app inside a docker container.
 
+## Run with yarn
+
 ### `yarn`
 
 To install all the dependencies listed in **package.json**
-
-## Run with yarn
 
 ### `yarn start`
 
