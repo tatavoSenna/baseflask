@@ -14,6 +14,8 @@ To run the app inside a docker container.
 
 To install all the dependencies listed in **package.json**
 
+## Run with yarn
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
