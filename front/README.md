@@ -2,6 +2,14 @@
 
 In the project directory, you can run:
 
+### `cp .env.sample .env`
+
+## Run with docker
+
+### `docker-compose up --build`
+
+To run the app inside a docker container.
+
 ### `yarn`
 
 To install all the dependencies listed in **package.json**
