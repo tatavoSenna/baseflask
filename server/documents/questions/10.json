@@ -8,11 +8,23 @@
 
   {"label": "", "variable": "company-signer-1-name", "option": "", "type": "input", "value": "Qual o nome do primeiro responsável pela empresa?", "answer": "", "parentIndex": 0, "childIndex": 7},
   {"label": "", "variable": "company-signer-1-job", "option": "", "type": "input", "value": "Qual o cargo do primeiro responsável pela empresa?", "answer": "", "parentIndex": 6, "childIndex": 8},
-  {"label": "", "variable": "company-signer-1-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela empresa?", "answer": "", "parentIndex": 7, "childIndex": 9},
+  {"label": "", "variable": "company-signer-1-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela empresa?", "answer": "", "parentIndex": 7, "childIndex": 9,
+    "docusign_data": {
+      "name_variable": "company-signer-1-name",
+      "x_position": "40",
+      "y_position": "570",
+      "page_number": "2"
+    }},
 
   {"label": "", "variable": "company-signer-2-name", "option": "", "type": "input", "value": "Qual o nome do segundo responsável pela empresa?", "answer": "", "parentIndex": 8, "childIndex": 10},
   {"label": "", "variable": "company-signer-2-job", "option": "", "type": "input", "value": "Qual o cargo do segundo responsável pela empresa?", "answer": "", "parentIndex": 9, "childIndex": 11},
-  {"label": "", "variable": "company-signer-2-email", "option": "", "type": "input", "value": "Qual o email do segundo responsável pela empresa?", "answer": "", "parentIndex": 10, "childIndex": 12},
+  {"label": "", "variable": "company-signer-2-email", "option": "", "type": "input", "value": "Qual o email do segundo responsável pela empresa?", "answer": "", "parentIndex": 10, "childIndex": 12,
+    "docusign_data": {
+      "name_variable": "company-signer-2-name",
+      "x_position": "300",
+      "y_position": "570",
+      "page_number": "2"
+    }},
 
   {"label": "", "variable": "contractor-name", "option": "", "type": "input", "value": "Qual a razão social da empresa?", "answer": "", "parentIndex": 11, "childIndex": 13},
   {"label": "", "variable": "contractor-address", "option": "", "type": "input", "value": "Qual o endereço da contratada?", "answer": "", "parentIndex": 12, "childIndex": 14},
@@ -20,11 +32,23 @@
 
   {"label": "", "variable": "contractor-signer-1-name", "option": "", "type": "input", "value": "Qual o nome do primeiro responsável pela contratada?", "answer": "", "parentIndex": 14, "childIndex": 16},
   {"label": "", "variable": "contractor-signer-1-job", "option": "", "type": "input", "value": "Qual o cargo do primeiro responsável pela contratada?", "answer": "", "parentIndex": 15, "childIndex": 17},
-  {"label": "", "variable": "contractor-signer-1-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela contratada?", "answer": "", "parentIndex": 16, "childIndex": 18},
+  {"label": "", "variable": "contractor-signer-1-email", "option": "", "type": "input", "value": "Qual o email do primeiro responsável pela contratada?", "answer": "", "parentIndex": 16, "childIndex": 18,
+    "docusign_data": {
+      "name_variable": "contractor-signer-1-name",
+      "x_position": "40",
+      "y_position": "650",
+      "page_number": "2"
+    }},
 
   {"label": "", "variable": "contractor-signer-2-name", "option": "", "type": "input", "value": "Qual o nome do segundo responsável pela contratada?", "answer": "", "parentIndex": 17, "childIndex": 19},
   {"label": "", "variable": "contractor-signer-2-job", "option": "", "type": "input", "value": "Qual o cargo do segundo responsável pela contratada?", "answer": "", "parentIndex": 18, "childIndex": 20},
-  {"label": "", "variable": "contractor-signer-2-email", "option": "", "type": "input", "value": "Qual o email do segundo responsável pela empresa?", "answer": "", "parentIndex": 19, "childIndex": 21},
+  {"label": "", "variable": "contractor-signer-2-email", "option": "", "type": "input", "value": "Qual o email do segundo responsável pela empresa?", "answer": "", "parentIndex": 19, "childIndex": 21,
+    "docusign_data": {
+      "name_variable": "contractor-signer-2-name",
+      "x_position": "300",
+      "y_position": "650",
+      "page_number": "2"
+    }},
 
   {"label": "", "variable": "services-description", "option": "", "type": "input", "value": "Quais serão os serviços que estão sendo contratados?", "answer": "", "parentIndex": 20, "childIndex": 22},
   {"label": "", "variable": "contract-duration", "option": "", "type": "input", "value": "Qual será o prazo do contrato?", "answer": "", "parentIndex": 21, "childIndex": 23},
@@ -48,10 +72,22 @@
   {"label": "", "variable": "witness-signer-1-name", "option": "", "type": "input", "value": "Qual o nome da primeira testemunha?", "answer": "", "parentIndex": 31, "childIndex": 37},
   {"label": "", "variable": "witness-signer-1-rg", "option": "", "type": "input", "value": "Qual o rg da primeira testemunha?", "answer": "", "parentIndex": 36, "childIndex": 38},
   {"label": "", "variable": "witness-signer-1-cpf", "option": "", "type": "input", "value": "Qual o cpf da primeira testemunha?", "answer": "", "parentIndex": 37, "childIndex": 39},
-  {"label": "", "variable": "witness-signer-1-email", "option": "", "type": "input", "value": "Qual o email da primeira testemunha?", "answer": "", "parentIndex": 38, "childIndex": 40},
+  {"label": "", "variable": "witness-signer-1-email", "option": "", "type": "input", "value": "Qual o email da primeira testemunha?", "answer": "", "parentIndex": 38, "childIndex": 40,
+    "docusign_data": {
+      "name_variable": "witness-signer-1-name",
+      "x_position": "50",
+      "y_position": "725",
+      "page_number": "2"
+    }},
   
   {"label": "", "variable": "witness-signer-2-name", "option": "", "type": "input", "value": "Qual o nome da segunda testemunha?", "answer": "", "parentIndex": 39, "childIndex": 41},
   {"label": "", "variable": "witness-signer-2-rg", "option": "", "type": "input", "value": "Qual o rg da segunda testemunha?", "answer": "", "parentIndex": 40, "childIndex": 42},
   {"label": "", "variable": "witness-signer-2-cpf", "option": "", "type": "input", "value": "Qual o cpf da segunda testemunha?", "answer": "", "parentIndex": 41, "childIndex": 43},
-  {"label": "", "variable": "witness-signer-2-email", "option": "", "type": "input", "value": "Qual o email da segunda testemunha?", "answer": "", "parentIndex": 42, "childIndex": null}
+  {"label": "", "variable": "witness-signer-2-email", "option": "", "type": "input", "value": "Qual o email da segunda testemunha?", "answer": "", "parentIndex": 42, "childIndex": null,
+    "docusign_data": {
+      "name_variable": "witness-signer-2-name",
+      "x_position": "300",
+      "y_position": "726",
+      "page_number": "2"
+    }}
 ]

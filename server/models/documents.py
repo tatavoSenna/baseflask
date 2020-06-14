@@ -30,9 +30,11 @@ class Document(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     document_model_id = db.Column(db.Integer, db.ForeignKey('document_model.id'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-    versions = relationship('DocumentVersion', back_populates='document')
     user = relationship('User')
     envelope = db.Column(JSON, nullable=True)
+
+    versions = relationship('DocumentVersion', back_populates='document')
+    model = relationship('DocumentModel')
 
 class DocumentVersion(db.Model):
     __tablename__ = 'document_version'
@@ -43,4 +45,5 @@ class DocumentVersion(db.Model):
     filename = db.Column(db.String(255), unique=False, nullable=True)
     answers = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+
     document = relationship('Document', back_populates='versions')

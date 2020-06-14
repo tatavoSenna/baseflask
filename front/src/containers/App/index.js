@@ -168,7 +168,7 @@ class App extends Component {
                             onClick={() => { downloadDocument(id) }}
                           ></Button>
                           <Button
-                            disabled={envelope !== null && envelope.status === 'sent'}
+                            // disabled={envelope !== null && envelope.status === 'sent'}
                             children={"Assinar"}
                             onClick={() => { signDocument(id) }}
                           ></Button>
