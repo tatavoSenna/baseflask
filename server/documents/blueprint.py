@@ -80,7 +80,7 @@ def create(current_user):
         # add treatment for pdf checkboxes 
         if 'pdf_option_type' in question and question['pdf_option_type'] == 'check_boxes':
             variable = question.get('answer', '')
-            answer = pdfrw.PdfName('Sim')
+            answer = pdfrw.PdfName('On')
 
         if variable and answer:
             context[variable] = answer
