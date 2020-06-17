@@ -7,7 +7,6 @@ function InputFactory({ content }) {
 
 	for (let i = 0; i < content.length; i++) {
 		const { value, variable, type, options, id } = content[i]
-		console.log(options)
 		if (type === 'input') {
 			children.push(
 				<Form.Item

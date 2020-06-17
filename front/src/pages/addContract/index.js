@@ -35,9 +35,14 @@ function AddContract() {
 	return (
 		<Layout>
 			<BreadCrumb parent="Contatros" current="Novo Contrato" />
-			<Layout>
+			<Layout
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+				}}>
 				<Card
 					style={{
+						maxWidth: '800px',
 						width: '100%',
 					}}
 					loading={loading}>

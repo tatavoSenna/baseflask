@@ -259,7 +259,7 @@
   },
   "edges": {
     "company": {
-      "from": "company",
+      "from": null,
       "to": "companySignerOne",
       "end": false,
       "data": null

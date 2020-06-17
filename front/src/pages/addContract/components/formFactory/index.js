@@ -10,14 +10,22 @@ import { Form, Button } from 'antd'
 
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import InputFactory from '../inputFactory'
+import styles from './index.module.scss'
 
 const layout = {
-	labelCol: { span: 12 },
-	wrapperCol: { span: 12 },
+	labelCol: {
+		lg: { span: 12 },
+		md: { span: 24 },
+		sm: { span: 24 },
+	},
+	wrapperCol: {
+		lg: { offset: 1, span: 11 },
+		md: { span: 24 },
+		sm: { span: 24 },
+	},
 }
-
 const tailLayout = {
-	wrapperCol: { span: 12 },
+	wrapperCol: { span: 24 },
 }
 
 const FormFactory = ({ content, edge }) => {
@@ -45,12 +53,16 @@ const FormFactory = ({ content, edge }) => {
 		dispatch(answerRequest({ history }))
 	}
 
+	const handleBack = () => {
+		const { from } = edge
+		history.push(`/form/${from}`)
+	}
+
 	return (
 		<Form
 			{...layout}
 			form={form}
 			layout="horizontal"
-			//className={styles.stepForm}
 			hideRequiredMark
 			onFinish={onSubmit}
 			// initialValues={data}
@@ -64,15 +76,20 @@ const FormFactory = ({ content, edge }) => {
 					justifyContent: 'center',
 					marginBottom: '20px',
 				}}>
-				<Button
-					type="primary"
-					style={{ marginRight: '20px' }}
-					onClick={() => history.goBack()}>
-					Anterior
-				</Button>
-				<Button type="primary" htmlType="submit">
-					Próximo
-				</Button>
+				<Form.Item {...tailLayout}>
+					{edge?.from && (
+						<Button
+							type="default"
+							htmlType="button"
+							className={styles.button}
+							onClick={handleBack}>
+							Anterior
+						</Button>
+					)}
+					<Button type="primary" htmlType="submit">
+						Próximo
+					</Button>
+				</Form.Item>
 			</div>
 		</Form>
 	)
