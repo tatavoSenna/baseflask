@@ -11,6 +11,7 @@ import {
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logo from '~/assets/logo.svg'
+import logoSmall from '~/assets/logo-small.svg'
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const history = useHistory()
@@ -30,7 +31,15 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 			{isWeb ? (
 				<Sider trigger={null} collapsible collapsed={collapsed}>
 					<div className={styles.logoWrapper}>
-						<img src={logo} alt="logo" className={styles.logo} />
+						{collapsed ? (
+							<img
+								src={logoSmall}
+								alt="logo"
+								className={styles.logoCollapsed}
+							/>
+						) : (
+							<img src={logo} alt="logo" className={styles.logo} />
+						)}
 					</div>
 					<Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
 						<Menu.Item

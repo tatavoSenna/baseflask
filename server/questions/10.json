@@ -199,63 +199,63 @@
           "value": "Qual será o valor máximo de alçada? (Até U$S)"
         }
       ]
+    },
+    "witnessSignerOne": {
+      "questions": [
+        {
+          "id": 1,
+          "variable": "witnessSignerNameOne",
+          "type": "input",
+          "value": "Qual o nome da primeira testemunha?"
+        },
+        {
+          "id": 2,
+          "variable": "witnessSignerRgOne",
+          "type": "input",
+          "value": "Qual o rg da primeira testemunha?"
+        },
+        {
+          "id": 3,
+          "variable": "witnessSignerCpfOne",
+          "type": "input",
+          "value": "Qual o cpf da primeira testemunha?"
+        },
+        {
+          "id": 4,
+          "variable": "witnessSignerEmailOne",
+          "type": "input",
+          "value": "Qual o email da primeira testemunha?"
+        }
+      ]
+    },
+    "witnessSignerTwo": {
+      "questions": [
+        {
+          "id": 1,
+          "variable": "witnessSignerNameTwo",
+          "type": "input",
+          "value": "Qual o nome da segunda testemunha?"
+        },
+        {
+          "id": 2,
+          "variable": "witnessSignerRgTwo",
+          "type": "input",
+          "value": "Qual o tg da segunda testemunha?"
+        },
+        {
+          "id": 3,
+          "variable": "witnessSignerCpfTwo",
+          "type": "input",
+          "value": "Qual o cpf da segunda testemunha?"
+        },
+        {
+          "id": 4,
+          "variable": "witnessSignerEmailTwo",
+          "type": "input",
+          "value": "Qual o email da segunda testemunha?"
+        }
+      ]
     }
-  },
-  "witnessSignerOne": {
-    "questions": [
-      {
-        "id": 1,
-        "variable": "witnessSignerNameOne",
-        "type": "input",
-        "value": "Qual o nome da primeira testemunha?"
-      },
-      {
-        "id": 2,
-        "variable": "witnessSignerRgOne",
-        "type": "input",
-        "value": "Qual o rg da primeira testemunha?"
-      },
-      {
-        "id": 3,
-        "variable": "witnessSignerCpfOne",
-        "type": "input",
-        "value": "Qual o cpf da primeira testemunha?"
-      },
-      {
-        "id": 4,
-        "variable": "witnessSignerEmailOne",
-        "type": "input",
-        "value": "Qual o email da primeira testemunha?"
-      }
-    ]
-  },
-  "witnessSignerTwo": {
-    "questions": [
-      {
-        "id": 1,
-        "variable": "witnessSignerNameTwo",
-        "type": "input",
-        "value": "Qual o nome da segunda testemunha?"
-      },
-      {
-        "id": 2,
-        "variable": "witnessSignerRgTwo",
-        "type": "input",
-        "value": "Qual o tg da segunda testemunha?"
-      },
-      {
-        "id": 3,
-        "variable": "witnessSignerCpfTwo",
-        "type": "input",
-        "value": "Qual o cpf da segunda testemunha?"
-      },
-      {
-        "id": 4,
-        "variable": "witnessSignerEmailTwo",
-        "type": "input",
-        "value": "Qual o email da segunda testemunha?"
-      }
-    ]
   },
   "edges": {
     "company": {
