@@ -19,7 +19,7 @@ export default function* rootSaga() {
 function* loginSaga({ payload }) {
 	const { email, password, history } = payload
 	try {
-		const { data } = yield call(api.post, '/login', {
+		const { data } = yield call(api.post, '/auth/login', {
 			email,
 			password,
 		})
