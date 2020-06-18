@@ -13,7 +13,7 @@ function* answerSaga({ payload }) {
 
 	try {
 		const { data } = yield call(api.post, `/documents/create`, {
-			document: 8,
+			document: 10,
 			questions: answer.data,
 		})
 
