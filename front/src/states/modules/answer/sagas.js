@@ -12,7 +12,7 @@ function* answerSaga({ payload }) {
 	const { answer } = yield select()
 
 	try {
-		const { data } = yield call(api.post, `/create`, {
+		const { data } = yield call(api.post, `/documents/create`, {
 			document: 8,
 			questions: answer.data,
 		})
