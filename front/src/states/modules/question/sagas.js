@@ -16,7 +16,7 @@ function* listQuestionSaga({ payload = {} }) {
 	const { documentId } = payload
 
 	try {
-		const { data } = yield call(api.get, `/questions?document=${documentId}`)
+		const { data } = yield call(api.get, `/documents/questions?document=${documentId}`)
 
 		yield put(listQuestionSuccess(data))
 	} catch (error) {

@@ -298,22 +298,4 @@ def questions(current_user):
     with open('app/documents/questions/%s.json' % document_model, encoding='utf-8') as json_file:
         decision_tree = json.load(json_file)
 
-    # Initialize the decision tree with the title input field
-    augumented_decision_tree = [{
-            "label": "",
-            "variable": "title",
-            "option": "",
-            "type": "input",
-            "value": "Qual o título do Documento?",
-            "answer": "",
-            "parentIndex": None,
-            "childIndex": 1
-        }]
-    
-    for field in decision_tree:
-        field['parentIndex'] = 0 if field['parentIndex'] == None else field['parentIndex'] + 1
-        if 'childIndex' in field and field['childIndex']:
-            field['childIndex'] = field['childIndex'] +  1
-        augumented_decision_tree.append(field)
-
-    return jsonify(augumented_decision_tree)
+    return jsonify(decision_tree)
