@@ -19,17 +19,43 @@ Parameters:
       https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html
       to learn more about launch types.
 
-  Repository:
-    Type: String
-    Description: >
-      The Reporitory with the image for the main applications. It must already have an image
-      with the initial image tagged as 0.
-    Default: lawing-api
-
   AppDomainName:
     Type: String
     Description: >
       The url to access the app. I will be included as an alternative domain name in Cloudfront Distribution.
+
+  Repository:
+    Type: String
+    Description: >
+      The name Repository with the image for the main applications. It must already have an image
+      with the initial image tagged as 0.
+    Default: lawing-api
+
+  DBName:
+    Description: The database name
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBUser:
+    NoEcho: 'true'
+    Description: The database admin account username
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBPassword:
+    NoEcho: 'true'
+    Description: The database admin account password
+    Type: String
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
 
   GitHubUser:
     Type: String
@@ -74,11 +100,19 @@ Metadata:
         default: "Launch Type"
       Repository:
         default: "lawing-api"
+      DBName:
+        default: "lawing-db"
     ParameterGroups:
       - Label:
           default: Cluster Configuration
         Parameters:
           - LaunchType
+      - Label:
+          default: Database
+        Parameters:
+          - DBName
+          - DBUser
+          - DBPassword  
       - Label:
           default: GitHub Configuration
         Parameters:
@@ -91,8 +125,16 @@ Metadata:
         Parameters:
           - TemplateBucket
 
-
 Resources:
+  Database:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/rds-postgres.yaml"
+      Parameters:
+        DBName: !Ref DBName
+        DBUser: !Ref DBUser
+        DBPassword: !Ref DBPassword
+
   Cluster:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -145,6 +187,7 @@ Resources:
         TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
         Subnets: !GetAtt VPC.Outputs.Subnets
+        DatabaseConnectionString: Database.Outputs.JDBCConnectionString
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

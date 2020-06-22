@@ -25,6 +25,8 @@ Parameters:
   Subnets:
     Type: List<AWS::EC2::Subnet::Id>
 
+  DatabaseConnectionString:
+    String
 
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
@@ -110,7 +112,7 @@ Resources:
           - Name: AWS_ACCESS_KEY_ID
             Value: 'AKIAIRXAMWKHW6GMRH7A'
           - Name: SQLALCHEMY_DATABASE_URI
-            Value: 'postgres://lawing_db_user:xUx42Ei5WKWMydzeS52h@lawing.cpl0g2bxvanv.us-east-1.rds.amazonaws.com/lawing'
+            Value: !Ref DatabaseConnectionString
           - Name: AWS_SECRET_ACCESS_KEY
             Value: 'ziKkp6tjGpgTi7QYqKJbiuQnvNaUI+3Zz+HlDKPi'
           - Name: DOCUSIGN_OAUTH_URI

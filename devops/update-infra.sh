@@ -1,5 +1,5 @@
 #!/bin/sh
-aws s3 cp devops/cf-templates/ s3://lawing-cloudformation-template --profile lawing --recursive
+aws s3 cp devops/cf-templates/ s3://lawing-cognito-cloudformation --profile lawing-cognito --recursive
 aws cloudformation update-stack \
     --stack-name lawing-staging \
     --template-url https://lawing-cloudformation-template.s3.amazonaws.com/lawing-master-template.yaml \
