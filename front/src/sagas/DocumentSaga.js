@@ -65,10 +65,10 @@ function* downloadDocument(action){
     const document_id = action.payload
             try {
         const url_response = yield axios.get(`/documents/${document_id}/download`)
-        const document_url = url_response.data
-        const file_data_response = yield axios.get(document_url, { responseType: 'arraybuffer' })
+        const {download_url, document_name} = url_response.data
+        const file_data_response = yield axios.get(download_url, { responseType: 'arraybuffer' })
         const {data} = file_data_response   
-        fileDownload(data, `${document_id}.docx`)
+        fileDownload(data, document_name)
     }
     catch (e) {
         yield put({

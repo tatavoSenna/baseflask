@@ -33,7 +33,7 @@ class Document(db.Model):
     user = relationship('User')
     envelope = db.Column(JSON, nullable=True)
 
-    versions = relationship('DocumentVersion', back_populates='document')
+    versions = relationship('DocumentVersion', back_populates='document', order_by='DocumentVersion.version_number')
     model = relationship('DocumentModel')
 
 class DocumentVersion(db.Model):

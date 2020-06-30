@@ -145,7 +145,7 @@ def download(current_user, document_id):
         abort(400, 'Missing document id')
 
     try:
-        last_version = DocumentVersion.query.filter_by(document_id=document_id).order_by(DocumentVersion.version_number).first()
+        document = Document.query.get(document_id)
     except Exception:
         abort(404, 'Document not Found')
 
@@ -154,11 +154,17 @@ def download(current_user, document_id):
     'get_object',
     Params={
         'Bucket': 'lawing-documents',
-        'Key': last_version.filename
+        'Key': document.versions[0].filename
         },
     ExpiresIn=180)
 
-    return jsonify(document_url)
+
+    response = {
+        'download_url': document_url,
+        'document_name': f'{document.versions[0].filename}.{document.model.model_type}'
+    }
+
+    return jsonify(response)
 
 @documents_api.route('/<int:document_id>/sign')
 @check_for_token
