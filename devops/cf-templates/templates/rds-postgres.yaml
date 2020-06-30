@@ -13,18 +13,41 @@ Parameters:
     Type: String
   DBPassword:
     Type: String
+  Subnets:
+    Type: String
+  VpcId:
+    Type: String
 
 Resources:
-  MyDB:
+
+  DBSecurityGroup:
+    Type: AWS::RDS::DBSecurityGroup
+    Properties:
+      GroupDescription: !Sub ${AWS::StackName}-dbsg
+      DBSecurityGroupIngress:
+        - CIDRIP: "0.0.0.0/0"
+      EC2VpcId: !Ref VpcId
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: 'Subnet group for lawing postgres'
+      DBSubnetGroupName: 'RDS Postgres subnet group'
+      SubnetIds: !Split [ ',', !Ref Subnets]
+
+  DB:
     Type: AWS::RDS::DBInstance
     Properties:
       DBName: !Ref 'DBName'
       AllocatedStorage: '5'
-      DBInstanceClass: db.t2.small
-      Engine: PostgreSQL
-      EngineVersion: 11.6-R1
+      DBInstanceClass: db.t2.micro
+      Engine: postgres
       MasterUsername: !Ref 'DBUser'
       MasterUserPassword: !Ref 'DBPassword'
+      DBSecurityGroups:
+        - !Ref DBSecurityGroup
+      DBSubnetGroupName:
+        !Ref DBSubnetGroup
 #       DBParameterGroupName: !Ref 'MyRDSParamGroup'
 #   MyRDSParamGroup:
 #     Type: AWS::RDS::DBParameterGroup
@@ -38,5 +61,5 @@ Resources:
 Outputs:
   JDBCConnectionString:
     Description: JDBC connection string for the database
-    Value: !Join ['', ['jdbc:mysql://', !GetAtt [MyDB, Endpoint.Address], ':', !GetAtt [
-          MyDB, Endpoint.Port], /, !Ref 'DBName']]
+    Value: !Join ['', ['jdbc:mysql://', !GetAtt [DB, Endpoint.Address], ':', !GetAtt [
+          DB, Endpoint.Port], /, !Ref 'DBName']]

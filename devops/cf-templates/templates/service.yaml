@@ -26,7 +26,7 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
 
   DatabaseConnectionString:
-    String
+    Type: String
 
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
@@ -98,7 +98,7 @@ Resources:
       ExecutionRoleArn: !Ref TaskExecutionRole
       ContainerDefinitions:
         - Name: lawing-api
-          Image: 833120502863.dkr.ecr.us-east-1.amazonaws.com/lawing-api:2
+          Image: parafernalia/baseflask:0
           Essential: true
           LogConfiguration: 
             LogDriver: awslogs

@@ -24,15 +24,9 @@ Parameters:
     Description: >
       The url to access the app. I will be included as an alternative domain name in Cloudfront Distribution.
 
-  Repository:
-    Type: String
-    Description: >
-      The name Repository with the image for the main applications. It must already have an image
-      with the initial image tagged as 0.
-    Default: lawing-api
-
   DBName:
     Description: The database name
+    Default: lawingdb
     Type: String
     MinLength: '1'
     MaxLength: '64'
@@ -98,10 +92,8 @@ Metadata:
         default: "Personal Access Token"
       LaunchType:
         default: "Launch Type"
-      Repository:
-        default: "lawing-api"
       DBName:
-        default: "lawing-db"
+        default: "Nome do banco de dados"
     ParameterGroups:
       - Label:
           default: Cluster Configuration
@@ -126,6 +118,15 @@ Metadata:
           - TemplateBucket
 
 Resources:
+
+  UserPool:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cognito.yaml"
+      Parameters:
+        AuthName: !Ref AWS::StackName
+
+
   Database:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -134,6 +135,8 @@ Resources:
         DBName: !Ref DBName
         DBUser: !Ref DBUser
         DBPassword: !Ref DBPassword
+        Subnets: !GetAtt VPC.Outputs.Subnets
+        VpcId: !GetAtt VPC.Outputs.VpcId
 
   Cluster:
     Type: AWS::CloudFormation::Stack
@@ -156,7 +159,7 @@ Resources:
         GitHubToken: !Ref GitHubToken
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
-        Repository: !Ref Repository
+        RepositoryName: !Ref AWS::StackName
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
@@ -202,6 +205,6 @@ Outputs:
     Description: The sample service that is being continuously deployed.
     Value: !GetAtt LoadBalancer.Outputs.ServiceUrl
 
-  PipelineUrl:
-    Description: The continuous deployment pipeline in the AWS Management Console.
-    Value: !GetAtt DeploymentPipeline.Outputs.PipelineUrl
+#   PipelineUrl:
+#     Description: The continuous deployment pipeline in the AWS Management Console.
+#     Value: !GetAtt DeploymentPipeline.Outputs.PipelineUrl

@@ -11,7 +11,7 @@ Resources:
         WebsiteConfiguration:
           ErrorDocument: index.html
           IndexDocument: index.html
-        BucketName: lawing-app
+        BucketName: !Sub lawing-cognito-app
 
     Distribution:
         Type: AWS::CloudFront::Distribution
@@ -38,7 +38,7 @@ Resources:
             ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
             # Configure the caching behavior for our CDN
                 ViewerCertificate:
-                    AcmCertificateArn: arn:aws:acm:us-east-1:833120502863:certificate/15bf796f-f638-40c3-b047-2b7ef047d904
+                    AcmCertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
                     SslSupportMethod: sni-only
                 DefaultCacheBehavior: 
                     AllowedMethods:

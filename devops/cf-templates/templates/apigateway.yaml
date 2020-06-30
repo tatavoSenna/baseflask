@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "My API Gateway and Lambda function"
+
+Parameters:
+  apiGatewayName:
+    Type: "String"
+    AllowedPattern: "^[a-z0-9]+$"
+    Default: "ApiGateway"
+
+
+Resources:
+  ApiGateway:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+        Name: !Ref apiGatewayName
+        ApiKeySelectionExpression: $request.header.x-api-key
+        ProtocolType: HTTP
+        RouteSelectionExpression: $request.method $request.path
