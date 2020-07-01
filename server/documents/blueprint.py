@@ -119,7 +119,7 @@ def create(current_user):
 
     # save generated document to an s3
     s3_client = boto3.client('s3')
-    s3_object_key = f'{slugify(title)}_{datetime.now().timestamp()}'
+    s3_object_key = f'{slugify(title)}_{int(datetime.now().timestamp())}'
     document_buffer.seek(0)
     try:
         s3_client.upload_fileobj(document_buffer, 'lawing-documents', s3_object_key)
