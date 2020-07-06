@@ -1,0 +1,268 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+
+Parameters:
+  GitHubRepo:
+    Type: String
+
+  GitHubBranch:
+    Type: String
+
+  GitHubToken:
+    Type: String
+    NoEcho: true
+
+  GitHubUser:
+    Type: String
+
+  AppBucket:
+    Type: String
+
+  CloudFrontDistribution:
+    Type: String
+
+Resources:
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+              - Resource: !Sub arn:aws:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CacheInvalidadeLambdaPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:logs:*:*:*
+                Effect: Allow
+                Action:
+                  - logs:*
+              - Resource: '*'
+                Effect: Allow
+                Action:
+                  - codepipeline:AcknowledgeJob
+                  - codepipeline:GetJobDetails
+                  - codepipeline:PollForJobs
+                  - codepipeline:PutJobFailureResult
+                  - codepipeline:PutJobSuccessResult     
+              - Resource: !Sub arn:aws:cloudfront::277246890921:distribution/${CloudFrontDistribution}
+                Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+
+  CacheInvalidatorLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: CloudFrontInvalidator
+      Handler: index.lambda_handler
+      Runtime: python3.7
+      Code:
+        ZipFile: |
+          import boto3
+          import time
+          import os
+          
+          def lambda_handler(event, context):
+              allFiles = ['/*']
+              client = boto3.client('cloudfront')
+              distributionId = os.getenv('DISTRIBUTION_ID')
+              invalidation = client.create_invalidation(
+                  DistributionId=distributionId,
+                  InvalidationBatch={
+                      'Paths': {
+                          'Quantity': 1,
+                          'Items': allFiles
+                  },
+                  'CallerReference': str(time.time())
+              })
+              
+              pipeline = boto3.client('codepipeline')
+              response = pipeline.put_job_success_result(
+                  jobId=event['CodePipeline.job']['id']
+              )
+              return response
+      Environment:
+        Variables:
+          DISTRIBUTION_ID: !Ref CloudFrontDistribution
+      Role: !GetAtt LambdaExecutionRole.Arn
+
+  CodePipelineServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: codepipeline.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: root
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Resource:
+                    - !Sub arn:aws:s3:::${ArtifactBucket}/*
+                  Effect: Allow
+                  Action:
+                    - s3:PutObject
+                    - s3:GetObject
+                    - s3:GetObjectVersion
+                    - s3:GetBucketVersioning
+                - Resource: "*"
+                  Effect: Allow
+                  Action:
+                    - codebuild:StartBuild
+                    - codebuild:BatchGetBuilds
+                    - iam:PassRole
+                - Resource:
+                  - !Sub arn:aws:s3:::${AppBucket}/*
+                  Effect: Allow
+                  Action:
+                    - s3:PutObject
+                    - s3:GetObject
+                    - s3:GetObjectVersion
+                    - s3:GetBucketVersioning
+                - Resource:
+                  - !GetAtt CacheInvalidatorLambda.Arn
+                  Effect: Allow
+                  Action:
+                    - lambda:InvokeFunction
+
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              runtimespec:
+                - node:10.x
+              commands:
+                - cd front
+                - export NODE_ENV=staging
+                - yarn install
+                - yarn build
+          artifacts:
+            files: front/build/**/*
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:4.0
+        Type: LINUX_CONTAINER
+      Name: !Ref AWS::StackName
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: App
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref GitHubRepo
+                Branch: !Ref GitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: App
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Build
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuildProject
+              InputArtifacts:
+                - Name: App
+              OutputArtifacts:
+                - Name: ReactAppBuild
+              RunOrder: 1
+        - Name: Deploy
+          Actions:
+              - Name: Deploy
+                ActionTypeId:
+                  Category: Deploy
+                  Owner: AWS
+                  Version: 1
+                  Provider: S3
+                Configuration:
+                  BucketName: !Ref AppBucket
+                  Extract: true
+                InputArtifacts:
+                  - Name: ReactAppBuild
+                RunOrder: 1
+              - Name: InvalidateCloudFront
+                ActionTypeId:
+                  Category: Invoke
+                  Owner: AWS
+                  Version: 1
+                  Provider: Lambda
+                Configuration:
+                  FunctionName: !Ref CacheInvalidatorLambda
+                InputArtifacts:
+                  - Name: ReactAppBuild
+                RunOrder: 1
+
+
+Outputs:
+  PipelineUrl:
+    Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}

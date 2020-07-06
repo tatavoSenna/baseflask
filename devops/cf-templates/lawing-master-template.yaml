@@ -34,7 +34,6 @@ Parameters:
     ConstraintDescription: must begin with a letter and contain only alphanumeric
       characters.
   DBUser:
-    NoEcho: 'true'
     Description: The database admin account username
     Type: String
     MinLength: '1'
@@ -125,6 +124,7 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cognito.yaml"
       Parameters:
         AuthName: !Ref AWS::StackName
+        AppDomainName: !Ref AppDomainName
 
 
   Database:
@@ -161,6 +161,18 @@ Resources:
         GitHubBranch: !Ref GitHubBranch
         RepositoryName: !Ref AWS::StackName
 
+  DeploymentPipelineFront:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/deployment-pipeline-front.yaml"
+      Parameters:
+        GitHubUser: !Ref GitHubUser
+        GitHubToken: !Ref GitHubToken
+        GitHubRepo: !Ref GitHubRepo
+        GitHubBranch: !Ref GitHubBranch
+        AppBucket: !GetAtt CloudFront.Outputs.AppBucket
+        CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
+
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -169,6 +181,9 @@ Resources:
         LaunchType: !Ref LaunchType
         Subnets: !GetAtt VPC.Outputs.Subnets
         VpcId: !GetAtt VPC.Outputs.VpcId
+        UserPoolArn: !GetAtt UserPool.Outputs.UserPoolArn
+        UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
+        UserPoolDomain: !GetAtt UserPool.Outputs.UserPoolDomain
 
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -200,10 +215,10 @@ Resources:
         AppDomainName: !Ref AppDomainName
 
 
-Outputs:
-  ServiceUrl:
-    Description: The sample service that is being continuously deployed.
-    Value: !GetAtt LoadBalancer.Outputs.ServiceUrl
+# Outputs:
+  # ServiceUrl:
+  #   Description: The sample service that is being continuously deployed.
+  #   Value: !GetAtt LoadBalancer.Outputs.ServiceUrl
 
 #   PipelineUrl:
 #     Description: The continuous deployment pipeline in the AWS Management Console.

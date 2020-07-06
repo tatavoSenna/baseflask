@@ -58,7 +58,7 @@ Resources:
             
 
 Outputs:
-    WebSiteUrl:
-        Value: !GetAtt Website.WebsiteURL
-    WebSiteBucket:
+    CloudFrontDistribution:
+        Value: !Ref Distribution
+    AppBucket:
         Value: !Ref Website
