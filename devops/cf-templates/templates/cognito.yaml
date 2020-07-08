@@ -42,11 +42,11 @@ Resources:
     Properties:
       UserPoolName: !Sub ${AuthName}-user-pool
       AutoVerifiedAttributes:
-        - phone_number
+        - email
       MfaConfiguration: "OFF"
-      SmsConfiguration:
-        ExternalId: !Sub ${AuthName}-external
-        SnsCallerArn: !GetAtt SNSRole.Arn
+      # SmsConfiguration:
+      #   ExternalId: !Sub ${AuthName}-external
+      #   # SnsCallerArn: !GetAtt SNSRole.Arn
       Schema:
         - Name: name
           AttributeDataType: String
