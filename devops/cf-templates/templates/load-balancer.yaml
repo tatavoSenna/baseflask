@@ -65,8 +65,8 @@ Resources:
       Port: 80
       Protocol: HTTP
       DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref TargetGroup
+        - Type: Redirect
+          Protocol: HTTPS
 
   LoadBalancerListenerhttps:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -78,14 +78,8 @@ Resources:
       Certificates:
         - CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
       DefaultActions:
-        - Type: authenticate-cognito
-          Order: 1
-          AuthenticateCognitoConfig:
-            UserPoolArn: !Ref UserPoolArn
-            UserPoolClientId: !Ref UserPoolClientId
-            UserPoolDomain: !Ref UserPoolDomain
         - Type: forward
-          Order: 2
+          Order: 1
           TargetGroupArn: !Ref TargetGroup
 
   TargetGroup:
