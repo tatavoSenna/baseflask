@@ -184,7 +184,7 @@ Resources:
                 - node:10.x
               commands:
                 - cd front
-                - export NODE_ENV=staging
+                - export NODE_ENV=cognito
                 - yarn install
                 - yarn build
           artifacts:
