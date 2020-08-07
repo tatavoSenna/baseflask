@@ -32,9 +32,16 @@ def get_document_list(current_user):
     try:
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 20))
+        search_param = str(request.args.get('search', ''))
     except:
         abort(400, "invalid parameters")
-    paginated_query = Document.query.filter_by(client_id=current_user['client_id']).order_by(desc(Document.created_at)).paginate(page=page, per_page=per_page)
+
+    paginated_query = Document.query \
+        .filter_by(client_id=current_user['client_id']) \
+        .filter(Document.title.ilike(f'%{search_param}%')) \
+        .order_by(desc(Document.created_at)) \
+        .paginate(page=page, per_page=per_page)
+
     return jsonify({
         'page': paginated_query.page,
         'per_page': paginated_query.per_page,
