@@ -103,7 +103,7 @@ Metadata:
         Parameters:
           - DBName
           - DBUser
-          - DBPassword  
+          - DBPassword
       - Label:
           default: GitHub Configuration
         Parameters:
@@ -205,7 +205,7 @@ Resources:
         TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
         Subnets: !GetAtt VPC.Outputs.Subnets
-        DatabaseConnectionString: Database.Outputs.JDBCConnectionString
+        DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
