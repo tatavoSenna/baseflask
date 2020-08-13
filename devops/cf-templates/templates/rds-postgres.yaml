@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Metadata: 
+Metadata:
   License: Apache-2.0
 Description: 'AWS CloudFormation Sample Template RDS_with_DBParameterGroup: Sample
   template showing how to create an Amazon RDS Database Instance with a DBParameterGroup.**WARNING**
@@ -59,7 +59,6 @@ Resources:
 #         general_log: '1'
 #         old_passwords: '0'
 Outputs:
-  JDBCConnectionString:
-    Description: JDBC connection string for the database
-    Value: !Join ['', ['jdbc:mysql://', !GetAtt [DB, Endpoint.Address], ':', !GetAtt [
-          DB, Endpoint.Port], /, !Ref 'DBName']]
+  DatabaseURI:
+    Description: Connection string for the database
+    Value: !Join ['',['postgresql://', !Ref 'DBUser', ':', !Ref 'DBPassword', '@', !GetAtt [DB, Endpoint.Address], ':', !GetAtt [DB, Endpoint.Port], '/', !Ref 'DBName']]
