@@ -10,6 +10,14 @@ application = Flask(__name__)
 application.debug = True
 application.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 application.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+
+application.config['AWS_DEFAULT_REGION'] = 'us-east-1'
+application.config['AWS_COGNITO_DOMAIN'] = 'auth.lawing.com.br'
+application.config['AWS_COGNITO_USER_POOL_ID'] = 'us-east-1_LRxGy9gu5'
+application.config['AWS_COGNITO_USER_POOL_CLIENT_ID'] = '3mqfa8k59e3j08785ja7ec3iqs'
+application.config['AWS_COGNITO_USER_POOL_CLIENT_SECRET'] = '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
+application.config['AWS_COGNITO_REDIRECT_URL'] = 'http://localhost:5000/auth/callback'
+
 CORS(application)
 
 db = SQLAlchemy(application)

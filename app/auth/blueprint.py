@@ -1,25 +1,31 @@
-from app.controllers import get_user
-from app import application
-from flask import request, Blueprint, jsonify
-
 import jwt
 
+from flask import request, Blueprint, jsonify, redirect
+from flask_awscognito import AWSCognitoAuthentication
+
+from app import application
+from app.controllers import get_user
+
 auth_api = Blueprint('auth', __name__)
+aws_auth = AWSCognitoAuthentication(application)
 
-@auth_api.route('/login', methods=['POST'])
-def login():
-    content = request.json
-    email = content['email']
-    password = content['password']
 
-    if not email or not password:
-        return jsonify({'message': 'Value is missing.'}), 404
+@auth_api.route('/sign_in')
+def sign_in():
+    return redirect(aws_auth.get_sign_in_url())
 
-    user = get_user(email)
+@auth_api.route('/sign_out')
+def sign_out():
+    sign_out_url = aws_auth.get_sign_in_url().replace("/login?", "/logout?")
+    return redirect(sign_out_url)
 
-    if user:
-        token = jwt.encode(user, application.config['SECRET_KEY'])
+@auth_api.route('/callback', methods=['GET'])
+def callback():
+    access_token = aws_auth.get_access_token(request.args)
+    return jsonify({'access_token': access_token})
 
-        return jsonify({'token': token.decode('UTF-8'), 'user': user})
-
-    return jsonify({'message': 'Cannot be authenticated.'}), 401
+@auth_api.route('me')
+@aws_auth.authentication_required
+def me():
+    claims = aws_auth.claims # or g.cognito_claims
+    return jsonify({'claims': claims})
