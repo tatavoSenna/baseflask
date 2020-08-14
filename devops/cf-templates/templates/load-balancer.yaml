@@ -15,10 +15,10 @@ Parameters:
 
   VpcId:
     Type: String
-  
+
   UserPoolArn:
     Type: String
-  
+
   UserPoolClientId:
     Type: String
 
@@ -65,8 +65,14 @@ Resources:
       Port: 80
       Protocol: HTTP
       DefaultActions:
-        - Type: Redirect
-          Protocol: HTTPS
+        - Type: "redirect"
+          RedirectConfig:
+            Protocol: "HTTPS"
+            Port: "443"
+            Host: "#{host}"
+            Path: "/#{path}"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
 
   LoadBalancerListenerhttps:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -78,8 +84,14 @@ Resources:
       Certificates:
         - CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
       DefaultActions:
-        - Type: forward
+        - Type: authenticate-cognito
           Order: 1
+          AuthenticateCognitoConfig:
+            UserPoolArn: !Ref UserPoolArn
+            UserPoolClientId: !Ref UserPoolClientId
+            UserPoolDomain: !Ref UserPoolDomain
+        - Type: forward
+          Order: 2
           TargetGroupArn: !Ref TargetGroup
 
   TargetGroup:

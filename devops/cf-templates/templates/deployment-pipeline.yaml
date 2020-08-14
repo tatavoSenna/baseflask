@@ -102,7 +102,7 @@ Resources:
                   - ecs:DescribeTaskDefinition
                   - ecs:DescribeTasks
                   - ecs:ListTasks
-                  - ecs:RegisterTaskDefinition 
+                  - ecs:RegisterTaskDefinition
                   - ecs:UpdateService
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
@@ -129,7 +129,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "$IMAGE_URI" server/.
+                - docker build --tag "$IMAGE_URI" app/.
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
