@@ -14,7 +14,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    environment: 
+    environment:
       PGADMIN_DEFAULT_EMAIL: dev@parafernalia.net.br
       PGADMIN_DEFAULT_PASSWORD: 123456
       PGADMIN_LISTEN_PORT: 9000
@@ -32,7 +32,7 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - .:/app
+      - .:/opt/app
     working_dir: /
     environment:
       - FLASK_APP=app/application.py
@@ -46,11 +46,11 @@ services:
       - DOCUSIGN_INTEGRATION_KEY=403ee112-39e5-4fea-ab30-5b7b6cdd58be
       - DOCUSIGN_SECRET_KEY=520c8913-e2e5-4dc1-baef-3ee2d97877a1
     command:
-      flask run --host=0.0.0.0
+      /bin/sh
     networks:
       - dev-network
 
 
-networks: 
+networks:
   dev-network:
     driver: bridge

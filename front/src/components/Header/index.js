@@ -1,48 +1,84 @@
-// Libs
 import React from 'react'
-import {  Menu, Dropdown  } from 'antd';
-import { DownOutlined } from '@ant-design/icons'
+import { func, bool } from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { Layout, Menu, Dropdown } from 'antd'
+import {
+	MenuUnfoldOutlined,
+	MenuFoldOutlined,
+	DownOutlined,
+	UserOutlined,
+} from '@ant-design/icons'
 
+import { logout } from '~/states/modules/session'
+import { classNames } from '~/utils'
 
-// Styles
-import "./styles.less"
-import 'antd/dist/antd.css';
+import styles from './index.module.scss'
 
-// Assets
-import logo from '../../assets/logo.svg';
+function Head({ handleCollapsed, isCollapsed, isWeb }) {
+	const history = useHistory()
+	const dispatch = useDispatch()
 
-function get_menu(handleLogout) {
-  return(
-  <Menu>
-    <Menu.Item>
-      <a onClick={() => {
-            window.location.assign(
-              process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
-              "/auth?response_type=code&scope=signature&client_id=" +
-              process.env.REACT_APP_DOCUSIGN_INTEGRATION_KEY +
-              "&redirect_uri=" +
-              process.env.REACT_APP_DOCUSIGN_REDIRECT_URL
-            );
-          }}
-        >
-          Docusign connect
-        </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a onClick={handleLogout}>Sair</a>
-    </Menu.Item>
-  </Menu>);
+	const handleLogout = () => {
+		dispatch(logout({ history }))
+	}
+
+	function getMenu() {
+		return (
+			<Menu style={{ zIndex: 1 }}>
+				<Menu.Item
+					onClick={() => {
+						window.location.assign(
+							process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
+								'/auth?response_type=code&scope=signature&client_id=' +
+								process.env.REACT_APP_DOCUSIGN_INTEGRATION_KEY +
+								'&redirect_uri=' +
+								process.env.REACT_APP_DOCUSIGN_REDIRECT_URL
+						)
+					}}>
+					Docusign connect
+				</Menu.Item>
+				<Menu.Item onClick={handleLogout}>Sair</Menu.Item>
+			</Menu>
+		)
+	}
+
+	const { Header } = Layout
+	return (
+		<Header
+			style={{ opacity: !isWeb && !isCollapsed ? 0.5 : 1 }}
+			className={classNames(styles.siteLayout, { [styles.mobile]: !isWeb })}>
+			{isWeb ? (
+				React.createElement(
+					isCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+					{
+						className: styles.trigger,
+						onClick: () => handleCollapsed(),
+					}
+				)
+			) : (
+				<div />
+			)}
+			<Dropdown overlay={() => getMenu()}>
+				<div
+					className={classNames(styles.profile, {
+						[styles.profileMobile]: !isWeb,
+					})}>
+					<UserOutlined /> <DownOutlined />
+				</div>
+			</Dropdown>
+		</Header>
+	)
 }
 
-const Header = ({ user, isSideBarActived, handleSideBar, handleLogout, children, ...props }) => (
-  <div className="header">
-    <img className="header__logo" src={logo} alt="Logo" />
-    <Dropdown overlay={get_menu(handleLogout)}>
-    <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-    {user.name} {user.surname} <DownOutlined />
-    </a>
-  </Dropdown>
-  </div>
-)
+Head.propTypes = {
+	handleCollapsed: func.isRequired,
+	isCollapsed: bool.isRequired,
+	isWeb: bool,
+}
 
-export default Header
+Head.deafultProps = {
+	isWeb: true,
+}
+
+export default Head
