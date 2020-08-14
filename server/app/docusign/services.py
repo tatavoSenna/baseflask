@@ -1,6 +1,7 @@
-import os
-from datetime import datetime
 import requests as http
+import os
+
+from datetime import datetime
 from base64 import b64encode
 
 from app import db
@@ -16,9 +17,9 @@ def get_token(user_data):
 
 def fetch_docusign_token(data):
     '''
-    For the developer sandbox environment, the base URI is 
+    For the developer sandbox environment, the base URI is
     https://account-d.docusign.com/oauth
-    For the production platform, the base URI is 
+    For the production platform, the base URI is
     https://account.docusign.com/oauth
     '''
     oauth_url = os.getenv('DOCUSIGN_OAUTH_URI')
@@ -26,7 +27,7 @@ def fetch_docusign_token(data):
     secret_key = os.getenv('DOCUSIGN_SECRET_KEY')
 
     headers = {
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': 'app/x-www-form-urlencoded',
         'Authorization': 'Basic {}'.format(b64encode('{}:{}'.format(integration_key, secret_key).encode("utf-8")).decode("utf-8"))}
 
     print(data)

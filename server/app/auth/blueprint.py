@@ -3,11 +3,11 @@ import jwt
 from flask import request, Blueprint, jsonify, redirect
 from flask_awscognito import AWSCognitoAuthentication
 
-from app import application
+from app import app
 from app.controllers import get_user
 
 auth_api = Blueprint('auth', __name__)
-aws_auth = AWSCognitoAuthentication(application)
+aws_auth = AWSCognitoAuthentication(app)
 
 
 @auth_api.route('/sign_in')

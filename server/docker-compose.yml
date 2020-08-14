@@ -24,7 +24,8 @@ services:
         - dev-network
 
   app:
-    build: ./
+    build: .
+    image: lawing_flask:latest
     restart: always
     tty: true
     links:
@@ -32,10 +33,10 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - .:/opt/app
-    working_dir: /
+      - ./app:/opt/app
+    working_dir: /opt
     environment:
-      - FLASK_APP=app/application.py
+      - FLASK_APP=wsgi
       - FLASK_ENV=development
       - SECRET_KEY=nf9w8**HytG
       - SQLALCHEMY_DATABASE_URI=postgres://local_user:password@postgres/lawing_local
@@ -49,7 +50,6 @@ services:
       /bin/sh
     networks:
       - dev-network
-
 
 networks:
   dev-network:
