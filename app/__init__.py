@@ -27,4 +27,3 @@ application.register_blueprint(auth_api, url_prefix='/auth')
 @application.route('/', methods=['GET'])
 def welcome():
     return 'Welcome do Doing.law API'
-    
