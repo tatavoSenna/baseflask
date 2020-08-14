@@ -4,7 +4,7 @@ import { Layout } from 'antd'
 // import ProLayout from '@ant-design/pro-layout'
 import { useMediaQuery } from 'react-responsive'
 
-import Header from '../header'
+import Header from '../Header'
 import SideBar from '../sidebar'
 import styles from './index.module.scss'
 
