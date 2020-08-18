@@ -7,16 +7,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-
-app.config['AWS_DEFAULT_REGION'] = 'us-east-1'
-app.config['AWS_COGNITO_DOMAIN'] = 'auth.lawing.com.br'
-app.config['AWS_COGNITO_USER_POOL_ID'] = 'us-east-1_LRxGy9gu5'
-app.config['AWS_COGNITO_USER_POOL_CLIENT_ID'] = '3mqfa8k59e3j08785ja7ec3iqs'
-app.config['AWS_COGNITO_USER_POOL_CLIENT_SECRET'] = '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
-app.config['AWS_COGNITO_REDIRECT_URL'] = 'http://localhost:5000/auth/callback'
+app.config.from_pyfile('config.py')
 
 CORS(app)
 

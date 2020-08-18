@@ -100,13 +100,27 @@ Resources:
         - Name: lawing-api
           Image: parafernalia/baseflask:0
           Essential: true
-          LogConfiguration: 
+          LogConfiguration:
             LogDriver: awslogs
             Options:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
           Environment:
+          - Name: AWS_DEFAULT_REGION
+            Value: 'us-east-1'
+          - Name: AWS_COGNITO_DOMAIN
+            Value: 'auth.lawing.com.br'
+          - Name: AWS_COGNITO_USER_POOL_ID
+            Value: 'us-east-1_LRxGy9gu5'
+          - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
+            Value: '3mqfa8k59e3j08785ja7ec3iqs'
+          - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
+            Value: '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
+          - Name: AWS_COGNITO_REDIRECT_URL
+            Value: 'https://api-cognito.lawing.com.br/auth/callback'
+          - Name: SQLALCHEMY_TRACK_MODIFICATIONS
+            Value: 'False'
           - Name: SECRET_KEY
             Value: '3456yrtyr65!2@'
           - Name: AWS_ACCESS_KEY_ID
@@ -127,8 +141,6 @@ Resources:
               Protocol: tcp
       Volumes:
         - Name: my-vol
-        
-
 
 Outputs:
   Service:

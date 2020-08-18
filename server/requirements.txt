@@ -5,6 +5,7 @@ docxtpl==0.6.3
 Flask==1.1.1
 Flask-AWSCognito==1.3
 Flask-Cors==3.0.3
+Flask-DotEnv==0.1.2
 flask-marshmallow==0.11.0
 Flask-Migrate==2.5.3
 Flask-Script==2.0.6
@@ -13,7 +14,7 @@ gunicorn==20.0.4
 marshmallow-sqlalchemy==0.22.3
 pdfrw==0.4
 psycopg2==2.8.5
-pudb==2019.2
 pyjwt==1.7.1
+python-dotenv==0.14.0
 python-slugify==4.0.0
 requests==2.23.0

@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 
 services:
   postgres:
@@ -7,6 +7,8 @@ services:
       POSTGRES_USER: local_user
       POSTGRES_DB: lawing_local
       POSTGRES_PASSWORD: password
+    volumes:
+      - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -22,35 +24,31 @@ services:
       - 9000:9000
     networks:
         - dev-network
-
+    depends_on:
+      - postgres
   app:
-    build: .
+    build:
+      context: .
     image: lawing_flask:latest
     restart: always
     tty: true
-    links:
+    depends_on:
       - postgres
     ports:
       - 5000:5000
     volumes:
-      - ./app:/opt/app
+      - ./:/opt
     working_dir: /opt
-    environment:
-      - FLASK_APP=wsgi
-      - FLASK_ENV=development
-      - SECRET_KEY=nf9w8**HytG
-      - SQLALCHEMY_DATABASE_URI=postgres://local_user:password@postgres/lawing_local
-      - AWS_ACCESS_KEY_ID=AKIAIRXAMWKHW6GMRH7A
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_DEFAULT_REGION=sa-east-1
-      - DOCUSIGN_OAUTH_URI=https://account-d.docusign.com/oauth
-      - DOCUSIGN_INTEGRATION_KEY=403ee112-39e5-4fea-ab30-5b7b6cdd58be
-      - DOCUSIGN_SECRET_KEY=520c8913-e2e5-4dc1-baef-3ee2d97877a1
-    command:
+    entrypoint:
       /bin/sh
     networks:
       - dev-network
+    tmpfs:
+      - /tmp
 
 networks:
   dev-network:
     driver: bridge
+
+volumes:
+  postgres:
