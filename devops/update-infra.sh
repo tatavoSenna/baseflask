@@ -10,6 +10,6 @@ aws cloudformation update-stack \
         ParameterKey=AppDomainName,ParameterValue=cognito.lawing.com.br \
         ParameterKey=DBUser,ParameterValue=lawingdbuser ParameterKey=DBPassword,ParameterValue=hHgTf54Rf \
         ParameterKey=TemplateBucket,ParameterValue=lawing-cognito-cloudformation \
-        ParameterKey=GitHubBranch,ParameterValue=feature/51_auth_token \
+        ParameterKey=GitHubBranch,ParameterValue=cognito \
     --profile \
         lawing-cognito

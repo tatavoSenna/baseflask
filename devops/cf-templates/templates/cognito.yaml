@@ -73,6 +73,7 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows: 
         - code
+        - implicit
       AllowedOAuthScopes:
         - email
         - openid
