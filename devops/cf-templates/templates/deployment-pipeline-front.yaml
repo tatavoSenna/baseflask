@@ -22,6 +22,9 @@ Parameters:
   CloudFrontDistribution:
     Type: String
 
+  AppDomainName:
+    Type: String
+
 Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
@@ -184,7 +187,6 @@ Resources:
                 - node:10.x
               commands:
                 - cd front
-                - export NODE_ENV=cognito
                 - yarn install
                 - yarn build
           artifacts:
@@ -195,6 +197,28 @@ Resources:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/standard:4.0
         Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: REACT_APP_API_URL
+            Value: !Join
+            - ''
+            - - 'https://api-'
+              - !Ref AppDomainName
+          - Name: REACT_APP_BASE_URL
+            Value:  !Join
+              - ''
+              - - 'https://'
+                - !Ref AppDomainName
+          - Name: REACT_APP_DOCUSIGN_REDIRECT_URL
+            Value: !Join
+            - ''
+            - - 'https://'
+              - !Ref AppDomainName
+              - '/docusign-token'
+          - Name: REACT_APP_DOCUSIGN_OAUTH_URL
+            Value: https://account-d.docusign.com/oauth
+          - Name: REACT_APP_DOCUSIGN_INTEGRATION_KEY
+            Value: 403ee112-39e5-4fea-ab30-5b7b6cdd58be
+
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
 

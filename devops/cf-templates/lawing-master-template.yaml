@@ -172,6 +172,7 @@ Resources:
         GitHubBranch: !Ref GitHubBranch
         AppBucket: !GetAtt CloudFront.Outputs.AppBucket
         CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
+        AppDomainName: !Ref AppDomainName
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
