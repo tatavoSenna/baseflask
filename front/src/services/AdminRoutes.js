@@ -11,7 +11,7 @@ export default function RouteWrapper({
 	const { signed } = store.getState().session
 
 	if (!signed && isPrivate) {
-		return <Redirect to="/login" />
+		window.open(process.env.REACT_APP_API_SIGN_IN_URL, '_self')
 	}
 
 	if (signed && !isPrivate) {
