@@ -15,7 +15,7 @@ const { actions, reducer } = createSlice({
 			extend(state),
 		getJWTSuccess: (state, { payload }) =>
 			extend(state, {
-				token: payload.token,
+				token: payload.access_token,
 				error: null,
 				signed: true,
 			}),

@@ -27,7 +27,7 @@ function* getTokenSaga({ payload }) {
 			}
 		})
 
-		api.defaults.headers['authorization'] = `Bearer ${data.access_token}`
+		api.defaults.headers['Authorization'] = `Bearer ${data.access_token}`
 		yield put(getJWTSuccess(data))
 
 	} catch (error) {
@@ -50,6 +50,6 @@ export function setToken({ payload }) {
 	const { token } = payload.session
 
 	if (token) {
-		api.defaults.headers['X-Auth-Token'] = token
+		api.defaults.headers['Authorization'] = `Bearer ${token}`
 	}
 }
