@@ -11,8 +11,6 @@ api_client.set_default_header(
 envelope_api = EnvelopesApi(api_client)
 from_date = (datetime.utcnow() - timedelta(days=30)).isoformat()
 try:
-    # envelope = envelope_api.list_status_changes('957b17e7-1218-4865-8fff-ad974ed8f6a7', from_date=from_date)
-    # envelope = envelope_api.get_form_data('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_id='99e42f47-0250-4222-b5e7-ebe12a06928e')
     envelope = envelope_api.recipents('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_id='99e42f47-0250-4222-b5e7-ebe12a06928e', recipient_id='6669ff8e-6bc6-4d17-9481-88687a5dd928')
     print(envelope)
 except Exception as e:
