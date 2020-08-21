@@ -1,4 +1,5 @@
 #!/bin/sh
+DEPLOY_BRANCH=${DEPLOY_BRANCH:=cognito}
 aws s3 cp devops/cf-templates/ s3://lawing-cognito-cloudformation --profile lawing-cognito --recursive
 aws cloudformation update-stack \
     --stack-name \
@@ -10,6 +11,6 @@ aws cloudformation update-stack \
         ParameterKey=AppDomainName,ParameterValue=cognito.lawing.com.br \
         ParameterKey=DBUser,ParameterValue=lawingdbuser ParameterKey=DBPassword,ParameterValue=hHgTf54Rf \
         ParameterKey=TemplateBucket,ParameterValue=lawing-cognito-cloudformation \
-        ParameterKey=GitHubBranch,ParameterValue=cognito \
+        ParameterKey=GitHubBranch,ParameterValue=$DEPLOY_BRANCH \
     --profile \
         lawing-cognito
