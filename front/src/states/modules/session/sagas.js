@@ -2,9 +2,9 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 import api from '~/services/api'
 import {
-	login,
-	loginFailure,
-	loginSuccess,
+	getJWToken,
+	getJWTFailure,
+	getJWTSuccess,
 	logout,
 	logoutFailure,
 	logoutSuccess,
@@ -12,32 +12,33 @@ import {
 
 export default function* rootSaga() {
 	yield takeLatest('persist/REHYDRATE', setToken)
-	yield takeEvery(login, loginSaga)
+	yield takeEvery(getJWToken, getTokenSaga)
 	yield takeEvery(logout, logoutSaga)
 }
 
-function* loginSaga({ payload }) {
-	const { email, password, history } = payload
+function* getTokenSaga({ payload }) {
+	const { state, code,} = payload
 	try {
-		const { data } = yield call(api.post, '/auth/login', {
-			email,
-			password,
+
+		const { data } = yield call(api.get, '/auth/callback', {
+			params: {
+				state,
+				code,
+			}
 		})
 
-		api.defaults.headers['X-Auth-Token'] = data.token
+		api.defaults.headers['Authorization'] = `Bearer ${data.access_token}`
+		yield put(getJWTSuccess(data))
 
-		yield put(loginSuccess(data))
-		history.push('/')
 	} catch (error) {
-		yield put(loginFailure(error))
+		yield put(getJWTFailure(error))
 	}
 }
 
 function* logoutSaga({ payload }) {
-	const { history } = payload
 	try {
 		yield put(logoutSuccess())
-		history.push('/login')
+		window.open(process.env.REACT_APP_API_SIGN_IN_URL)
 	} catch (error) {
 		yield put(logoutFailure(error))
 	}
@@ -49,6 +50,6 @@ export function setToken({ payload }) {
 	const { token } = payload.session
 
 	if (token) {
-		api.defaults.headers['X-Auth-Token'] = token
+		api.defaults.headers['Authorization'] = `Bearer ${token}`
 	}
 }

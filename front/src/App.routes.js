@@ -3,15 +3,14 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import AdminRoute from './services/AdminRoutes'
 
-import Login from './pages/login'
-// import Home from './pages/home'
+import Token from './pages/token'
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
 
 import Wrapper from '~/components/wrapper'
 
 export const ROUTES = {
-	login: '/login',
+	token: '/token',
 	home: '/',
 	contracts: '/contracts',
 	addContract: '/addContracts',
@@ -22,7 +21,7 @@ function Routes() {
 	return (
 		<Router>
 			<Switch>
-				<AdminRoute path={ROUTES.login} component={Login} />
+				<AdminRoute path={ROUTES.token} component={Token} />
 				<Wrapper>
 					{/* <AdminRoute exact path={ROUTES.home} component={Home} isPrivate /> */}
 					<AdminRoute

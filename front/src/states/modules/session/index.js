@@ -5,25 +5,21 @@ const initialState = {
 	token: null,
 	error: null,
 	signed: false,
-	loading: false,
 }
 
 const { actions, reducer } = createSlice({
 	name: 'session',
 	initialState,
 	reducers: {
-		login: (state) =>
+		getJWToken: (state) =>
+			extend(state),
+		getJWTSuccess: (state, { payload }) =>
 			extend(state, {
-				loading: true,
-			}),
-		loginSuccess: (state, { payload }) =>
-			extend(state, {
-				token: payload.token,
+				token: payload.access_token,
 				error: null,
 				signed: true,
-				loading: false,
 			}),
-		loginFailure: (state, { payload }) =>
+		getJWTFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
 			}),
@@ -45,9 +41,9 @@ const { actions, reducer } = createSlice({
 })
 
 export const {
-	login,
-	loginSuccess,
-	loginFailure,
+	getJWToken,
+	getJWTSuccess,
+	getJWTFailure,
 	logout,
 	logoutFailure,
 	logoutSuccess,
