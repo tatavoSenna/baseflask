@@ -1,6 +1,18 @@
 import os
 from app import app
 
+def init_dotenv():
+    from flask_dotenv import DotEnv
+
+    env = DotEnv()
+    env_file = os.environ.get("ENV_FILE", os.path.join(os.getcwd(), '.env'))
+
+    if os.path.isfile(env_file) is False:
+        print("No .env file was found or ENV_FILE is not set")
+        exit()
+
+    env.init_app(app, env_file=env_file)
+
 if app.config['ENV'] != "production":
     init_dotenv()
 
@@ -19,14 +31,4 @@ app.config["AWS_COGNITO_USER_POOL_CLIENT_ID"] = os.environ.get("AWS_COGNITO_USER
 app.config["AWS_COGNITO_USER_POOL_CLIENT_SECRET"] = os.environ.get("AWS_COGNITO_USER_POOL_CLIENT_SECRET")
 app.config["AWS_COGNITO_REDIRECT_URL"] = os.environ.get("AWS_COGNITO_REDIRECT_URL")
 
-def init_dotenv():
-    from flask_dotenv import DotEnv
 
-    env = DotEnv()
-    env_file = os.environ.get("ENV_FILE", os.path.join(os.getcwd(), '.env'))
-
-    if os.path.isfile(env_file) is False:
-        print("No .env file was found or ENV_FILE is not set")
-        exit()
-
-    env.init_app(app, env_file=env_file)

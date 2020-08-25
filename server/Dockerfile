@@ -31,5 +31,6 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 COPY app app/
 COPY wsgi.py wsgi.py
+COPY alembic.ini alembic.ini
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]

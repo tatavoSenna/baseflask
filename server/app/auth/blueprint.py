@@ -1,14 +1,10 @@
-import jwt
-
 from flask import request, Blueprint, jsonify, redirect
-from flask_awscognito import AWSCognitoAuthentication
 
-from app import app
-from app.controllers import get_user
+from app import app, aws_auth
+from app.serializers.user_serializers import UserSerializer
+from app.users.remote import RemoteUser
 
 auth_api = Blueprint('auth', __name__)
-aws_auth = AWSCognitoAuthentication(app)
-
 
 @auth_api.route('/sign_in')
 def sign_in():
@@ -22,10 +18,12 @@ def sign_out():
 @auth_api.route('/callback', methods=['GET'])
 def callback():
     access_token = aws_auth.get_access_token(request.args)
-    return jsonify({'access_token': access_token})
+    remote_user = RemoteUser(access_token=access_token)
+    local_user = remote_user.create_or_get_local()
 
-@auth_api.route('me')
-@aws_auth.authentication_required
-def me():
-    claims = aws_auth.claims # or g.cognito_claims
-    return jsonify({'claims': claims})
+    response = dict(
+        user=UserSerializer().dump(local_user),
+        access_token=access_token
+    )
+
+    return jsonify(response)
