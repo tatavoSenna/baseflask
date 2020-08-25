@@ -5,11 +5,12 @@ import base64
 import json
 import uuid
 import pdfrw
+import boto3
+
 from datetime import datetime
 from app.controllers import get_document_models, get_documents, create_document
 from app.constants import months
 from flask import request, Blueprint, abort, jsonify
-import boto3
 from botocore.exceptions import ClientError
 from app import db
 from app.models.documents import Document, DocumentVersion
@@ -35,7 +36,7 @@ def get_document_list(current_user):
         per_page = int(request.args.get('per_page', 20))
     except:
         abort(400, "invalid parameters")
-    paginated_query = Document.query.filter_by(client_id=current_user['client_id']).order_by(
+    paginated_query = Document.query.filter_by(company_id=current_user['company_id']).order_by(
         desc(Document.created_at)).paginate(page=page, per_page=per_page)
     return jsonify({
         'page': paginated_query.page,
@@ -128,7 +129,7 @@ def create(current_user):
         print(f'error uploading to s3 {e}')
 
     new_document = create_document(
-        current_user['client_id'],
+        current_user['company_id'],
         current_user['id'],
         title,
         document_model_id,
@@ -290,7 +291,7 @@ def request_signatures(current_user, document_id):
 @check_for_token
 def documents(current_user):
 
-    document_models = get_document_models(current_user['client_id'])
+    document_models = get_document_models(current_user['company_id'])
 
     return jsonify(document_models)
 

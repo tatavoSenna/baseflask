@@ -9,7 +9,7 @@ class DocumentModel(db.Model):
     __tablename__ = 'document_model'
 
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
     filename = db.Column(db.String(255), unique=False, nullable=True)
     model_type = db.Column(
@@ -27,7 +27,7 @@ class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(255), unique=True, nullable=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     document_model_id = db.Column(db.Integer, db.ForeignKey('document_model.id'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     user = relationship('User')

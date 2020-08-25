@@ -4,11 +4,11 @@ Parameters:
   AuthName:
     Type: String
     Description: Unique Auth Name for Cognito Resources
-  
+
   AppDomainName:
     Type: String
-    Description: 
-      SubDomain name sufix for the cognito ui. If you pass a domain like app.example.com 
+    Description:
+      SubDomain name sufix for the cognito ui. If you pass a domain like app.example.com
       a prefix will be added and the final domain would be auth-app.example.com
 
 Resources:
@@ -16,20 +16,20 @@ Resources:
   SNSRole:
     Type: "AWS::IAM::Role"
     Properties:
-      AssumeRolePolicyDocument: 
+      AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: "Allow"
-            Principal: 
-              Service: 
+            Principal:
+              Service:
                 - "cognito-idp.amazonaws.com"
-            Action: 
+            Action:
               - "sts:AssumeRole"
       Policies:
         - PolicyName: "CognitoSNSPolicy"
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action: "sns:publish"
                 Resource: "*"
@@ -60,43 +60,43 @@ Resources:
           AttributeDataType: String
           Mutable: false
           Required: false
-  
+
   # Creates a User Pool Client to be used by the identity pool
   UserPoolClient:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: !Sub ${AuthName}-client
-      GenerateSecret: true 
+      GenerateSecret: true
       UserPoolId: !Ref UserPool
-      SupportedIdentityProviders: 
+      SupportedIdentityProviders:
         - COGNITO
       AllowedOAuthFlowsUserPoolClient: true
-      AllowedOAuthFlows: 
+      AllowedOAuthFlows:
         - code
-        - implicit
       AllowedOAuthScopes:
-        - email
         - openid
+        - aws.cognito.signin.user.admin
+        - profile
       CallbackURLs:
         - !Join [ '', [ 'https://', !Ref AppDomainName, '/token' ]]
 
   # Configures the hosted ui for cognito
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
-    Properties: 
+    Properties:
       Domain:  'auth.lawing.com.br' # !Join [ '-', [ 'auth', !Ref AppDomainName ] ]
-      CustomDomainConfig: 
+      CustomDomainConfig:
         CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
       UserPoolId: !Ref UserPool
-    
-  
+
+
   # Creates a federeated Identity pool
   IdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
       IdentityPoolName: !Sub ${AuthName}Identity
       AllowUnauthenticatedIdentities: true
-      CognitoIdentityProviders: 
+      CognitoIdentityProviders:
         - ClientId: !Ref UserPoolClient
           ProviderName: !GetAtt UserPool.ProviderName
 
@@ -104,24 +104,24 @@ Resources:
   CognitoUnAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
-      AssumeRolePolicyDocument: 
+      AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: "Allow"
-            Principal: 
+            Principal:
               Federated: "cognito-identity.amazonaws.com"
-            Action: 
+            Action:
               - "sts:AssumeRoleWithWebIdentity"
             Condition:
-              StringEquals: 
+              StringEquals:
                 "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
               "ForAnyValue:StringLike":
                 "cognito-identity.amazonaws.com:amr": unauthenticated
       Policies:
         - PolicyName: "CognitoUnauthorizedPolicy"
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action:
                   - "mobileanalytics:PutEvents"
@@ -133,24 +133,24 @@ Resources:
   CognitoAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
-      AssumeRolePolicyDocument: 
+      AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: "Allow"
-            Principal: 
+            Principal:
               Federated: "cognito-identity.amazonaws.com"
-            Action: 
+            Action:
               - "sts:AssumeRoleWithWebIdentity"
             Condition:
-              StringEquals: 
+              StringEquals:
                 "cognito-identity.amazonaws.com:aud": !Ref IdentityPool
               "ForAnyValue:StringLike":
                 "cognito-identity.amazonaws.com:amr": authenticated
       Policies:
         - PolicyName: "CognitoAuthorizedPolicy"
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action:
                   - "mobileanalytics:PutEvents"
@@ -161,7 +161,7 @@ Resources:
                 Action:
                   - "lambda:InvokeFunction"
                 Resource: "*"
-  
+
   # Assigns the roles to the Identity Pool
   IdentityPoolRoleMapping:
     Type: "AWS::Cognito::IdentityPoolRoleAttachment"
