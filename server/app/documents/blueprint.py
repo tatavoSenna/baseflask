@@ -12,9 +12,9 @@ from app.controllers import get_document_models, get_documents, create_document
 from app.constants import months
 from flask import request, Blueprint, abort, jsonify
 from botocore.exceptions import ClientError
-from app import db
+from app import db, aws_auth
 from app.models.documents import Document, DocumentVersion
-from app.auth.services import check_for_token
+from app.users.remote import get_local_user
 from app.models.documents import DocumentModel
 from app.serializers.document_serializers import DocumentSerializer
 from sqlalchemy import desc
@@ -28,7 +28,8 @@ documents_api = Blueprint('documents', __name__)
 
 
 @documents_api.route('/')
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def get_document_list(current_user):
 
     try:
@@ -47,7 +48,8 @@ def get_document_list(current_user):
 
 
 @documents_api.route('/create', methods=['POST'])
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def create(current_user):
     # check if content_type is json
     if not request.is_json:
@@ -86,7 +88,6 @@ def create(current_user):
                 # gets the title from the user's answers and  the filename from the document_title
                 if question['variable'] == 'title':
                     title = f'{answers["title"]}-{unique_id}'
-    print(context)
 
     now = datetime.now()
     context['day'] = str(now.day).zfill(2)
@@ -140,7 +141,8 @@ def create(current_user):
 
 
 @documents_api.route('/<int:document_id>/download')
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def download(current_user, document_id):
 
     if not document_id:
@@ -165,7 +167,8 @@ def download(current_user, document_id):
 
 
 @documents_api.route('/<int:document_id>/sign')
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def request_signatures(current_user, document_id):
 
     if not document_id:
@@ -288,7 +291,8 @@ def request_signatures(current_user, document_id):
 
 
 @documents_api.route('/models', methods=['GET'])
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def documents(current_user):
 
     document_models = get_document_models(current_user['company_id'])
@@ -297,7 +301,8 @@ def documents(current_user):
 
 
 @documents_api.route('/questions', methods=['GET'])
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def questions(current_user):
     # TODO: change parameter to 'model'
     document_model = request.args.get('document')

@@ -1,9 +1,13 @@
+from functools import wraps
+
 import boto3
 
+from flask import g
 from flask_awscognito import utils as cognito_utils
 
 from app import db
 from app.models.user import User
+from app.serializers.user_serializers import UserSerializer 
 
 
 class RemoteUser():
@@ -47,3 +51,22 @@ class RemoteUser():
             if ("Name" and "Value") in attribute and attribute["Name"] == attribute_name:
                 return attribute["Value"]
         return None
+
+
+def get_local_user(view):
+    @wraps(view)
+    def decorated(*args, **kwargs):
+        
+        user_data_from_cognito_jwt = g.cognito_claims
+        user_model_instance = User.query.filter_by(sub=user_data_from_cognito_jwt['sub']).one()
+        serialized_user = UserSerializer().dump(user_model_instance)
+    
+        return view(serialized_user, *args, **kwargs) 
+
+    return decorated
+
+        
+            
+                                
+
+
