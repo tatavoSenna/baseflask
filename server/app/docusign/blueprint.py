@@ -1,14 +1,16 @@
 from flask import request, Blueprint, abort, jsonify
 from app.docusign.services import fetch_docusign_token
-from app.auth.services import check_for_token
 from app.docusign.services import set_user_token
+from app.users.remote import get_local_user
+from app import aws_auth
 
 
 docusign_api = Blueprint('docusign', __name__)
 
 '''Obtain token from docusign'''
 @docusign_api.route('/token', methods=['GET'])
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def docusign_token(current_user):
     authorization_code = request.args.get('code')
     data = {
@@ -24,7 +26,8 @@ def docusign_token(current_user):
 Normally works only 30 days after creation
 '''
 @docusign_api.route('/refresh', methods=['GET'])
-@check_for_token
+@aws_auth.authentication_required
+@get_local_user
 def docusign_refresh_token(current_user):
     data = {
         'grant_type': 'refresh_token',
