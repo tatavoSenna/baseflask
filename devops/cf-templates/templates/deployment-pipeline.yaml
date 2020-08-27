@@ -129,7 +129,7 @@ Resources:
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
             build:
               commands:
-                - docker build --tag "$IMAGE_URI" server/.
+                - docker build --tag "$IMAGE_URI" --file server/devops/Dockerfile.prod  server/.
             post_build:
               commands:
                 - docker push "$IMAGE_URI"

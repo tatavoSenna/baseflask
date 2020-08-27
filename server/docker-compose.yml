@@ -29,6 +29,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: ./devops/Dockerfile.dev
     image: lawing_flask:latest
     restart: always
     tty: true
