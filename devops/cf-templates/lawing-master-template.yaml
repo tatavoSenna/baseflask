@@ -125,6 +125,7 @@ Resources:
       Parameters:
         AuthName: !Ref AWS::StackName
         AppDomainName: !Ref AppDomainName
+        CognitoUserPoolDomain: !Ref AWS::StackName
 
 
   Database:
@@ -182,9 +183,6 @@ Resources:
         LaunchType: !Ref LaunchType
         Subnets: !GetAtt VPC.Outputs.Subnets
         VpcId: !GetAtt VPC.Outputs.VpcId
-        UserPoolArn: !GetAtt UserPool.Outputs.UserPoolArn
-        UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
-        UserPoolDomain: !GetAtt UserPool.Outputs.UserPoolDomain
 
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -207,6 +205,7 @@ Resources:
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
         Subnets: !GetAtt VPC.Outputs.Subnets
         DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
+        CognitoUserPoolDomain: !Ref AWS::StackName
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

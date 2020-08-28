@@ -11,6 +11,11 @@ Parameters:
       SubDomain name sufix for the cognito ui. If you pass a domain like app.example.com
       a prefix will be added and the final domain would be auth-app.example.com
 
+  CognitoUserPoolDomain:
+    Type: String
+    Description:
+      The Cognito user pool domain, for the hosted ui.
+
 Resources:
   # Creates a role that allows Cognito to send SNS messages
   SNSRole:
@@ -41,6 +46,8 @@ Resources:
     Type: "AWS::Cognito::UserPool"
     Properties:
       UserPoolName: !Sub ${AuthName}-user-pool
+      AliasAttributes: 
+        - email
       AutoVerifiedAttributes:
         - email
       MfaConfiguration: "OFF"
@@ -51,15 +58,11 @@ Resources:
         - Name: name
           AttributeDataType: String
           Mutable: true
-          Required: false
+          Required: true
         - Name: email
           AttributeDataType: String
           Mutable: false
           Required: true
-        - Name: phone_number
-          AttributeDataType: String
-          Mutable: false
-          Required: false
 
   # Creates a User Pool Client to be used by the identity pool
   UserPoolClient:
@@ -84,9 +87,13 @@ Resources:
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain:  'auth.lawing.com.br' # !Join [ '-', [ 'auth', !Ref AppDomainName ] ]
-      CustomDomainConfig:
-        CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
+      Domain: !Join
+      - '-'
+      - - !Ref CognitoUserPoolDomain
+        - 'lawing'
+      # if you want to have a custon domain, edit de Domain above and add a CustomDomainConfig with the certificate that covers it.
+      # CustomDomainConfig:
+      #   CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
       UserPoolId: !Ref UserPool
 
 
@@ -176,5 +183,5 @@ Outputs:
     Value: !GetAtt UserPool.Arn
   UserPoolClientId:
     Value: !Ref UserPoolClient
-  UserPoolDomain:
-    Value: !Ref UserPoolDomain
+  # UserPoolDomain:
+  #   Value: !Ref UserPoolDomain

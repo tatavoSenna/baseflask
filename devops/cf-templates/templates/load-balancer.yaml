@@ -16,15 +16,6 @@ Parameters:
   VpcId:
     Type: String
 
-  UserPoolArn:
-    Type: String
-
-  UserPoolClientId:
-    Type: String
-
-  UserPoolDomain:
-    Type: String
-
 
 Conditions:
   EC2: !Equals [ !Ref LaunchType, "EC2" ]
