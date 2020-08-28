@@ -209,6 +209,7 @@ Resources:
         CognitoUserPool: !GetAtt UserPool.Outputs.UserPool
         UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClient
         UserPoolClientSecret: UserPool.UserPoolClientSecret
+        AppDomainName: !Ref AppDomainName
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

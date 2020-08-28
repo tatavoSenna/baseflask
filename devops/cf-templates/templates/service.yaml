@@ -28,6 +28,11 @@ Parameters:
   DatabaseConnectionString:
     Type: String
 
+  AppDomainName:
+      Type: String
+      Description:
+        The front end domain. The api needs this to build the callback url to the cognito hosted ui
+
   CognitoUserPool:
     Type: String
     Description:
@@ -144,7 +149,11 @@ Resources:
           - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
             Value: '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
           - Name: AWS_COGNITO_REDIRECT_URL
-            Value: 'https://api-cognito.lawing.com.br/auth/callback'
+            Value: !Join
+            - ''
+            - - 'https://'
+              - !Ref AppDomainName
+              - '/token'
           - Name: SQLALCHEMY_TRACK_MODIFICATIONS
             Value: 'False'
           - Name: SECRET_KEY
