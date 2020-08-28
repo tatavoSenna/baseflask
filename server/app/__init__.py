@@ -28,22 +28,24 @@ def create_app():
     ma.init_app(app)
     aws_auth.init_app(app)
 
-    from app.users import remote
+    with app.app_context():
 
-    from app.documents.blueprint import documents_api
-    app.register_blueprint(documents_api, url_prefix='/documents')
+        from .users import remote
 
-    from app.docusign.blueprint import docusign_api
-    app.register_blueprint(docusign_api, url_prefix='/docusign')
+        from .documents.blueprint import documents_bp
+        app.register_blueprint(documents_bp, url_prefix='/documents')
 
-    from app.auth.blueprint import auth_api
-    app.register_blueprint(auth_api, url_prefix='/auth')
+        from .docusign.blueprint import docusign_bp
+        app.register_blueprint(docusign_bp, url_prefix='/docusign')
 
-    from app.users.blueprint import users_api
-    app.register_blueprint(users_api, url_prefix='/users')
+        from .auth.blueprint import auth_bp
+        app.register_blueprint(auth_bp, url_prefix='/auth')
 
-    @app.route('/', methods=['GET'])
-    def welcome():
-        return 'Welcome do Doing.law API'
+        from .users.blueprint import users_bp
+        app.register_blueprint(users_bp, url_prefix='/users')
 
-    return app
+        @app.route('/', methods=['GET'])
+        def welcome():
+            return 'Welcome do Doing.law API'
+
+        return app

@@ -24,10 +24,10 @@ from app.docusign.serializers import EnvelopeSerializer
 from slugify import slugify
 from docxtpl import DocxTemplate
 
-documents_api = Blueprint('documents', __name__)
+documents_bp = Blueprint('documents', __name__)
 
 
-@documents_api.route('/')
+@documents_bp.route('/')
 @aws_auth.authentication_required
 @get_local_user
 def get_document_list(current_user): 
@@ -53,7 +53,7 @@ def get_document_list(current_user):
     })
 
 
-@documents_api.route('/create', methods=['POST'])
+@documents_bp.route('/create', methods=['POST'])
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
@@ -147,7 +147,7 @@ def create(current_user):
     return new_document
 
 
-@documents_api.route('/<int:document_id>/download')
+@documents_bp.route('/<int:document_id>/download')
 @aws_auth.authentication_required
 @get_local_user
 def download(current_user, document_id):
@@ -180,7 +180,7 @@ def download(current_user, document_id):
     return jsonify(response)
 
 
-@documents_api.route('/<int:document_id>/sign')
+@documents_bp.route('/<int:document_id>/sign')
 @aws_auth.authentication_required
 @get_local_user
 def request_signatures(current_user, document_id):
@@ -304,7 +304,7 @@ def request_signatures(current_user, document_id):
         return jsonify({'message': 'No signers.'}), 400
 
 
-@documents_api.route('/models', methods=['GET'])
+@documents_bp.route('/models', methods=['GET'])
 @aws_auth.authentication_required
 @get_local_user
 def documents(current_user):
@@ -314,7 +314,7 @@ def documents(current_user):
     return jsonify(document_models)
 
 
-@documents_api.route('/questions', methods=['GET'])
+@documents_bp.route('/questions', methods=['GET'])
 @aws_auth.authentication_required
 @get_local_user
 def questions(current_user):

@@ -5,12 +5,10 @@ from app.users.remote import get_local_user
 from app import aws_auth
 
 
-docusign_api = Blueprint('docusign', __name__)
+docusign_bp = Blueprint('docusign', __name__)
 
 '''Obtain token from docusign'''
-
-
-@docusign_api.route('/token', methods=['GET'])
+@docusign_bp.route('/token', methods=['GET'])
 @aws_auth.authentication_required
 @get_local_user
 def docusign_token(current_user):
@@ -40,9 +38,7 @@ def docusign_token(current_user):
 '''Obtain new token from docusign
 Normally works only 30 days after creation
 '''
-
-
-@docusign_api.route('/refresh', methods=['GET'])
+@docusign_bp.route('/refresh', methods=['GET'])
 @aws_auth.authentication_required
 @get_local_user
 def docusign_refresh_token(current_user):
