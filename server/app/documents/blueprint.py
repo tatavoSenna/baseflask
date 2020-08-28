@@ -4,33 +4,37 @@ import logging
 import base64
 import json
 import uuid
-import pdfrw
-import boto3
 
 from datetime import datetime
-from app.controllers import get_document_models, get_documents, create_document
-from app.constants import months
+
+import boto3
+import pdfrw
+
 from flask import request, Blueprint, abort, jsonify
+
 from botocore.exceptions import ClientError
-from app import db, aws_auth
-from app.models.documents import Document, DocumentVersion
-from app.users.remote import get_local_user
-from app.models.documents import DocumentModel
-from app.serializers.document_serializers import DocumentSerializer
-from sqlalchemy import desc
-from docusign_esign import ApiClient, EnvelopesApi, EnvelopeDefinition, Signer, SignHere, Tabs, Recipients, Document as DocusignDocument
-from app.docusign.services import get_token
-from app.docusign.serializers import EnvelopeSerializer
-from slugify import slugify
+from docusign_esign import (ApiClient, EnvelopesApi, EnvelopeDefinition, Signer,
+    SignHere, Tabs, Recipients, Document as DocusignDocument)
 from docxtpl import DocxTemplate
+from slugify import slugify
+from sqlalchemy import desc
+
+from app import db, aws_auth
+from app.constants import months
+from app.controllers import get_document_templates, get_documents, create_document
+from app.models.documents import Document, DocumentVersion, DocumentTemplate
+from app.serializers.document_serializers import DocumentSerializer
+from app.users.remote import get_local_user
+from app.docusign.serializers import EnvelopeSerializer
+from app.docusign.services import get_token
+
 
 documents_bp = Blueprint('documents', __name__)
-
 
 @documents_bp.route('/')
 @aws_auth.authentication_required
 @get_local_user
-def get_document_list(current_user): 
+def get_document_list(current_user):
 
     try:
         page = int(request.args.get('page', 1))
@@ -65,21 +69,21 @@ def create(current_user):
         content = request.json
 
     # check for required parameters
-    document_model_id = content.get('document', None)
+    document_template_id = content.get('document', None)
     answers = content.get('questions', None)
-    if not document_model_id or not answers:
+    if not document_template_id or not answers:
         return jsonify({'message': 'Value is missing. Needs questions and document model id'}), 400
 
     # loads the document model
-    document_model = DocumentModel.query.get(document_model_id)
-    if not document_model:
+    document_template = DocumentTemplate.query.get(document_template_id)
+    if not document_template:
         return jsonify({'message': 'Document model is missing.'}), 404
 
     context = {}
     unique_id = uuid.uuid1()
-    title = f'{document_model.name}-{unique_id}'
+    title = f'{document_template.name}-{unique_id}'
 
-    with open('app/documents/questions/%s.json' % document_model_id, encoding='utf-8') as json_file:
+    with open('app/documents/questions/%s.json' % document_template_id, encoding='utf-8') as json_file:
         decision_tree = json.load(json_file)
     for key in decision_tree['nodes']:
         for question in decision_tree['nodes'][key]['questions']:
@@ -102,16 +106,16 @@ def create(current_user):
     context['year'] = now.year
     context['today'] = f'{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}'
 
-    if document_model.model_type == 'docx':
+    if document_template.model_type == 'docx':
         # generate document from docx_template
-        doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
+        doc = DocxTemplate(f'app/documents/template/{document_template_id}.docx')
         doc.render(context)
         document_buffer = io.BytesIO()
         doc.save(document_buffer)
-    elif document_model.model_type == 'pdf':
+    elif document_template.model_type == 'pdf':
         # generate document from pdf
         pdf_template = pdfrw.PdfReader(
-            f'app/documents/template/{document_model_id}.pdf')
+            f'app/documents/template/{document_template_id}.pdf')
         for page in pdf_template.Root.Pages.Kids:
             if page.Annots:
                 for field in page.Annots:
@@ -140,7 +144,7 @@ def create(current_user):
         current_user['company_id'],
         current_user['id'],
         title,
-        document_model_id,
+        document_template_id,
         answers,
         s3_object_key,
     )
@@ -309,9 +313,9 @@ def request_signatures(current_user, document_id):
 @get_local_user
 def documents(current_user):
 
-    document_models = get_document_models(current_user['company_id'])
+    document_templates = get_document_templates(current_user['company_id'])
 
-    return jsonify(document_models)
+    return jsonify(document_templates)
 
 
 @documents_bp.route('/questions', methods=['GET'])
@@ -319,12 +323,12 @@ def documents(current_user):
 @get_local_user
 def questions(current_user):
     # TODO: change parameter to 'model'
-    document_model = request.args.get('document')
+    document_template = request.args.get('document')
 
-    if not document_model:
+    if not document_template:
         return jsonify({'message': 'Value is missing.'}), 404
 
-    with open('app/documents/questions/%s.json' % document_model, encoding='utf-8') as json_file:
+    with open('app/documents/questions/%s.json' % document_template, encoding='utf-8') as json_file:
         decision_tree = json.load(json_file)
 
     return jsonify(decision_tree)

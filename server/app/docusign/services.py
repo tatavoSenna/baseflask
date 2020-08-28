@@ -1,11 +1,12 @@
-import requests as http
 import os
 
 from datetime import datetime
 from base64 import b64encode
 
-from app import db
+import requests
+
 from app.models.user import User
+from app import db
 
 
 def get_token(user_data):
@@ -32,7 +33,7 @@ def fetch_docusign_token(data):
         'Authorization': 'Basic {}'.format(b64encode('{}:{}'.format(integration_key, secret_key).encode("utf-8")).decode("utf-8"))}
 
     print(data)
-    response = http.post('{}/token'.format(oauth_url),
+    response = requests.post('{}/token'.format(oauth_url),
                          data=data, headers=headers)
     print(response.json())
     access_token = response.json().get('access_token')
