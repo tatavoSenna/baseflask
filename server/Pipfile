@@ -8,6 +8,7 @@ pytest-flask = "*"
 pytest-flask-sqlalchemy = "*"
 python-dotenv = "==0.14.0"
 Flask-DotEnv = "==0.1.2"
+pytest-dotenv = "*"
 
 [packages]
 alembic = "==1.4.2"

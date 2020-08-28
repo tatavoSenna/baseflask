@@ -4,10 +4,15 @@ services:
   postgres:
     image: postgres:12.2
     environment:
-      POSTGRES_USER: local_user
-      POSTGRES_DB: lawing_local
-      POSTGRES_PASSWORD: password
+      POSTGRES_MULTIPLE_DATABASES:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    environment:
+        - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
+        - POSTGRES_USER=lawing_user
+        - POSTGRES_PASSWORD=lawing_pass
     volumes:
+      - ./devops/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
       - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432

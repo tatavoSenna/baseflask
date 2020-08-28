@@ -31,6 +31,7 @@ RUN pipenv install --dev --system --verbose
 
 COPY app app/
 COPY wsgi.py wsgi.py
+COPY config.py config.py
 COPY alembic.ini alembic.ini
 COPY .flaskenv .flaskenv
 
