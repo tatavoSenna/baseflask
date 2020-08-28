@@ -28,10 +28,25 @@ Parameters:
   DatabaseConnectionString:
     Type: String
 
+  CognitoUserPool:
+    Type: String
+    Description:
+      The user pool the api will use for authentication
+
   CognitoUserPoolDomain:
     Type: String
     Description:
       The Cognito hosted ui domain basename. The api needs it to build the hosted ui domain.
+
+  UserPoolClient:
+    Type: String
+    Description:
+      The user pool app client
+
+  UserPoolClientSecret:
+    Type: String
+    Description:
+      The user pool app client
 
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
@@ -118,14 +133,14 @@ Resources:
             Value: !Join
             - ''
             - - 'https://'
-              - !Ref CognitoUserPoolDomain
+              - 'cgn-' # !Ref CognitoUserPoolDomain
               - 'lawing.auth.'
               - !Ref AWS::Region
               - '.amazoncognito.com'
           - Name: AWS_COGNITO_USER_POOL_ID
-            Value: 'us-east-1_LRxGy9gu5'
+            Value: !Ref CognitoUserPool
           - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
-            Value: '3mqfa8k59e3j08785ja7ec3iqs'
+            Value: !Ref UserPoolClient
           - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
             Value: '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
           - Name: AWS_COGNITO_REDIRECT_URL

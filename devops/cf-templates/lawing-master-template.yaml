@@ -206,6 +206,9 @@ Resources:
         Subnets: !GetAtt VPC.Outputs.Subnets
         DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
         CognitoUserPoolDomain: !Ref AWS::StackName
+        CognitoUserPool: !GetAtt UserPool.Outputs.UserPool
+        UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClient
+        UserPoolClientSecret: UserPool.UserPoolClientSecret
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

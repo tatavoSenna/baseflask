@@ -89,7 +89,7 @@ Resources:
     Properties:
       Domain: !Join
       - '-'
-      - - !Ref CognitoUserPoolDomain
+      - - 'cgn' # !Ref CognitoUserPoolDomain
         - 'lawing'
       # if you want to have a custon domain, edit de Domain above and add a CustomDomainConfig with the certificate that covers it.
       # CustomDomainConfig:
@@ -179,9 +179,10 @@ Resources:
         unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
 
 Outputs:
-  UserPoolArn:
-    Value: !GetAtt UserPool.Arn
-  UserPoolClientId:
+  UserPool:
+    Value: !Ref UserPool
+  UserPoolClient:
     Value: !Ref UserPoolClient
-  # UserPoolDomain:
-  #   Value: !Ref UserPoolDomain
+  UserPoolClientSecret:
+    Value: !GetAtt UserPoolClient.ClientSecret
+  
