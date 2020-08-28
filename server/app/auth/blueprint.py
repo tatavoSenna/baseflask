@@ -1,6 +1,6 @@
 from flask import request, Blueprint, jsonify, redirect
 
-from app import app, aws_auth
+from app import aws_auth
 from app.serializers.user_serializers import UserSerializer
 from app.users.remote import RemoteUser
 

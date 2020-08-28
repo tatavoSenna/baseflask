@@ -2,7 +2,7 @@ import logging
 
 from flask import request, Blueprint, jsonify
 
-from app import app, aws_auth, db
+from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
 from app.models.user import User
 from app.controllers import get_user
