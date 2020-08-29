@@ -25,10 +25,15 @@ $ docker exec -it server_app_1 /bin/sh
 $ flask db upgrade --directory /opt/app/migrations;
 ```
 
-5) Run flask server
+5) Run tests (optional)
+```
+$ pytest
+```
+
+6) Run flask server
 ```
 $ flask run
 ```
 
-6) Point your browser to *http://127.0.0.0:5000*
+7) Point your browser to *http://127.0.0.0:5000*
 
