@@ -30,7 +30,7 @@ Resources:
                             OriginProtocolPolicy: https-only
                 CustomErrorResponses:
                     - 
-                        ErrorCode: 404
+                        ErrorCode: 403
                         ResponseCode: 200
                         ResponsePagePath: /index.html
                 Enabled: true
