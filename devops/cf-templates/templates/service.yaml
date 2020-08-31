@@ -138,7 +138,7 @@ Resources:
             Value: !Join
             - ''
             - - 'https://'
-              - 'cgn-' # !Ref CognitoUserPoolDomain
+              - !Ref CognitoUserPoolDomain
               - 'lawing.auth.'
               - !Ref AWS::Region
               - '.amazoncognito.com'
