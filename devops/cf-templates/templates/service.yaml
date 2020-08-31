@@ -147,7 +147,7 @@ Resources:
           - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
             Value: !Ref UserPoolClient
           - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
-            Value: '1c41gi6mrm16ehqme6urbiiopsurf08ag06inchm24jghmovq3ka'
+            Value: !Ref UserPoolClientSecret
           - Name: AWS_COGNITO_REDIRECT_URL
             Value: !Join
             - ''
