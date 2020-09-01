@@ -30,7 +30,7 @@ documents_api = Blueprint('documents', __name__)
 @documents_api.route('/')
 @aws_auth.authentication_required
 @get_local_user
-def get_document_list(current_user):
+def get_document_list(current_user): 
 
     try:
         page = int(request.args.get('page', 1))
@@ -40,7 +40,7 @@ def get_document_list(current_user):
         abort(400, "invalid parameters")
 
     paginated_query = Document.query \
-        .filter_by(client_id=current_user['client_id']) \
+        .filter_by(company_id=current_user['company_id']) \
         .filter(Document.title.ilike(f'%{search_param}%')) \
         .order_by(desc(Document.created_at)) \
         .paginate(page=page, per_page=per_page)
@@ -57,6 +57,7 @@ def get_document_list(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
+
     # check if content_type is json
     if not request.is_json:
         return jsonify({'message': 'Accepts only content-type json.'}), 400
@@ -100,6 +101,8 @@ def create(current_user):
     context['month'] = months[now.month - 1]
     context['year'] = now.year
     context['today'] = f'{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}'
+
+    import ipdb; ipdb.set_trace()
 
     if document_model.model_type == 'docx':
         # generate document from docx_template
