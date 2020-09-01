@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  lawing-admin:
+    stdin_open: true
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./src:/lawing-admin/src
+      - ./public:/lawing-admin/public
+    ports:
+      - $PORT:$PORT
+    env_file:
+      - .env

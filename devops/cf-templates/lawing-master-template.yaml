@@ -19,17 +19,36 @@ Parameters:
       https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html
       to learn more about launch types.
 
-  Repository:
-    Type: String
-    Description: >
-      The Reporitory with the image for the main applications. It must already have an image
-      with the initial image tagged as 0.
-    Default: lawing-api
-
   AppDomainName:
     Type: String
     Description: >
       The url to access the app. I will be included as an alternative domain name in Cloudfront Distribution.
+
+  DBName:
+    Description: The database name
+    Default: lawingdb
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBUser:
+    Description: The database admin account username
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBPassword:
+    NoEcho: 'true'
+    Description: The database admin account password
+    Type: String
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
 
   GitHubUser:
     Type: String
@@ -72,13 +91,19 @@ Metadata:
         default: "Personal Access Token"
       LaunchType:
         default: "Launch Type"
-      Repository:
-        default: "lawing-api"
+      DBName:
+        default: "Nome do banco de dados"
     ParameterGroups:
       - Label:
           default: Cluster Configuration
         Parameters:
           - LaunchType
+      - Label:
+          default: Database
+        Parameters:
+          - DBName
+          - DBUser
+          - DBPassword
       - Label:
           default: GitHub Configuration
         Parameters:
@@ -91,8 +116,29 @@ Metadata:
         Parameters:
           - TemplateBucket
 
-
 Resources:
+
+  UserPool:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cognito.yaml"
+      Parameters:
+        AuthName: !Ref AWS::StackName
+        AppDomainName: !Ref AppDomainName
+        CognitoUserPoolDomain: !Ref AWS::StackName
+
+
+  Database:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/rds-postgres.yaml"
+      Parameters:
+        DBName: !Ref DBName
+        DBUser: !Ref DBUser
+        DBPassword: !Ref DBPassword
+        Subnets: !GetAtt VPC.Outputs.Subnets
+        VpcId: !GetAtt VPC.Outputs.VpcId
+
   Cluster:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -114,7 +160,20 @@ Resources:
         GitHubToken: !Ref GitHubToken
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
-        Repository: !Ref Repository
+        RepositoryName: !Ref AWS::StackName
+
+  DeploymentPipelineFront:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/deployment-pipeline-front.yaml"
+      Parameters:
+        GitHubUser: !Ref GitHubUser
+        GitHubToken: !Ref GitHubToken
+        GitHubRepo: !Ref GitHubRepo
+        GitHubBranch: !Ref GitHubBranch
+        AppBucket: !GetAtt CloudFront.Outputs.AppBucket
+        CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
+        AppDomainName: !Ref AppDomainName
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
@@ -145,6 +204,12 @@ Resources:
         TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
         Subnets: !GetAtt VPC.Outputs.Subnets
+        DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
+        CognitoUserPoolDomain: !Ref AWS::StackName
+        CognitoUserPool: !GetAtt UserPool.Outputs.UserPool
+        UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClient
+        UserPoolClientSecret: !GetAtt UserPool.Outputs.UserPoolClientSecret
+        AppDomainName: !Ref AppDomainName
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
@@ -152,13 +217,3 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cloudfront.yaml"
       Parameters:
         AppDomainName: !Ref AppDomainName
-
-
-Outputs:
-  ServiceUrl:
-    Description: The sample service that is being continuously deployed.
-    Value: !GetAtt LoadBalancer.Outputs.ServiceUrl
-
-  PipelineUrl:
-    Description: The continuous deployment pipeline in the AWS Management Console.
-    Value: !GetAtt DeploymentPipeline.Outputs.PipelineUrl
