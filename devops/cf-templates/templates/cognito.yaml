@@ -89,11 +89,11 @@ Resources:
     Properties:
       Domain: !Join
       - '-'
-      - - 'cgn' # !Ref CognitoUserPoolDomain
+      - - !Ref CognitoUserPoolDomain
         - 'lawing'
       # if you want to have a custon domain, edit de Domain above and add a CustomDomainConfig with the certificate that covers it.
       # CustomDomainConfig:
-      #   CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
+      # CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
       UserPoolId: !Ref UserPool
 
 

@@ -48,6 +48,7 @@ Resources:
         - !Ref DBSecurityGroup
       DBSubnetGroupName:
         !Ref DBSubnetGroup
+      PubliclyAccessible: true
 #       DBParameterGroupName: !Ref 'MyRDSParamGroup'
 #   MyRDSParamGroup:
 #     Type: AWS::RDS::DBParameterGroup
