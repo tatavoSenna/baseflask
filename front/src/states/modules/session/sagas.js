@@ -17,19 +17,18 @@ export default function* rootSaga() {
 }
 
 function* getTokenSaga({ payload }) {
-	const { state, code,} = payload
+	const { state, code, history } = payload
 	try {
-
 		const { data } = yield call(api.get, '/auth/callback', {
 			params: {
 				state,
 				code,
-			}
+			},
 		})
 
 		api.defaults.headers['Authorization'] = `Bearer ${data.access_token}`
 		yield put(getJWTSuccess(data))
-
+		history.push('/')
 	} catch (error) {
 		yield put(getJWTFailure(error))
 	}
@@ -38,7 +37,7 @@ function* getTokenSaga({ payload }) {
 function* logoutSaga({ payload }) {
 	try {
 		yield put(logoutSuccess())
-		window.location.replace(process.env.REACT_APP_API_SIGN_URL)
+		// window.location.replace(process.env.REACT_APP_API_SIGN_IN_URL)
 	} catch (error) {
 		yield put(logoutFailure(error))
 	}
