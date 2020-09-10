@@ -12,6 +12,7 @@ import session, { sessionSaga } from './modules/session'
 import contract, { contractSaga } from './modules/contract'
 import question, { questionSaga } from './modules/question'
 import answer, { answerSaga } from './modules/answer'
+import docusign, { docusignSaga } from './modules/docusign'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -25,6 +26,7 @@ const reducers = combineReducers({
 	contract,
 	question,
 	answer,
+	docusign,
 })
 
 const store = configureStore({
@@ -35,7 +37,13 @@ const store = configureStore({
 const persistor = persistStore(store)
 
 const rootSaga = function* () {
-	yield all([sessionSaga(), contractSaga(), questionSaga(), answerSaga()])
+	yield all([
+		sessionSaga(),
+		contractSaga(),
+		questionSaga(),
+		answerSaga(),
+		docusignSaga(),
+	])
 }
 
 sagaMiddleware.run(rootSaga)
