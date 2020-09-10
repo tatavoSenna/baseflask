@@ -6,6 +6,7 @@ import AdminRoute from './services/AdminRoutes'
 import Token from './pages/token'
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
+import DocusignToken from './pages/docusignToken'
 
 import Wrapper from '~/components/wrapper'
 
@@ -15,6 +16,7 @@ export const ROUTES = {
 	contracts: '/contracts',
 	addContract: '/addContracts',
 	form: '/form/:current',
+	docusignToken: '/docusign-token',
 }
 
 function Routes() {
@@ -22,8 +24,12 @@ function Routes() {
 		<Router>
 			<Switch>
 				<AdminRoute path={ROUTES.token} component={Token} />
+				<AdminRoute
+					path={ROUTES.docusignToken}
+					component={DocusignToken}
+					isPrivate
+				/>
 				<Wrapper>
-					{/* <AdminRoute exact path={ROUTES.home} component={Home} isPrivate /> */}
 					<AdminRoute
 						exact
 						path={ROUTES.home}
