@@ -38,7 +38,7 @@ function* getTokenSaga({ payload }) {
 function* logoutSaga({ payload }) {
 	try {
 		yield put(logoutSuccess())
-		window.open(process.env.REACT_APP_API_SIGN_IN_URL)
+		window.location.replace(process.env.REACT_APP_API_SIGN_URL)
 	} catch (error) {
 		yield put(logoutFailure(error))
 	}
