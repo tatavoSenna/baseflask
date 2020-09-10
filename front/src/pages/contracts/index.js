@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Skeleton, Card, Layout, Empty, Button } from 'antd'
@@ -10,6 +11,25 @@ import {
 
 import { listContract, viewContract } from '~/states/modules/contract'
 import BreadCrumb from '~/components/breadCrumb'
+
+function getDescription({ email, createdAt }) {
+	return (
+		<div>
+			<p>{email}</p>
+			<span>{createdAt}</span>
+		</div>
+	)
+}
+
+getDescription.propTypes = {
+	email: PropTypes.string,
+	createdAt: PropTypes.string,
+}
+
+getDescription.defaultProps = {
+	email: '',
+	createdAt: '',
+}
 
 function Contracts() {
 	const history = useHistory()
@@ -24,15 +44,6 @@ function Contracts() {
 
 	function handleViewContract({ documentId }) {
 		dispatch(viewContract({ documentId }))
-	}
-
-	function getDescription({ email, createdAt }) {
-		return (
-			<div>
-				<p>{email}</p>
-				<span>{createdAt}</span>
-			</div>
-		)
 	}
 
 	return (

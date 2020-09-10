@@ -28,7 +28,6 @@ function AddContract() {
 			content: questions.nodes ? questions.nodes[current] : null,
 			edge: questions.edges ? questions.edges[current] : null,
 		})
-		// setCurrentStep(step)
 		setStepComponent(component)
 	}, [current, questions])
 
