@@ -7,6 +7,7 @@ from flask_awscognito import utils as cognito_utils
 
 from app import db
 from app.models.user import User
+from app.models.company import Company
 from app.serializers.user_serializers import UserSerializer 
 
 
@@ -35,14 +36,17 @@ class RemoteUser():
 
     def create_or_get_local(self):
         local_user = User.query.filter_by(sub=self.sub()).first()
-
+        default_company = Company.query.filter_by(id='1').first()
         if not local_user:
             local_user = User(
                 email=self.email(),
-                sub=self.sub()
+                sub=self.sub(),
+                company_id=default_company.id
             )
             db.session.add(local_user)
             db.session.commit()
+
+    
 
         return local_user
 
