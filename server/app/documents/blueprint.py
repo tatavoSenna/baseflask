@@ -102,8 +102,6 @@ def create(current_user):
     context['year'] = now.year
     context['today'] = f'{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}'
 
-    import ipdb; ipdb.set_trace()
-
     if document_model.model_type == 'docx':
         # generate document from docx_template
         doc = DocxTemplate(f'app/documents/template/{document_model_id}.docx')
