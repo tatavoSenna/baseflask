@@ -84,7 +84,7 @@ Resources:
                   - codepipeline:PollForJobs
                   - codepipeline:PutJobFailureResult
                   - codepipeline:PutJobSuccessResult     
-              - Resource: !Sub arn:aws:cloudfront::277246890921:distribution/${CloudFrontDistribution}
+              - Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}
                 Effect: Allow
                 Action:
                   - cloudfront:CreateInvalidation
@@ -203,6 +203,12 @@ Resources:
             - ''
             - - 'https://api-'
               - !Ref AppDomainName
+          - Name: REACT_APP_API_SIGN_IN_URL
+            Value: !Join
+            - ''
+            - - 'https://api-'
+              - !Ref AppDomainName
+              - '/auth/sign_in'
           - Name: REACT_APP_BASE_URL
             Value:  !Join
               - ''
