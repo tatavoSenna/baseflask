@@ -139,7 +139,7 @@ Resources:
             - ''
             - - 'https://'
               - !Ref CognitoUserPoolDomain
-              - 'lawing.auth.'
+              - '-lawing.auth.'
               - !Ref AWS::Region
               - '.amazoncognito.com'
           - Name: AWS_COGNITO_USER_POOL_ID
