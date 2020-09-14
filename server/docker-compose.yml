@@ -4,11 +4,16 @@ services:
   postgres:
     image: postgres:12.2
     environment:
-      POSTGRES_USER: local_user
-      POSTGRES_DB: lawing_local
-      POSTGRES_PASSWORD: password
+      POSTGRES_MULTIPLE_DATABASES:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    environment:
+        - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
+        - POSTGRES_USER=lawing_user
+        - POSTGRES_PASSWORD=lawing_pass
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./devops/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -29,6 +34,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: ./devops/Dockerfile.dev
     image: lawing_flask:latest
     restart: always
     tty: true
@@ -39,8 +45,6 @@ services:
     volumes:
       - ./:/opt
     working_dir: /opt
-    entrypoint:
-      /bin/sh
     networks:
       - dev-network
     tmpfs:
@@ -51,4 +55,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
+  postgres_data:

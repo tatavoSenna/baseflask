@@ -1,22 +1,22 @@
 import json
 from app import ma
-from app.models.documents import Document, DocumentVersion, DocumentModel
+from app.models.documents import Document, DocumentVersion, DocumentTemplate
 from app.serializers.user_serializers import UserSerializer
 
 class DocumentVersionSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         model=DocumentVersion
 
-class DocumentModelSerializer(ma.SQLAlchemyAutoSchema):
-    class Meta: 
-        model=DocumentModel
+class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model=DocumentTemplate
 
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     versions = ma.Nested(DocumentVersionSerializer, many=True, exclude=('answers',))
-    model=ma.Nested(DocumentModelSerializer)
+    model=ma.Nested(DocumentTemplateSerializer)
     user = ma.Nested(UserSerializer)
     envelope = ma.Method('get_envelope_dict')
-    class Meta: 
+    class Meta:
         model = Document
         include_fk = True
         include_relationships = True

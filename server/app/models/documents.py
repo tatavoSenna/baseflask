@@ -1,12 +1,16 @@
 import enum
-from app import db
-from datetime import datetime
-from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql.json import JSON
-from sqlalchemy.dialects.postgresql import ENUM
 
-class DocumentModel(db.Model):
-    __tablename__ = 'document_model'
+from datetime import datetime
+
+from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.dialects.postgresql.json import JSON
+from sqlalchemy.orm import relationship
+
+from app import db
+
+
+class DocumentTemplate(db.Model):
+    __tablename__ = 'document_template'
 
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
@@ -21,6 +25,7 @@ class DocumentModel(db.Model):
     def __repr__(self):
         return '<Document Model %r>' % self.name
 
+
 class Document(db.Model):
     __tablename__ = 'document'
 
@@ -28,13 +33,14 @@ class Document(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(255), unique=True, nullable=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    document_model_id = db.Column(db.Integer, db.ForeignKey('document_model.id'), nullable=False)
+    document_template_id = db.Column(db.Integer, db.ForeignKey('document_template.id'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     user = relationship('User')
     envelope = db.Column(JSON, nullable=True)
 
-    versions = relationship('DocumentVersion', back_populates='document', order_by='DocumentVersion.version_number')
-    model = relationship('DocumentModel')
+    versions = relationship('DocumentVersion', back_populates='document')
+    model = relationship('DocumentTemplate')
+
 
 class DocumentVersion(db.Model):
     __tablename__ = 'document_version'
