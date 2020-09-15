@@ -12,11 +12,10 @@ import Wrapper from '~/components/wrapper'
 
 export const ROUTES = {
 	token: '/token',
+	docusign: '/docusign-token',
 	home: '/',
 	contracts: '/contracts',
-	addContract: '/addContracts',
-	form: '/form/:current',
-	docusign: '/docusign-token',
+	form: '/contracts/new/:model/:current',
 }
 
 function Routes() {
@@ -28,14 +27,14 @@ function Routes() {
 				<Wrapper>
 					<AdminRoute
 						exact
-						path={ROUTES.home}
-						component={Contracts}
+						path={ROUTES.form}
+						component={AddContract}
 						isPrivate
 					/>
 					<AdminRoute
 						exact
-						path={ROUTES.form}
-						component={AddContract}
+						path={ROUTES.home}
+						component={Contracts}
 						isPrivate
 					/>
 				</Wrapper>
