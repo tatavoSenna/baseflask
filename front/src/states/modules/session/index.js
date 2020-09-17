@@ -2,6 +2,7 @@ import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
+	loading: false,
 	token: null,
 	error: null,
 	signed: false,
@@ -12,16 +13,19 @@ const { actions, reducer } = createSlice({
 	initialState,
 	reducers: {
 		getJWToken: (state) =>
-			extend(state),
+			extend(state, {
+				loading: true,
+			}),
 		getJWTSuccess: (state, { payload }) =>
 			extend(state, {
 				token: payload.access_token,
-				error: null,
 				signed: true,
+				loading: false,
 			}),
 		getJWTFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		logout: (state) =>
 			extend(state, {

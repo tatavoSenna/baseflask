@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Layout, Spin } from 'antd'
 
 import { setDocusignRequest } from '~/states/modules/docusign'
 
-function DocusignToken(props) {
+function Docusign(props) {
 	const dispatch = useDispatch()
 	const history = useHistory()
-	const { connected, error } = useSelector(({ docusign }) => docusign)
 
 	useEffect(() => {
 		const query = new URLSearchParams(window.location.search)
 		const code = query.get('code')
 		dispatch(setDocusignRequest({ code, history }))
-	}, [dispatch])
+	}, [dispatch, history])
 
 	return (
 		<Layout
@@ -29,4 +28,4 @@ function DocusignToken(props) {
 	)
 }
 
-export default DocusignToken
+export default Docusign

@@ -2,7 +2,7 @@ import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	token: null,
+	loading: false,
 	error: null,
 }
 
@@ -10,7 +10,19 @@ const { actions, reducer } = createSlice({
 	name: 'docusign',
 	initialState,
 	reducers: {
-		setDocusignRequest: (state) => extend(state),
+		setDocusignRequest: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		setDocusignSuccess: (state, { payload }) =>
+			extend(state, {
+				loading: false,
+			}),
+		setDocusignFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 

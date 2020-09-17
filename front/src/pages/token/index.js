@@ -1,23 +1,21 @@
-import React, { useEffect }from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Layout } from 'antd'
-import { Spin } from 'antd';
+import { Spin } from 'antd'
 
 import { getJWToken } from '~/states/modules/session'
-import { Redirect } from 'react-router-dom';
-
 
 function Token(props) {
+	const history = useHistory()
 	const dispatch = useDispatch()
-
-	const { signed } = useSelector(({session}) => session)
 
 	useEffect(() => {
 		const query = new URLSearchParams(window.location.search)
-		const state = query.get('state');
-		const code = query.get('code');
-		dispatch(getJWToken({state, code, }))
-	}, [dispatch])
+		const state = query.get('state')
+		const code = query.get('code')
+		dispatch(getJWToken({ state, code, history }))
+	}, [dispatch, history])
 
 	return (
 		<Layout
@@ -27,15 +25,7 @@ function Token(props) {
 				alignItems: 'center',
 				justifyContent: 'center',
 			}}>
-			{signed && 
-				<Redirect
-					to='/'
-				/>	
-			}
-			<Spin 
-				size='large'
-				tip='loading'
-			/>
+			<Spin size="large" tip="loading" />
 		</Layout>
 	)
 }
