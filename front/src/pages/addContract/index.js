@@ -14,14 +14,14 @@ const getCurrentStepAndComponent = ({ edge, content }) => ({
 })
 
 function AddContract() {
-	const { current } = useParams()
+	const { current, model } = useParams()
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { data: questions, loading } = useSelector(({ question }) => question)
 
 	useEffect(() => {
-		dispatch(listQuestion({ documentId: 10 }))
-	}, [dispatch])
+		dispatch(listQuestion({ documentId: model }))
+	}, [dispatch, model])
 
 	useEffect(() => {
 		const { component } = getCurrentStepAndComponent({

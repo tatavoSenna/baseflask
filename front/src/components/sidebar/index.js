@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { bool, func } from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
 import {
@@ -8,20 +9,35 @@ import {
 	FolderOpenOutlined,
 } from '@ant-design/icons'
 
+import { listModel } from '~/states/modules/model'
+
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logo from '~/assets/logo.svg'
 import logoSmall from '~/assets/logo-small.svg'
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
+	const dispatch = useDispatch()
 	const history = useHistory()
 	const { pathname } = useLocation()
+	const { data: models } = useSelector(({ model }) => model)
+
+	useEffect(() => {
+		dispatch(listModel())
+	}, [dispatch])
 
 	function handleGoTo(path) {
 		if (!isWeb) {
 			handleCollapsed()
 		}
 		return history.push(path)
+	}
+
+	function handleNewContract(modelId) {
+		if (!isWeb) {
+			handleCollapsed()
+		}
+		return history.push(`/contracts/new/${modelId}/0`)
 	}
 
 	const { SubMenu } = Menu
@@ -52,18 +68,14 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							key="sub1"
 							icon={<FileAddOutlined />}
 							title="Novo Contrato">
-							<Menu.Item
-								key="form"
-								icon={<FileTextOutlined />}
-								onClick={() => handleGoTo('/form/company')}>
-								Mercado Livre
-							</Menu.Item>
-							<Menu.Item
-								key="form-2"
-								icon={<FileTextOutlined />}
-								onClick={() => handleGoTo('/form/pj')}>
-								Contrato 2
-							</Menu.Item>
+							{models.map((model) => (
+								<Menu.Item
+									key={model.id}
+									icon={<FileTextOutlined />}
+									onClick={() => handleNewContract(model.id)}>
+									{model.name}
+								</Menu.Item>
+							))}
 						</SubMenu>
 					</Menu>
 				</Sider>
@@ -97,18 +109,14 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							key="sub1"
 							icon={<FileAddOutlined />}
 							title="Novo Contrato">
-							<Menu.Item
-								key="form"
-								icon={<FileTextOutlined />}
-								onClick={() => handleGoTo('/form/company')}>
-								Mercado Livre
-							</Menu.Item>
-							<Menu.Item
-								key="form-2"
-								icon={<FileTextOutlined />}
-								onClick={() => handleGoTo('/form/pj')}>
-								Contrato 2
-							</Menu.Item>
+							{models.map((model) => (
+								<Menu.Item
+									key="form"
+									icon={<FileTextOutlined />}
+									onClick={() => handleNewContract(model.id)}>
+									{model.name}
+								</Menu.Item>
+							))}
 						</SubMenu>
 					</Menu>
 				</Sider>
