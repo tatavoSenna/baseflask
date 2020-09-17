@@ -30,11 +30,11 @@ function* loginSaga({ payload = {} }) {
 function* viewSaga({ payload }) {
 	const { documentId } = payload
 	try {
-		const { data: url } = yield call(
+		const { data } = yield call(
 			api.get,
 			`/documents/${documentId}/download`
 		)
-		window.open(url, '_blank')
+		window.open(data.download_url, '_blank')
 	} catch (error) {
 		// TODO: Show error
 	}
