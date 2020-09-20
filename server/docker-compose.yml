@@ -13,7 +13,7 @@ services:
         - POSTGRES_PASSWORD=lawing_pass
     volumes:
       - ./devops/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -55,4 +55,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  pgdata:

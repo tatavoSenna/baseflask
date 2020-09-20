@@ -12,18 +12,29 @@ Session = scoped_session(
     scopefunc=lambda: current_app.extensions["sqlalchemy"].db.session,
 )
 
+
 class BaseFactory(SQLAlchemyModelFactory):
     class Meta:
         abstract = True
         sqlalchemy_session = Session
 
+
+class CompanyFactory(BaseFactory):
+    class Meta:
+        model = models.Company
+
+    id = factory.Sequence(lambda n: n)
+    name = factory.Faker("company")
+
+
 class UserFactory(BaseFactory):
     class Meta:
         model = models.User
-        sqlalchemy_get_or_create = ("sub", "email",)
 
     id = factory.Sequence(lambda n: n)
     sub = factory.Faker("uuid4")
     name = factory.Faker("first_name_nonbinary")
     surname = factory.Faker("last_name_nonbinary")
     email = factory.Faker("email")
+    username = factory.Faker("slug")
+    company = factory.SubFactory(CompanyFactory)

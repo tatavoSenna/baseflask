@@ -11,40 +11,48 @@ from app import db
 
 def get_token(user_data):
     try:
-        token = User.query.get(user_data['id']).docusign_token
+        token = User.query.get(user_data["id"]).docusign_token
         return token
     except Exception as e:
         print(e)
 
 
 def fetch_docusign_token(data):
-    '''
+    """
     For the developer sandbox environment, the base URI is
     https://account-d.docusign.com/oauth
     For the production platform, the base URI is
     https://account.docusign.com/oauth
-    '''
-    oauth_url = os.getenv('DOCUSIGN_OAUTH_URI')
-    integration_key = os.getenv('DOCUSIGN_INTEGRATION_KEY')
-    secret_key = os.getenv('DOCUSIGN_SECRET_KEY')
+    """
+    oauth_url = os.getenv("DOCUSIGN_OAUTH_URI")
+    integration_key = os.getenv("DOCUSIGN_INTEGRATION_KEY")
+    secret_key = os.getenv("DOCUSIGN_SECRET_KEY")
 
     headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic {}'.format(b64encode('{}:{}'.format(integration_key, secret_key).encode("utf-8")).decode("utf-8"))}
+        "content-type": "application/x-www-form-urlencoded",
+        "Authorization": "Basic {}".format(
+            b64encode(
+                "{}:{}".format(integration_key, secret_key).encode("utf-8")
+            ).decode("utf-8")
+        ),
+    }
 
     print(data)
-    response = requests.post('{}/token'.format(oauth_url),
-                         data=data, headers=headers)
+    response = requests.post("{}/token".format(oauth_url), data=data, headers=headers)
     print(response.json())
-    access_token = response.json().get('access_token')
-    refresh_token = response.json().get('refresh_token')
-    expires_in = response.json().get('expires_in')
+    access_token = response.json().get("access_token")
+    refresh_token = response.json().get("refresh_token")
+    expires_in = response.json().get("expires_in")
     token_obtain_date = datetime.now()
 
-    error = {
-        'error': response.json().get('error'),
-        'error_description': response.json().get('error_description')
-    } if response.json().get('error') else None
+    error = (
+        {
+            "error": response.json().get("error"),
+            "error_description": response.json().get("error_description"),
+        }
+        if response.json().get("error")
+        else None
+    )
 
     return (access_token, refresh_token, token_obtain_date, expires_in, error)
 

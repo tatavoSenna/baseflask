@@ -14,13 +14,14 @@ migrate = Migrate()
 ma = Marshmallow()
 aws_auth = AWSCognitoAuthentication()
 
+
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
 
-    if app.config['ENV'] != "production":
+    if app.config["ENV"] != "production":
         init_dotenv(app)
 
-    app.config.from_object('config.Config')
+    app.config.from_object("config.Config")
 
     CORS(app)
     db.init_app(app)
@@ -31,19 +32,23 @@ def create_app():
     from .users import remote
 
     from .documents.blueprint import documents_bp
-    app.register_blueprint(documents_bp, url_prefix='/documents')
+
+    app.register_blueprint(documents_bp, url_prefix="/documents")
 
     from .docusign.blueprint import docusign_bp
-    app.register_blueprint(docusign_bp, url_prefix='/docusign')
+
+    app.register_blueprint(docusign_bp, url_prefix="/docusign")
 
     from .auth.blueprint import auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     from .users.blueprint import users_bp
-    app.register_blueprint(users_bp, url_prefix='/users')
 
-    @app.route('/', methods=['GET'])
+    app.register_blueprint(users_bp, url_prefix="/users")
+
+    @app.route("/", methods=["GET"])
     def welcome():
-        return 'Welcome do Doing.law API'
+        return "Welcome do Doing.law API"
 
     return app
