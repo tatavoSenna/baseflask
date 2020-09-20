@@ -3,12 +3,13 @@ import pytest
 from app import create_app, db as app_db
 
 
-@pytest.yield_fixture(scope='session')
+@pytest.yield_fixture(scope="session")
 def app():
     app = create_app()
     yield app
 
-@pytest.yield_fixture(scope='session')
+
+@pytest.yield_fixture(scope="session")
 def db(app):
     app_db.app = app
     app_db.create_all()
@@ -18,7 +19,7 @@ def db(app):
     app_db.drop_all()
 
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def session(db):
     connection = db.engine.connect()
     transaction = connection.begin()

@@ -10,46 +10,56 @@ from app import db
 
 
 class DocumentTemplate(db.Model):
-    __tablename__ = 'document_template'
+    __tablename__ = "document_template"
 
     id = db.Column(db.Integer, primary_key=True)
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
     filename = db.Column(db.String(255), unique=False, nullable=True)
-    model_type = db.Column(
-        ENUM('docx', 'pdf', name='model_template_file_type'),
-        default= 'docx',
-        nullable=False
+    filetype = db.Column(
+        ENUM("docx", "pdf", name="template_file_type"), default="docx", nullable=False
     )
+    # Belongs to
+    company = db.relationship("Company", back_populates="templates")
+
+    # Has many
+    documents = db.relationship("Document", back_populates="template")
 
     def __repr__(self):
-        return '<Document Model %r>' % self.name
+        return "<Document Template %r>" % self.name
 
 
 class Document(db.Model):
-    __tablename__ = 'document'
+    __tablename__ = "document"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String(255), unique=True, nullable=True)
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    document_template_id = db.Column(db.Integer, db.ForeignKey('document_template.id'), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
+    document_template_id = db.Column(
+        db.Integer, db.ForeignKey("document_template.id"), nullable=False
+    )
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-    user = relationship('User')
     envelope = db.Column(JSON, nullable=True)
 
-    versions = relationship('DocumentVersion', back_populates='document')
-    model = relationship('DocumentTemplate')
+    # Belongs to
+    company = db.relationship("Company", back_populates="documents")
+    user = relationship("User", back_populates="documents")
+    template = relationship("DocumentTemplate", back_populates="documents")
+
+    # Has many
+    versions = relationship("DocumentVersion", back_populates="document")
 
 
 class DocumentVersion(db.Model):
-    __tablename__ = 'document_version'
+    __tablename__ = "document_version"
 
     id = db.Column(db.Integer, primary_key=True)
     version_number = db.Column(db.Integer, default=1)
-    document_id = db.Column(db.Integer, db.ForeignKey('document.id'), nullable=False)
+    document_id = db.Column(db.Integer, db.ForeignKey("document.id"), nullable=False)
     filename = db.Column(db.String(255), unique=False, nullable=True)
     answers = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
 
-    document = relationship('Document', back_populates='versions')
+    # Belongs to
+    document = relationship("Document", back_populates="versions")

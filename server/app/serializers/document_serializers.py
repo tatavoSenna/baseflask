@@ -3,19 +3,23 @@ from app import ma
 from app.models.documents import Document, DocumentVersion, DocumentTemplate
 from app.serializers.user_serializers import UserSerializer
 
+
 class DocumentVersionSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model=DocumentVersion
+        model = DocumentVersion
+
 
 class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model=DocumentTemplate
+        model = DocumentTemplate
+
 
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
-    versions = ma.Nested(DocumentVersionSerializer, many=True, exclude=('answers',))
-    model=ma.Nested(DocumentTemplateSerializer)
+    versions = ma.Nested(DocumentVersionSerializer, many=True, exclude=("answers",))
+    template = ma.Nested(DocumentTemplateSerializer)
     user = ma.Nested(UserSerializer)
-    envelope = ma.Method('get_envelope_dict')
+    envelope = ma.Method("get_envelope_dict")
+
     class Meta:
         model = Document
         include_fk = True
@@ -29,4 +33,3 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
             except:
                 return None
         return None
-

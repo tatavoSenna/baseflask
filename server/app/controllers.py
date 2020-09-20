@@ -15,7 +15,7 @@ def get_user(email):
         "name": user.name,
         "surname": user.surname,
         "email": user.email,
-        "company_id": user.company_id
+        "company_id": user.company_id,
     }
 
     return data
@@ -24,10 +24,12 @@ def get_user(email):
 def get_document_templates(company_id, *doc_id):
     if doc_id:
         document_templates = DocumentTemplate.query.filter_by(
-            company_id=company_id, id=doc_id).all()
+            company_id=company_id, id=doc_id
+        ).all()
     else:
         document_templates = DocumentTemplate.query.filter_by(
-            company_id=company_id).all()
+            company_id=company_id
+        ).all()
 
     data = []
     for document_template in document_templates:
@@ -44,8 +46,12 @@ def get_document_templates(company_id, *doc_id):
 
 
 def get_documents(company_id):
-    documents = Document.query.filter_by(company_id=company_id).join(
-        DocumentTemplate, Document.document_template_id == DocumentTemplate.id).order_by(Document.created_at.desc()).limit(5)
+    documents = (
+        Document.query.filter_by(company_id=company_id)
+        .join(DocumentTemplate, Document.document_template_id == DocumentTemplate.id)
+        .order_by(Document.created_at.desc())
+        .limit(5)
+    )
 
     data = []
     for document in documents:
@@ -66,19 +72,19 @@ def get_documents(company_id):
     return data
 
 
-def create_document(company_id, user_id, title, document_template_id, answers, filename):
+def create_document(
+    company_id, user_id, title, document_template_id, answers, filename
+):
     new_document = Document(
         user_id=user_id,
         company_id=company_id,
         title=title,
-        document_template_id=document_template_id
+        document_template_id=document_template_id,
     )
     db.session.add(new_document)
     db.session.commit()
     first_version = DocumentVersion(
-        filename = filename,
-        answers = answers,
-        document = new_document
+        filename=filename, answers=answers, document=new_document
     )
     db.session.add(first_version)
     db.session.commit()
