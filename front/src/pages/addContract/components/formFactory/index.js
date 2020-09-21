@@ -28,7 +28,7 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 
-const FormFactory = ({ content, edge }) => {
+const FormFactory = ({ content }) => {
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
@@ -43,19 +43,13 @@ const FormFactory = ({ content, edge }) => {
 	// }
 
 	const onSubmit = (data) => {
-		const { to, end, data: value } = edge
 		dispatch(appendAnswer({ data }))
-
-		if (!end || isEqual(data, value)) {
-			return history.push(to)
-		}
-
+		console.log(data)
 		dispatch(answerRequest({ history }))
 	}
 
 	const handleBack = () => {
-		const { from } = edge
-		history.push(`/form/${from}`)
+		history.push(`/form/`)
 	}
 
 	return (
@@ -68,6 +62,8 @@ const FormFactory = ({ content, edge }) => {
 			// initialValues={data}
 		>
 			{content && content.length > 0 && InputFactory({ content })}
+			{console.log('content-form')}
+			{console.log(content)}
 			<div
 				{...tailLayout}
 				style={{
@@ -77,17 +73,8 @@ const FormFactory = ({ content, edge }) => {
 					marginBottom: '20px',
 				}}>
 				<Form.Item {...tailLayout}>
-					{edge?.from && (
-						<Button
-							type="default"
-							htmlType="button"
-							className={styles.button}
-							onClick={handleBack}>
-							Anterior
-						</Button>
-					)}
 					<Button type="primary" htmlType="submit">
-						Próximo
+						Enviar
 					</Button>
 				</Form.Item>
 			</div>
@@ -99,7 +86,6 @@ export default FormFactory
 
 FormFactory.propTypes = {
 	content: array,
-	edge: object,
 }
 FormFactory.defaultProps = {
 	content: [],
