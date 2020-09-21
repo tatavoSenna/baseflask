@@ -10,8 +10,7 @@ from datetime import datetime
 import boto3
 import pdfrw
 
-from flask import request, Blueprint, abort, jsonify
-
+from flask import request, Blueprint, abort, jsonify, current_app
 from botocore.exceptions import ClientError
 from docusign_esign import (
     ApiClient,
@@ -39,6 +38,7 @@ from app.docusign.services import get_token
 
 documents_bp = Blueprint("documents", __name__)
 
+AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
 
 @documents_bp.route("/")
 @aws_auth.authentication_required
@@ -159,7 +159,7 @@ def create(current_user):
     s3_object_key = f"{slugify(title)}_{int(datetime.now().timestamp())}"
     document_buffer.seek(0)
     try:
-        s3_client.upload_fileobj(document_buffer, "lawing-documents", s3_object_key)
+        s3_client.upload_fileobj(document_buffer, AWS_S3_DOCUMENTS_BUCKET, s3_object_key)
     except ClientError as e:
         print(f"error uploading to s3 {e}")
 
@@ -195,7 +195,7 @@ def download(current_user, document_id):
     s3_client = boto3.client("s3")
     document_url = s3_client.generate_presigned_url(
         "get_object",
-        Params={"Bucket": "lawing-documents", "Key": document.versions[0].filename},
+        Params={"Bucket": AWS_S3_DOCUMENTS_BUCKET, "Key": document.versions[0].filename},
         ExpiresIn=180,
     )
 
@@ -248,7 +248,7 @@ def request_signatures(current_user, document_id):
         s3_client = boto3.client("s3")
         document_buffer = io.BytesIO()
         s3_client.download_fileobj(
-            "lawing-documents", f"{last_version.filename}", document_buffer
+            AWS_S3_DOCUMENTS_BUCKET, f"{last_version.filename}", document_buffer
         )
     except ClientError as e:
         logging.error(e)

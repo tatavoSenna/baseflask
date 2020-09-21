@@ -20,6 +20,7 @@ class Config(object):
         "AWS_COGNITO_USER_POOL_CLIENT_SECRET"
     )
     AWS_COGNITO_REDIRECT_URL = os.environ.get("AWS_COGNITO_REDIRECT_URL")
+    AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
 
 
 def init_dotenv(app):

@@ -154,6 +154,8 @@ Resources:
             - - 'https://'
               - !Ref AppDomainName
               - '/token'
+          - Name: AWS_S3_DOCUMENTS_BUCKET
+            Value: 'lawing-documents'
           - Name: SQLALCHEMY_TRACK_MODIFICATIONS
             Value: 'False'
           - Name: SECRET_KEY
