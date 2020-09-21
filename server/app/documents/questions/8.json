@@ -1,5 +1,6 @@
 [
-  {
+  [
+    {
       "label": "",
       "variable": "concessionaries",
       "option": "",
@@ -8,8 +9,8 @@
       "answer": "",
       "parentIndex": null,
       "childIndex": 1
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "cnpj",
       "option": "",
@@ -18,8 +19,8 @@
       "answer": "",
       "parentIndex": 0,
       "childIndex": 2
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "address",
       "option": "",
@@ -28,24 +29,24 @@
       "answer": "",
       "parentIndex": 1,
       "childIndex": 3
-  },
-  {
-    "label": "",
-    "variable": "concessionaire_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email do responsável pela concessionária?",
-    "answer": "",
-    "parentIndex": 2,
-    "childIndex": 4,
-    "docusign_data": {
-      "name_variable": "concessionaries",
-      "anchor_string":"(CONCESSION",
-      "anchor_x_offset": "-0.5",
-      "anchor_y_offset": "-0.4"
-    }
-},
-  {
+    },
+    {
+      "label": "",
+      "variable": "concessionaire_signer",
+      "option": "",
+      "type": "input",
+      "value": "Qual o email do responsável pela concessionária?",
+      "answer": "",
+      "parentIndex": 2,
+      "childIndex": 4,
+      "docusign_data": {
+        "name_variable": "concessionaries",
+        "anchor_string": "(CONCESSION",
+        "anchor_x_offset": "-0.5",
+        "anchor_y_offset": "-0.4"
+      }
+    },
+    {
       "label": "",
       "variable": "client",
       "option": "",
@@ -54,8 +55,8 @@
       "answer": "",
       "parentIndex": 3,
       "childIndex": 5
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "cpf",
       "option": "",
@@ -64,8 +65,8 @@
       "answer": "",
       "parentIndex": 4,
       "childIndex": 6
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "client_address",
       "option": "",
@@ -74,24 +75,24 @@
       "answer": "",
       "parentIndex": 5,
       "childIndex": 7
-  },
-  {
-    "label": "",
-    "variable": "client_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email do cliente?",
-    "answer": "",
-    "parentIndex": 6,
-    "childIndex": 8,
-    "docusign_data": {
-      "name_variable": "client",
-      "anchor_string":"(CLIENTE)",
-      "anchor_x_offset": "-0.5",
-      "anchor_y_offset": "-0.4"
-    }
-},
-  {
+    },
+    {
+      "label": "",
+      "variable": "client_signer",
+      "option": "",
+      "type": "input",
+      "value": "Qual o email do cliente?",
+      "answer": "",
+      "parentIndex": 6,
+      "childIndex": 8,
+      "docusign_data": {
+        "name_variable": "client",
+        "anchor_string": "(CLIENTE)",
+        "anchor_x_offset": "-0.5",
+        "anchor_y_offset": "-0.4"
+      }
+    },
+    {
       "label": "",
       "variable": "vehicle",
       "option": "",
@@ -100,8 +101,8 @@
       "answer": "",
       "parentIndex": 7,
       "childIndex": 9
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "description",
       "option": "",
@@ -110,8 +111,8 @@
       "answer": "",
       "parentIndex": 8,
       "childIndex": 10
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "opt_for",
       "option": "",
@@ -120,8 +121,8 @@
       "answer": "",
       "parentIndex": 9,
       "childIndex": 12
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "benefit",
       "option": "",
@@ -130,29 +131,8 @@
       "answer": "",
       "parentIndex": 10,
       "childIndex": 13
-  },
-  {
-      "label": "",
-      "variable": "has_witness",
-      "option": "",
-      "type": "radio",
-      "value": "Necessita de testemunhas?",
-      "answer": "",
-      "parentIndex": 11
-  },
-  {
-      "label": "Sim",
-      "option": "yes",
-      "parentIndex": 12,
-      "childIndex": 15
-  },
-  {
-      "label": "Não",
-      "option": "no",
-      "parentIndex": 12,
-      "childIndex": null
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "witness_name_1",
       "option": "",
@@ -161,8 +141,8 @@
       "answer": "",
       "parentIndex": 13,
       "childIndex": 16
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "witness_rg_1",
       "option": "",
@@ -171,8 +151,8 @@
       "answer": "",
       "parentIndex": 15,
       "childIndex": 17
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "witness_cpf_1",
       "option": "",
@@ -181,24 +161,24 @@
       "answer": "",
       "parentIndex": 16,
       "childIndex": 18
-  },
-  {
-    "label": "",
-    "variable": "witness_1_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email da primeira testemunha?",
-    "answer": "",
-    "parentIndex": 17,
-    "childIndex": 19,
-    "docusign_data": {
-      "name_variable": "witness_name_1",
-      "anchor_string":"Testemunhas:",
-      "anchor_x_offset": "0",
-      "anchor_y_offset": "0.2"
-    }
-},
-  {
+    },
+    {
+      "label": "",
+      "variable": "witness_1_signer",
+      "option": "",
+      "type": "input",
+      "value": "Qual o email da primeira testemunha?",
+      "answer": "",
+      "parentIndex": 17,
+      "childIndex": 19,
+      "docusign_data": {
+        "name_variable": "witness_name_1",
+        "anchor_string": "Testemunhas:",
+        "anchor_x_offset": "0",
+        "anchor_y_offset": "0.2"
+      }
+    },
+    {
       "label": "",
       "variable": "witness_name_2",
       "option": "",
@@ -207,8 +187,8 @@
       "answer": "",
       "parentIndex": 18,
       "childIndex": 20
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "witness_rg_2",
       "option": "",
@@ -217,8 +197,8 @@
       "answer": "",
       "parentIndex": 19,
       "childIndex": 21
-  },
-  {
+    },
+    {
       "label": "",
       "variable": "witness_cpf_2",
       "option": "",
@@ -227,21 +207,22 @@
       "answer": "",
       "parentIndex": 20,
       "childIndex": 22
-  },
-  {
-    "label": "",
-    "variable": "witness_2_signer",
-    "option": "",
-    "type": "input",
-    "value": "Qual o email da segunda testemunha?",
-    "answer": "",
-    "parentIndex": 21,
-    "childIndex": null,
-    "docusign_data": {
-      "name_variable": "witness_name_2",
-      "anchor_string":"Testemunhas:",
-      "anchor_x_offset": "3.2",
-      "anchor_y_offset": "0.2"
+    },
+    {
+      "label": "",
+      "variable": "witness_2_signer",
+      "option": "",
+      "type": "input",
+      "value": "Qual o email da segunda testemunha?",
+      "answer": "",
+      "parentIndex": 21,
+      "childIndex": null,
+      "docusign_data": {
+        "name_variable": "witness_name_2",
+        "anchor_string": "Testemunhas:",
+        "anchor_x_offset": "3.2",
+        "anchor_y_offset": "0.2"
+      }
     }
-}
+  ]
 ]

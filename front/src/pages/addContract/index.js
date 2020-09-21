@@ -8,9 +8,9 @@ import FormFactory from './components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
 
-const getCurrentStepAndComponent = ({ edge, content }) => ({
+const getCurrentStepAndComponent = ({ content }) => ({
 	step: 0,
-	component: <FormFactory content={content?.questions} edge={edge} />,
+	component: <FormFactory content={content} />,
 })
 
 function AddContract() {
@@ -25,8 +25,7 @@ function AddContract() {
 
 	useEffect(() => {
 		const { component } = getCurrentStepAndComponent({
-			content: questions.nodes ? questions.nodes[current] : null,
-			edge: questions.edges ? questions.edges[current] : null,
+			content: questions ? questions[current] : null,
 		})
 		setStepComponent(component)
 	}, [current, questions])
