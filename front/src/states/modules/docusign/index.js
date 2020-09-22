@@ -23,6 +23,7 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		signContract: (state) => extend(state),
 	},
 })
 
@@ -30,6 +31,7 @@ export const {
 	setDocusignRequest,
 	setDocusignSuccess,
 	setDocusignFailure,
+	signContract,
 } = actions
 
 export { default as docusignSaga } from './sagas'

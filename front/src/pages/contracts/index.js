@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons'
 
 import { listContract, viewContract } from '~/states/modules/contract'
+import { signContract } from '~/states/modules/docusign'
 import BreadCrumb from '~/components/breadCrumb'
 
 function getDescription({ email, createdAt }) {
@@ -46,6 +47,10 @@ function Contracts() {
 		dispatch(viewContract({ documentId }))
 	}
 
+	function handleSignContract({ documentId }) {
+		dispatch(signContract(documentId))
+	}
+
 	return (
 		<Layout>
 			<BreadCrumb parent="Contratos" current="Lista" />
@@ -60,7 +65,10 @@ function Contracts() {
 						style={{ width: '100%', marginTop: 16, maxWidth: 800 }}
 						actions={[
 							<SettingOutlined key="setting" />,
-							<EditOutlined key="edit" />,
+							<EditOutlined
+								key="sign"
+								onClick={() => handleSignContract({ documentId: contract.id })}
+							/>,
 							<DownloadOutlined
 								key="download"
 								onClick={() => handleViewContract({ documentId: contract.id })}
