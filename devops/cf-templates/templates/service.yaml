@@ -172,6 +172,8 @@ Resources:
             Value: 520c8913-e2e5-4dc1-baef-3ee2d97877a1
           - Name: DOCUSIGN_INTEGRATION_KEY
             Value: 403ee112-39e5-4fea-ab30-5b7b6cdd58be
+          - Name: AWS_S3_DOCUMENTS_BUCKET
+            Value: lawing-documents-dev
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000
