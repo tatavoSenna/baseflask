@@ -38,7 +38,7 @@ from app.docusign.services import get_token
 
 documents_bp = Blueprint("documents", __name__)
 
-AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+
 
 @documents_bp.route("/")
 @aws_auth.authentication_required
@@ -74,6 +74,8 @@ def get_document_list(current_user):
 @get_local_user
 def create(current_user):
 
+    AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+
     # check if content_type is json
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
@@ -81,9 +83,9 @@ def create(current_user):
         content = request.json
 
     # check for required parameters
-    document_template_id = content.get("document", None)
-    answers = content.get("questions", None)
-    if not document_template_id or not answers:
+    document_template_id = content.get("model", None)
+    variables = content.get("variables", None)
+    if not document_template_id or not variables:
         return (
             jsonify(
                 {"message": "Value is missing. Needs questions and document model id"}
@@ -96,42 +98,42 @@ def create(current_user):
     if not document_template:
         return jsonify({"message": "Document model is missing."}), 404
 
-    context = {}
     unique_id = uuid.uuid1()
     title = f"{document_template.name}-{unique_id}"
 
-    with open(
-        "app/documents/questions/%s.json" % document_template_id, encoding="utf-8"
-    ) as json_file:
-        decision_tree = json.load(json_file)
-    for key in decision_tree["nodes"]:
-        for question in decision_tree["nodes"][key]["questions"]:
+    # with open(
+    #     "app/documents/questions/%s.json" % document_template_id, encoding="utf-8"
+    # ) as json_file:
+    #     decision_tree = json.load(json_file)
+    # for key in decision_tree:
+    #     for question in decision_tree["questions"]:
 
-            # get answers for question on the answers list
-            if "variable" in question and question["variable"] in answers:
-                context[question["variable"]] = answers[question["variable"]]
+    #         # get answers for question on the answers list
+    #         if "variable" in question and question["variable"] in answers:
+    #             context[question["variable"]] = answers[question["variable"]]
 
-                # add treatment for pdf checkboxes
-                if (
-                    "pdf_option_type" in question
-                    and question["pdf_option_type"] == "check_boxes"
-                ):
-                    context[answers["variable"]] = pdfrw.PdfName("On")
+    #             # add treatment for pdf checkboxes
+    #             if (
+    #                 "pdf_option_type" in question
+    #                 and question["pdf_option_type"] == "check_boxes"
+    #             ):
+    #                 context[answers["variable"]] = pdfrw.PdfName("On")
 
-                # gets the title from the user's answers and  the filename from the document_title
-                if question["variable"] == "title":
-                    title = f'{answers["title"]}-{unique_id}'
+    #             # gets the title from the user's answers and  the filename from the document_title
+    #             if question["variable"] == "title":
+    #                 title = f'{answers["title"]}-{unique_id}'
 
     now = datetime.now()
-    context["day"] = str(now.day).zfill(2)
-    context["month"] = months[now.month - 1]
-    context["year"] = now.year
-    context["today"] = f"{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}"
+    variables["day"] = str(now.day).zfill(2)
+    variables["month"] = months[now.month - 1]
+    variables["year"] = now.year
+    variables["today"] = f"{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}"
 
     if document_template.filetype == "docx":
         # generate document from docx_template
         doc = DocxTemplate(f"app/documents/template/{document_template_id}.docx")
-        doc.render(context)
+        print(variables)
+        doc.render(variables)
         document_buffer = io.BytesIO()
         doc.save(document_buffer)
     elif document_template.filetype == "pdf":
@@ -156,7 +158,7 @@ def create(current_user):
 
     # save generated document to an s3
     s3_client = boto3.client("s3")
-    s3_object_key = f"{slugify(title)}_{int(datetime.now().timestamp())}"
+    s3_object_key = f"{slugify(title)}_{int(datetime.now().timestamp())}.{document_template.filetype}"
     document_buffer.seek(0)
     try:
         s3_client.upload_fileobj(document_buffer, AWS_S3_DOCUMENTS_BUCKET, s3_object_key)
@@ -168,7 +170,7 @@ def create(current_user):
         current_user["id"],
         title,
         document_template_id,
-        answers,
+        variables,
         s3_object_key,
     )
     return new_document
@@ -178,6 +180,8 @@ def create(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def download(current_user, document_id):
+
+    AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
 
     if not document_id:
         abort(400, "Missing document id")

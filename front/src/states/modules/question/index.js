@@ -15,12 +15,15 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loading: true,
 			}),
-		listQuestionSuccess: (state, { payload }) =>
+		listQuestionSuccess: (state, { payload }) => {
+			const { modelId, data } = payload
 			extend(state, {
-				data: payload,
+				modelId,
+				data,
 				error: null,
 				loading: false,
-			}),
+			})
+		},
 		listQuestionFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,

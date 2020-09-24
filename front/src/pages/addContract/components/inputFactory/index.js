@@ -2,11 +2,11 @@ import React from 'react'
 import { object } from 'prop-types'
 import { Form, Input, Radio } from 'antd'
 
-function InputFactory({ content }) {
+function InputFactory(pageFieldsData) {
 	const children = []
 
-	for (let i = 0; i < content.length; i++) {
-		const { value, variable, type, options, id } = content[i]
+	for (let i = 0; i < pageFieldsData.length; i++) {
+		const { value, variable, type, options, id } = pageFieldsData[i]
 		if (type === 'input') {
 			children.push(
 				<Form.Item

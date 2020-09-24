@@ -9,12 +9,17 @@ export default function* rootSaga() {
 
 function* answerSaga({ payload }) {
 	const { history } = payload
-	const { answer } = yield select()
-
+	const { answer, modelId } = yield select((state) => {
+		const {
+			answer,
+			question: { modelId },
+		} = state
+		return { answer, modelId }
+	})
 	try {
 		const { data } = yield call(api.post, `/documents/create`, {
-			document: 10,
-			questions: answer.data,
+			model: modelId,
+			variables: answer.data,
 		})
 
 		yield put(answerSuccess(data))

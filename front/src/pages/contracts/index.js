@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Skeleton, Card, Layout, Empty, Button } from 'antd'
+import { Skeleton, Card, Layout, Empty, Button, PageHeader } from 'antd'
 import {
 	EditOutlined,
 	DownloadOutlined,
@@ -53,13 +53,10 @@ function Contracts() {
 
 	return (
 		<Layout>
-			<BreadCrumb parent="Contratos" current="Lista" />
-			<Layout
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'flex-start',
-				}}>
+			<PageHeader>
+				<BreadCrumb parent="Contratos" current="Lista" />
+			</PageHeader>
+			<Layout>
 				{contracts.map((contract) => (
 					<Card
 						style={{ width: '100%', marginTop: 16, maxWidth: 800 }}
