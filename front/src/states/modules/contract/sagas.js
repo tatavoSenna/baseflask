@@ -36,7 +36,7 @@ function* viewSaga({ payload }) {
 	const { documentId } = payload
 	try {
 		const { data } = yield call(api.get, `/documents/${documentId}/download`)
-		window.open(data.download_url, '_blank')
+		window.open(data.download_url, 'self')
 	} catch (error) {
 		errorMessage({
 			content: 'Falha na conexão com o servidor. Tente novamente mais tarde.',

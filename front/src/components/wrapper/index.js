@@ -43,8 +43,6 @@ function Wrapper({ children }) {
 					onClick={handleClickContent}
 					className={styles.siteLayout}
 					style={{
-						margin: '24px 16px',
-						padding: 24,
 						minHeight: 280,
 						opacity: !isDesktopOrLaptop && !collapsed ? 0.5 : 1,
 					}}>

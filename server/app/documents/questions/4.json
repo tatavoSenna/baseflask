@@ -1,6 +1,0 @@
-[
-  {"label": "", "variable": "has_quota", "option": "", "type": "radio", "value": "O cliente possui uma ou mais cotas?", "answer": "", "parentIndex": "", "childIndex": 1},
-  {"label": "Uma", "option": "one", "parentIndex": 0, "childIndex": null},
-  {"label": "Mais de uma", "option": "more", "parentIndex": 0, "childIndex": 3},
-  {"label": "", "variable": "quotas", "option": "", "type": "input", "value": "Quantas cotas?", "answer": "", "parentIndex": 0, "childIndex": null}
-]

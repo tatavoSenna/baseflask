@@ -1,52 +1,51 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Card, Layout } from 'antd'
+import { Card, Layout, PageHeader } from 'antd'
 
 import BreadCrumb from '~/components/breadCrumb'
 import FormFactory from './components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
 
-const getCurrentStepAndComponent = ({ content }) => ({
-	step: 0,
-	component: <FormFactory content={content} />,
-})
+const getCurrentStepAndComponent = (pageFieldsData, isLastPage) => (
+	<FormFactory pageFieldsData={pageFieldsData} isLastPage={isLastPage} />
+)
 
 function AddContract() {
 	const { current, model } = useParams()
+	const currentPage = parseInt(current)
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { data: questions, loading } = useSelector(({ question }) => question)
 
 	useEffect(() => {
-		dispatch(listQuestion({ documentId: model }))
+		dispatch(listQuestion({ modelId: model }))
 	}, [dispatch, model])
 
 	useEffect(() => {
-		const { component } = getCurrentStepAndComponent({
-			content: questions ? questions[current] : null,
-		})
-		setStepComponent(component)
-	}, [current, questions])
+		const pageFieldsData = questions ? questions[currentPage] : null
+		const isLastPage = currentPage === questions.length - 1
+		const pageFormComponent = getCurrentStepAndComponent(
+			pageFieldsData,
+			isLastPage
+		)
+		setStepComponent(pageFormComponent)
+	}, [currentPage, questions])
 
 	return (
 		<Layout>
-			<BreadCrumb parent="Contatros" current="Novo Contrato" />
-			<Layout
+			<PageHeader>
+				<BreadCrumb parent="Contratos" current={'Novo Contrato'} />
+			</PageHeader>
+			<Card
 				style={{
-					display: 'flex',
-					alignItems: 'center',
-				}}>
-				<Card
-					style={{
-						maxWidth: '800px',
-						width: '100%',
-					}}
-					loading={loading}>
-					{stepComponent}
-				</Card>
-			</Layout>
+					maxWidth: '800px',
+					width: '100%',
+				}}
+				loading={loading}>
+				{stepComponent}
+			</Card>
 		</Layout>
 	)
 }
