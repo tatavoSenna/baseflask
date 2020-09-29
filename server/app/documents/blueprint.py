@@ -28,16 +28,20 @@ from sqlalchemy import desc
 
 from app import db, aws_auth
 from app.constants import months
-from app.controllers import get_document_templates, get_documents, create_document
 from app.models.documents import Document, DocumentVersion, DocumentTemplate
 from app.serializers.document_serializers import DocumentSerializer
 from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
 
+from .helpers import (
+    get_document_templates,
+    get_documents,
+    create_document,
+    create_new_version,
+)
 
 documents_bp = Blueprint("documents", __name__)
-
 
 
 @documents_bp.route("/")
@@ -73,66 +77,39 @@ def get_document_list(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
-
-    AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
-
     # check if content_type is json
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
-    else:
-        content = request.json
 
     # check for required parameters
+    content = request.json
     document_template_id = content.get("model", None)
     variables = content.get("variables", None)
+
     if not document_template_id or not variables:
-        return (
-            jsonify(
-                {"message": "Value is missing. Needs questions and document model id"}
-            ),
-            400,
-        )
+        error_msg = "Value is missing. Needs questions and document model id"
+        return jsonify({"message": error_msg}), 400
 
     # loads the document model
     document_template = DocumentTemplate.query.get(document_template_id)
     if not document_template:
-        return jsonify({"message": "Document model is missing."}), 404
+        error_msg = "Document model is missing."
+        return jsonify({"message": error_msg}), 404
 
     unique_id = uuid.uuid1()
     title = f"{document_template.name}-{unique_id}"
-
-    # with open(
-    #     "app/documents/questions/%s.json" % document_template_id, encoding="utf-8"
-    # ) as json_file:
-    #     decision_tree = json.load(json_file)
-    # for key in decision_tree:
-    #     for question in decision_tree["questions"]:
-
-    #         # get answers for question on the answers list
-    #         if "variable" in question and question["variable"] in answers:
-    #             context[question["variable"]] = answers[question["variable"]]
-
-    #             # add treatment for pdf checkboxes
-    #             if (
-    #                 "pdf_option_type" in question
-    #                 and question["pdf_option_type"] == "check_boxes"
-    #             ):
-    #                 context[answers["variable"]] = pdfrw.PdfName("On")
-
-    #             # gets the title from the user's answers and  the filename from the document_title
-    #             if question["variable"] == "title":
-    #                 title = f'{answers["title"]}-{unique_id}'
 
     now = datetime.now()
     variables["day"] = str(now.day).zfill(2)
     variables["month"] = months[now.month - 1]
     variables["year"] = now.year
-    variables["today"] = f"{ str(now.day).zfill(2)}/{months[now.month - 1]}/{now.year}"
+    variables[
+        "today"
+    ] = f'{ variables["day"] }/{ variables["month"] }/{ variables["year"] }'
 
     if document_template.filetype == "docx":
         # generate document from docx_template
         doc = DocxTemplate(f"app/documents/template/{document_template_id}.docx")
-        print(variables)
         doc.render(variables)
         document_buffer = io.BytesIO()
         doc.save(document_buffer)
@@ -144,62 +121,70 @@ def create(current_user):
         for page in pdf_template.Root.Pages.Kids:
             if page.Annots:
                 for field in page.Annots:
-                    if field["/T"] and field["/T"][1:-1] in context.keys():
+                    if field.get("/T", [])[1:-1] in context.keys():
                         kwargs = {"V": context[field["/T"][1:-1]]}
                         field.update(pdfrw.PdfDict(**kwargs))
+
         pdf_template.Root.AcroForm.update(
             pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject("true"))
         )
+
         temp_file_name = f"{unique_id}_temp.pdf"
         pdfrw.PdfWriter().write(temp_file_name, pdf_template)
         document_buffer = open(temp_file_name, "rb")
         document_buffer.read()
         os.remove(temp_file_name)
 
-    # save generated document to an s3
-    s3_client = boto3.client("s3")
-    s3_object_key = f"{slugify(title)}_{int(datetime.now().timestamp())}.{document_template.filetype}"
-    document_buffer.seek(0)
-    try:
-        s3_client.upload_fileobj(document_buffer, AWS_S3_DOCUMENTS_BUCKET, s3_object_key)
-    except ClientError as e:
-        print(f"error uploading to s3 {e}")
-
-    new_document = create_document(
+    document = create_document(
         current_user["company_id"],
         current_user["id"],
         title,
         document_template_id,
-        variables,
-        s3_object_key,
     )
-    return new_document
+
+    version = create_new_version(document, answers=variables)
+
+    # save generated document to an s3
+    s3_client = boto3.client("s3")
+    remote_filename = f"{document.id}/{version.version_number}_{int(datetime.now().timestamp())}.{document_template.filetype}"
+    document_buffer.seek(0)
+
+    try:
+        s3_client.upload_fileobj(
+            document_buffer,
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            f'{current_app.config["AWS_S3_DOCUMENT_ROOT"]}/{remote_filename}',
+        )
+    except ClientError as e:
+        print(f"error uploading to s3 {e}")
+
+    version.filename = remote_filename
+    db.session.add(version)
+    db.session.commit()
+    db.session.refresh(document)
+
+    return DocumentSerializer().dump(document)
 
 
 @documents_bp.route("/<int:document_id>/download")
 @aws_auth.authentication_required
 @get_local_user
 def download(current_user, document_id):
-
-    AWS_S3_DOCUMENTS_BUCKET = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
-
     if not document_id:
         abort(400, "Missing document id")
 
     try:
         document = Document.query.get(document_id)
-        last_version = (
-            DocumentVersion.query.filter_by(document_id=document_id)
-            .order_by(DocumentVersion.version_number)
-            .first()
-        )
     except Exception:
         abort(404, "Document not Found")
 
     s3_client = boto3.client("s3")
     document_url = s3_client.generate_presigned_url(
         "get_object",
-        Params={"Bucket": AWS_S3_DOCUMENTS_BUCKET, "Key": document.versions[0].filename},
+        Params={
+            "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            "Key": document.versions[0].filename,
+        },
         ExpiresIn=180,
     )
 
@@ -233,26 +218,28 @@ def request_signatures(current_user, document_id):
     for question in last_version.answers:
 
         # check if the question has been answered
-        if "variable" in question and "answer" in question and question["answer"] != "":
+        if "variable" in question and "answer" in question and question["answer"]:
             # gather all answers on an dictionary becaus we may need info when gatthering signers
             variable_name = question["variable"]
             answers[question["variable"]] = question["answer"]
 
             # Variables that identify signers end with "signer"
-            if variable_name.find("signer") >= 0:
-                if "docusign_data" in question:
-                    signer_data = question["docusign_data"]
-                    signer_data["name"] = answers[
-                        question["docusign_data"]["name_variable"]
-                    ]
-                    signer_data["email"] = question["answer"]
-                    signers_data.append(signer_data)
+            if variable_name.find("signer") >= 0 and "docusign_data" in question:
+                signer_data = question["docusign_data"]
+                signer_data["name"] = answers[
+                    question["docusign_data"]["name_variable"]
+                ]
+                signer_data["email"] = question["answer"]
+                signers_data.append(signer_data)
+
+    s3_client = boto3.client("s3")
 
     try:
-        s3_client = boto3.client("s3")
         document_buffer = io.BytesIO()
         s3_client.download_fileobj(
-            AWS_S3_DOCUMENTS_BUCKET, f"{last_version.filename}", document_buffer
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            f"{last_version.filename}",
+            document_buffer,
         )
     except ClientError as e:
         logging.error(e)
@@ -260,7 +247,7 @@ def request_signatures(current_user, document_id):
     document_buffer.seek(0)
     base64_document = base64.b64encode(document_buffer.read()).decode("ascii")
 
-    if len(signers_data) > 0:
+    if signers_data:
 
         # create the DocuSign document object
         document = DocusignDocument(
@@ -338,9 +325,6 @@ def request_signatures(current_user, document_id):
         document = Document.query.get(document_id)
         document.envelope = json.dumps(EnvelopeSerializer().dump(envelope))
         db.session.commit()
-
-        # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)
-
         return jsonify(DocumentSerializer().dump(document))
     else:
         return jsonify({"message": "No signers."}), 400

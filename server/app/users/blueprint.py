@@ -8,8 +8,9 @@ from flask import request, Blueprint, jsonify, current_app
 from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
 from app.models.user import User
-from app.controllers import get_user
 from app.serializers.user_serializers import UserSerializer
+
+from .helpers import get_user
 
 users_bp = Blueprint("users", __name__)
 

@@ -1,24 +1,11 @@
 import json
 
 from app import db
-from app.models.company import Company
 from app.models.documents import Document, DocumentTemplate, DocumentVersion
-from app.models.user import User
-from app.serializers.document_serializers import DocumentSerializer
-
-
-def get_user(email):
-    user = User.query.filter_by(email=email).first()
-
-    data = {
-        "id": user.id,
-        "name": user.name,
-        "surname": user.surname,
-        "email": user.email,
-        "company_id": user.company_id,
-    }
-
-    return data
+from app.serializers.document_serializers import (
+    DocumentSerializer,
+    DocumentVersionSerializer,
+)
 
 
 def get_document_templates(company_id, *doc_id):
@@ -73,21 +60,27 @@ def get_documents(company_id):
 
 
 def create_document(
-    company_id, user_id, title, document_template_id, answers, filename
+    company_id,
+    user_id,
+    title,
+    document_template_id,
 ):
-    new_document = Document(
+    document = Document(
         user_id=user_id,
         company_id=company_id,
         title=title,
         document_template_id=document_template_id,
     )
-    db.session.add(new_document)
+    db.session.add(document)
     db.session.commit()
-    first_version = DocumentVersion(
-        filename=filename, answers=answers, document=new_document
-    )
-    db.session.add(first_version)
-    db.session.commit()
-    db.session.refresh(new_document)
 
-    return DocumentSerializer().dump(new_document)
+    return document
+
+
+def create_new_version(document, **kwargs):
+    version = DocumentVersion(document=document, **kwargs)
+    db.session.add(version)
+    db.session.commit()
+    db.session.refresh(document)
+
+    return version
