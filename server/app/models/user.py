@@ -25,9 +25,29 @@ class User(db.Model):
 
     # Belongs to
     company = db.relationship("Company", back_populates="users")
+    user_group = db.relationship("UserGroup", back_populates="users")
 
     # Has many
     documents = db.relationship("Document", back_populates="user")
+
+    def __repr__(self):
+        return "<User %r>" % self.username
+
+
+class UserGroup(db.Model):
+    __tablename__ = "user_group"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), unique=False, nullable=True)
+    company_id = db.Column(
+        db.Integer, db.ForeignKey("company.id"), nullable=True)
+    active = db.Column(db.Boolean, default=True, nullable=True)
+
+    # Belongs to
+    company = db.relationship("Company", back_populates="user_groups")
+
+    # Has many
+    users = db.relationship("User", back_populates="user_group")
 
     def __repr__(self):
         return "<User %r>" % self.username
