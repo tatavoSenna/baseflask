@@ -1,5 +1,5 @@
 from app import db
-from app.models.user import UserGroup
+from app.models.user import User, UserGroup
 from flask import jsonify
 
 
@@ -16,6 +16,15 @@ def create_user_group_controller(name, company_id):
     db.session.add(new_user_group)
     db.session.commit()
     return new_user_group
+
+
+def get_user_group_controller(logged_user, user_group_id):
+    user_group = UserGroup.query.filter_by(
+        company_id=logged_user.get("company_id", -1), active=True
+    ).filter_by(id=user_group_id).first()
+    users = User.query.filter_by(user_group_id=user_group.id).all()
+    
+    return user_group, users
 
 
 def delete_user_group_controller(user_group):
