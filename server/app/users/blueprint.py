@@ -12,8 +12,11 @@ from app.serializers.user_serializers import UserSerializer, UserGroupSerializer
 from app.models.company import Company
 
 from .helpers import get_user
-from .controllers import (list_user_controller, list_user_group_controller,
-                          create_user_group_controller, delete_user_group_controller)
+from .controllers import (list_user_controller,
+                          list_user_group_controller,
+                          create_user_group_controller,
+                          delete_user_group_controller,
+                          get_user_group_controller)
 
 users_bp = Blueprint("users", __name__)
 user_groups_bp = Blueprint("users_groups", __name__)
@@ -143,6 +146,15 @@ def update(logged_user, username):
 def list_user_groups(logged_user):
     user_groups = list_user_group_controller(logged_user)
     return jsonify({"user_groups": UserGroupSerializer(many=True).dump(user_groups)})
+
+
+@user_groups_bp.route("<user_group_id>", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_user_group(logged_user, user_group_id):
+    user_group, users = get_user_group_controller(logged_user, user_group_id)
+    return jsonify({"user_group": UserGroupSerializer(many=False).dump(user_group),
+                    "users": UserSerializer(many=True).dump(users)})
 
 
 @user_groups_bp.route("", methods=["POST"])
