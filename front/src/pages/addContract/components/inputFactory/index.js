@@ -1,42 +1,37 @@
 import React from 'react'
 import { object } from 'prop-types'
-import { Form, Input, Radio } from 'antd'
+import RadioField from '../../../../components/radioField'
+import CnpjField from '../../../../components/cnpjField'
+import CpfField from '../../../../components/cpfField'
+import EmailField from '../../../../components/emailField'
+import CurrencyField from '../../../../components/currencyField'
+import TextField from '../../../../components/textField'
 
 function InputFactory(pageFieldsData) {
 	const children = []
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
-		const { value, variable, type, options, id } = pageFieldsData[i]
-		if (type === 'input') {
-			children.push(
-				<Form.Item
-					key={`${variable}_${id}`}
-					name={variable}
-					label={value}
-					type={type}
-					hasFeedback
-					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					colon={false}>
-					<Input placeholder="" />
-				</Form.Item>
-			)
-		} else if (type === 'radio') {
-			children.push(
-				<Form.Item
-					key={`${variable}_${id}`}
-					name={variable}
-					label={value}
-					// hasFeedback
-					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					type={type}
-					colon={false}>
-					<Radio.Group>
-						{options.map((option) => (
-							<Radio value={option}>{option}</Radio>
-						))}
-					</Radio.Group>
-				</Form.Item>
-			)
+		const { type } = pageFieldsData[i]
+		switch (type) {
+			case 'radio':
+				children.push(<RadioField key={i} pageFieldsData={pageFieldsData[i]} />)
+				break
+			case 'cnpj':
+				children.push(<CnpjField key={i} pageFieldsData={pageFieldsData[i]} />)
+				break
+			case 'cpf':
+				children.push(<CpfField key={i} pageFieldsData={pageFieldsData[i]} />)
+				break
+			case 'email':
+				children.push(<EmailField key={i} pageFieldsData={pageFieldsData[i]} />)
+				break
+			case 'currency':
+				children.push(
+					<CurrencyField key={i} pageFieldsData={pageFieldsData[i]} />
+				)
+				break
+			default:
+				children.push(<TextField key={i} pageFieldsData={pageFieldsData[i]} />)
 		}
 	}
 

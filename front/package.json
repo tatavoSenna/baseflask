@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.2.2",
+    "antd-mask-input": "^0.1.13",
     "axios": "^0.19.2",
     "babel-plugin-import": "^1.13.0",
     "moment": "^2.25.3",
@@ -61,8 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-	},
-	"husky": {
+  },
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
