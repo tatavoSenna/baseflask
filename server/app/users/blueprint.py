@@ -7,12 +7,15 @@ from flask import request, Blueprint, jsonify, current_app
 
 from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
-from app.models.user import User
-from app.serializers.user_serializers import UserSerializer
+from app.models.user import User, UserGroup
+from app.serializers.user_serializers import UserSerializer, UserGroupSerializer
+from app.models.company import Company
 
 from .helpers import get_user
+from .controllers import list_user_group_controller, create_user_group_controller, delete_user_group_controller
 
 users_bp = Blueprint("users", __name__)
+user_groups_bp = Blueprint("users_groups", __name__)
 
 
 @users_bp.route("me", methods=["GET"])
@@ -119,3 +122,46 @@ def update(logged_user, username):
         return dict(error="Cognito response error")
 
     return response
+
+
+@user_groups_bp.route("", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def list_user_groups(logged_user):
+    user_groups = list_user_group_controller(logged_user)
+    return jsonify({"user_groups": UserGroupSerializer(many=True).dump(user_groups)})
+
+
+@user_groups_bp.route("", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def create_user_group(logged_user):
+    fields = request.get_json()
+    required_fields = ["name", "company_id"]
+
+    if not all(f in fields for f in required_fields):
+        return dict(error="Missing required fields")
+
+    name = fields.get("name")
+    company_id = fields.get("company_id")
+
+    if not Company.query.get(company_id):
+        return dict(error="Couldn't find any company with the given id")
+
+    new_user_group = create_user_group_controller(name, company_id)
+
+    return jsonify({"user_group": UserGroupSerializer().dump(new_user_group)})
+
+
+@user_groups_bp.route("<group_id>", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def delete_user_group(logged_user, group_id):
+
+    user_group = UserGroup.query.get(group_id)
+    if not user_group:
+        return dict(error="User Group not found")
+
+    delete_user_group_controller(user_group)
+
+    return {}, 204

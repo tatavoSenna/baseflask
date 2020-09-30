@@ -43,9 +43,11 @@ def create_app():
 
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
-    from .users.blueprint import users_bp
+    from .users.blueprint import users_bp, user_groups_bp
 
     app.register_blueprint(users_bp, url_prefix="/users")
+
+    app.register_blueprint(user_groups_bp, url_prefix="/user_groups")
 
     @app.route("/", methods=["GET"])
     def welcome():
