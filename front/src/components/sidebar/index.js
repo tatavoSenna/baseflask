@@ -7,6 +7,7 @@ import {
 	FileAddOutlined,
 	FileTextOutlined,
 	FolderOpenOutlined,
+	TeamOutlined,
 } from '@ant-design/icons'
 
 import { listModel } from '~/states/modules/model'
@@ -77,6 +78,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								</Menu.Item>
 							))}
 						</SubMenu>
+						<Menu.Item
+							key="users"
+							icon={<TeamOutlined />}
+							onClick={() => handleGoTo('/users')}>
+							Usuários
+						</Menu.Item>
 					</Menu>
 				</Sider>
 			) : (
@@ -118,6 +125,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								</Menu.Item>
 							))}
 						</SubMenu>
+						<Menu.Item
+							key="users"
+							icon={<TeamOutlined />}
+							onClick={() => handleGoTo('/users')}>
+							Usuários
+						</Menu.Item>
 					</Menu>
 				</Sider>
 			)}

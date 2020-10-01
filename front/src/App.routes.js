@@ -7,6 +7,7 @@ import Token from './pages/token'
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
+import Users from './pages/users'
 
 import Wrapper from '~/components/wrapper'
 
@@ -16,6 +17,7 @@ export const ROUTES = {
 	home: '/',
 	contracts: '/contracts',
 	form: '/contracts/new/:model/:current',
+	users: '/users',
 }
 
 function Routes() {
@@ -37,6 +39,7 @@ function Routes() {
 						component={Contracts}
 						isPrivate
 					/>
+					<AdminRoute exact path={ROUTES.users} component={Users} isPrivate />
 				</Wrapper>
 			</Switch>
 		</Router>
