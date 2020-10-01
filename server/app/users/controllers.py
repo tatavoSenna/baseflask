@@ -7,7 +7,7 @@ from app.serializers.user_serializers import UserSerializer
 
 def list_user_controller(company_id, page=1, per_page=20, search_param=''):
     paginated_query = (
-        User.query.filter_by(company_id=company_id)
+        User.query.filter_by(company_id=company_id, active=True)
         .filter(or_(User.name.ilike(f"%{search_param}%"),
                     User.surname.ilike(f"%{search_param}%"),
                     User.email.ilike(f"%{search_param}%")))
