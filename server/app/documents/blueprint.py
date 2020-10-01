@@ -183,7 +183,7 @@ def download(current_user, document_id):
         "get_object",
         Params={
             "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            "Key": document.versions[0].filename,
+            "Key": f'{current_app.config["AWS_S3_DOCUMENT_ROOT"]}/{document.versions[0].filename}'
         },
         ExpiresIn=180,
     )
