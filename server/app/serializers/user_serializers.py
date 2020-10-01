@@ -1,5 +1,5 @@
 from app import ma
-from app.models.user import User, UserGroup
+from app.models.user import User, Group
 
 
 class UserSerializer(ma.SQLAlchemyAutoSchema):
@@ -14,7 +14,7 @@ class UserSerializer(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
 
-class UserGroupSerializer(ma.SQLAlchemyAutoSchema):
+class GroupSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = UserGroup
+        model = Group
         include_fk = True
