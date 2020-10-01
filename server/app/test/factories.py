@@ -29,7 +29,7 @@ class CompanyFactory(BaseFactory):
 
 class UserFactory(BaseFactory):
     class Meta:
-        model = models.User
+        model = models.user.User
 
     id = factory.Sequence(lambda n: n)
     sub = factory.Faker("uuid4")
@@ -37,4 +37,13 @@ class UserFactory(BaseFactory):
     surname = factory.Faker("last_name_nonbinary")
     email = factory.Faker("email")
     username = factory.Faker("slug")
+    company = factory.SubFactory(CompanyFactory)
+
+
+class GroupFactory(BaseFactory):
+    class Meta:
+        model = models.user.Group
+
+    id = factory.Sequence(lambda n: n)
+    name = factory.Faker("company")
     company = factory.SubFactory(CompanyFactory)

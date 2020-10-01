@@ -12,11 +12,13 @@ from app.serializers.user_serializers import UserSerializer, GroupSerializer
 from app.models.company import Company
 
 from .helpers import get_user
-from .controllers import (list_user_controller,
-                          list_group_controller,
-                          create_group_controller,
-                          delete_group_controller,
-                          get_group_controller)
+from .controllers import (
+    list_user_controller,
+    list_group_controller,
+    create_group_controller,
+    delete_group_controller,
+    get_group_controller
+)
 
 users_bp = Blueprint("users", __name__)
 groups_bp = Blueprint("groups", __name__)
@@ -144,7 +146,8 @@ def update(logged_user, username):
 @aws_auth.authentication_required
 @get_local_user
 def list_groups(logged_user):
-    groups = list_group_controller(logged_user)
+    company_id = logged_user.company_id
+    groups = list_group_controller(company_id)
     return jsonify({"groups": GroupSerializer(many=True).dump(groups)})
 
 
@@ -152,7 +155,8 @@ def list_groups(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def get_group(logged_user, group_id):
-    group = get_group_controller(logged_user, group_id)
+    company_id = logged_user.company_id
+    group = get_group_controller(company_id, group_id)
     if group:
         return jsonify({"group": GroupSerializer(many=False).dump(group)})
     else:
@@ -164,18 +168,18 @@ def get_group(logged_user, group_id):
 @get_local_user
 def create_group(logged_user):
     fields = request.get_json()
-    required_fields = ["name", "company_id"]
+    required_fields = ["name"]
 
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields"), 400
 
     name = fields.get("name")
-    company_id = fields.get("company_id")
+    company = Company.query.get(logged_user.company_id)
 
-    if not Company.query.get(company_id):
+    if not company:
         return dict(error="Couldn't find any company with the given id"), 404
 
-    new_group = create_group_controller(name, company_id)
+    new_group = create_group_controller(company.id, name)
 
     return jsonify({"group": GroupSerializer().dump(new_group)})
 
@@ -185,7 +189,8 @@ def create_group(logged_user):
 @get_local_user
 def delete_group(logged_user, group_id):
 
-    group = Group.query.filter_by(id=group_id, active=True).first()
+    group = Group.query.filter_by(
+        id=group_id, active=True, company_id=logged_user.company_id).first()
     if not group:
         return dict(error="User Group not found"), 404
 
