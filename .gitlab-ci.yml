@@ -1,7 +1,0 @@
-test:
-  stage: test
-  image: node:alpine
-  script:
-    - cd front && yarn
-    - yarn test:ci
-    - echo "Tests Succeeded"
