@@ -43,7 +43,6 @@ from .helpers import (
 
 documents_bp = Blueprint("documents", __name__)
 
-
 @documents_bp.route("/")
 @aws_auth.authentication_required
 @get_local_user
@@ -154,7 +153,7 @@ def create(current_user):
             document_buffer,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             f'{current_app.config["AWS_S3_DOCUMENT_ROOT"]}/{remote_filename}',
-        )
+            )
     except ClientError as e:
         print(f"error uploading to s3 {e}")
 

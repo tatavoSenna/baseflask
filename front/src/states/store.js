@@ -14,6 +14,7 @@ import model, { modelSaga } from './modules/model'
 import question, { questionSaga } from './modules/question'
 import answer, { answerSaga } from './modules/answer'
 import docusign, { docusignSaga } from './modules/docusign'
+import users, { usersSaga } from './modules/users'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -29,6 +30,7 @@ const reducers = combineReducers({
 	question,
 	answer,
 	docusign,
+	users,
 })
 
 const store = configureStore({
@@ -46,6 +48,7 @@ const rootSaga = function* () {
 		questionSaga(),
 		answerSaga(),
 		docusignSaga(),
+		usersSaga(),
 	])
 }
 
