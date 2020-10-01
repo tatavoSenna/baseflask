@@ -50,13 +50,16 @@ def sync():
 @aws_auth.authentication_required
 @get_local_user
 def list_users(logged_user):
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+        search_param = str(request.args.get("search", ""))
+    except:
+        return {}, 400
 
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 20))
-    search_param = str(request.args.get("search", ""))
-
+    company_id = logged_user['company_id']
     paginated_query = list_user_controller(
-        logged_user, page, per_page, search_param)
+        company_id, page, per_page, search_param)
 
     return jsonify(
         {
@@ -136,7 +139,7 @@ def update(logged_user, username):
 
     try:
         response = cognito.admin_update_user_attributes(**user_attributes)
-    except err:
+    except:
         return dict(error="Cognito response error")
 
     return response
@@ -146,16 +149,31 @@ def update(logged_user, username):
 @aws_auth.authentication_required
 @get_local_user
 def list_groups(logged_user):
-    company_id = logged_user.company_id
-    groups = list_group_controller(company_id)
-    return jsonify({"groups": GroupSerializer(many=True).dump(groups)})
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+        search_param = str(request.args.get("search", ""))
+    except:
+        return {}, 400
+
+    company_id = logged_user['company_id']
+    paginated_query = list_group_controller(
+        company_id, page, per_page, search_param
+    )
+
+    return jsonify({
+        "page": paginated_query.page,
+        "per_page": paginated_query.per_page,
+        "total": paginated_query.total,
+        "groups": GroupSerializer(many=True).dump(paginated_query.items)
+    })
 
 
 @groups_bp.route("<group_id>", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def get_group(logged_user, group_id):
-    company_id = logged_user.company_id
+    company_id = logged_user['company_id']
     group = get_group_controller(company_id, group_id)
     if group:
         return jsonify({"group": GroupSerializer(many=False).dump(group)})
@@ -174,7 +192,7 @@ def create_group(logged_user):
         return dict(error="Missing required fields"), 400
 
     name = fields.get("name")
-    company = Company.query.get(logged_user.company_id)
+    company = Company.query.get(logged_user['company_id'])
 
     if not company:
         return dict(error="Couldn't find any company with the given id"), 404
@@ -190,7 +208,7 @@ def create_group(logged_user):
 def delete_group(logged_user, group_id):
 
     group = Group.query.filter_by(
-        id=group_id, active=True, company_id=logged_user.company_id).first()
+        id=group_id, active=True, company_id=logged_user['company_id']).first()
     if not group:
         return dict(error="User Group not found"), 404
 
