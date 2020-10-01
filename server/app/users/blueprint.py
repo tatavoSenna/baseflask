@@ -11,6 +11,7 @@ from app.models.user import User
 from app.serializers.user_serializers import UserSerializer
 
 from .helpers import get_user
+from .controllers import list_user_controller
 
 users_bp = Blueprint("users", __name__)
 
@@ -41,10 +42,22 @@ def sync():
 @aws_auth.authentication_required
 @get_local_user
 def list_users(logged_user):
-    users = User.query.filter_by(
-        company_id=logged_user.get("company_id", -1), active=True
+
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 20))
+    search_param = str(request.args.get("search", ""))
+
+    paginated_query = list_user_controller(
+        logged_user, page, per_page, search_param)
+
+    return jsonify(
+        {
+            "page": paginated_query.page,
+            "per_page": paginated_query.per_page,
+            "total": paginated_query.total,
+            "users": UserSerializer(many=True).dump(paginated_query.items),
+        }
     )
-    return jsonify({"users": UserSerializer(many=True).dump(users)})
 
 
 @users_bp.route("", methods=["POST"])

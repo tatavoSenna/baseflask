@@ -6,7 +6,7 @@ from faker import Faker
 
 from app.models import User, Company
 from app.test import factories
-from .remote import RemoteUser
+from app.users.remote import RemoteUser
 
 fake = Faker()
 email = fake.email()
