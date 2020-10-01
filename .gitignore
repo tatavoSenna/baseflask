@@ -110,3 +110,9 @@ temp/
 
 # Mac file system
 .DS_Store
+
+.ropeproject/
+*.swp
+*.swo
+
+.env$

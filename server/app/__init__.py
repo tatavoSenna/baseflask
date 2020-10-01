@@ -1,16 +1,14 @@
-import os
-
 from flask import Flask
 from flask_awscognito import AWSCognitoAuthentication
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import init_dotenv
 
 
 db = SQLAlchemy()
-migrate = Migrate()
+migrate = Migrate(compare_type=True,)
 ma = Marshmallow()
 aws_auth = AWSCognitoAuthentication()
 
