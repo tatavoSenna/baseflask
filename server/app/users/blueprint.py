@@ -13,13 +13,13 @@ from app.models.company import Company
 
 from .helpers import get_user
 from .controllers import (list_user_controller,
-                          list_user_group_controller,
-                          create_user_group_controller,
-                          delete_user_group_controller,
-                          get_user_group_controller)
+                          list_group_controller,
+                          create_group_controller,
+                          delete_group_controller,
+                          get_group_controller)
 
 users_bp = Blueprint("users", __name__)
-user_groups_bp = Blueprint("users_groups", __name__)
+groups_bp = Blueprint("groups", __name__)
 
 
 @users_bp.route("me", methods=["GET"])
@@ -140,53 +140,55 @@ def update(logged_user, username):
     return response
 
 
-@user_groups_bp.route("", methods=["GET"])
+@groups_bp.route("", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
-def list_user_groups(logged_user):
-    user_groups = list_user_group_controller(logged_user)
-    return jsonify({"user_groups": GroupSerializer(many=True).dump(user_groups)})
+def list_groups(logged_user):
+    groups = list_group_controller(logged_user)
+    return jsonify({"groups": GroupSerializer(many=True).dump(groups)})
 
 
-@user_groups_bp.route("<user_group_id>", methods=["GET"])
+@groups_bp.route("<group_id>", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
-def get_user_group(logged_user, user_group_id):
-    user_group, users = get_user_group_controller(logged_user, user_group_id)
-    return jsonify({"user_group": GroupSerializer(many=False).dump(user_group),
-                    "users": UserSerializer(many=True).dump(users)})
+def get_group(logged_user, group_id):
+    group = get_group_controller(logged_user, group_id)
+    if group:
+        return jsonify({"group": GroupSerializer(many=False).dump(group)})
+    else:
+        return {}, 404
 
 
-@user_groups_bp.route("", methods=["POST"])
+@ groups_bp.route("", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
-def create_user_group(logged_user):
+def create_group(logged_user):
     fields = request.get_json()
     required_fields = ["name", "company_id"]
 
     if not all(f in fields for f in required_fields):
-        return dict(error="Missing required fields")
+        return dict(error="Missing required fields"), 400
 
     name = fields.get("name")
     company_id = fields.get("company_id")
 
     if not Company.query.get(company_id):
-        return dict(error="Couldn't find any company with the given id")
+        return dict(error="Couldn't find any company with the given id"), 404
 
-    new_user_group = create_user_group_controller(name, company_id)
+    new_group = create_group_controller(name, company_id)
 
-    return jsonify({"user_group": GroupSerializer().dump(new_user_group)})
+    return jsonify({"group": GroupSerializer().dump(new_group)})
 
 
-@user_groups_bp.route("<group_id>", methods=["DELETE"])
+@ groups_bp.route("<group_id>", methods=["DELETE"])
 @aws_auth.authentication_required
 @get_local_user
-def delete_user_group(logged_user, group_id):
+def delete_group(logged_user, group_id):
 
-    user_group = Group.query.get(group_id)
-    if not user_group:
-        return dict(error="User Group not found")
+    group = Group.query.filter_by(id=group_id, active=True).first()
+    if not group:
+        return dict(error="User Group not found"), 404
 
-    delete_user_group_controller(user_group)
+    delete_group_controller(group)
 
     return {}, 204
