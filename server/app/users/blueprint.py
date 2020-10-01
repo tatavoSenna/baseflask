@@ -51,13 +51,16 @@ def sync():
 @get_local_user
 def list_users(logged_user):
     try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
     except:
         return {}, 400
 
     company_id = logged_user['company_id']
+
     paginated_query = list_user_controller(
         company_id, page, per_page, search_param)
 
@@ -150,8 +153,10 @@ def update(logged_user, username):
 @get_local_user
 def list_groups(logged_user):
     try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
     except:
         return {}, 400
