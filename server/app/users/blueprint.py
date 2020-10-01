@@ -7,8 +7,8 @@ from flask import request, Blueprint, jsonify, current_app
 
 from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
-from app.models.user import User, UserGroup
-from app.serializers.user_serializers import UserSerializer, UserGroupSerializer
+from app.models.user import User, Group
+from app.serializers.user_serializers import UserSerializer, GroupSerializer
 from app.models.company import Company
 
 from .helpers import get_user
@@ -132,7 +132,7 @@ def update(logged_user, username):
 @get_local_user
 def list_user_groups(logged_user):
     user_groups = list_user_group_controller(logged_user)
-    return jsonify({"user_groups": UserGroupSerializer(many=True).dump(user_groups)})
+    return jsonify({"user_groups": GroupSerializer(many=True).dump(user_groups)})
 
 
 @user_groups_bp.route("<user_group_id>", methods=["GET"])
@@ -140,7 +140,7 @@ def list_user_groups(logged_user):
 @get_local_user
 def get_user_group(logged_user, user_group_id):
     user_group, users = get_user_group_controller(logged_user, user_group_id)
-    return jsonify({"user_group": UserGroupSerializer(many=False).dump(user_group),
+    return jsonify({"user_group": GroupSerializer(many=False).dump(user_group),
                     "users": UserSerializer(many=True).dump(users)})
 
 
@@ -162,7 +162,7 @@ def create_user_group(logged_user):
 
     new_user_group = create_user_group_controller(name, company_id)
 
-    return jsonify({"user_group": UserGroupSerializer().dump(new_user_group)})
+    return jsonify({"user_group": GroupSerializer().dump(new_user_group)})
 
 
 @user_groups_bp.route("<group_id>", methods=["DELETE"])
@@ -170,7 +170,7 @@ def create_user_group(logged_user):
 @get_local_user
 def delete_user_group(logged_user, group_id):
 
-    user_group = UserGroup.query.get(group_id)
+    user_group = Group.query.get(group_id)
     if not user_group:
         return dict(error="User Group not found")
 
