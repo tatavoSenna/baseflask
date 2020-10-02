@@ -23,7 +23,7 @@ class Config(object):
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
     AWS_S3_DOCUMENT_ROOT = "documents"
     PAGE_DEFAULT = 1
-    PER_PAGE_DEFAULT = 1
+    PER_PAGE_DEFAULT = 20
 
 
 def init_dotenv(app):

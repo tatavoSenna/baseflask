@@ -24,7 +24,9 @@ def upgrade():
                     sa.Column('company_id', sa.Integer(), nullable=True),
                     sa.Column('active', sa.Boolean(), nullable=True),
                     sa.ForeignKeyConstraint(['company_id'], ['company.id'], ),
-                    sa.PrimaryKeyConstraint('id')
+                    sa.PrimaryKeyConstraint('id'),
+                    sa.UniqueConstraint(
+                        'name', 'company_id', name='unique_group')
                     )
     op.create_table('participates_on',
                     sa.Column('id', sa.Integer(), nullable=False),
@@ -32,7 +34,9 @@ def upgrade():
                     sa.Column('user_id', sa.Integer(), nullable=True),
                     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
                     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-                    sa.PrimaryKeyConstraint('id')
+                    sa.PrimaryKeyConstraint('id'),
+                    sa.UniqueConstraint(
+                        'group_id', 'user_id', name='unique_participates_on')
                     )
     op.drop_constraint('user_user_group_id_fkey', 'user', type_='foreignkey')
     op.drop_column('user', 'user_group_id')
