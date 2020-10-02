@@ -73,7 +73,7 @@ def test_list_groups_pagination():
     assert len(paginated_query3.items) == 10
 
 
-def test_retrieve_specific_users():
+def test_retrieve_specific_groups():
     company = factories.CompanyFactory(id=1)
 
     factories.GroupFactory(
