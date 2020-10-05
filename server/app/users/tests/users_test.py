@@ -9,21 +9,19 @@ def add_n_random_users(n, company):
 
 def test_retrieve_with_empty_database():
     company = factories.CompanyFactory(id=1)
-    logged_user = {'company_id': company.id}
 
-    paginated_query1 = list_user_controller(logged_user)
+    paginated_query1 = list_user_controller(company.id)
     assert paginated_query1.total == 0
 
 
 def test_retrieve_all_users_pagination():
     number_of_users = 25
     company = factories.CompanyFactory(id=1)
-    logged_user = {'company_id': company.id}
     add_n_random_users(number_of_users, company)
 
-    paginated_query2 = list_user_controller(logged_user)
-    paginated_query3 = list_user_controller(logged_user, page=1, per_page=15)
-    paginated_query4 = list_user_controller(logged_user, page=2, per_page=15)
+    paginated_query2 = list_user_controller(company.id)
+    paginated_query3 = list_user_controller(company.id, page=1, per_page=15)
+    paginated_query4 = list_user_controller(company.id, page=2, per_page=15)
 
     assert paginated_query2.total == number_of_users
     assert len(paginated_query3.items) == 15
@@ -32,7 +30,6 @@ def test_retrieve_all_users_pagination():
 
 def test_retrieve_specific_users():
     company = factories.CompanyFactory(id=1)
-    logged_user = {'company_id': company.id}
 
     factories.UserFactory(
         company=company,
@@ -49,14 +46,14 @@ def test_retrieve_specific_users():
         surname='b2',
     )
 
-    paginated_query2 = list_user_controller(logged_user)
-    paginated_query3 = list_user_controller(logged_user, search_param='')
-    paginated_query4 = list_user_controller(logged_user, search_param='Mamão')
-    paginated_query5 = list_user_controller(logged_user, search_param='téstẽr')
+    paginated_query2 = list_user_controller(company.id)
+    paginated_query3 = list_user_controller(company.id, search_param='')
+    paginated_query4 = list_user_controller(company.id, search_param='Mamão')
+    paginated_query5 = list_user_controller(company.id, search_param='téstẽr')
     paginated_query6 = list_user_controller(
-        logged_user, search_param='@testCorp')
+        company.id, search_param='@testCorp')
     paginated_query7 = list_user_controller(
-        logged_user, search_param='tEsTeR2')
+        company.id, search_param='tEsTeR2')
 
     assert paginated_query2.total == 2
     assert paginated_query3.total == 2

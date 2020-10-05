@@ -7,13 +7,21 @@ from flask import request, Blueprint, jsonify, current_app
 
 from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
-from app.models.user import User
-from app.serializers.user_serializers import UserSerializer
+from app.models.user import User, Group
+from app.serializers.user_serializers import UserSerializer, GroupSerializer
+from app.models.company import Company
 
 from .helpers import get_user
-from .controllers import list_user_controller
+from .controllers import (
+    list_user_controller,
+    list_group_controller,
+    create_group_controller,
+    delete_group_controller,
+    get_group_controller
+)
 
 users_bp = Blueprint("users", __name__)
+groups_bp = Blueprint("groups", __name__)
 
 
 @users_bp.route("me", methods=["GET"])
@@ -42,13 +50,16 @@ def sync():
 @aws_auth.authentication_required
 @get_local_user
 def list_users(logged_user):
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+        search_param = str(request.args.get("search", ""))
+    except:
+        return {}, 400
 
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 20))
-    search_param = str(request.args.get("search", ""))
-
+    company_id = logged_user['company_id']
     paginated_query = list_user_controller(
-        logged_user, page, per_page, search_param)
+        company_id, page, per_page, search_param)
 
     return jsonify(
         {
@@ -128,7 +139,79 @@ def update(logged_user, username):
 
     try:
         response = cognito.admin_update_user_attributes(**user_attributes)
-    except err:
+    except:
         return dict(error="Cognito response error")
 
     return response
+
+
+@groups_bp.route("", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def list_groups(logged_user):
+    try:
+        page = int(request.args.get("page", 1))
+        per_page = int(request.args.get("per_page", 20))
+        search_param = str(request.args.get("search", ""))
+    except:
+        return {}, 400
+
+    company_id = logged_user['company_id']
+    paginated_query = list_group_controller(
+        company_id, page, per_page, search_param
+    )
+
+    return jsonify({
+        "page": paginated_query.page,
+        "per_page": paginated_query.per_page,
+        "total": paginated_query.total,
+        "groups": GroupSerializer(many=True).dump(paginated_query.items)
+    })
+
+
+@groups_bp.route("<group_id>", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_group(logged_user, group_id):
+    company_id = logged_user['company_id']
+    group = get_group_controller(company_id, group_id)
+    if group:
+        return jsonify({"group": GroupSerializer(many=False).dump(group)})
+    else:
+        return {}, 404
+
+
+@ groups_bp.route("", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def create_group(logged_user):
+    fields = request.get_json()
+    required_fields = ["name"]
+
+    if not all(f in fields for f in required_fields):
+        return dict(error="Missing required fields"), 400
+
+    name = fields.get("name")
+    company = Company.query.get(logged_user['company_id'])
+
+    if not company:
+        return dict(error="Couldn't find any company with the given id"), 404
+
+    new_group = create_group_controller(company.id, name)
+
+    return jsonify({"group": GroupSerializer().dump(new_group)})
+
+
+@ groups_bp.route("<group_id>", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def delete_group(logged_user, group_id):
+
+    group = Group.query.filter_by(
+        id=group_id, active=True, company_id=logged_user['company_id']).first()
+    if not group:
+        return dict(error="User Group not found"), 404
+
+    delete_group_controller(group)
+
+    return {}, 204
