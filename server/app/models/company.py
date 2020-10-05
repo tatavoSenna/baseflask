@@ -9,6 +9,7 @@ class Company(db.Model):
 
     # Has many
     users = db.relationship("User", back_populates="company")
+    groups = db.relationship("Group", back_populates="company")
     templates = db.relationship("DocumentTemplate", back_populates="company")
     documents = db.relationship("Document", back_populates="company")
 
