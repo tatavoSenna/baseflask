@@ -101,6 +101,9 @@ def delete(logged_user, username):
         UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
     )
 
+    if (logged_user['username'] == username):
+        return dict(error='Cannot delete yourself'), 400
+
     try:
         response = cognito.admin_disable_user(**user_attributes)
     except cognito.exceptions.UserNotFoundException as identifier:
