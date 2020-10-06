@@ -17,7 +17,10 @@ from .controllers import (
     list_group_controller,
     create_group_controller,
     delete_group_controller,
-    get_group_controller
+    get_group_controller,
+    add_user_to_group_controller,
+    list_users_on_group_controller,
+    remove_user_from_group_controller,
 )
 
 users_bp = Blueprint("users", __name__)
@@ -51,8 +54,10 @@ def sync():
 @get_local_user
 def list_users(logged_user):
     try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
     except:
         return {}, 400
@@ -153,8 +158,10 @@ def update(logged_user, username):
 @get_local_user
 def list_groups(logged_user):
     try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
     except:
         return {}, 400
@@ -216,5 +223,102 @@ def delete_group(logged_user, group_id):
         return dict(error="User Group not found"), 404
 
     delete_group_controller(group)
+
+    return {}, 204
+
+
+@groups_bp.route("<group_id>/users", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def list_users_on_group(logged_user, group_id):
+    try:
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+        search_param = str(request.args.get("search", ""))
+    except:
+        return {}, 400
+
+    company_id = logged_user['company_id']
+    group = Group.query.get(group_id)
+    if not group:
+        return {}, 404
+
+    if group.company_id != company_id:
+        return {}, 400
+
+    paginated_query = list_users_on_group_controller(
+        group.id, page, per_page, search_param)
+
+    return jsonify(
+        {
+            "page": paginated_query.page,
+            "per_page": paginated_query.per_page,
+            "total": paginated_query.total,
+            "users": UserSerializer(many=True).dump(paginated_query.items),
+        }
+    )
+
+
+@ groups_bp.route("<group_id>/users", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def add_user_to_group(logged_user, group_id):
+    fields = request.get_json()
+    required_fields = ["user_id"]
+
+    if not all(f in fields for f in required_fields):
+        return dict(error="Missing required fields"), 400
+
+    company = Company.query.get(logged_user['company_id'])
+    if not company:
+        return dict(error="Couldn't find any company for the current user"), 404
+
+    group = Group.query.get(group_id)
+    if not group:
+        return dict(error="Couldn't find group"), 404
+
+    if group.company_id != logged_user['company_id']:
+        return dict(error="Logged user has no access to specified group"), 400
+
+    user_id = fields.get("user_id")
+    user = User.query.get(user_id)
+    if not user:
+        return dict(error="Couldn't find specified user"), 404
+
+    if user.company_id != logged_user['company_id']:
+        return dict(error="Specified user doesn't belong to your company"), 400
+
+    add_user_to_group_controller(
+        group_id=group_id, user_id=logged_user['id'])
+
+    return {}, 204
+
+
+@ groups_bp.route("<group_id>/users/<user_id>", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def remove_user_from_group(logged_user, group_id, user_id):
+
+    company = Company.query.get(logged_user['company_id'])
+    if not company:
+        return dict(error="Couldn't find any company for the current user"), 404
+
+    group = Group.query.get(group_id)
+    if not group:
+        return dict(error="Couldn't find group"), 404
+
+    if group.company_id != logged_user['company_id']:
+        return dict(error="Logged user has no access to specified group"), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return dict(error="Couldn't find specified user"), 404
+
+    if user.company_id != logged_user['company_id']:
+        return dict(error="Specified user doesn't belong to your company"), 400
+
+    remove_user_from_group_controller(group_id, user_id)
 
     return {}, 204

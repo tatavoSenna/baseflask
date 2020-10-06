@@ -49,8 +49,10 @@ documents_bp = Blueprint("documents", __name__)
 def get_document_list(current_user):
 
     try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
     except:
         abort(400, "invalid parameters")

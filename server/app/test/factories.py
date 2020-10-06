@@ -47,3 +47,12 @@ class GroupFactory(BaseFactory):
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("company")
     company = factory.SubFactory(CompanyFactory)
+
+
+class ParticipatesOnFactory(BaseFactory):
+    class Meta:
+        model = models.user.ParticipatesOn
+
+    id = factory.Sequence(lambda n: n)
+    groups = factory.SubFactory(GroupFactory)
+    users = factory.SubFactory(UserFactory)
