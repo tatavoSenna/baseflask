@@ -6,6 +6,14 @@ const initialState = {
 	token: null,
 	error: null,
 	signed: false,
+	loggedUser: {
+		id: null,
+		username: '',
+		email: '',
+		name: '',
+		surname: '',
+		companyId: null,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -36,10 +44,30 @@ const { actions, reducer } = createSlice({
 				token: null,
 				signed: false,
 				loading: false,
+				loggedUser: extend(state.loggedUser, {
+					id: null,
+					username: '',
+					email: '',
+					name: '',
+					surname: '',
+					companyId: null,
+				}),
 			}),
 		logoutFailure: (state) =>
 			extend(state, {
 				loading: false,
+			}),
+		getLoggedUser: (state) => state,
+		getLoggedUserSuccess: (state, { payload }) =>
+			extend(state, {
+				loggedUser: extend(state.loggedUser, {
+					id: payload.id,
+					username: payload.username,
+					email: payload.email,
+					name: payload.name,
+					surname: payload.surname,
+					companyId: payload.company_id,
+				}),
 			}),
 	},
 })
@@ -51,6 +79,8 @@ export const {
 	logout,
 	logoutFailure,
 	logoutSuccess,
+	getLoggedUser,
+	getLoggedUserSuccess,
 } = actions
 
 export { default as sessionSaga } from './sagas'

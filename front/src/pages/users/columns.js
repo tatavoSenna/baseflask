@@ -1,8 +1,8 @@
 import React from 'react'
 
-import ConfirmDelete from './components/confirmDelete'
+import Delete from './components/Delete'
 
-export function getColumns({ handleDelete }) {
+export function getColumns({ handleDelete, loggedUser }) {
 	return [
 		{
 			title: 'Nome',
@@ -24,7 +24,11 @@ export function getColumns({ handleDelete }) {
 			dataIndex: 'username',
 			key: 'username',
 			render: (username) => (
-				<ConfirmDelete username={username} handleDelete={handleDelete} />
+				<Delete
+					username={username}
+					handleDelete={handleDelete}
+					disabled={loggedUser.username === username}
+				/>
 			),
 		},
 	]
