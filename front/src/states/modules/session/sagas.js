@@ -1,6 +1,7 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 import api from '~/services/api'
+import { errorMessage } from '~/services/messager'
 import {
 	getJWToken,
 	getJWTFailure,
@@ -8,12 +9,15 @@ import {
 	logout,
 	logoutFailure,
 	logoutSuccess,
+	getLoggedUser,
+	getLoggedUserSuccess,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeLatest('persist/REHYDRATE', setToken)
 	yield takeEvery(getJWToken, getTokenSaga)
 	yield takeEvery(logout, logoutSaga)
+	yield takeEvery(getLoggedUser, getLoggedUserSaga)
 }
 
 function* getTokenSaga({ payload }) {
@@ -34,12 +38,22 @@ function* getTokenSaga({ payload }) {
 	}
 }
 
-function* logoutSaga({ payload }) {
+function* logoutSaga() {
 	try {
 		yield put(logoutSuccess())
 		window.location.replace(process.env.REACT_APP_API_SIGN_IN_URL)
 	} catch (error) {
 		yield put(logoutFailure(error))
+	}
+}
+
+function* getLoggedUserSaga() {
+	try {
+		const url = '/users/me'
+		const { data } = yield call(api.get, url)
+		yield put(getLoggedUserSuccess(data))
+	} catch (error) {
+		errorMessage('Falha ao buscar informações do usuário logado')
 	}
 }
 

@@ -12,6 +12,7 @@ import {
 	deleteUser,
 } from '~/states/modules/users'
 import BreadCrumb from '~/components/breadCrumb'
+import { getLoggedUser } from '~/states/modules/session'
 
 const { Search } = Input
 
@@ -21,10 +22,14 @@ function Users() {
 	const { userList, loading, showModal, newUser } = useSelector(
 		({ users }) => users
 	)
+	const { loggedUser } = useSelector(({ session }) => session)
 
 	useEffect(() => {
 		dispatch(getUserList())
-	}, [dispatch])
+		if (!loggedUser) {
+			dispatch(getLoggedUser())
+		}
+	}, [dispatch, loggedUser])
 
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
@@ -52,7 +57,7 @@ function Users() {
 		dispatch(deleteUser(id))
 	}
 
-	const columns = getColumns({ handleDelete })
+	const columns = getColumns({ handleDelete, loggedUser })
 
 	return (
 		<Layout style={{ padding: '0 24px 24px' }}>
@@ -81,7 +86,11 @@ function Users() {
 					/>
 					<Button onClick={handleShowModal}>+ Usuário</Button>
 				</div>
-				<Table dataSource={userList} columns={columns} loading={loading} />
+				<Table
+					dataSource={userList}
+					columns={columns}
+					loading={loading || !loggedUser}
+				/>
 			</Content>
 		</Layout>
 	)
