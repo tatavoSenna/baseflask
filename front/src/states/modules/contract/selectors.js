@@ -8,6 +8,7 @@ moment.locale('pt-br')
 export const selectAllContracts = (payload) =>
 	payload.map((contract) => ({
 		id: parseInt(contract.id, 10),
+		key: parseInt(contract.id, 10),
 		title: contract.title,
 		clientId: contract.client_id,
 		author: `${contract.user.name} ${contract.user.surname}`,

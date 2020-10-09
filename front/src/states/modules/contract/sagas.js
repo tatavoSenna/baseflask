@@ -15,11 +15,18 @@ export default function* rootSaga() {
 }
 
 function* loginSaga({ payload = {} }) {
-	const { perPage = 20, page = 1 } = payload
+	const { perPage = 10, page = 1, search = '' } = payload
 	try {
 		const { data } = yield call(
 			api.get,
-			`/documents/?per_page=${perPage}&page=${page}`
+			`/documents/?per_page=${perPage}&page=${page}&search=${search}`,
+			{
+				params: {
+					per_page: perPage,
+					page,
+					search,
+				},
+			}
 		)
 
 		yield put(listContractSuccess(data))

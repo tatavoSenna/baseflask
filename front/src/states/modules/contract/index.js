@@ -5,6 +5,11 @@ import { selectAllContracts } from './selectors'
 
 const initialState = {
 	data: [],
+	pages: {
+		page: 0,
+		per_page: 0,
+		total: 0,
+	},
 	error: null,
 	loading: false,
 }
@@ -20,6 +25,11 @@ const { actions, reducer } = createSlice({
 		listContractSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllContracts(payload.items),
+				pages: {
+					page: payload.page,
+					per_page: payload.per_page,
+					total: payload.total,
+				},
 				error: null,
 				loading: false,
 			}),

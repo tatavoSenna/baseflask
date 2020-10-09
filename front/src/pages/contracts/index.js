@@ -1,17 +1,34 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Skeleton, Card, Layout, Empty, Button, PageHeader } from 'antd'
-import {
-	EditOutlined,
-	DownloadOutlined,
-	SettingOutlined,
-} from '@ant-design/icons'
+import { Layout, PageHeader } from 'antd'
 
-import { listContract, viewContract } from '~/states/modules/contract'
-import { signContract } from '~/states/modules/docusign'
+import { listContract } from '~/states/modules/contract'
 import BreadCrumb from '~/components/breadCrumb'
+import DataTable from '~/components/dataTable'
+
+const COLUMNS = [
+	{
+		title: 'Descrição',
+		dataIndex: 'title',
+		key: 'title',
+	},
+	{
+		title: 'Criado por',
+		dataIndex: 'author',
+		key: 'author',
+	},
+	{
+		title: 'Data Criação',
+		dataIndex: 'createdAt',
+		key: 'createdAt',
+	},
+	{
+		title: 'Status',
+		dataIndex: 'address',
+		key: 'address',
+	},
+]
 
 function getDescription({ email, createdAt }) {
 	return (
@@ -32,24 +49,21 @@ getDescription.defaultProps = {
 	createdAt: '',
 }
 
-function Contracts() {
-	const history = useHistory()
+const Contracts = () => {
 	const dispatch = useDispatch()
-	const { data: contracts, loading } = useSelector(({ contract }) => contract)
+	const { data: contracts, loading, pages } = useSelector(
+		({ contract }) => contract
+	)
+
+	const getContracts = ({ page, perPage, search }) =>
+		dispatch(listContract({ page, perPage, search }))
+
+	const handleSearch = ({ page, perPage, search }) =>
+		dispatch(listContract({ page, perPage, search }))
 
 	useEffect(() => {
 		dispatch(listContract())
 	}, [dispatch])
-
-	const { Meta } = Card
-
-	function handleViewContract({ documentId }) {
-		dispatch(viewContract({ documentId }))
-	}
-
-	function handleSignContract({ documentId }) {
-		dispatch(signContract(documentId))
-	}
 
 	return (
 		<Layout>
@@ -57,38 +71,17 @@ function Contracts() {
 				<BreadCrumb parent="Contratos" current="Lista" />
 			</PageHeader>
 			<Layout>
-				{contracts.map((contract) => (
-					<Card
-						style={{ width: '100%', marginTop: 16, maxWidth: 800 }}
-						actions={[
-							<SettingOutlined key="setting" />,
-							<EditOutlined
-								key="sign"
-								onClick={() => handleSignContract({ documentId: contract.id })}
-							/>,
-							<DownloadOutlined
-								key="download"
-								onClick={() => handleViewContract({ documentId: contract.id })}
-							/>,
-						]}>
-						<Skeleton loading={loading} active>
-							<Meta
-								title={contract.title}
-								description={getDescription({
-									email: contract.authorEmail,
-									createdAt: contract.createdAt,
-								})}
-							/>
-						</Skeleton>
-					</Card>
-				))}
-				{!loading && contracts.length === 0 && (
-					<Empty description={<span>Nenhum contrato encontrado</span>}>
-						<Button type="primary" onClick={() => history.push('/form/pj')}>
-							Criar contrato
-						</Button>
-					</Empty>
-				)}
+				<DataTable
+					columns={COLUMNS}
+					dataSource={contracts}
+					pages={pages}
+					onChangePageNumber={getContracts}
+					onSearch={handleSearch}
+					onClickButton={() => {}}
+					textButton="Novo Contrato"
+					placeholderNoData={!loading ? 'Nenhum contrato encontrado' : ''}
+					loading={loading}
+				/>
 			</Layout>
 		</Layout>
 	)
