@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { Layout, PageHeader } from 'antd'
 
 import { listContract } from '~/states/modules/contract'
@@ -51,9 +52,12 @@ getDescription.defaultProps = {
 
 const Contracts = () => {
 	const dispatch = useDispatch()
+	const history = useHistory()
 	const { data: contracts, loading, pages } = useSelector(
 		({ contract }) => contract
 	)
+
+	const handleToGo = () => history.push('/documentDetails')
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search }))
@@ -81,6 +85,7 @@ const Contracts = () => {
 					textButton="Novo Contrato"
 					placeholderNoData={!loading ? 'Nenhum contrato encontrado' : ''}
 					loading={loading}
+					onClickRow={handleToGo}
 				/>
 			</Layout>
 		</Layout>

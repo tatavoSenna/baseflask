@@ -15,6 +15,7 @@ const DataTable = ({
 	onClickButton,
 	placeholderNoData,
 	loading,
+	onClickRow,
 }) => {
 	const [search, setSearch] = useState('')
 	return (
@@ -39,6 +40,11 @@ const DataTable = ({
 			<Table
 				columns={columns}
 				dataSource={dataSource}
+				onRow={(record, rowIndex) => {
+					return {
+						onClick: () => onClickRow(record, rowIndex),
+					}
+				}}
 				pagination={{
 					showSizeChanger: true,
 					pageSize: pages.per_page,
@@ -78,12 +84,14 @@ DataTable.propTypes = {
 	onClickButton: func.isRequired,
 	placeholderNoData: string,
 	loading: bool,
+	onClickRow: func,
 }
 
 DataTable.defaultProps = {
 	placeholderSearch: 'Search',
 	placeholderNoData: 'Nenhum dado encontrado',
 	loading: false,
+	onClickRow: () => {},
 }
 
 export default DataTable
