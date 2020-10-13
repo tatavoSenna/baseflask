@@ -8,6 +8,7 @@ import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
 import Users from './pages/users'
+import DocumentDetails from './pages/documentDetails'
 
 import Wrapper from '~/components/wrapper'
 
@@ -18,6 +19,7 @@ export const ROUTES = {
 	contracts: '/contracts',
 	form: '/contracts/new/:model/:current',
 	users: '/users',
+	documentDetails: '/documentDetails',
 }
 
 function Routes() {
@@ -40,6 +42,12 @@ function Routes() {
 						isPrivate
 					/>
 					<AdminRoute exact path={ROUTES.users} component={Users} isPrivate />
+					<AdminRoute
+						exact
+						path={ROUTES.documentDetails}
+						component={DocumentDetails}
+						isPrivate
+					/>
 				</Wrapper>
 			</Switch>
 		</Router>
