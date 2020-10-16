@@ -5,6 +5,20 @@ from flask import jsonify
 from app.serializers.user_serializers import UserSerializer
 
 
+
+def get_user_controller(email):
+    user = User.query.filter_by(email=email).first()
+
+    data = {
+        "id": user.id,
+        "name": user.name,
+        "surname": user.surname,
+        "email": user.email,
+        "company_id": user.company_id,
+    }
+
+    return data
+
 def list_user_controller(company_id, page=1, per_page=20, search_param=''):
     paginated_query = (
         User.query.filter_by(company_id=company_id, active=True)
