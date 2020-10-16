@@ -56,3 +56,21 @@ class ParticipatesOnFactory(BaseFactory):
     id = factory.Sequence(lambda n: n)
     groups = factory.SubFactory(GroupFactory)
     users = factory.SubFactory(UserFactory)
+    
+class DocumentTemplateFactory(BaseFactory):
+    class Meta:
+        model = models.documents.DocumentTemplate
+
+    id = factory.Sequence(lambda n: n)
+    name = factory.Faker("first_name_nonbinary")
+    filename = factory.Faker("last_name_nonbinary")
+    company = factory.SubFactory(CompanyFactory)
+
+class DocumentFactory(BaseFactory):
+    class Meta:
+        model = models.documents.Document
+
+    id = factory.Sequence(lambda n: n)
+    company = factory.SubFactory(CompanyFactory)
+    user = factory.SubFactory(UserFactory)
+    template = factory.SubFactory(DocumentTemplateFactory)

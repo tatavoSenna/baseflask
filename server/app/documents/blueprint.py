@@ -34,6 +34,8 @@ from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
 
+from .controllers import get_document_controller
+
 from .helpers import (
     get_document_templates,
     get_documents,
@@ -42,6 +44,17 @@ from .helpers import (
 )
 
 documents_bp = Blueprint("documents", __name__)
+
+@documents_bp.route("/<int:document_id>")
+@aws_auth.authentication_required 
+@get_local_user 
+def get_document_detail(current_user, document_id): 
+    try:
+        document = get_document_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+    return jsonify(DocumentSerializer(many=False).dump(document))
+
 
 @documents_bp.route("/")
 @aws_auth.authentication_required
