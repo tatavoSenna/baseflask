@@ -34,13 +34,11 @@ from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
 
-from .controllers import get_document_controller
-
-from .helpers import (
-    get_document_templates,
-    get_documents,
+from .controllers  import (
+    get_document_templates_controller,
     create_document,
-    create_new_version,
+    create_new_version_controller,
+    get_document_controller
 )
 
 documents_bp = Blueprint("documents", __name__)
@@ -156,7 +154,7 @@ def create(current_user):
         document_template_id,
     )
 
-    version = create_new_version(document, answers=variables)
+    version = create_new_version_controller(document, answers=variables)
 
     # save generated document to an s3
     s3_client = boto3.client("s3")
@@ -349,7 +347,7 @@ def request_signatures(current_user, document_id):
 @get_local_user
 def documents(current_user):
 
-    document_templates = get_document_templates(current_user["company_id"])
+    document_templates = get_document_templates_controller(current_user["company_id"])
 
     return jsonify(document_templates)
 
