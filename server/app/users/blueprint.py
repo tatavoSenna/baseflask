@@ -11,7 +11,6 @@ from app.models.user import User, Group
 from app.serializers.user_serializers import UserSerializer, GroupSerializer
 from app.models.company import Company
 
-from .helpers import get_user
 from .controllers import (
     list_user_controller,
     list_group_controller,
@@ -21,6 +20,7 @@ from .controllers import (
     add_user_to_group_controller,
     list_users_on_group_controller,
     remove_user_from_group_controller,
+    get_user_controller
 )
 
 users_bp = Blueprint("users", __name__)
