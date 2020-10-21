@@ -29,7 +29,7 @@ class User(db.Model):
     # Has many
     documents = db.relationship("Document", back_populates="user")
     participates_on = db.relationship(
-        "ParticipatesOn", back_populates="users")
+        "ParticipatesOn", back_populates="user")
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -49,7 +49,7 @@ class Group(db.Model):
 
     # Has many
     participates_on = db.relationship(
-        "ParticipatesOn", back_populates="groups")
+        "ParticipatesOn", back_populates="group")
 
     def __repr__(self):
         return "<Group %r>" % self.name
@@ -66,5 +66,5 @@ class ParticipatesOn(db.Model):
         db.Integer, db.ForeignKey("user.id"), nullable=True)
 
     # Belongs to
-    users = db.relationship("User", back_populates="participates_on")
-    groups = db.relationship("Group", back_populates="participates_on")
+    user = db.relationship("User", back_populates="participates_on")
+    group = db.relationship("Group", back_populates="participates_on")

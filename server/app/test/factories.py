@@ -54,8 +54,8 @@ class ParticipatesOnFactory(BaseFactory):
         model = models.user.ParticipatesOn
 
     id = factory.Sequence(lambda n: n)
-    groups = factory.SubFactory(GroupFactory)
-    users = factory.SubFactory(UserFactory)
+    group = factory.SubFactory(GroupFactory)
+    user = factory.SubFactory(UserFactory)
     
 class DocumentTemplateFactory(BaseFactory):
     class Meta:
