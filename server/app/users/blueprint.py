@@ -12,6 +12,7 @@ from app.serializers.user_serializers import UserSerializer, GroupSerializer
 from app.models.company import Company
 
 from .controllers import (
+    create_user_controller,
     list_user_controller,
     list_group_controller,
     create_group_controller,
@@ -86,13 +87,17 @@ def create(logged_user):
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields")
 
-    email = fields.get("email")
-    name = fields.get("name")
+    try:
+        new_user = create_user_controller(
+            email=fields.get("email"),
+            name=fields.get("name"),
+            group_ids=fields.get("groups"),
+            company_id = logged_user["company_id"]
+        )
+    except:
+        return {}, 500
 
-    remote_user = RemoteUser()
-    response = remote_user.create(email, name)
-
-    return jsonify({"user": UserSerializer().dump(response)})
+    return jsonify({"user": UserSerializer().dump(new_user)})
 
 
 @users_bp.route("<username>", methods=["DELETE"])
