@@ -3,6 +3,28 @@ from sqlalchemy import or_
 from app.models.user import User, Group, ParticipatesOn
 from flask import jsonify
 from app.serializers.user_serializers import UserSerializer
+from app.users.remote import RemoteUser
+
+
+def create_user_controller(email, name, group_ids=None, company_id=None):
+
+    if group_ids:
+        groups = {}
+        for group_id in group_ids:
+            groups[group_id] = Group.query.get(group_id)
+            if not groups[group_id]:
+                raise Exception("Group not found")
+
+    remote_user = RemoteUser()
+    new_user = remote_user.create(email, name)
+
+    if group_ids and groups:
+        for group in groups.values():
+            db.session.add(ParticipatesOn(
+                group_id=group.id, user_id=new_user.id))
+        db.session.commit()
+
+    return new_user
 
 
 
