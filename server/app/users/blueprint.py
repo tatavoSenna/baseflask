@@ -13,6 +13,7 @@ from app.models.company import Company
 
 from .controllers import (
     list_user_controller,
+    edit_user_controller,
     list_group_controller,
     create_group_controller,
     delete_group_controller,
@@ -122,35 +123,22 @@ def delete(logged_user, username):
     return response
 
 
-# @users_bp.route('<username>', methods=['PATCH'])
+@users_bp.route('<username>', methods=['PATCH'])
 @aws_auth.authentication_required
 @get_local_user
 def update(logged_user, username):
     fields = request.get_json()
-    allowed_fields = set(("name"))
-
-    if any(f not in fields for f in allowed_fields):
-        return dict(error="Not allowed fields present. Please check documentation.")
-
-    cognito = boto3.client("cognito-idp")
-    email = fields.get("email")
-    name = fields.get("name")
-
-    user_attributes = dict(
-        UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
-        Username=username,
-        UserAttributes=[
-            {"Name": "email", "Value": email},
-            {"Name": "name", "Value": name},
-        ],
-    )
 
     try:
-        response = cognito.admin_update_user_attributes(**user_attributes)
+        edited_user = edit_user_controller(
+            username=username,
+            company_id=logged_user['company_id'],
+            group_ids=fields.get("groups")
+        )
     except:
-        return dict(error="Cognito response error")
+        return {}, 500
 
-    return response
+    return jsonify({"user": UserSerializer().dump(edited_user)})
 
 
 @groups_bp.route("", methods=["GET"])

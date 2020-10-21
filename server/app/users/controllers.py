@@ -96,3 +96,31 @@ def remove_user_from_group_controller(group_id, user_id):
         group_id=group_id, user_id=user_id).first()
     db.session.delete(participation)
     db.session.commit()
+
+
+def edit_user_controller(username, company_id=None, group_ids=None):
+    user = User.query.filter_by(username=username).first()
+
+    if user.company_id != company_id:
+        raise Exception("Invalid company")
+
+    if group_ids:
+        new_groups = {}
+        for group_id in group_ids:
+            new_groups[group_id] = Group.query.get(group_id)
+
+            if not new_groups[group_id]:
+                raise Exception(f"Group {group_id} not found")
+
+        for participation in user.participates_on:
+            if participation.group.id not in new_groups.keys():
+                db.session.delete(participation)
+            else:
+                new_groups.pop(participation.group.id)
+
+        for group in new_groups.values():
+            db.session.add(ParticipatesOn(group_id=group.id, user_id=user.id))
+
+        db.session.commit()
+
+    return user
