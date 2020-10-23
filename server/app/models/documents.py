@@ -4,6 +4,7 @@ from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.dialects.postgresql.json import JSON
+from sqlalchemy.dialects.postgresql.json import JSONB
 from sqlalchemy.orm import relationship
 
 from app import db
@@ -15,7 +16,10 @@ class DocumentTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
-    filename = db.Column(db.String(255), unique=False, nullable=True)
+    textfile = db.Column(db.String(255), unique=False, nullable=True)
+    workflow = db.Column(JSONB, unique=False, nullable=True)
+    form = db.Column(JSONB, unique=False, nullable=True)
+    signers = db.Column(JSONB, unique=False, nullable=True)
     filetype = db.Column(
         ENUM("docx", "pdf", name="template_file_type"), default="docx", nullable=False
     )

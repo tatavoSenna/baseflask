@@ -29,13 +29,14 @@ from sqlalchemy import desc
 from app import db, aws_auth
 from app.constants import months
 from app.models.documents import Document, DocumentVersion, DocumentTemplate
-from app.serializers.document_serializers import DocumentSerializer
+from app.serializers.document_serializers import DocumentSerializer, DocumentTemplateSerializer, DocumentTemplateListSerializer
 from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
 
 from .controllers  import (
-    get_document_templates_controller,
+    get_document_template_list_controller,
+    get_document_template_details_controller,
     create_document,
     create_new_version_controller,
     get_document_controller
@@ -342,29 +343,22 @@ def request_signatures(current_user, document_id):
         return jsonify({"message": "No signers."}), 400
 
 
-@documents_bp.route("/models", methods=["GET"])
+@documents_bp.route("/templates", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def documents(current_user):
 
-    document_templates = get_document_templates_controller(current_user["company_id"])
+    document_templates = get_document_template_list_controller(current_user["company_id"])
+    
+    return jsonify({"DocumentTemplates": DocumentTemplateListSerializer(many=True).dump(document_templates)})
+    
 
-    return jsonify(document_templates)
 
-
-@documents_bp.route("/questions", methods=["GET"])
+@documents_bp.route("/templates/<int:documentTemplate_id>", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
-def questions(current_user):
-    # TODO: change parameter to 'model'
-    document_template = request.args.get("document")
+def document(current_user, documentTemplate_id): 
 
-    if not document_template:
-        return jsonify({"message": "Value is missing."}), 404
+    document_template = get_document_template_details_controller(current_user["company_id"], documentTemplate_id)
 
-    with open(
-        "app/documents/questions/%s.json" % document_template, encoding="utf-8"
-    ) as json_file:
-        decision_tree = json.load(json_file)
-
-    return jsonify(decision_tree)
+    return jsonify({"DocumentTemplate": DocumentTemplateSerializer().dump(document_template)})

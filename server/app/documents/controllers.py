@@ -8,31 +8,21 @@ from app.serializers.document_serializers import (
 )
 
 
-def get_document_templates_controller(company_id, *doc_id):
-    if doc_id:
-        document_templates = DocumentTemplate.query.filter_by(
-            company_id=company_id, id=doc_id
-        ).all()
-    else:
-        document_templates = DocumentTemplate.query.filter_by(
-            company_id=company_id
-        ).all()
-
-    data = []
-    for document_template in document_templates:
-        data.append(
-            {
-                "id": document_template.id,
-                "company_id": document_template.company_id,
-                "name": document_template.name,
-                "filename": document_template.filename,
-            }
-        )
-
-    return data
+def get_document_template_list_controller(company_id):
+   
+    document_templates = DocumentTemplate.query.filter_by(
+        company_id=company_id
+    ).all()
+    return document_templates
 
 
-
+def get_document_template_details_controller(company_id, template_id):
+    
+    document_template = DocumentTemplate.query.filter_by(
+        company_id=company_id, id=template_id
+    ).first()
+  
+    return document_template
 
 def create_document(
     company_id,
