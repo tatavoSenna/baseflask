@@ -11,8 +11,31 @@ class DocumentVersionSerializer(ma.SQLAlchemyAutoSchema):
 
 class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
+        exclude = (
+            "company_id",
+            "textfile",
+            "workflow",
+            "signers",
+            "filetype",
+            "company",
+            "documents",
+        )
         model = DocumentTemplate
 
+class DocumentTemplateListSerializer(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        exclude = (
+            "company_id",
+            "textfile",
+            "workflow",
+            "form",
+            "signers",
+            "filetype",
+            "company",
+            "documents",
+        )
+        model = DocumentTemplate
+        include_fk = True
 
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     versions = ma.Nested(DocumentVersionSerializer, many=True, exclude=("answers",))

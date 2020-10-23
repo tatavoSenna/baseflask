@@ -63,7 +63,7 @@ class DocumentTemplateFactory(BaseFactory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("first_name_nonbinary")
-    filename = factory.Faker("last_name_nonbinary")
+    textfile = factory.Faker("last_name_nonbinary")
     company = factory.SubFactory(CompanyFactory)
 
 class DocumentFactory(BaseFactory):
