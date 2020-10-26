@@ -17,7 +17,7 @@ const { actions, reducer } = createSlice({
 			}),
 		listModelSuccess: (state, { payload }) =>
 			extend(state, {
-				data: payload,
+				data: payload.DocumentTemplates,
 				error: null,
 				loading: false,
 			}),

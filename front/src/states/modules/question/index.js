@@ -19,7 +19,7 @@ const { actions, reducer } = createSlice({
 			const { modelId, data } = payload
 			extend(state, {
 				modelId,
-				data,
+				data: data.DocumentTemplate.form,
 				error: null,
 				loading: false,
 			})
@@ -28,23 +28,6 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
-		// answer: (state, { payload }) =>
-		// 	extend(state, {
-		// 		questions: map(
-		// 			state.questions,
-		// 			(v) => assign({}, v, { answer: payload.data[v.variable] || '' }) // no v.value maybe a problem
-		// 		),
-		// 		loadingAnswer: true,
-		// 	}),
-		// answerSuccess: (state, { payload }) =>
-		// 	extend(state, {
-		// 		loadingAnswer: false,
-		// 	}),
-		// answerFailure: (state, { payload }) =>
-		// 	extend(state, {
-		// 		loadingAnswer: false,
-		// 		error: payload.error,
-		// 	}),
 	},
 })
 

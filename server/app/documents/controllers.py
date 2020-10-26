@@ -1,10 +1,9 @@
 import json
 
 from app import db
-from app.models.documents import Document, DocumentTemplate, DocumentVersion
+from app.models.documents import Document, DocumentTemplate
 from app.serializers.document_serializers import (
-    DocumentSerializer,
-    DocumentVersionSerializer,
+    DocumentSerializer
 )
 
 
@@ -33,6 +32,7 @@ def create_document(
     document = Document(
         user_id=user_id,
         company_id=company_id,
+
         title=title,
         document_template_id=document_template_id,
     )
@@ -41,14 +41,6 @@ def create_document(
 
     return document
 
-
-def create_new_version_controller(document, **kwargs):
-    version = DocumentVersion(document=document, **kwargs)
-    db.session.add(version)
-    db.session.commit()
-    db.session.refresh(document)
-
-    return version
 
 def get_document_controller(document_id):
     document = Document.query.get(document_id)

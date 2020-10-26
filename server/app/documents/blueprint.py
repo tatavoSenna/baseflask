@@ -28,8 +28,8 @@ from sqlalchemy import desc
 
 from app import db, aws_auth
 from app.constants import months
-from app.models.documents import Document, DocumentVersion, DocumentTemplate
 from app.serializers.document_serializers import DocumentSerializer, DocumentTemplateSerializer, DocumentTemplateListSerializer
+from app.models.documents import Document, DocumentTemplate
 from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
@@ -38,18 +38,20 @@ from .controllers  import (
     get_document_template_list_controller,
     get_document_template_details_controller,
     create_document,
-    create_new_version_controller,
     get_document_controller
 )
 
 documents_bp = Blueprint("documents", __name__)
 
+
 @documents_bp.route("/<int:document_id>")
-@aws_auth.authentication_required 
-@get_local_user 
-def get_document_detail(current_user, document_id): 
+@aws_auth.authentication_required
+@get_local_user
+def get_document_detail(current_user, document_id):
     try:
         document = get_document_controller(document_id)
+        if not document:
+            abort(404, "Document not Found")    
     except Exception:
         abort(404, "Document not Found")
     return jsonify(DocumentSerializer(many=False).dump(document))
@@ -122,7 +124,8 @@ def create(current_user):
 
     if document_template.filetype == "docx":
         # generate document from docx_template
-        doc = DocxTemplate(f"app/documents/template/{document_template_id}.docx")
+        doc = DocxTemplate(
+            f"app/documents/template/{document_template_id}.docx")
         doc.render(variables)
         document_buffer = io.BytesIO()
         doc.save(document_buffer)
@@ -155,26 +158,19 @@ def create(current_user):
         document_template_id,
     )
 
-    version = create_new_version_controller(document, answers=variables)
-
     # save generated document to an s3
-    s3_client = boto3.client("s3")
-    remote_filename = f"{document.id}/{version.version_number}_{int(datetime.now().timestamp())}.{document_template.filetype}"
-    document_buffer.seek(0)
+    # s3_client = boto3.client("s3")
+    # remote_filename = f"{document.id}/{'version.version_number'}_{int(datetime.now().timestamp())}.{document_template.filetype}"
+    # document_buffer.seek(0)
 
-    try:
-        s3_client.upload_fileobj(
-            document_buffer,
-            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            f'{current_app.config["AWS_S3_DOCUMENT_ROOT"]}/{remote_filename}',
-            )
-    except ClientError as e:
-        print(f"error uploading to s3 {e}")
-
-    version.filename = remote_filename
-    db.session.add(version)
-    db.session.commit()
-    db.session.refresh(document)
+    # try:
+    #     s3_client.upload_fileobj(
+    #         document_buffer,
+    #         current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+    #         f'{current_app.config["AWS_S3_DOCUMENT_ROOT"]}/{remote_filename}',
+    #     )
+    # except ClientError as e:
+    #     print(f"error uploading to s3 {e}")
 
     return DocumentSerializer().dump(document)
 
@@ -209,149 +205,14 @@ def download(current_user, document_id):
     return jsonify(response)
 
 
-@documents_bp.route("/<int:document_id>/sign")
-@aws_auth.authentication_required
-@get_local_user
-def request_signatures(current_user, document_id):
-
-    if not document_id:
-        abort(400, "Missing document id")
-
-    try:
-        last_version = (
-            DocumentVersion.query.filter_by(document_id=document_id)
-            .order_by(DocumentVersion.version_number)
-            .first()
-        )
-    except Exception:
-        abort(404, "Document not Found")
-
-    answers = {}
-    signers_data = []
-    for question in last_version.answers:
-
-        # check if the question has been answered
-        if "variable" in question and "answer" in question and question["answer"]:
-            # gather all answers on an dictionary becaus we may need info when gatthering signers
-            variable_name = question["variable"]
-            answers[question["variable"]] = question["answer"]
-
-            # Variables that identify signers end with "signer"
-            if variable_name.find("signer") >= 0 and "docusign_data" in question:
-                signer_data = question["docusign_data"]
-                signer_data["name"] = answers[
-                    question["docusign_data"]["name_variable"]
-                ]
-                signer_data["email"] = question["answer"]
-                signers_data.append(signer_data)
-
-    s3_client = boto3.client("s3")
-
-    try:
-        document_buffer = io.BytesIO()
-        s3_client.download_fileobj(
-            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            f"{last_version.filename}",
-            document_buffer,
-        )
-    except ClientError as e:
-        logging.error(e)
-
-    document_buffer.seek(0)
-    base64_document = base64.b64encode(document_buffer.read()).decode("ascii")
-
-    if signers_data:
-
-        # create the DocuSign document object
-        document = DocusignDocument(
-            document_base64=base64_document,
-            name=last_version.document.title,
-            file_extension=last_version.document.template.filetype,
-            document_id=1,
-        )
-
-        signers = []
-        for index, signer_data in enumerate(signers_data):
-            # Create the signer recipient model
-            signer = Signer(  # The signer
-                email=signer_data["email"],
-                name=signer_data["name"],
-                recipient_id=str(index + 1),
-                routing_order="1",
-            )
-
-            # Create a sign_here tab on the document, either relative to an anchor string or to the document page
-            if signer_data.get("anchor_string", None):
-                sign_here = SignHere(
-                    recipient_id="1",
-                    tab_label="assine aqui",
-                    anchor_string=signer_data["anchor_string"],
-                    anchor_x_offset=signer_data["anchor_x_offset"],
-                    anchor_y_offset=signer_data["anchor_y_offset"],
-                    anchor_ignore_if_not_present="false",
-                    anchor_units="inches",
-                )
-            else:
-                sign_here = SignHere(
-                    recipient_id="1",
-                    document_id=1,
-                    tab_label="assine aqui",
-                    x_position=signer_data["x_position"],
-                    y_position=signer_data["y_position"],
-                    page_number=signer_data["page_number"],
-                )
-
-            # Add the tabs model (including the sign_here tab) to the signer
-            # The Tabs object wants arrays of the different field/tab types
-            signer.tabs = Tabs(sign_here_tabs=[sign_here])
-
-            signers.append(signer)
-
-        # Next, create the top level envelope definition and populate it.
-        envelope_definition = EnvelopeDefinition(
-            email_subject=last_version.document.title,
-            # The order in the docs array determines the order in the envelope
-            documents=[document],
-            # The Recipients object wants arrays for each recipient type
-            recipients=Recipients(signers=signers),
-            status="sent",  # requests that the envelope be created and sent.
-        )
-
-        # Ready to go: send the envelope request
-        api_client = ApiClient()
-        api_client.host = "https://demo.docusign.net/restapi"
-        api_client.set_default_header(
-            "Authorization", "Bearer " + get_token(current_user)
-        )
-
-        envelope_api = EnvelopesApi(api_client)
-        try:
-            envelope = envelope_api.create_envelope(
-                "957b17e7-1218-4865-8fff-ad974ed8f6a7",
-                envelope_definition=envelope_definition,
-            )
-        except Exception as e:
-            logging.error(e)
-            return jsonify({"message": "Error accessing docusign api."}), 400
-
-        # save envelope data on document
-        document = Document.query.get(document_id)
-        document.envelope = json.dumps(EnvelopeSerializer().dump(envelope))
-        db.session.commit()
-        return jsonify(DocumentSerializer().dump(document))
-    else:
-        return jsonify({"message": "No signers."}), 400
-
-
 @documents_bp.route("/templates", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def documents(current_user):
 
     document_templates = get_document_template_list_controller(current_user["company_id"])
-    
+
     return jsonify({"DocumentTemplates": DocumentTemplateListSerializer(many=True).dump(document_templates)})
-    
 
 
 @documents_bp.route("/templates/<int:documentTemplate_id>", methods=["GET"])
