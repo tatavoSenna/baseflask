@@ -126,7 +126,7 @@ def edit_user_controller(username, company_id=None, group_ids=None):
     if user.company_id != company_id:
         raise Exception("Invalid company")
 
-    if group_ids:
+    if group_ids is not None:
         new_groups = {}
         for group_id in group_ids:
             new_groups[group_id] = Group.query.get(group_id)
