@@ -107,3 +107,21 @@ def test_patch_user_groups():
     assert group.name not in new_groups
     assert group2.name in new_groups
     assert group3.name in new_groups
+
+
+def test_patch_user_with_empty_groups():
+    company = factories.CompanyFactory()
+    group = factories.GroupFactory(company=company)
+    user = factories.UserFactory(company=company)
+
+    factories.ParticipatesOnFactory(user=user, group=group)
+
+    assert len(user.participates_on) == 1
+
+    edit_user_controller(
+        username=user.username,
+        company_id=company.id,
+        group_ids=[]
+    )
+
+    assert len(user.participates_on) == 0

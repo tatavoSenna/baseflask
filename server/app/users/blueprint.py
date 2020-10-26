@@ -138,7 +138,7 @@ def update(logged_user, username):
         edited_user = edit_user_controller(
             username=username,
             company_id=logged_user['company_id'],
-            group_ids=fields.get("groups")
+            group_ids=fields.get("groups", None)
         )
     except:
         return {}, 500
