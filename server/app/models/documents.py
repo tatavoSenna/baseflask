@@ -50,7 +50,7 @@ class Document(db.Model):
     envelope = db.Column(JSON, nullable=True)
     workflow = db.Column(JSON, nullable=True)
     variables = db.Column(JSON, nullable=True)
-    versions = db.Column(JSON, nullable=True)
+    versions = db.Column(JSON, nullable=True, default=["0"])
     signers = db.Column(JSON, nullable=True)
     form = db.Column(JSON, nullable=True)
     current_step = db.Column(db.String(255), nullable=True)
