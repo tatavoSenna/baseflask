@@ -1066,6 +1066,23 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@ckeditor/ckeditor5-build-classic@^23.0.0":
+  version "23.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-build-classic/-/ckeditor5-build-classic-23.0.0.tgz#9b4ae5dc470e9ae4be14672b49d05d21887e2d81"
+  integrity sha512-9Pgb9OAPnx1577WDYizEuOFHmLyXkwU8UxneyP4Zkr9mrJUEL0w0uVgQhiB8DYlAAArHXeFasSogwFvLX6xBtw==
+
+"@ckeditor/ckeditor5-build-decoupled-document@^23.0.0":
+  version "23.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-build-decoupled-document/-/ckeditor5-build-decoupled-document-23.0.0.tgz#52fde3e31ccf77dca43bfd25ac2b28aee5ee951b"
+  integrity sha512-gZH3OuJslxHfXILtVc9pPnB6avZ7iKKPB3XEdBrVqjfXgwZmjnP5a5UFdFxQQeySdEgura+q9WNI8OAVQee8rw==
+
+"@ckeditor/ckeditor5-react@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-react/-/ckeditor5-react-2.1.0.tgz#f612546a5a328899a436d71b72ffd632600049e8"
+  integrity sha512-rlHjRKhwP9tNK0Yj2UJShL14mRfxLPgJ+Pv6zTv/Mvmd4wrwGnJf+5ybOAGK92S02hP1cXH+9km+PRO1b4V+ng==
+  dependencies:
+    prop-types "^15.6.1"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -2059,6 +2076,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
+
+antd-mask-input@^0.1.13:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/antd-mask-input/-/antd-mask-input-0.1.14.tgz#328afcd6d1f3492704297a59bac854ca96bced0c"
+  integrity sha512-m/sFvypNakwiNmthPHkVcpjd4G6hUWF05JD/PYgfjb3ebZK4GlEPnkNH12CKMLG0lfS0Q2IqLixuPq5w04N30w==
 
 antd@^4.2.2:
   version "4.2.3"
@@ -3101,6 +3123,14 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+ckeditor4-react@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ckeditor4-react/-/ckeditor4-react-1.2.0.tgz#4fb16014f80c4ae10980361b937fc75861bff25a"
+  integrity sha512-0g4/iWGXnbTI33XMav2RVjZW/V9h3E5x9v0/GL03HjKUL8E/Sl80BCjfF/5+PvUW9D852ky5eF36YuG3TJ3NOQ==
+  dependencies:
+    load-script "^1.0.0"
+    prop-types "^15.6.2"
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -7074,6 +7104,11 @@ load-json-file@^4.0.0:
     parse-json "^4.0.0"
     pify "^3.0.0"
     strip-bom "^3.0.0"
+
+load-script@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/load-script/-/load-script-1.0.0.tgz#0491939e0bee5643ee494a7e3da3d2bac70c6ca4"
+  integrity sha1-BJGTngvuVkPuSUp+PaPSuscMbKQ=
 
 loader-fs-cache@^1.0.2:
   version "1.0.3"

@@ -6,15 +6,19 @@ import { Select } from 'antd'
 const { Option } = Select
 var groupSelect = null
 
-const UserModal = ({
-	handleCreate,
+const UserEditModal = ({
+	handleUpdate,
 	handleCancel,
-	handleNewUser,
-	newUser,
+	handleEditUser,
+	editUser,
 	showModal,
 	groups,
 }) => {
 	const [form] = Form.useForm()
+	form.setFieldsValue({
+		email: editUser.email,
+		groups: editUser.groups,
+	})
 
 	const children = []
 	groups.map((item) =>
@@ -23,27 +27,24 @@ const UserModal = ({
 
 	return (
 		<Modal
+			forceRender
 			visible={showModal}
 			onCancel={handleCancel}
 			footer={[
 				<Button key="cancelar" onClick={handleCancel}>
 					Cancelar
 				</Button>,
-				<Button
-					key="criar"
-					onClick={() => handleCreate(form)}
-					form="newUserForm"
-					disabled={!(newUser.name && newUser.email)}>
-					Criar
+				<Button key="criar" onClick={handleUpdate} form="editUserForm">
+					Editar
 				</Button>,
 			]}>
-			<Form form={form} id="newUserForm" onChange={() => handleNewUser(form)}>
-				<Form.Item label="Novo Usuário"></Form.Item>
+			<Form form={form} id="editUserForm" onChange={() => handleEditUser(form)}>
+				<Form.Item label="Editar usuário"></Form.Item>
 				<Form.Item label="Nome" name="name">
-					<Input value={newUser.name} />
+					<Input disabled={true} />
 				</Form.Item>
 				<Form.Item label="Email" name="email">
-					<Input />
+					<Input disabled={true} />
 				</Form.Item>
 				<Form.Item label="Grupos" name="groups">
 					<Select
@@ -52,7 +53,7 @@ const UserModal = ({
 						allowClear
 						style={{ width: '100%' }}
 						placeholder="Selecione o grupo"
-						onChange={() => handleNewUser(form)}
+						onChange={() => handleEditUser(form)}
 						onSelect={() => groupSelect.blur()}
 						onDeselect={() => groupSelect.blur()}>
 						{children}
@@ -63,17 +64,17 @@ const UserModal = ({
 	)
 }
 
-UserModal.propTypes = {
-	handleCreate: PropTypes.func,
+UserEditModal.propTypes = {
+	handleUpdate: PropTypes.func,
 	handleCancel: PropTypes.func,
-	handleNewUser: PropTypes.func,
-	newUser: PropTypes.object,
+	handleEditUser: PropTypes.func,
+	editUser: PropTypes.object,
 	showModal: PropTypes.bool,
 	groups: PropTypes.array,
 }
 
-UserModal.defaultProps = {
+UserEditModal.defaultProps = {
 	groups: [],
 }
 
-export default UserModal
+export default UserEditModal
