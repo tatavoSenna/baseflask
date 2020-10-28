@@ -5,9 +5,17 @@ const initialState = {
 	loading: false,
 	userList: [],
 	showModal: false,
+	showEditModal: false,
 	newUser: {
 		name: '',
 		email: '',
+		groups: [],
+	},
+	editUser: {
+		username: '',
+		name: '',
+		email: '',
+		groups: [],
 	},
 }
 
@@ -29,6 +37,18 @@ const { actions, reducer } = createSlice({
 				newUser: extend(state.newUser, {
 					name: payload.name,
 					email: payload.email,
+					groups: payload.groups,
+				}),
+			}),
+		updateEditUser: (state, { payload }) =>
+			extend(state, {
+				editUser: extend(state.editUser, {
+					username: !payload.username
+						? state.editUser.username
+						: payload.username,
+					name: payload.name,
+					email: payload.email,
+					groups: payload.groups,
 				}),
 			}),
 		createUser: (state) => extend(state),
@@ -37,12 +57,18 @@ const { actions, reducer } = createSlice({
 				newUser: extend(state.newUser, {
 					name: '',
 					email: '',
+					groups: [],
 				}),
 			}),
 		setShowModal: (state, { payload }) =>
 			extend(state, {
 				showModal: payload,
 			}),
+		setShowEditModal: (state, { payload }) =>
+			extend(state, {
+				showEditModal: payload,
+			}),
+		updateUser: (state) => extend(state),
 		deleteUser: (state) => extend(state),
 	},
 })
@@ -52,9 +78,12 @@ export const {
 	getUserListSuccess,
 	getUserListFailure,
 	createUser,
+	updateUser,
 	deleteUser,
 	setShowModal,
+	setShowEditModal,
 	updateNewUser,
+	updateEditUser,
 	resetNewUser,
 } = actions
 

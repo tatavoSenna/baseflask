@@ -12,12 +12,14 @@ import {
 	createUser,
 	deleteUser,
 	resetNewUser,
+	updateUser,
 } from '.'
 import { selectAllUsers } from './selectors'
 
 export default function* rootSaga() {
 	yield takeEvery(getUserList, getUserListSaga)
 	yield takeEvery(createUser, createUserSaga)
+	yield takeEvery(updateUser, updateUserSaga)
 	yield takeEvery(deleteUser, deleteUserSaga)
 }
 
@@ -35,13 +37,13 @@ function* getUserListSaga({ payload }) {
 function* createUserSaga() {
 	const { users } = yield select()
 	const { newUser = {} } = users
-
+	console.log('crea', users, newUser)
 	loadingMessage({
 		content: 'Criando novo usuário...',
 		updateKey: 'createUser',
 	})
 	try {
-		yield call(api.post, '/users', newUser)
+		yield call(api.patch, '/users', newUser)
 		successMessage({
 			content: 'Usuário criado com sucesso',
 			updateKey: 'createUser',
@@ -54,6 +56,30 @@ function* createUserSaga() {
 		})
 	}
 	yield put(resetNewUser())
+}
+
+function* updateUserSaga() {
+	const { users } = yield select()
+	const { editUser = {} } = users
+	loadingMessage({
+		content: 'Editando usuário...',
+		updateKey: 'updateUser',
+	})
+	try {
+		yield call(api.patch, `/users/${editUser.username}`, {
+			groups: editUser.groups,
+		})
+		successMessage({
+			content: 'Usuário editado com sucesso',
+			updateKey: 'updateUser',
+		})
+		yield put(getUserList())
+	} catch {
+		errorMessage({
+			content: 'Edição de usuário falhou',
+			updateKey: 'updateUser',
+		})
+	}
 }
 
 function* deleteUserSaga({ payload }) {
