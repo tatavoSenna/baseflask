@@ -32,6 +32,31 @@ class DocumentTemplateListSerializer(ma.SQLAlchemyAutoSchema):
         model = DocumentTemplate
         include_fk = True
 
+
+class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
+    # user = ma.Nested(UserSerializer)
+    user = ma.Function(lambda obj: {
+        "name": obj.user.name,
+        "surname": obj.user.surname,
+    })
+
+    class Meta:
+        model = Document
+        include_relationships = True
+        exclude = (
+            'form',
+            'template',
+            'envelope',
+            'workflow',
+            'variables',
+            'versions',
+            'signers',
+            'form',
+            'current_step',
+            'company',
+        )
+
+
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     template = ma.Nested(DocumentTemplateSerializer)
     user = ma.Nested(UserSerializer)

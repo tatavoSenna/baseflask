@@ -5,12 +5,17 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import init_dotenv
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 
 db = SQLAlchemy()
 migrate = Migrate(compare_type=True,)
 ma = Marshmallow()
 aws_auth = AWSCognitoAuthentication()
+jinja_env = Environment(
+    loader=PackageLoader('app', 'templates'),
+    autoescape=select_autoescape(['html', 'xml'])
+)
 
 
 def create_app():

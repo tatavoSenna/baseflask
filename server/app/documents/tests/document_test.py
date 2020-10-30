@@ -1,8 +1,10 @@
 import pytest
 from app.test import factories
 from flask import jsonify
-from app.models.documents import Document
-from app.documents.controllers import get_document_controller
+from unittest.mock import patch
+
+from app.models.documents import Document, DocumentTemplate
+from app.documents.controllers import get_document_controller, create_document_controller
 
 def test_retrieve_document():
     company_id = 134
@@ -42,3 +44,33 @@ def test_retrieve_document_jsonb_fields():
     assert retrieved_document.versions == versions
     assert retrieved_document.signers == signers
     assert retrieved_document.current_step == current_step
+
+
+@patch('app.documents.controllers.RemoteDocument.create')
+def test_create_document(create_remote_document_mock):
+    company = factories.CompanyFactory()
+    user = factories.UserFactory(
+        company = company
+    )
+    document_template = factories.DocumentTemplateFactory(
+        company = company
+    )
+
+    variables = {}
+
+    assert DocumentTemplate.query.get(document_template.id).company_id == company.id
+
+    document = create_document_controller(
+        user.id,
+        user.company_id,
+        variables,
+        document_template.id
+    )
+
+    assert document.user_id == user.id
+    assert document.company_id == company.id
+    assert document.document_template_id == document_template.id
+
+    create_remote_document_mock.assert_called_once_with(
+        document
+    )
