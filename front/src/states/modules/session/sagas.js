@@ -32,6 +32,7 @@ function* getTokenSaga({ payload }) {
 
 		api.defaults.headers['Authorization'] = `Bearer ${data.access_token}`
 		yield put(getJWTSuccess(data))
+		yield put(getLoggedUserSuccess(data.user))
 		history.push('/')
 	} catch (error) {
 		yield put(getJWTFailure(error))

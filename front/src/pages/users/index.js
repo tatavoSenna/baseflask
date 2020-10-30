@@ -23,7 +23,6 @@ import {
 	createGroup,
 } from '~/states/modules/groups'
 import BreadCrumb from '~/components/breadCrumb'
-import { getLoggedUser } from '~/states/modules/session'
 
 const { Search } = Input
 
@@ -47,9 +46,6 @@ function Users() {
 	useEffect(() => {
 		dispatch(getGroupList())
 		dispatch(getUserList())
-		if (!loggedUser) {
-			dispatch(getLoggedUser())
-		}
 	}, [dispatch, loggedUser])
 
 	const handleShowModal = () => {
