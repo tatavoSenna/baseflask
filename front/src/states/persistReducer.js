@@ -1,14 +1,12 @@
 import storage from 'redux-persist/lib/storage'
 import { persistReducer } from 'redux-persist'
-import { createFilter } from 'redux-persist-transform-filter'
 
 export default (reducers) => {
 	const persistedReducer = persistReducer(
 		{
-			key: 'lawing',
+			key: 'root',
 			storage,
 			whitelist: ['session'],
-			transforms: [createFilter('session', ['token', 'signed'])],
 		},
 		reducers
 	)
