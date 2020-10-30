@@ -14,7 +14,6 @@ import {
 	resetNewUser,
 	updateUser,
 } from '.'
-import { selectAllUsers } from './selectors'
 
 export default function* rootSaga() {
 	yield takeEvery(getUserList, getUserListSaga)
@@ -23,12 +22,13 @@ export default function* rootSaga() {
 	yield takeEvery(deleteUser, deleteUserSaga)
 }
 
-function* getUserListSaga({ payload }) {
-	const url = payload ? `/users?search=${payload}` : '/users'
+function* getUserListSaga({ payload = {} }) {
+	const { perPage = 10, page = 1, search = '' } = payload
+
+	const url = `/users?per_page=${perPage}&page=${page}&search=${search}`
 	try {
 		const { data } = yield call(api.get, url)
-		const userList = selectAllUsers(data.users)
-		yield put(getUserListSuccess(userList))
+		yield put(getUserListSuccess(data))
 	} catch (error) {
 		errorMessage('Erro na conexão com o servidor. Tente novamente mais tarde')
 	}
@@ -37,13 +37,12 @@ function* getUserListSaga({ payload }) {
 function* createUserSaga() {
 	const { users } = yield select()
 	const { newUser = {} } = users
-	console.log('crea', users, newUser)
 	loadingMessage({
 		content: 'Criando novo usuário...',
 		updateKey: 'createUser',
 	})
 	try {
-		yield call(api.patch, '/users', newUser)
+		yield call(api.post, '/users', newUser)
 		successMessage({
 			content: 'Usuário criado com sucesso',
 			updateKey: 'createUser',

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Layout, Input, Button, Table } from 'antd'
+import { Layout, PageHeader } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
 import UserModal from './components/modal'
@@ -23,11 +23,9 @@ import {
 	createGroup,
 } from '~/states/modules/groups'
 import BreadCrumb from '~/components/breadCrumb'
-
-const { Search } = Input
+import DataTable from '~/components/dataTable'
 
 function Users() {
-	const { Content } = Layout
 	const dispatch = useDispatch()
 	const {
 		userList,
@@ -36,6 +34,7 @@ function Users() {
 		showEditModal,
 		newUser,
 		editUser,
+		pages,
 	} = useSelector(({ users }) => users)
 	const { groupList, showGroupModal, newGroup } = useSelector(
 		({ groups }) => groups
@@ -47,6 +46,9 @@ function Users() {
 		dispatch(getGroupList())
 		dispatch(getUserList())
 	}, [dispatch, loggedUser])
+
+	const getUsers = ({ page, perPage, search }) =>
+		dispatch(getUserList({ page, perPage, search }))
 
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
@@ -102,7 +104,7 @@ function Users() {
 		dispatch(setShowEditModal(false))
 	}
 
-	const handleCancelEdit = (form) => {
+	const handleCancelEdit = () => {
 		dispatch(setShowEditModal(false))
 	}
 
@@ -113,15 +115,11 @@ function Users() {
 	const columns = getColumns({ handleDelete, loggedUser, handleEdit })
 
 	return (
-		<Layout style={{ padding: '0 24px 24px' }}>
-			<BreadCrumb parent="Usuários" current="Lista" />
-			<Content
-				style={{
-					padding: 24,
-					margin: 0,
-					minHeight: 280,
-					background: '#fff',
-				}}>
+		<Layout>
+			<PageHeader>
+				<BreadCrumb parent="Usuários" current="Lista" />
+			</PageHeader>
+			<Layout>
 				<UserModal
 					handleCancel={handleCancel}
 					handleCreate={handleCreate}
@@ -145,23 +143,24 @@ function Users() {
 					showModal={showGroupModal}
 					newGroup={newGroup}
 				/>
-				<div
-					className="searchbox"
-					style={{ display: 'flex', gap: '5px', margin: '24px 0' }}>
-					<Search
-						placeholder="Procurar por usuário..."
-						onSearch={(value) => handleSearch(value)}
-						enterButton
-					/>
-					<Button onClick={handleShowModal}>+ Usuário</Button>
-					<Button onClick={handleShowGroupModal}>+ Grupo</Button>
-				</div>
-				<Table
+				<DataTable
 					dataSource={userList}
 					columns={columns}
 					loading={loading || !loggedUser}
+					pages={pages}
+					onChangePageNumber={getUsers}
+					onSearch={handleSearch}
+					onClickButton={handleShowModal}
+					textButton="+ Usuário "
+					placeholderNoData={!loading ? 'Nenhum usuário encontrado' : ''}
+					buttons={[
+						{
+							title: '+ Grupo',
+							onClick: handleShowGroupModal,
+						},
+					]}
 				/>
-			</Content>
+			</Layout>
 		</Layout>
 	)
 }
