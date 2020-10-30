@@ -38,8 +38,11 @@ from app.docusign.services import get_token
 from .controllers  import (
     get_document_template_list_controller,
     get_document_template_details_controller,
-    get_document_controller,
     edit_signers_controller,
+    create_document_controller,
+    create_new_version_controller,
+    get_document_controller,
+    get_document_version_controller,
 )
 
 documents_bp = Blueprint("documents", __name__)
@@ -87,6 +90,56 @@ def get_document_list(current_user):
         }
     )
 
+@documents_bp.route("/<int:document_id>/text", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_document_text(current_user, document_id): 
+    try:
+        #get current version
+        version_id = get_document_version_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+    s3_resource = boto3.resource('s3')
+    filename = f"documents/{document_id}/{version_id}.txt"
+    obj = s3_resource.Object('lawing-documents-dev', filename)
+    data = io.BytesIO()
+    obj.download_fileobj(data)
+    return jsonify(
+        {
+            "text": obj.get()['Body'].read().decode('utf-8')
+        }
+    )
+
+@documents_bp.route("/<int:document_id>/text", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def add_document_text(current_user, document_id):
+    #get current version
+    try:
+       version_id = create_new_version_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+
+    if not request.is_json:
+        return jsonify({"message": "Accepts only text in content-type json."}), 400
+    content = request.json
+    #get text content to upload and create s3 filepath
+    document_text = content.get("text", None)
+    filename = f"documents/{document_id}/{version_id}.txt"
+
+    s3_resource = boto3.resource('s3')
+    object = s3_resource.Object('lawing-documents-dev',filename)
+    #save new version on s3 as binary
+    try:
+        object.put(Body=bytearray(document_text,encoding='utf8'))
+    except ClientError as e:
+        print(f"error uploading to s3 {e}")
+
+    return jsonify(
+        {
+            "text":document_text
+        }
+    )
 
 @documents_bp.route("", methods=["POST"])
 @aws_auth.authentication_required
@@ -96,7 +149,6 @@ def create(current_user):
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
 
-    # check for required parameters
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)

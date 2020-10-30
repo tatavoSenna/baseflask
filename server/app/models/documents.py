@@ -7,6 +7,7 @@ from sqlalchemy.dialects.postgresql.json import JSON
 from sqlalchemy.dialects.postgresql.json import JSONB
 from sqlalchemy.orm import relationship
 
+
 from app import db
 
 

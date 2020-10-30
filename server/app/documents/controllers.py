@@ -69,7 +69,7 @@ def get_current_date_dict():
 
 
 def get_document_controller(document_id):
-    document = Document.query.get(document_id)
+    document = Document.query.filter_by(id=document_id).first()
     return document
 
 
@@ -99,3 +99,23 @@ def find_signer_by_id(signer_id, signers, default=None):
         if signer['id'] == signer_id:
             return signer
     return default
+
+
+def get_document_version_controller(document_id):
+    document = get_document_controller(document_id)
+    #take size of array with will be version + 1
+    versions = document.versions
+    current_version = int(versions[len(versions) - 1])  
+    return current_version
+
+def create_new_version_controller(document_id):
+    document = Document.query.filter_by(id=document_id).first()
+    versions = document.versions
+    current_version = int(versions[len(versions) - 1])
+    new_version = current_version + 1
+    #need to make a copy to track changes to JSON, otherwise the changes are not updated
+    document.versions = copy.deepcopy(document.versions)
+    document.versions.append(str(new_version))
+    db.session.add(document)
+    db.session.commit()
+    return new_version
