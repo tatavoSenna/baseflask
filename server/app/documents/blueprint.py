@@ -39,7 +39,7 @@ from .controllers  import (
     get_document_template_list_controller,
     get_document_template_details_controller,
     get_document_controller,
-    create_document_controller,
+    edit_signers_controller,
 )
 
 documents_bp = Blueprint("documents", __name__)
@@ -163,3 +163,20 @@ def document(current_user, documentTemplate_id):
     document_template = get_document_template_details_controller(current_user["company_id"], documentTemplate_id)
 
     return jsonify({"DocumentTemplate": DocumentTemplateSerializer().dump(document_template)})
+
+
+@documents_bp.route("/<int:document_id>/signers", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def edit_signers(current_user, document_id): 
+    content = request.json
+    if content:
+        signers = content.get('signers')
+    else:
+        abort(400, 'no content')
+    if not signers:
+        abort(400, "signers field is required")
+
+    document = edit_signers_controller(document_id, content['signers'])
+
+    return jsonify(DocumentSerializer(many=False).dump(document))
