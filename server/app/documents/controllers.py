@@ -9,6 +9,7 @@ from .remote import RemoteDocument
 from app.serializers.document_serializers import (
     DocumentSerializer
 )
+import copy
 
 
 def get_document_template_list_controller(company_id):
@@ -70,3 +71,31 @@ def get_current_date_dict():
 def get_document_controller(document_id):
     document = Document.query.get(document_id)
     return document
+
+
+def edit_signers_controller(document_id, patched_signers):
+    document = Document.query.get(document_id)
+    document.signers = copy.deepcopy(document.signers)
+
+    new_signers = [
+        find_signer_by_id(
+            signer['id'],
+            patched_signers,
+            default=signer
+        ) for signer in document.signers
+    ]
+
+    for i in range(len(document.signers)):
+        document.signers[i].update(new_signers[i])
+
+    db.session.add(document)
+    db.session.commit()
+
+    return document
+
+
+def find_signer_by_id(signer_id, signers, default=None):
+    for signer in signers:
+        if signer['id'] == signer_id:
+            return signer
+    return default
