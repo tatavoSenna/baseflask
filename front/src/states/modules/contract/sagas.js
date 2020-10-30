@@ -19,14 +19,7 @@ function* loginSaga({ payload = {} }) {
 	try {
 		const { data } = yield call(
 			api.get,
-			`/documents/?per_page=${perPage}&page=${page}&search=${search}`,
-			{
-				params: {
-					per_page: perPage,
-					page,
-					search,
-				},
-			}
+			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
 		)
 
 		yield put(listContractSuccess(data))

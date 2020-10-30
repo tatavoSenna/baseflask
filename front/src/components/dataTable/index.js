@@ -16,6 +16,7 @@ const DataTable = ({
 	placeholderNoData,
 	loading,
 	onClickRow,
+	buttons,
 }) => {
 	const [search, setSearch] = useState('')
 	return (
@@ -36,6 +37,11 @@ const DataTable = ({
 					style={{ width: '50%' }}
 				/>
 				<Button onClick={onClickButton}>{textButton}</Button>
+				{buttons.map((button, index) => (
+					<Button key={index} onClick={button.onClick}>
+						{button.title}
+					</Button>
+				))}
 			</div>
 			<Table
 				columns={columns}
@@ -85,6 +91,7 @@ DataTable.propTypes = {
 	placeholderNoData: string,
 	loading: bool,
 	onClickRow: func,
+	buttons: array,
 }
 
 DataTable.defaultProps = {
@@ -92,6 +99,7 @@ DataTable.defaultProps = {
 	placeholderNoData: 'Nenhum dado encontrado',
 	loading: false,
 	onClickRow: () => {},
+	buttons: [],
 }
 
 export default DataTable

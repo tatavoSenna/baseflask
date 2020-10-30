@@ -1,5 +1,6 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
+import { selectAllUsers } from './selectors'
 
 const initialState = {
 	loading: false,
@@ -17,6 +18,11 @@ const initialState = {
 		email: '',
 		groups: [],
 	},
+	pages: {
+		page: 0,
+		per_page: 0,
+		total: 0,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -30,7 +36,12 @@ const { actions, reducer } = createSlice({
 		getUserListSuccess: (state, { payload }) =>
 			extend(state, {
 				loading: false,
-				userList: payload,
+				userList: selectAllUsers(payload.users),
+				pages: {
+					page: payload.page,
+					per_page: payload.per_page,
+					total: payload.total,
+				},
 			}),
 		updateNewUser: (state, { payload }) =>
 			extend(state, {
