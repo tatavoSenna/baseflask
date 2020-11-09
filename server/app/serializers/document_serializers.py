@@ -38,6 +38,7 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
     user = ma.Function(lambda obj: {
         "name": obj.user.name,
         "surname": obj.user.surname,
+        "email": obj.user.email
     })
 
     class Meta:
