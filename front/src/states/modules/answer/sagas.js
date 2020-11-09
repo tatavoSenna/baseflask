@@ -18,16 +18,17 @@ function* answerSaga({ payload }) {
 
 	loadingMessage({ content: 'Criando documento...', updateKey: 'answer' })
 
-	const { answer, modelId } = yield select((state) => {
+	const { answer, modelId, title } = yield select((state) => {
 		const {
 			answer,
-			question: { modelId },
+			question: { modelId, title },
 		} = state
-		return { answer, modelId }
+		return { answer, modelId, title }
 	})
 	try {
-		const { data } = yield call(api.post, `/documents/create`, {
-			model: modelId,
+		const { data } = yield call(api.post, '/documents/', {
+			document_template: modelId,
+			title,
 			variables: answer.data,
 		})
 

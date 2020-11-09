@@ -1,6 +1,8 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { selectAllModels } from './selectors'
+
 const initialState = {
 	data: [],
 	error: null,
@@ -17,7 +19,7 @@ const { actions, reducer } = createSlice({
 			}),
 		listModelSuccess: (state, { payload }) =>
 			extend(state, {
-				data: payload.DocumentTemplates,
+				data: selectAllModels(payload.DocumentTemplates),
 				error: null,
 				loading: false,
 			}),
