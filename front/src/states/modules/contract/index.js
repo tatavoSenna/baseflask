@@ -5,6 +5,7 @@ import { selectAllContracts } from './selectors'
 
 const initialState = {
 	data: [],
+	showModal: false,
 	pages: {
 		page: 0,
 		per_page: 0,
@@ -38,6 +39,10 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 			}),
 		viewContract: (state) => state,
+		setShowModal: (state, { payload }) =>
+			extend(state, {
+				showModal: payload,
+			}),
 	},
 })
 
@@ -46,6 +51,7 @@ export const {
 	listContractSuccess,
 	listContractFailure,
 	viewContract,
+	setShowModal,
 } = actions
 
 export { default as contractSaga } from './sagas'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { object, bool } from 'prop-types'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Form, Button } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
@@ -27,23 +27,28 @@ const tailLayout = {
 const { Title } = Typography
 
 const FormFactory = ({ pageFieldsData, isLastPage }) => {
-	console.log(pageFieldsData)
-	const { current, model } = useParams()
-	const currentPage = parseInt(current)
+	const { values } = useHistory().location.state
+	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
 
 	const handleBack = () => {
 		const previousPage = currentPage - 1
-		history.push(`/contracts/new/${model}/${previousPage}`)
+		history.push({
+			pathname: `/contracts/new/`,
+			state: { values: { ...values, current: previousPage } },
+		})
 	}
 
 	const onSubmit = (data) => {
 		dispatch(appendAnswer({ data }))
 		if (!isLastPage) {
 			const nextPage = currentPage + 1
-			return history.push(`/contracts/new/${model}/${nextPage}`)
+			return history.push({
+				pathname: `/contracts/new/`,
+				state: { values: { ...values, current: nextPage } },
+			})
 		}
 		dispatch(answerRequest({ history }))
 	}

@@ -17,7 +17,7 @@ export const ROUTES = {
 	docusign: '/docusign-token',
 	home: '/',
 	contracts: '/contracts',
-	form: '/contracts/new/:model/:current',
+	form: '/contracts/new',
 	users: '/users',
 	documentDetails: '/documentDetails',
 }

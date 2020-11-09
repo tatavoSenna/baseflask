@@ -16,9 +16,10 @@ const { actions, reducer } = createSlice({
 				loading: true,
 			}),
 		listQuestionSuccess: (state, { payload }) => {
-			const { modelId, data } = payload
+			const { modelId, title, data } = payload
 			extend(state, {
 				modelId,
+				title,
 				data: data.DocumentTemplate.form,
 				error: null,
 				loading: false,

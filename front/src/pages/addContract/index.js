@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
 import { Card, Layout, PageHeader } from 'antd'
+import { useHistory } from 'react-router-dom'
 
 import BreadCrumb from '~/components/breadCrumb'
 import FormFactory from './components/formFactory'
@@ -13,15 +13,15 @@ const getCurrentStepAndComponent = (pageFieldsData, isLastPage) => (
 )
 
 function AddContract() {
-	const { current, model } = useParams()
-	const currentPage = parseInt(current)
+	const { values } = useHistory().location.state
+	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { data: questions, loading } = useSelector(({ question }) => question)
 
 	useEffect(() => {
-		dispatch(listQuestion({ modelId: model }))
-	}, [dispatch, model])
+		dispatch(listQuestion({ modelId: values.modelId, title: values.title }))
+	}, [dispatch, values])
 
 	useEffect(() => {
 		const pageFieldsData = questions ? questions[currentPage] : null

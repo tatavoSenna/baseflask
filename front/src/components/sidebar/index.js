@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react'
 import { bool, func } from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
-import {
-	FileAddOutlined,
-	FileTextOutlined,
-	FolderOpenOutlined,
-	TeamOutlined,
-} from '@ant-design/icons'
+import { FolderOpenOutlined, TeamOutlined } from '@ant-design/icons'
 
 import { listModel } from '~/states/modules/model'
 
@@ -21,7 +16,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const { pathname } = useLocation()
-	const { data: models } = useSelector(({ model }) => model)
 
 	useEffect(() => {
 		dispatch(listModel())
@@ -34,14 +28,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		return history.push(path)
 	}
 
-	function handleNewContract(modelId) {
-		if (!isWeb) {
-			handleCollapsed()
-		}
-		return history.push(`/contracts/new/${modelId}/0`)
-	}
-
-	const { SubMenu } = Menu
 	const { Sider } = Layout
 	return (
 		<>
@@ -65,19 +51,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<FolderOpenOutlined />}>
 							Contratos
 						</Menu.Item>
-						<SubMenu
-							key="sub1"
-							icon={<FileAddOutlined />}
-							title="Novo Contrato">
-							{models.map((model) => (
-								<Menu.Item
-									key={model.id}
-									icon={<FileTextOutlined />}
-									onClick={() => handleNewContract(model.id)}>
-									{model.name}
-								</Menu.Item>
-							))}
-						</SubMenu>
 						<Menu.Item
 							key="users"
 							icon={<TeamOutlined />}
@@ -112,19 +85,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<FolderOpenOutlined />}>
 							Contratos
 						</Menu.Item>
-						<SubMenu
-							key="sub1"
-							icon={<FileAddOutlined />}
-							title="Novo Contrato">
-							{models.map((model) => (
-								<Menu.Item
-									key="form"
-									icon={<FileTextOutlined />}
-									onClick={() => handleNewContract(model.id)}>
-									{model.name}
-								</Menu.Item>
-							))}
-						</SubMenu>
 						<Menu.Item
 							key="users"
 							icon={<TeamOutlined />}
