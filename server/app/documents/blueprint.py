@@ -45,7 +45,9 @@ from .controllers import (
     get_document_controller,
     get_document_version_controller,
     download_document_text_controller,
-    upload_document_text_controller
+    upload_document_text_controller,
+    next_status_controller,
+    previous_status_controller
 )
 
 documents_bp = Blueprint("documents", __name__)
@@ -113,30 +115,34 @@ def get_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def add_document_text(current_user, document_id):
+    # get current version
+    try:
+        version_id = create_new_version_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
 
     if not request.is_json:
         return jsonify({"message": "Accepts only text in content-type json."}), 400
     content = request.json
+    # get text content to upload and create s3 filepath
     document_text = content.get("text", None)
 
+    s3_resource = boto3.resource('s3')
+    object = s3_resource.Object('lawing-documents-dev', filename)
+    # save new version on s3 as binary
     try:
-        # create new version in 'versions' array before uploading the text
-        create_new_version_controller(document_id)
-    except Exception:
-        abort(404, "Document not Found")
-
-    try:
-        upload_document_text_controller(document_id, document_text)
-    except Exception:
-        abort(404, "Error uploading to s3")
+        object.put(Body=bytearray(document_text, encoding='utf8'))
+    except ClientError as e:
+        print(f"error uploading to s3 {e}")
 
     return jsonify(
         {
-            "uploaded_text": document_text
+            "text": document_text
         }
     )
 
-@documents_bp.route("/", methods=["POST"])
+
+@documents_bp.route("", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
@@ -190,6 +196,38 @@ def download(current_user, document_id):
     }
 
     return jsonify(response)
+
+
+@documents_bp.route("/<int:document_id>/next")
+@aws_auth.authentication_required
+@get_local_user
+def next_document_status(current_user, document_id):
+    try:
+        document, status = next_status_controller(document_id)
+        if not document:
+            abort(404, "Document not Found")
+        if status == 1:
+            abort(400, "There is no next status")
+    except Exception:
+        abort(404, "Could not change document status")
+
+    return DocumentSerializer().dump(document)
+
+
+@documents_bp.route("/<int:document_id>/previous")
+@aws_auth.authentication_required
+@get_local_user
+def previous_document_status(current_user, document_id):
+    try:
+        document, status = previous_status_controller(document_id)
+        if not document:
+            abort(404, "Document not Found")
+        if status == 1:
+            abort(404, "There is no previous status")
+    except Exception:
+        abort(404, "Could not change document status")
+
+    return DocumentSerializer().dump(document)
 
 
 @documents_bp.route("/templates", methods=["GET"])

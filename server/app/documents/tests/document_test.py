@@ -8,7 +8,9 @@ from app.documents.controllers import(
     get_document_controller,
     create_document_controller,
     download_document_text_controller,
-    upload_document_text_controller
+    upload_document_text_controller,
+    next_status_controller,
+    previous_status_controller
 )
 
 
@@ -105,3 +107,83 @@ def test_upload_document_text(upload_document_text_mock):
         document,
         bytearray(document_text, encoding='utf8')
     )
+
+
+def test_change_document_status_next():
+    company_id = 134
+    user_id = 115
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+            },
+            "3485": {
+                "next_node": None,
+            },
+            "5521": {
+                "next_node": "3485",
+            }
+        },
+        "current_node": "5521"
+    }
+
+    variables = [{"variable1": 5121}]
+    versions = [{"current_version": 1219}]
+    signers = [{"name": "Joelma"}]
+    current_step = "primeiro"
+
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(id=user_id, company=company)
+    document = factories.DocumentFactory(
+        company=company,
+        user=user,
+        workflow=workflow,
+        variables=variables,
+        versions=versions,
+        signers=signers,
+        current_step=current_step
+    )
+    # call the controller to change status from '5521' to '3485'
+    retrieved_document, status = next_status_controller(document.id)
+    # check if status was changed to the expected one
+    assert retrieved_document.workflow["current_node"] == "3485"
+
+
+def test_change_document_status_previous():
+    company_id = 134
+    user_id = 115
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+            },
+            "3485": {
+                "next_node": None,
+            },
+            "5521": {
+                "next_node": "3485",
+            }
+        },
+        "current_node": "5521"
+    }
+
+    variables = [{"variable1": 5121}]
+    versions = [{"current_version": 1219}]
+    signers = [{"name": "Joelma"}]
+    current_step = "primeiro"
+
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(id=user_id, company=company)
+    document = factories.DocumentFactory(
+        company=company,
+        user=user,
+        workflow=workflow,
+        variables=variables,
+        versions=versions,
+        signers=signers,
+        current_step=current_step
+    )
+    # call the controller to change status from '5521' to '544'
+    retrieved_document, status = previous_status_controller(document.id)
+    # check if status was changed to the expected one
+    assert retrieved_document.workflow["current_node"] == "544"

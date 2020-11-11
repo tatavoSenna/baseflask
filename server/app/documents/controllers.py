@@ -135,3 +135,42 @@ def upload_document_text_controller(document_id, document_text):
     document_text = bytearray(document_text, encoding='utf8')
     remote_document = RemoteDocument()
     remote_document.upload_filled_text_to_documents(document, document_text)
+
+
+def next_status_controller(document_id):
+    document = get_document_controller(document_id)
+    workflow = document.workflow
+    import ipdb; ipdb.set_trace()
+    next_node = workflow["nodes"][workflow["current_node"]]["next_node"]
+    # check if there is a next node
+    if next_node is None:
+        return document, 1
+
+    # need to make a copy to track changes to JSON, otherwise the changes are not updated
+    document.workflow = copy.deepcopy(document.workflow)
+    document.workflow["current_node"] = next_node
+    db.session.add(document)
+    db.session.commit()
+    return document, 0
+
+
+def previous_status_controller(document_id):
+    document = get_document_controller(document_id)
+    workflow = document.workflow
+    current_node = workflow["current_node"]
+    previous_node = None
+    nodes = workflow["nodes"].items()
+    for key, value in nodes:
+        if value["next_node"] == current_node:
+            previous_node = key
+
+    # check if there is a previous node
+    if previous_node is None:
+        return document, 1
+
+    # need to make a copy to track changes to JSON, otherwise the changes are not updated
+    document.workflow = copy.deepcopy(document.workflow)
+    document.workflow["current_node"] = previous_node
+    db.session.add(document)
+    db.session.commit()
+    return document, 0
