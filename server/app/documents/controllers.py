@@ -140,7 +140,6 @@ def upload_document_text_controller(document_id, document_text):
 def next_status_controller(document_id):
     document = get_document_controller(document_id)
     workflow = document.workflow
-    import ipdb; ipdb.set_trace()
     next_node = workflow["nodes"][workflow["current_node"]]["next_node"]
     # check if there is a next node
     if next_node is None:
