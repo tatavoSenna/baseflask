@@ -115,29 +115,24 @@ def get_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def add_document_text(current_user, document_id):
-    # get current version
-    try:
-        version_id = create_new_version_controller(document_id)
-    except Exception:
-        abort(404, "Document not Found")
-
     if not request.is_json:
         return jsonify({"message": "Accepts only text in content-type json."}), 400
     content = request.json
-    # get text content to upload and create s3 filepath
     document_text = content.get("text", None)
-
-    s3_resource = boto3.resource('s3')
-    object = s3_resource.Object('lawing-documents-dev', filename)
-    # save new version on s3 as binary
     try:
-        object.put(Body=bytearray(document_text, encoding='utf8'))
-    except ClientError as e:
-        print(f"error uploading to s3 {e}")
+        # create new version in 'versions' array before uploading the text
+        create_new_version_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+
+    try:
+        upload_document_text_controller(document_id, document_text)
+    except Exception:
+        abort(404, "Error uploading to s3")
 
     return jsonify(
         {
-            "text": document_text
+            "uploaded_text": document_text
         }
     )
 
@@ -153,6 +148,7 @@ def create(current_user):
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
+    title = content.get("title", None)
 
     if not document_template_id or not variables:
         error_msg = "Value is missing. Needs questions and document model id"
@@ -163,6 +159,7 @@ def create(current_user):
         current_user["id"],
         variables,
         document_template_id,
+        title
     )
 
     return DocumentSerializer().dump(document)

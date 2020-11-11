@@ -29,9 +29,8 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, company_id, variables, document_template_id):
+def create_document_controller(user_id, company_id, variables, document_template_id, title):
     document_template = DocumentTemplate.query.get(document_template_id)
-    title = f"{document_template.name}-{uuid.uuid1()}"
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
