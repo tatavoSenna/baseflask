@@ -4,7 +4,13 @@ from flask import jsonify
 from unittest.mock import patch
 
 from app.models.documents import Document, DocumentTemplate
-from app.documents.controllers import get_document_controller, create_document_controller
+from app.documents.controllers import(
+    get_document_controller,
+    create_document_controller,
+    download_document_text_controller,
+    upload_document_text_controller
+)
+
 
 def test_retrieve_document():
     company_id = 134
@@ -50,15 +56,16 @@ def test_retrieve_document_jsonb_fields():
 def test_create_document(create_remote_document_mock):
     company = factories.CompanyFactory()
     user = factories.UserFactory(
-        company = company
+        company=company
     )
     document_template = factories.DocumentTemplateFactory(
-        company = company
+        company=company
     )
 
     variables = {}
 
-    assert DocumentTemplate.query.get(document_template.id).company_id == company.id
+    assert DocumentTemplate.query.get(
+        document_template.id).company_id == company.id
 
     document = create_document_controller(
         user.id,
@@ -73,4 +80,28 @@ def test_create_document(create_remote_document_mock):
 
     create_remote_document_mock.assert_called_once_with(
         document
+    )
+
+
+@patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
+def test_download_document_text(download_document_text_mock):
+
+    document = factories.DocumentFactory(id=1)
+
+    textfile = download_document_text_controller(document.id)
+    download_document_text_mock.assert_called_once_with(
+        document
+    )
+
+
+@patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+def test_upload_document_text(upload_document_text_mock):
+
+    document = factories.DocumentFactory(id=1)
+
+    document_text = "test text"
+    upload_document_text_controller(document.id, document_text)
+    upload_document_text_mock.assert_called_once_with(
+        document,
+        bytearray(document_text, encoding='utf8')
     )

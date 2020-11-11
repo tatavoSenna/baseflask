@@ -13,9 +13,9 @@ class RemoteDocument:
 
     def create(self, document):
         text_template = self.download_text_from_template(document)
-        filled_text = self.fill_text_with_variables(text_template, document.variables)
+        filled_text = self.fill_text_with_variables(
+            text_template, document.variables)
         self.upload_filled_text_to_documents(document, filled_text)
-
 
     def upload_filled_text_to_documents(self, document, filled_text):
         remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[-1]}.txt'
@@ -27,6 +27,17 @@ class RemoteDocument:
             remote_path
         )
 
+    def download_text_from_documents(self, document):
+        text_file_io = io.BytesIO()
+        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[-1]}.txt'
+
+        self.s3_client.download_fileobj(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path,
+            text_file_io)
+        text_file = text_file_io.getvalue()
+
+        return text_file
 
     def download_text_from_template(self, document):
         text_file_io = io.BytesIO()
@@ -40,9 +51,8 @@ class RemoteDocument:
 
         return text_file
 
-
     def fill_text_with_variables(self, text_template, variables):
         jinja_template = jinja_env.from_string(text_template.decode())
         filled_text = jinja_template.render(variables).encode()
-        
+
         return filled_text
