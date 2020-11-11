@@ -14,6 +14,7 @@ from app.documents.controllers import(
 )
 
 
+
 def test_retrieve_document():
     company_id = 134
     user_id = 115
@@ -63,6 +64,7 @@ def test_create_document(create_remote_document_mock):
     document_template = factories.DocumentTemplateFactory(
         company=company
     )
+    title = "default title"
 
     variables = {}
 
@@ -73,12 +75,14 @@ def test_create_document(create_remote_document_mock):
         user.id,
         user.company_id,
         variables,
-        document_template.id
+        document_template.id,
+        title
     )
 
     assert document.user_id == user.id
     assert document.company_id == company.id
     assert document.document_template_id == document_template.id
+    assert document.title == title
 
     create_remote_document_mock.assert_called_once_with(
         document
