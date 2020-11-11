@@ -13,7 +13,7 @@ import copy
 
 
 def get_document_template_list_controller(company_id):
-   
+
     document_templates = DocumentTemplate.query.filter_by(
         company_id=company_id
     ).all()
@@ -21,12 +21,13 @@ def get_document_template_list_controller(company_id):
 
 
 def get_document_template_details_controller(company_id, template_id):
-    
+
     document_template = DocumentTemplate.query.filter_by(
         company_id=company_id, id=template_id
     ).first()
-  
+
     return document_template
+
 
 def create_document_controller(user_id, company_id, variables, document_template_id):
     document_template = DocumentTemplate.query.get(document_template_id)
@@ -103,19 +104,34 @@ def find_signer_by_id(signer_id, signers, default=None):
 
 def get_document_version_controller(document_id):
     document = get_document_controller(document_id)
-    #take size of array with will be version + 1
+    # take size of array with will be version + 1
     versions = document.versions
-    current_version = int(versions[len(versions) - 1])  
+    current_version = int(versions[len(versions) - 1])
     return current_version
+
 
 def create_new_version_controller(document_id):
     document = Document.query.filter_by(id=document_id).first()
     versions = document.versions
     current_version = int(versions[len(versions) - 1])
     new_version = current_version + 1
-    #need to make a copy to track changes to JSON, otherwise the changes are not updated
+    # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
     document.versions.append(str(new_version))
     db.session.add(document)
     db.session.commit()
-    return new_version
+
+
+def download_document_text_controller(document_id):
+    document = get_document_controller(document_id)
+    remote_document = RemoteDocument()
+    textfile = remote_document.download_text_from_documents(document)
+    return textfile
+
+
+def upload_document_text_controller(document_id, document_text):
+    document = get_document_controller(document_id)
+    # convert from string to bytes object
+    document_text = bytearray(document_text, encoding='utf8')
+    remote_document = RemoteDocument()
+    remote_document.upload_filled_text_to_documents(document, document_text)
