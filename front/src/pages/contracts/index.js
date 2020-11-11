@@ -32,7 +32,11 @@ const Contracts = () => {
 		dispatch(setShowModal(true))
 	}
 
-	const handleToGo = () => history.push('/documentDetails')
+	const handleToGo = (record) =>
+		history.push({
+			pathname: `/documentDetails`,
+			state: { id: record.id },
+		})
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search }))

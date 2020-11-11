@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Radio, Typography } from 'antd'
+import { array } from 'prop-types'
 
 const { Title, Text } = Typography
 
-const Tabs = () => {
+const Tabs = ({ signers }) => {
 	const [value, setValue] = useState('1')
 
 	const tab = (option) => {
@@ -42,20 +43,16 @@ const Tabs = () => {
 		</>
 	)
 
-	const assign = () => (
-		<>
-			<Title level={4}>CONTRATANTE</Title>
-			<Text>Nome</Text>
-			<Text>Leon Hatori</Text>
-			<Text>E-mail</Text>
-			<Text>leon@lawing.com.br</Text>
-			<Title level={4}>CONTRATADA</Title>
-			<Text>Nome</Text>
-			<Text>João Carlos Silva</Text>
-			<Text>E-mail</Text>
-			<Text>joao.silva@contratada.com.br</Text>
-		</>
-	)
+	const assign = () =>
+		signers.map((signer, index) => (
+			<div style={{ display: 'flex', flexDirection: 'column' }} key={index}>
+				<Title level={4}></Title>
+				<Text>Nome</Text>
+				<Text>{signer.name}</Text>
+				<Text>E-mail</Text>
+				<Text>{signer.email}</Text>
+			</div>
+		))
 
 	return (
 		<div
@@ -90,6 +87,8 @@ const Tabs = () => {
 	)
 }
 
-Tabs.propTypes = {}
+Tabs.propTypes = {
+	signers: array,
+}
 
 export default Tabs
