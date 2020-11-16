@@ -28,6 +28,24 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
+		previousStep: (state) => extend(state),
+		previousStepSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+			}),
+		previousStepFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+			}),
+		nextStep: (state) => extend(state),
+		nextStepSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+			}),
+		nextStepFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+			}),
 	},
 })
 
@@ -35,6 +53,12 @@ export const {
 	getDocumentDetail,
 	getDocumentDetailSuccess,
 	getDocumentDetailFailure,
+	previousStep,
+	previousStepSuccess,
+	previousStepFailure,
+	nextStep,
+	nextStepSuccess,
+	nextStepFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

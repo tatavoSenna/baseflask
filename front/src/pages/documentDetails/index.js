@@ -7,7 +7,11 @@ import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
 import BreadCrumb from '~/components/breadCrumb'
 
-import { getDocumentDetail } from '~/states/modules/documentDetail'
+import {
+	getDocumentDetail,
+	previousStep,
+	nextStep,
+} from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
 	const dispatch = useDispatch()
@@ -16,6 +20,9 @@ const DocumentDetails = () => {
 	)
 	const { id } = useHistory().location.state
 
+	const getPreviousStep = () => dispatch(previousStep({ id }))
+	const getNextStep = () => dispatch(nextStep({ id }))
+
 	useEffect(() => {
 		dispatch(getDocumentDetail({ id }))
 	}, [dispatch, id])
@@ -23,7 +30,10 @@ const DocumentDetails = () => {
 	return (
 		<Layout style={{ padding: '0 24px 24px' }}>
 			<PageHeader>
-				<BreadCrumb parent="Contratos" current="Detalhe" />
+				<BreadCrumb
+					parent="Contratos"
+					current={`${Object.keys(data).length > 0 ? data.title : 'Detalhe'}`}
+				/>
 			</PageHeader>
 			<Spin spinning={loading} />
 			{Object.keys(data).length > 0 && (
@@ -36,10 +46,11 @@ const DocumentDetails = () => {
 					<div>
 						<Steps
 							current={data.workflow.current}
-							title="Evolução do Documento"
 							steps={data.workflow.steps}
+							onClickPrevious={getPreviousStep}
+							onClickNext={getNextStep}
 						/>
-						<Editor title={data.title} text={text} />
+						<Editor text={text} />
 					</div>
 					<Tabs signers={data.signers} />
 				</div>

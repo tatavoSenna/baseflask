@@ -1,11 +1,15 @@
 import React from 'react'
-import { Steps as StepsAntd, Typography } from 'antd'
-import { string, shape, arrayOf, number } from 'prop-types'
+import { Steps as StepsAntd, Form, Button } from 'antd'
+import { string, shape, arrayOf, number, func } from 'prop-types'
 
+import styles from './index.module.scss'
 const { Step } = StepsAntd
-const { Title } = Typography
 
-const Steps = ({ title, steps, current }) => {
+const tailLayout = {
+	wrapperCol: { span: 24 },
+}
+
+const Steps = ({ steps, current, onClickPrevious, onClickNext }) => {
 	return (
 		<div
 			style={{
@@ -16,14 +20,13 @@ const Steps = ({ title, steps, current }) => {
 				minHeight: 200,
 				background: '#fff',
 			}}>
-			<Title
-				level={4}
+			<StepsAntd
 				style={{
+					marginTop: '5%',
 					marginBottom: '5%',
-				}}>
-				{title}
-			</Title>
-			<StepsAntd current={current} labelPlacement="vertical">
+				}}
+				current={current}
+				labelPlacement="vertical">
 				{steps.map((item, index) => (
 					<Step
 						key={index}
@@ -33,12 +36,33 @@ const Steps = ({ title, steps, current }) => {
 					/>
 				))}
 			</StepsAntd>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'flex-end',
+				}}>
+				<Form.Item {...tailLayout}>
+					{current !== 0 && (
+						<Button
+							type="default"
+							htmlType="button"
+							className={styles.button}
+							onClick={onClickPrevious}>
+							Anterior
+						</Button>
+					)}
+					{current !== steps.length - 1 && (
+						<Button type="primary" htmlType="button" onClick={onClickNext}>
+							Próximo
+						</Button>
+					)}
+				</Form.Item>
+			</div>
 		</div>
 	)
 }
 
 Steps.propTypes = {
-	title: string.isRequired,
 	steps: arrayOf(
 		shape({
 			title: string.isRequired,
@@ -47,6 +71,8 @@ Steps.propTypes = {
 		})
 	).isRequired,
 	current: number.isRequired,
+	onClickPrevious: func.isRequired,
+	onClickNext: func.isRequired,
 }
 
 export default Steps
