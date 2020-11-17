@@ -43,7 +43,6 @@ from .controllers import (
     create_document_controller,
     create_new_version_controller,
     get_document_controller,
-    get_document_version_controller,
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
@@ -119,25 +118,29 @@ def add_document_text(current_user, document_id):
         return jsonify({"message": "Accepts only text in content-type json."}), 400
     content = request.json
     document_text = content.get("text", None)
+    description = content.get("description", None)
     try:
         # create new version in 'versions' array before uploading the text
-        create_new_version_controller(document_id)
+        create_new_version_controller(
+            document_id, description, current_user["id"])
     except Exception:
         abort(404, "Document not Found")
 
     try:
         upload_document_text_controller(document_id, document_text)
+        document = get_document_controller(document_id)
     except Exception:
         abort(404, "Error uploading to s3")
 
     return jsonify(
         {
-            "uploaded_text": document_text
+            "uploaded_text": document_text,
+            "updated_versions_list": document.versions
         }
     )
 
 
-@documents_bp.route("", methods=["POST"])
+@documents_bp.route("/", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
@@ -153,7 +156,6 @@ def create(current_user):
     if not document_template_id or not variables:
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
-
     document = create_document_controller(
         current_user["company_id"],
         current_user["id"],

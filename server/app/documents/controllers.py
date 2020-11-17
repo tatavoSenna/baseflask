@@ -34,7 +34,12 @@ def create_document_controller(user_id, company_id, variables, document_template
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
-
+    current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
+    version = [{"description": "Version 0",
+                "user": user_id,
+                "created_at": current_date,
+                "id": "0"
+                }]
     document = Document(
         user_id=user_id,
         company_id=company_id,
@@ -42,6 +47,7 @@ def create_document_controller(user_id, company_id, variables, document_template
         workflow=document_template.workflow,
         signers=document_template.signers,
         variables=variables,
+        versions=version,
         title=title,
         document_template_id=document_template_id,
     )
@@ -101,22 +107,20 @@ def find_signer_by_id(signer_id, signers, default=None):
     return default
 
 
-def get_document_version_controller(document_id):
-    document = get_document_controller(document_id)
-    # take size of array with will be version + 1
-    versions = document.versions
-    current_version = int(versions[len(versions) - 1])
-    return current_version
-
-
-def create_new_version_controller(document_id):
+def create_new_version_controller(document_id, description, user_id):
     document = Document.query.filter_by(id=document_id).first()
     versions = document.versions
-    current_version = int(versions[len(versions) - 1])
+    current_version = int(versions[-1]["id"])
     new_version = current_version + 1
+    current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
+    version = {"description": description,
+               "user": user_id,
+               "created_at": current_date,
+               "id": str(new_version)}
+
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
-    document.versions.append(str(new_version))
+    document.versions.append(version)
     db.session.add(document)
     db.session.commit()
 
