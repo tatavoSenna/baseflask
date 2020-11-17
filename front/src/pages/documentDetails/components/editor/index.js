@@ -4,9 +4,8 @@ import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import { string } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
-import { Typography } from 'antd'
 
-const Editor = ({ text, title }) => {
+const Editor = ({ text }) => {
 	return (
 		<div
 			style={{
@@ -18,15 +17,6 @@ const Editor = ({ text, title }) => {
 					className={classNames(styles.documentEditorToolbar)}></div>
 				<div className={classNames(styles.documentEditorEditableContainer)}>
 					<div className={classNames(styles.ckEditorEditable)}>
-						<Typography
-							style={{
-								textAlign: 'center',
-								fontSize: 20,
-								color: 'black',
-								marginBottom: 50,
-							}}>
-							{title}
-						</Typography>
 						<CKEditor
 							onInit={(editor) => {
 								const toolbarContainer = document.querySelector(
@@ -48,7 +38,6 @@ const Editor = ({ text, title }) => {
 
 Editor.propTypes = {
 	text: string,
-	title: string,
 }
 
 export default Editor
