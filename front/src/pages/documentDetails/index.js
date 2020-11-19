@@ -52,7 +52,7 @@ const DocumentDetails = () => {
 						/>
 						<Editor text={text} />
 					</div>
-					<Tabs signers={data.signers} />
+					<Tabs signers={data.signers} infos={data.variables} />
 				</div>
 			)}
 		</Layout>

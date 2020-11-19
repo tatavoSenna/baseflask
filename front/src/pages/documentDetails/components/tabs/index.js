@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Radio, Typography } from 'antd'
 import { array } from 'prop-types'
+import { ContainerTabs, ContainerInfo } from './styles'
 
 const { Title, Text } = Typography
 
-const Tabs = ({ signers }) => {
+const Tabs = ({ signers, infos }) => {
 	const [value, setValue] = useState('1')
 
 	const tab = (option) => {
@@ -17,24 +18,32 @@ const Tabs = ({ signers }) => {
 		}
 	}
 
-	const info = () => (
-		<>
-			<Title level={4}>CONTRATADA</Title>
-			<Text>Razão Social</Text>
-			<Text>Petardo Audio Visual LTDA</Text>
-			<Text>CNPJ</Text>
-			<Text>02.616.112/0001-8</Text>
-			<Text>Endereço</Text>
-			<Text>R. Eugênio Jardim, 33 sala 204 Rio de Janeiro - RJ 22098-033</Text>
-			<Title level={4}>REPRESENTANTE</Title>
-			<Text>Razão Social</Text>
-			<Text>Petardo Audio Visual LTDA</Text>
-			<Text>CNP</Text>
-			<Text>02.616.112/0001-8</Text>
-			<Text>Endereço</Text>
-			<Text>R. Eugênio Jardim, 33 sala 204 Rio de Janeiro - RJ 22098-033</Text>
-		</>
-	)
+	const info = () =>
+		infos.map((item, index) => {
+			return (
+				<ContainerTabs key={index}>
+					<Title key={index} level={4} style={{ marginTop: 20, fontSize: 18 }}>
+						{item.title}
+					</Title>
+					{item.fields.map((item, index) => {
+						return (
+							<ContainerInfo key={index}>
+								<Text
+									style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+									key={item.label + index}>
+									{item.label}:
+								</Text>
+								<Text
+									style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+									key={item.value + index}>
+									{item.value}
+								</Text>
+							</ContainerInfo>
+						)
+					})}
+				</ContainerTabs>
+			)
+		})
 
 	const version = () => (
 		<>
@@ -45,13 +54,13 @@ const Tabs = ({ signers }) => {
 
 	const assign = () =>
 		signers.map((signer, index) => (
-			<div style={{ display: 'flex', flexDirection: 'column' }} key={index}>
+			<ContainerTabs key={index}>
 				<Title level={4}></Title>
 				<Text>Nome</Text>
 				<Text>{signer.name}</Text>
 				<Text>E-mail</Text>
 				<Text>{signer.email}</Text>
-			</div>
+			</ContainerTabs>
 		))
 
 	return (
@@ -89,6 +98,7 @@ const Tabs = ({ signers }) => {
 
 Tabs.propTypes = {
 	signers: array,
+	infos: array,
 }
 
 export default Tabs
