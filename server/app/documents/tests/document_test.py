@@ -14,7 +14,9 @@ from app.documents.controllers import(
     next_status_controller,
     previous_status_controller
 )
-
+from app.serializers.document_serializers import (
+    DocumentListSerializer
+)
 
 def test_retrieve_document():
     company_id = 134
@@ -58,6 +60,38 @@ def test_retrieve_document_jsonb_fields():
     assert retrieved_document.versions == versions
     assert retrieved_document.signers == signers
     assert retrieved_document.current_step == current_step
+
+
+def test_document_list_serializer():
+    company_id = 134
+    user_id = 115
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+            },
+            "3485": {
+                "next_node": None,
+            },
+            "5521": {
+                "next_node": "3485",
+                "title": "Passo atual"
+            }
+        },
+        "current_node": "5521"
+    }
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(
+        id=user_id, name='Pedro', surname='Costa', email='testemail@gmail.com', company=company)
+    document = factories.DocumentFactory(company=company, user=user, workflow=workflow)
+    query = (
+        Document.query.filter_by(company_id=company_id).first()
+    )
+    test_info = DocumentListSerializer(many=False).dump(query)
+    assert test_info["user"]["name"] == "Pedro"
+    assert test_info["user"]["surname"] == "Costa"
+    assert test_info["user"]["email"] == "testemail@gmail.com"
+    assert test_info["status"] == "Passo atual"
 
 
 @patch('app.documents.controllers.RemoteDocument.create')

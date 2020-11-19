@@ -17,6 +17,7 @@ class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
         )
         model = DocumentTemplate
 
+
 class DocumentTemplateListSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         exclude = (
@@ -40,6 +41,7 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
         "surname": obj.user.surname,
         "email": obj.user.email
     })
+    status = ma.Method("get_status")
 
     class Meta:
         model = Document
@@ -57,6 +59,16 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
             'company',
         )
 
+    def get_status(self, obj):
+        if obj.workflow:
+            current_node = obj.workflow["current_node"]
+            nodes = obj.workflow.get('nodes', None)
+            if nodes:
+                current_status = nodes.get(
+                    current_node, {"title": "-"}).get('title', {"title": "-"})
+
+            return current_status
+
 
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     template = ma.Nested(DocumentTemplateSerializer)
@@ -70,7 +82,7 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
         model = Document
         include_fk = True
         include_relationships = True
-        exclude = ('form','template')
+        exclude = ('form', 'template')
 
     def get_workflow(self, obj):
         if obj.workflow:
@@ -127,6 +139,7 @@ def order_nodes(nodes):
     else:
         return
 
+
 def generate_steps(obj_workflow, ordered_nodes):
     steps = []
     for node in ordered_nodes:
@@ -148,7 +161,8 @@ def map_variables_to_form(variables, form):
         })
         for question in group['fields']:
             filled_form[-1]["fields"].append({
-                "label": question['value'], ### MUDAR PARA question['label'] após refatoração do form
+                # MUDAR PARA question['label'] após refatoração do form
+                "label": question['value'],
                 "variable": question['variable'],
                 "value": variables[question['variable']]
             })
