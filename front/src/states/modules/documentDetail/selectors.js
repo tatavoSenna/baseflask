@@ -9,3 +9,16 @@ export const selectAllDocumentDetail = (payload) => {
 		},
 	}
 }
+
+export const selectAllDocumentVersions = (payload) => {
+	return {
+		...payload.document,
+		workflow: {
+			...payload.document.workflow,
+			current: payload.document.workflow.steps
+				.map((item) => item.step)
+				.indexOf(payload.document.workflow.current_step),
+		},
+		versions: payload.versions,
+	}
+}

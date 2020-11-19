@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 import { Radio, Typography } from 'antd'
 import { array } from 'prop-types'
 import { ContainerTabs, ContainerInfo } from './styles'
+import * as moment from 'moment'
+import 'moment/locale/pt-br'
+
+moment.locale('pt-br')
 
 const { Title, Text } = Typography
 
-const Tabs = ({ signers, infos }) => {
+const Tabs = ({ signers, versions, infos }) => {
 	const [value, setValue] = useState('1')
 
 	const tab = (option) => {
@@ -45,12 +49,15 @@ const Tabs = ({ signers, infos }) => {
 			)
 		})
 
-	const version = () => (
-		<>
-			<Text>Versão 1</Text>
-			<Text>Luiz Senna em 13/09/2020</Text>
-		</>
-	)
+	const version = () =>
+		versions.map((item, index) => (
+			<div
+				style={{ display: 'flex', flexDirection: 'column', marginBottom: 10 }}
+				key={index}>
+				<Text>{item.description}</Text>
+				<Text>{moment(item.created_at).fromNow()}</Text>
+			</div>
+		))
 
 	const assign = () =>
 		signers.map((signer, index) => (
@@ -98,6 +105,7 @@ const Tabs = ({ signers, infos }) => {
 
 Tabs.propTypes = {
 	signers: array,
+	versions: array,
 	infos: array,
 }
 

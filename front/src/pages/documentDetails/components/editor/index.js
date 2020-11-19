@@ -1,11 +1,12 @@
 import React from 'react'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
-import { string } from 'prop-types'
+import { string, func } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
+import { Form, Button } from 'antd'
 
-const Editor = ({ text }) => {
+const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText }) => {
 	return (
 		<div
 			style={{
@@ -26,18 +27,38 @@ const Editor = ({ text }) => {
 							}}
 							editor={DecoupledEditor}
 							config={{}}
-							onChange={(event, editor) => console.log({ event, editor })}
+							onChange={(event, editor) => onUpdateText(editor.getData())}
 							data={text}
 						/>
 					</div>
 				</div>
 			</div>
+			{text !== textUpdate && (
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'flex-end',
+						paddingTop: 20,
+					}}>
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="button"
+							onClick={() => onClickUpdate(textUpdate)}>
+							Criar versão
+						</Button>
+					</Form.Item>
+				</div>
+			)}
 		</div>
 	)
 }
 
 Editor.propTypes = {
 	text: string,
+	textUpdate: string,
+	onClickUpdate: func,
+	onUpdateText: func,
 }
 
 export default Editor
