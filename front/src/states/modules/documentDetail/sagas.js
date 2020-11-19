@@ -1,10 +1,17 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects'
-
+import { all, call, put, takeEvery, select } from 'redux-saga/effects'
+import {
+	errorMessage,
+	successMessage,
+	loadingMessage,
+} from '~/services/messager'
 import api from '~/services/api'
 import {
 	getDocumentDetail,
 	getDocumentDetailSuccess,
 	getDocumentDetailFailure,
+	newVersion,
+	newVersionSuccess,
+	newVersionFailure,
 	previousStep,
 	previousStepSuccess,
 	previousStepFailure,
@@ -15,6 +22,7 @@ import {
 
 export default function* rootSaga() {
 	yield takeEvery(getDocumentDetail, getDocumentDetailSaga)
+	yield takeEvery(newVersion, newVersionSaga)
 	yield takeEvery(previousStep, previousStepSaga)
 	yield takeEvery(nextStep, nextStepSaga)
 }
@@ -29,6 +37,38 @@ function* getDocumentDetailSaga({ payload = {} }) {
 		yield put(getDocumentDetailSuccess({ ...detail.data, ...detailText.data }))
 	} catch (error) {
 		yield put(getDocumentDetailFailure(error))
+	}
+}
+
+function* newVersionSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Criando nova versão do documento...',
+		updateKey: 'createVersion',
+	})
+	const { id, description, text } = payload
+	const { documentDetail } = yield select()
+	try {
+		const response = yield call(api.post, `/documents/${id}/text`, {
+			text,
+			description,
+		})
+		successMessage({
+			content: 'Versão criada com sucesso',
+			updateKey: 'createVersion',
+		})
+		yield put(
+			newVersionSuccess({
+				text: response.data.uploaded_text,
+				versions: response.data.updated_versions_list,
+				document: documentDetail.data,
+			})
+		)
+	} catch (error) {
+		errorMessage({
+			content: 'Criação de nova versão falhou',
+			updateKey: 'createVersion',
+		})
+		yield put(newVersionFailure(error))
 	}
 }
 
