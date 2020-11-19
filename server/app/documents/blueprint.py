@@ -137,7 +137,7 @@ def add_document_text(current_user, document_id):
     )
 
 
-@documents_bp.route("", methods=["POST"])
+@documents_bp.route("/", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
