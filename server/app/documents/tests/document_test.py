@@ -18,6 +18,7 @@ from app.serializers.document_serializers import (
     DocumentListSerializer
 )
 
+
 def test_retrieve_document():
     company_id = 134
     user_id = 115
@@ -35,7 +36,7 @@ def test_retrieve_document_jsonb_fields():
     workflow = [{"workflow": "step 1 step 2"}]
     variables = [{"variable1": 5121}]
     versions = [{"description": "Version 0",
-                 "user": user_id,
+                 "email": "teste@gmail.com",
                  "created_at": "2020-10-3 21: 00: 00",
                  "id": "0"
                  }]
@@ -83,7 +84,8 @@ def test_document_list_serializer():
     company = factories.CompanyFactory(id=company_id)
     user = factories.UserFactory(
         id=user_id, name='Pedro', surname='Costa', email='testemail@gmail.com', company=company)
-    document = factories.DocumentFactory(company=company, user=user, workflow=workflow)
+    document = factories.DocumentFactory(
+        company=company, user=user, workflow=workflow)
     query = (
         Document.query.filter_by(company_id=company_id).first()
     )
@@ -98,7 +100,7 @@ def test_document_list_serializer():
 def test_create_document(create_remote_document_mock):
     company = factories.CompanyFactory()
     user = factories.UserFactory(
-        company=company
+        company=company, email="testemail@gmail.com"
     )
     document_template = factories.DocumentTemplateFactory(
         company=company
@@ -112,6 +114,7 @@ def test_create_document(create_remote_document_mock):
 
     document = create_document_controller(
         user.id,
+        user.email,
         user.company_id,
         variables,
         document_template.id,
@@ -131,27 +134,28 @@ def test_create_document(create_remote_document_mock):
 def test_create_new_document_version():
     company_id = 134
     user_id = 115
+    user_email = "teste@gmail.com"
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     versions = [{"description": "Version 0",
-                 "user": user_id,
+                 "email": "aaa@gmail.com",
                  "created_at": current_date,
                  "id": "0"
                  }]
 
     company = factories.CompanyFactory(id=company_id)
-    user = factories.UserFactory(id=user_id, company=company)
+    user = factories.UserFactory(id=user_id, email=user_email, company=company)
     document = factories.DocumentFactory(
         company=company,
         user=user,
         versions=versions,
     )
 
-    create_new_version_controller(document.id, "teste", user.id)
+    create_new_version_controller(document.id, "teste", user.email)
     retrieved_document = get_document_controller(document.id)
     new_version = retrieved_document.versions[-1]
 
     assert new_version["description"] == "teste"
-    assert new_version["user"] == user.id
+    assert new_version["email"] == user_email
     assert new_version["created_at"] == current_date
     assert new_version["id"] == "1"
 
@@ -244,7 +248,7 @@ def test_change_document_status_previous():
 
     variables = [{"variable1": 5121}]
     versions = [{"description": "Version 0",
-                 "user": user_id,
+                 "email": "teste@gmail.com",
                  "created_at": "2020-10-3 21: 00: 00",
                  "id": "0"
                  }]
