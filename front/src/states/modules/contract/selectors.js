@@ -14,6 +14,7 @@ export const selectAllContracts = (payload) =>
 		author: `${contract.user.name} ${contract.user.surname}`,
 		authorEmail: contract.user.email,
 		documentId: contract.document_model_id,
+		status: contract.status,
 		createdAt: contract.created_at
 			? moment(contract.created_at).fromNow()
 			: null,
