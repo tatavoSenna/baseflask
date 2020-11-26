@@ -48,6 +48,9 @@ from .controllers import (
     next_status_controller,
     previous_status_controller
 )
+from app.docusign.controllers import (
+    sign_document_controller
+)
 
 documents_bp = Blueprint("documents", __name__)
 
@@ -250,6 +253,33 @@ def document(current_user, documentTemplate_id):
         current_user["company_id"], documentTemplate_id)
 
     return jsonify({"DocumentTemplate": DocumentTemplateSerializer().dump(document_template)})
+
+
+@documents_bp.route('/<int:document_id>/sign')
+@aws_auth.authentication_required
+@get_local_user
+def request_signatures(current_user, document_id):
+
+    if not document_id:
+        abort(400, 'Missing document id')
+
+    try:
+        textfile = download_document_text_controller(document_id)
+        current_document = get_document_controller(document_id)
+    except Exception:
+        abort(404, 'Document not Found')
+
+    account_ID = 'b3db6c1c-db88-4fcd-a929-a9641a56ea8d'
+    token = get_token(current_user)
+    if token is None:
+        abort(400, "Missing DocuSign user token")
+
+    try:
+        sign_document_controller(current_document, textfile, account_ID, token)
+    except Exception:
+        abort(404, 'Error accessing docusign api.')
+
+    return jsonify(DocumentSerializer().dump(current_document))
 
 
 @documents_bp.route("/<int:document_id>/signers", methods=["PATCH"])
