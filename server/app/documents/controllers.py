@@ -29,14 +29,14 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, company_id, variables, document_template_id, title):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
-                "user": user_id,
+                "email": user_email,
                 "created_at": current_date,
                 "id": "0"
                 }]
@@ -107,14 +107,14 @@ def find_signer_by_id(signer_id, signers, default=None):
     return default
 
 
-def create_new_version_controller(document_id, description, user_id):
+def create_new_version_controller(document_id, description, user_email):
     document = Document.query.filter_by(id=document_id).first()
     versions = document.versions
     current_version = int(versions[-1]["id"])
     new_version = current_version + 1
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = {"description": description,
-               "user": user_id,
+               "email": user_email,
                "created_at": current_date,
                "id": str(new_version)}
 

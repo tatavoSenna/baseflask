@@ -122,7 +122,7 @@ def add_document_text(current_user, document_id):
     try:
         # create new version in 'versions' array before uploading the text
         create_new_version_controller(
-            document_id, description, current_user["id"])
+            document_id, description, current_user["email"])
     except Exception:
         abort(404, "Document not Found")
 
@@ -157,8 +157,9 @@ def create(current_user):
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
     document = create_document_controller(
-        current_user["company_id"],
         current_user["id"],
+        current_user["email"],
+        current_user["company_id"],
         variables,
         document_template_id,
         title
