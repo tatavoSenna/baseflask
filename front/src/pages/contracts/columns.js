@@ -6,17 +6,17 @@ export const getColumns = () => [
 	},
 	{
 		title: 'Criado por',
-		dataIndex: 'author',
-		key: 'author',
+		dataIndex: 'authorEmail',
+		key: 'authorEmail',
+	},
+	{
+		title: 'Status',
+		dataIndex: 'status',
+		key: 'status',
 	},
 	{
 		title: 'Data Criação',
 		dataIndex: 'createdAt',
 		key: 'createdAt',
-	},
-	{
-		title: 'Status',
-		dataIndex: 'address',
-		key: 'address',
 	},
 ]
