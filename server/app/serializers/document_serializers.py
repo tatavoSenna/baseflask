@@ -108,12 +108,14 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     def get_signers(self, obj):
         signers_list = []
         if obj.signers:
-            for signer in obj.signers:
-                signers_list.append({
-                    "id": signer["id"],
-                    "name": signer["name"],
-                    "email": signer["email"]
-                })
+            for signers_info in obj.signers:
+                for signer_data in signers_info.values():
+                    for signer in signer_data:
+                        signers_list.append({
+                            "id": signer["id"],
+                            "name": signer["name"],
+                            "email": signer["email"]
+                        })
         return signers_list
 
 
