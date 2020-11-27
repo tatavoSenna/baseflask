@@ -79,6 +79,13 @@ def get_document_controller(document_id):
     return document
 
 
+def get_document_version_controller(document_id):
+    document = get_document_controller(document_id)
+    # take size of array with will be version + 1
+    current_version = document.versions[-1]["id"]
+    return current_version
+
+
 def edit_signers_controller(document_id, patched_signers):
     document = Document.query.get(document_id)
     document.signers = copy.deepcopy(document.signers)
@@ -125,10 +132,11 @@ def create_new_version_controller(document_id, description, user_email):
     db.session.commit()
 
 
-def download_document_text_controller(document_id):
+def download_document_text_controller(document_id, version_id):
     document = get_document_controller(document_id)
     remote_document = RemoteDocument()
-    textfile = remote_document.download_text_from_documents(document)
+    textfile = remote_document.download_text_from_documents(
+        document, version_id)
     return textfile
 
 

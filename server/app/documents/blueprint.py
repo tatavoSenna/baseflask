@@ -43,6 +43,7 @@ from .controllers import (
     create_document_controller,
     create_new_version_controller,
     get_document_controller,
+    get_document_version_controller,
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
@@ -102,8 +103,11 @@ def get_document_list(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def get_document_text(current_user, document_id):
+    version_id = request.args.get('version')
+    if not version_id:
+        version_id = get_document_version_controller(document_id)
     try:
-        textfile = download_document_text_controller(document_id)
+        textfile = download_document_text_controller(document_id, version_id)
     except Exception:
         abort(404, "Document not Found")
     return jsonify(
@@ -264,7 +268,8 @@ def request_signatures(current_user, document_id):
         abort(400, 'Missing document id')
 
     try:
-        textfile = download_document_text_controller(document_id)
+        version_id = get_document_version_controller(document_id)
+        textfile = download_document_text_controller(document_id, version_id)
         current_document = get_document_controller(document_id)
     except Exception:
         abort(404, 'Document not Found')

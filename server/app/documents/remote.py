@@ -27,9 +27,9 @@ class RemoteDocument:
             remote_path
         )
 
-    def download_text_from_documents(self, document):
+    def download_text_from_documents(self, document, version_id):
         text_file_io = io.BytesIO()
-        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[-1]["id"]}.txt'
+        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.txt'
 
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
