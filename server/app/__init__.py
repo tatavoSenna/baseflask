@@ -52,6 +52,10 @@ def create_app():
 
     app.register_blueprint(groups_bp, url_prefix="/groups")
 
+    from .company.blueprint import company_bp
+
+    app.register_blueprint(company_bp, url_prefix="/company")
+
     @app.route("/", methods=["GET"])
     def welcome():
         return "Welcome do Doing.law API"

@@ -25,7 +25,7 @@ class CompanyFactory(BaseFactory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("company")
-
+    
 
 class UserFactory(BaseFactory):
     class Meta:
