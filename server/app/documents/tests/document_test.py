@@ -162,12 +162,17 @@ def test_create_new_document_version():
 
 @patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
 def test_download_document_text(download_document_text_mock):
+    versions = [{"description": "Version 0",
+                 "email": "aaa@gmail.com",
+                 "created_at": "test",
+                 "id": "0"
+                 }]
+    document = factories.DocumentFactory(id=1, versions=versions)
+    version_id = document.versions[-1]["id"]
 
-    document = factories.DocumentFactory(id=1)
-
-    textfile = download_document_text_controller(document.id)
+    textfile = download_document_text_controller(document.id, version_id)
     download_document_text_mock.assert_called_once_with(
-        document
+        document, version_id
     )
 
 
