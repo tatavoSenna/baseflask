@@ -9,6 +9,7 @@ from app.documents.controllers import(
     get_document_controller,
     create_document_controller,
     create_new_version_controller,
+    save_signers_controller,
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
@@ -96,7 +97,49 @@ def test_document_list_serializer():
     assert test_info["status"] == "Passo atual"
 
 
-@patch('app.documents.controllers.RemoteDocument.create')
+def test_update_document_signers():
+    document_id = 134
+    signers_empty = [
+        {
+            "title": "Empresa Contratante Representante 1",
+            "fields": [
+                {
+                    "label": "",
+                    "variable": "CONTRATANTE_ASSINANTE_1_NOME",
+                    "type": "text",
+                                "value": "Nome"
+                },
+                {
+                    "label": "",
+                    "variable": "CONTRATANTE_ASSINANTE_1_EMAIL",
+                    "type": "email",
+                                "value": "Email"
+                }
+            ],
+            "anchor": [
+                {
+                    "anchor_string": "CONTRATANTE",
+                    "name_variable": "concessionaries",
+                    "anchor_x_offset": "-0.5",
+                    "anchor_y_offset": "-0.4"
+                }
+            ]
+        }
+    ]
+
+    signers_info = {"CONTRATANTE_ASSINANTE_1_NOME": "Luiz Senna",
+                    "CONTRATANTE_ASSINANTE_1_EMAIL": "luiz.senna@parafernalia.net.br"
+                    }
+    variables = {"CONTRATANTE_RAZAO_SOCIAL": "sdjiaowaowj"}
+    document = factories.DocumentFactory(
+        id=document_id, signers=signers_empty, variables=variables)
+    retrieved_document = save_signers_controller(document_id, signers_info)
+
+    assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_NOME'] == "Luiz Senna"
+    assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_EMAIL'] == "luiz.senna@parafernalia.net.br"
+
+
+@ patch('app.documents.controllers.RemoteDocument.create')
 def test_create_document(create_remote_document_mock):
     company = factories.CompanyFactory()
     user = factories.UserFactory(
@@ -160,7 +203,7 @@ def test_create_new_document_version():
     assert new_version["id"] == "1"
 
 
-@patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
+@ patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
 def test_download_document_text(download_document_text_mock):
     versions = [{"description": "Version 0",
                  "email": "aaa@gmail.com",
@@ -176,7 +219,7 @@ def test_download_document_text(download_document_text_mock):
     )
 
 
-@patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
 def test_upload_document_text(upload_document_text_mock):
 
     document = factories.DocumentFactory(id=1)

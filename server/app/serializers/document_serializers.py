@@ -75,8 +75,7 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     user = ma.Nested(UserSerializer)
     envelope = ma.Method("get_envelope_dict")
     workflow = ma.Method("get_workflow")
-    variables = ma.Method("get_variables")
-    signers = ma.Method("get_signers")
+    info = ma.Method("get_variables")
 
     class Meta:
         model = Document
@@ -104,19 +103,6 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
             except:
                 return None
         return None
-
-    def get_signers(self, obj):
-        signers_list = []
-        if obj.signers:
-            for signers_info in obj.signers:
-                for signer_data in signers_info.values():
-                    for signer in signer_data:
-                        signers_list.append({
-                            "id": signer["id"],
-                            "name": signer["name"],
-                            "email": signer["email"]
-                        })
-        return signers_list
 
 
 def order_nodes(nodes):

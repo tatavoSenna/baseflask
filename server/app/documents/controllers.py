@@ -86,32 +86,15 @@ def get_document_version_controller(document_id):
     return current_version
 
 
-def edit_signers_controller(document_id, patched_signers):
-    document = Document.query.get(document_id)
-    document.signers = copy.deepcopy(document.signers)
+def save_signers_controller(document_id, signers_variables):
+    document = get_document_controller(document_id)
+    document.variables = copy.deepcopy(document.variables)
 
-    new_signers = [
-        find_signer_by_id(
-            signer['id'],
-            patched_signers,
-            default=signer
-        ) for signer in document.signers
-    ]
-
-    for i in range(len(document.signers)):
-        document.signers[i].update(new_signers[i])
-
+    document.variables.update(signers_variables)
     db.session.add(document)
     db.session.commit()
 
     return document
-
-
-def find_signer_by_id(signer_id, signers, default=None):
-    for signer in signers:
-        if signer['id'] == signer_id:
-            return signer
-    return default
 
 
 def create_new_version_controller(document_id, description, user_email):
