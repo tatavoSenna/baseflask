@@ -39,7 +39,7 @@ from app.docusign.services import get_token
 from .controllers import (
     get_document_template_list_controller,
     get_document_template_details_controller,
-    edit_signers_controller,
+    save_signers_controller,
     create_document_controller,
     create_new_version_controller,
     get_document_controller,
@@ -252,7 +252,6 @@ def documents(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def document(current_user, documentTemplate_id):
-
     document_template = get_document_template_details_controller(
         current_user["company_id"], documentTemplate_id)
 
@@ -287,18 +286,17 @@ def request_signatures(current_user, document_id):
     return jsonify(DocumentSerializer().dump(current_document))
 
 
-@documents_bp.route("/<int:document_id>/signers", methods=["PATCH"])
+@documents_bp.route("/<int:document_id>/signers", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
-def edit_signers(current_user, document_id):
+def save_signers(current_user, document_id):
     content = request.json
     if content:
-        signers = content.get('signers')
+        try:
+            document = save_signers_controller(document_id, content)
+        except Exception:
+            abort(404, "Could not save document signers")
     else:
         abort(400, 'no content')
-    if not signers:
-        abort(400, "signers field is required")
-
-    document = edit_signers_controller(document_id, content['signers'])
 
     return jsonify(DocumentSerializer(many=False).dump(document))

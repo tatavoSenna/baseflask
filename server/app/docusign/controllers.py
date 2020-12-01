@@ -22,11 +22,16 @@ def sign_document_controller(current_document, document_text, account_ID, token)
     signers_data = []
 
     for signer_info in current_document.signers:
-        for signers_lists in signer_info.values():
-            for signer_data in signers_lists:
-                if not signer_data['email']:
-                    abort(400, "Email field is required for all signers")
-                signers_data.append(signer_data)
+        for signer_field in signer_info['fields']:
+            if signer_field['value'] == "Nome":
+                name = signer_field['variable']
+            if signer_field['value'] == "Email":
+                email = signer_field['variable']
+        signers_data.append({
+            'name': current_document.variables[name],
+            'email': current_document.variables[email],
+            'signatures': signer_info['anchor']
+        })
 
     base64_document = base64.b64encode(document_text).decode("utf-8")
     if len(signers_data) > 0:
@@ -41,6 +46,7 @@ def sign_document_controller(current_document, document_text, account_ID, token)
 
         signers = []
         for index, signer_data in enumerate(signers_data):
+            print(signer_data)
             # Create the signer recipient model
 
             signer = Signer(  # The signer
