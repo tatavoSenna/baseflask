@@ -22,6 +22,7 @@ class Config(object):
     )
     AWS_COGNITO_REDIRECT_URL = os.environ.get("AWS_COGNITO_REDIRECT_URL")
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
+    print(AWS_S3_DOCUMENTS_BUCKET)
     AWS_S3_DOCUMENTS_ROOT = "documents"
     AWS_S3_TEMPLATES_ROOT = "templates"
     PAGE_DEFAULT = 1
