@@ -59,13 +59,7 @@ class RemoteDocument:
 
     def get_template(self):
         template_file_io = io.BytesIO()
-<<<<<<< HEAD
         remote_path = 'template.html'
-=======
-        remote_path = '/template.html'
-        import ipdb
-        ipdb.set_trace()
->>>>>>> first commit
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             remote_path,

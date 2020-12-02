@@ -54,7 +54,6 @@ def sign_document_controller(current_document, document_text, account_ID, token)
     signers_data = []
 
     for signer_info in current_document.signers:
-<<<<<<< HEAD
         for signer_field in signer_info['fields']:
             if signer_field['value'] == "Nome":
                 name = signer_field['variable']
@@ -71,16 +70,6 @@ def sign_document_controller(current_document, document_text, account_ID, token)
         template, {'text_contract': document_text.decode("utf-8")})
     html_definition = {"source": formatted_text}
 
-=======
-        for signers_lists in signer_info.values():
-            for signer_data in signers_lists:
-                if not signer_data['email']:
-                    abort(400, "Email field is required for all signers")
-                signers_data.append(signer_data)
-    jinja_template = RemoteDocument().get_template().decode()
-    formatted_text = jinja_template.render(document_text).encode()
-    base64_document = base64.b64encode(formatted_text).decode("utf-8")
->>>>>>> first commit
     if len(signers_data) > 0:
 
         # create the DocuSign document object
