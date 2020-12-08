@@ -106,6 +106,7 @@ def sign_document_controller(current_document, document_text, account_ID, token)
             return jsonify({'message': 'Error accessing docusign api.'}), 400
 
         # save envelope data on document, if its not a Mock object type(for test purposes)
+        current_document.sent = True
         if not isinstance(envelope, MagicMock):
             current_document.envelope = json.dumps(
                 EnvelopeSerializer().dump(envelope))

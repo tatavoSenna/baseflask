@@ -83,3 +83,4 @@ def test_sign_document(create_envelope_mock):
 
     sign_document_controller(document, document_text, account_ID, token)
     create_envelope_mock.assert_called_once()
+    assert document.sent == True
