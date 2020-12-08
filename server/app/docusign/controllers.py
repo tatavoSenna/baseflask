@@ -36,6 +36,7 @@ def sign_document_controller(current_document, document_text, account_ID, token)
     if len(signers_data) > 0:
 
         # create the DocuSign document object
+        base64_document = base64.b64encode(document_text).decode("utf-8")
         document = DocusignDocument(
             document_base64=base64_document,
             name=current_document.title,
