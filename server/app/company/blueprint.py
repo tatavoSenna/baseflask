@@ -39,3 +39,17 @@ def save_keys(logged_user, company_id):
         return {}, 500
 
     return jsonify({"company": CompanySerializer().dump(company)})
+
+
+@company_bp.route("/<company_id>/docusign", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_keys(logged_user, company_id):
+    company = Company.query.get(company_id)
+    if not company:
+        return {}, 404
+
+    if logged_user['company_id'] != int(company_id):
+        return {}, 401
+
+    return jsonify({"company": CompanySerializer().dump(company)})
