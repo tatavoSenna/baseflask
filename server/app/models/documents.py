@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.dialects.postgresql.json import JSON
 from sqlalchemy.dialects.postgresql.json import JSONB
 from sqlalchemy.orm import relationship
+from sqlalchemy.types import Boolean
 
 
 from app import db
@@ -54,6 +55,7 @@ class Document(db.Model):
     versions = db.Column(JSON, nullable=True, default=["0"])
     signers = db.Column(JSON, nullable=True)
     form = db.Column(JSON, nullable=True)
+    sent = db.Column(Boolean, nullable=True, default=False)
     current_step = db.Column(db.String(255), nullable=True)
 
     # Belongs to

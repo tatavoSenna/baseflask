@@ -258,11 +258,12 @@ def document(current_user, documentTemplate_id):
     return jsonify({"DocumentTemplate": DocumentTemplateSerializer().dump(document_template)})
 
 
-@documents_bp.route('/<int:document_id>/sign')
+@documents_bp.route('/sign', methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
-def request_signatures(current_user, document_id):
-
+def request_signatures(current_user):
+    content = request.json
+    document_id = content.get("document_id", None)
     if not document_id:
         abort(400, 'Missing document id')
 
