@@ -56,3 +56,15 @@ class RemoteDocument:
         filled_text = jinja_template.render(variables).encode()
 
         return filled_text
+
+    def get_template(self):
+        template_file_io = io.BytesIO()
+        remote_path = 'template.html'
+        self.s3_client.download_fileobj(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path,
+            template_file_io)
+
+        template_file = template_file_io.getvalue()
+
+        return template_file
