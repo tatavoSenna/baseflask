@@ -3,6 +3,8 @@ from app.docusign.services import fetch_docusign_token
 from app.docusign.services import set_user_token
 from app.users.remote import get_local_user
 from app import aws_auth
+from bs4 import BeautifulSoup
+from app.docusign.controllers import update_signer_status
 
 
 docusign_bp = Blueprint("docusign", __name__)
@@ -15,7 +17,8 @@ docusign_bp = Blueprint("docusign", __name__)
 @get_local_user
 def docusign_token(current_user):
     authorization_code = request.args.get("code")
-    data = {"grant_type": "authorization_code", "code": "{}".format(authorization_code)}
+    data = {"grant_type": "authorization_code",
+            "code": "{}".format(authorization_code)}
 
     try:
         (
@@ -26,7 +29,8 @@ def docusign_token(current_user):
             error,
         ) = fetch_docusign_token(data)
         set_user_token(
-            current_user.get("id"), access_token, refresh_token, token_obtain_date
+            current_user.get(
+                "id"), access_token, refresh_token, token_obtain_date
         )
         status_code = 500 if error else 200
     except Exception as e:
@@ -52,3 +56,18 @@ def docusign_refresh_token(current_user):
         current_user.get("id"), access_token, refresh_token, token_obtain_date
     )
     return {"success": True}
+
+
+@docusign_bp.route('signed', methods=['POST'])
+def docusign_follow_up():
+    xml = BeautifulSoup(request.data, "xml")
+    envelope_id = xml.EnvelopeStatus.EnvelopeID.string
+
+    # for every signer if it has finished signing update his signing time
+    for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
+        if signer_status.Status.string == "Completed":
+            update_signer_status(
+                docusign_id=envelope_id,
+                email=signer_status.Email.string
+            )
+    return ('Ok', 200)

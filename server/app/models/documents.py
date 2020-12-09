@@ -49,7 +49,7 @@ class Document(db.Model):
     )
     created_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow())
-    envelope = db.Column(JSON, nullable=True)
+    envelope = db.Column(db.String(255), unique=True, nullable=True)
     workflow = db.Column(JSON, nullable=True)
     variables = db.Column(JSON, nullable=True)
     versions = db.Column(JSON, nullable=True, default=["0"])

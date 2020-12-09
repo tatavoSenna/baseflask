@@ -88,9 +88,10 @@ def get_document_version_controller(document_id):
 
 def save_signers_controller(document_id, signers_variables):
     document = get_document_controller(document_id)
-    document.variables = copy.deepcopy(document.variables)
-
-    document.variables.update(signers_variables)
+    # need to make a copy so that the 'signers' and 'variables' JSON changes are tracked
+    variables = copy.deepcopy(document.variables)
+    variables.update(signers_variables)
+    document.variables = variables
     db.session.add(document)
     db.session.commit()
 

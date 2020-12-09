@@ -3,8 +3,10 @@ from app.test import factories
 from unittest.mock import patch
 
 from app.docusign.controllers import(
-    sign_document_controller
+    sign_document_controller, update_signer_status
 )
+from app.documents.controllers import(
+    get_document_controller)
 
 
 @patch('docusign_esign.EnvelopesApi.create_envelope')
@@ -84,3 +86,47 @@ def test_sign_document(create_envelope_mock):
     sign_document_controller(document, document_text, account_ID, token)
     create_envelope_mock.assert_called_once()
     assert document.sent == True
+
+
+def test_update_signer_status():
+    email = 'teste@gmail.com'
+    document_id = 15
+    signers_empty = [
+        {
+            "title": "Empresa Contratante Representante 1",
+            "fields": [
+                {
+                    "label": "",
+                    "variable": "CONTRATANTE_ASSINANTE_1_NOME",
+                    "type": "text",
+                                "value": "Nome"
+                },
+                {
+                    "label": "",
+                    "variable": "CONTRATANTE_ASSINANTE_1_EMAIL",
+                    "type": "email",
+                                "value": "Email"
+                }
+            ],
+            "anchor": [
+                {
+                    "anchor_string": "CONTRATANTE",
+                    "name_variable": "concessionaries",
+                    "anchor_x_offset": "-0.5",
+                    "anchor_y_offset": "-0.4"
+                }
+            ]
+        }
+    ]
+    variables = {"CONTRATANTE_RAZAO_SOCIAL": "sdjiaowaowj",
+                 "CONTRATANTE_ASSINANTE_1_EMAIL": "teste@gmail.com"
+                 }
+    document = factories.DocumentFactory(
+        id=document_id, signers=signers_empty, variables=variables, envelope='12')
+    update_signer_status(docusign_id='12', email=email)
+    retrieved_document = get_document_controller(document_id)
+    retrieved_variables = retrieved_document.variables
+    for signer_info in retrieved_document.signers:
+        for signer_field in signer_info['fields']:
+            if signer_field['value'] == "Email" and retrieved_variables[signer_field['variable']] == email:
+                assert signer_info['signing_date'] != ""
