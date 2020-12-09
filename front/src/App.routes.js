@@ -9,6 +9,7 @@ import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
 import Users from './pages/users'
 import DocumentDetails from './pages/documentDetails'
+import Integrations from './pages/integrations'
 
 import Wrapper from '~/components/wrapper'
 
@@ -20,6 +21,7 @@ export const ROUTES = {
 	form: '/contracts/new',
 	users: '/users',
 	documentDetails: '/documentDetails',
+	integrations: '/integrations',
 }
 
 function Routes() {
@@ -46,6 +48,12 @@ function Routes() {
 						exact
 						path={ROUTES.documentDetails}
 						component={DocumentDetails}
+						isPrivate
+					/>
+					<AdminRoute
+						exact
+						path={ROUTES.integrations}
+						component={Integrations}
 						isPrivate
 					/>
 				</Wrapper>

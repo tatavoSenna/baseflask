@@ -3,7 +3,11 @@ import { bool, func } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout } from 'antd'
-import { FolderOpenOutlined, TeamOutlined } from '@ant-design/icons'
+import {
+	FolderOpenOutlined,
+	TeamOutlined,
+	DeploymentUnitOutlined,
+} from '@ant-design/icons'
 
 import { listModel } from '~/states/modules/model'
 
@@ -57,6 +61,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/users')}>
 							Usuários
 						</Menu.Item>
+						<Menu.Item
+							key="integration"
+							icon={<DeploymentUnitOutlined />}
+							onClick={() => handleGoTo('/integrations')}>
+							Integração
+						</Menu.Item>
 					</Menu>
 				</Sider>
 			) : (
@@ -90,6 +100,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<TeamOutlined />}
 							onClick={() => handleGoTo('/users')}>
 							Usuários
+						</Menu.Item>
+						<Menu.Item
+							key="integration"
+							icon={<DeploymentUnitOutlined />}
+							onClick={() => handleGoTo('/integrations')}>
+							Integração
 						</Menu.Item>
 					</Menu>
 				</Sider>
