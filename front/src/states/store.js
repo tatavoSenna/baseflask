@@ -17,6 +17,7 @@ import docusign, { docusignSaga } from './modules/docusign'
 import users, { usersSaga } from './modules/users'
 import groups, { groupsSaga } from './modules/groups'
 import documentDetail, { documentDetailSaga } from './modules/documentDetail'
+import integrations, { integrationsSaga } from './modules/integrations'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -35,6 +36,7 @@ const reducers = combineReducers({
 	users,
 	groups,
 	documentDetail,
+	integrations,
 })
 
 const store = configureStore({
@@ -55,6 +57,7 @@ const rootSaga = function* () {
 		usersSaga(),
 		groupsSaga(),
 		documentDetailSaga(),
+		integrationsSaga(),
 	])
 }
 
