@@ -1,8 +1,11 @@
 import json
+import copy
 import logging
 from app import db
 from unittest.mock import MagicMock
+from datetime import datetime
 from flask import request, Blueprint, abort, jsonify, current_app
+from app.models.documents import Document
 import base64
 from docusign_esign import (
     ApiClient,
@@ -16,6 +19,35 @@ from docusign_esign import (
 )
 from app.documents.remote import RemoteDocument
 from app.docusign.serializers import EnvelopeSerializer
+
+webhook_url = 'https://a46d1b6bc4a1.ngrok.io/docusign/signed'
+event_notification = {"url": webhook_url,
+                      "loggingEnabled": "true",  # The api wants strings for true/false
+                      "requireAcknowledgment": "true",
+                      "useSoapInterface": "false",
+                      "includeCertificateWithSoap": "false",
+                      "signMessageWithX509Cert": "false",
+                      "includeDocuments": "true",
+                      "includeEnvelopeVoidReason": "true",
+                      "includeTimeZone": "true",
+                      "includeSenderAccountAsCustomField": "true",
+                      "includeDocumentFields": "true",
+                      "includeCertificateOfCompletion": "true",
+                      "envelopeEvents": [  # for this recipe, we're requesting notifications
+                          # for all envelope and recipient events
+                          {"envelopeEventStatusCode": "sent"},
+                          {"envelopeEventStatusCode": "delivered"},
+                          {"envelopeEventStatusCode": "completed"},
+                          {"envelopeEventStatusCode": "declined"},
+                          {"envelopeEventStatusCode": "voided"}],
+                      "recipientEvents": [
+                          {"recipientEventStatusCode": "Sent"},
+                          {"recipientEventStatusCode": "Delivered"},
+                          {"recipientEventStatusCode": "Completed"},
+                          {"recipientEventStatusCode": "Declined"},
+                          {"recipientEventStatusCode": "AuthenticationFailed"},
+                          {"recipientEventStatusCode": "AutoResponded"}]
+                      }
 
 
 def sign_document_controller(current_document, document_text, account_ID, token):
@@ -85,6 +117,7 @@ def sign_document_controller(current_document, document_text, account_ID, token)
             documents=[document],
             # The Recipients object wants arrays for each recipient type
             recipients=Recipients(signers=signers),
+            event_notification=event_notification,
             status="sent"  # requests that the envelope be created and sent.
         )
 
@@ -98,19 +131,37 @@ def sign_document_controller(current_document, document_text, account_ID, token)
         )
 
         envelope_api = EnvelopesApi(api_client)
-        try:
-            envelope = envelope_api.create_envelope(
-                account_ID, envelope_definition=envelope_definition)
-        except Exception as e:
-            logging.error(e)
-            return jsonify({'message': 'Error accessing docusign api.'}), 400
+
+        envelope = envelope_api.create_envelope(
+            account_ID, envelope_definition=envelope_definition)
 
         # save envelope data on document, if its not a Mock object type(for test purposes)
         current_document.sent = True
         if not isinstance(envelope, MagicMock):
-            current_document.envelope = json.dumps(
-                EnvelopeSerializer().dump(envelope))
+
+            current_document.envelope = envelope.envelope_id
             # testar para ver se o commit está atualizando o json corretamente
             db.session.commit()
 
         # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)
+
+
+def update_signer_status(docusign_id=None, email=None):
+    document = Document.query.filter_by(envelope=docusign_id).first()
+
+    # need to make a copy so that changes in signers JSON are tracked
+    signers = copy.deepcopy(document.signers)
+    variables = document.variables
+
+    for signer_info in signers:
+        for signer_field in signer_info['fields']:
+            if (signer_field['value'] == 'Email') and (variables[signer_field['variable']] == email):
+                # register the date and time of signature if it has not yet been registered
+                if not signer_info.get('signing_date', ""):
+                    signer_info['signing_date'] = datetime.now(
+                    ).astimezone().replace(microsecond=0).isoformat()
+                break
+
+    document.signers = signers
+    db.session.add(document)
+    db.session.commit()
