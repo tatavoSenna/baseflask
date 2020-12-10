@@ -4,7 +4,7 @@ from app.docusign.services import set_user_token
 from app.users.remote import get_local_user
 from app import aws_auth
 from bs4 import BeautifulSoup
-from app.docusign.controllers import update_signer_status
+from app.docusign.controllers import update_signer_status, update_envelope_status
 
 
 docusign_bp = Blueprint("docusign", __name__)
@@ -62,7 +62,10 @@ def docusign_refresh_token(current_user):
 def docusign_follow_up():
     xml = BeautifulSoup(request.data, "xml")
     envelope_id = xml.EnvelopeStatus.EnvelopeID.string
-
+    envelope_status = xml.EnvelopeStatus.Status.string
+    # check if envelope is done signing
+    if envelope_status == 'Completed':
+        update_envelope_status(docusign_id=envelope_id)
     # for every signer if it has finished signing update his signing time
     for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
         if signer_status.Status.string == "Completed":

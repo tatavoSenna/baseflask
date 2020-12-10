@@ -56,6 +56,7 @@ class Document(db.Model):
     signers = db.Column(JSON, nullable=True)
     form = db.Column(JSON, nullable=True)
     sent = db.Column(Boolean, nullable=True, default=False)
+    signed = db.Column(Boolean, nullable=True, default=False)
     current_step = db.Column(db.String(255), nullable=True)
 
     # Belongs to
