@@ -18,6 +18,12 @@ import {
 	nextStep,
 	nextStepSuccess,
 	nextStepFailure,
+	newAssign,
+	newAssignSuccess,
+	newAssignFailure,
+	sentAssign,
+	sentAssignSuccess,
+	sentAssignFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -25,6 +31,8 @@ export default function* rootSaga() {
 	yield takeEvery(newVersion, newVersionSaga)
 	yield takeEvery(previousStep, previousStepSaga)
 	yield takeEvery(nextStep, nextStepSaga)
+	yield takeEvery(newAssign, newAssignSaga)
+	yield takeEvery(sentAssign, sentAssignSaga)
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {
@@ -69,6 +77,51 @@ function* newVersionSaga({ payload = {} }) {
 			updateKey: 'createVersion',
 		})
 		yield put(newVersionFailure(error))
+	}
+}
+
+function* sentAssignSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Enviando documento para assinatura via Docusign.',
+		updateKey: 'sentAssign',
+	})
+	const { id } = payload
+	try {
+		const response = yield call(api.post, `/documents/sign`, {
+			document_id: id,
+		})
+		if (response.data.sent) {
+			successMessage({
+				content: 'Enviamos, via docusign, o documento para assinatura.',
+				updateKey: 'sentAssign',
+			})
+		} else {
+			successMessage({
+				content:
+					'Envio para docusign falhou, favor revisar os dados de assinantes.',
+				updateKey: 'sentAssign',
+			})
+		}
+		yield put(sentAssignSuccess({ ...response.data }))
+	} catch (error) {
+		errorMessage({
+			content:
+				'Envio para docusign falhou, favor revisar os dados de assinantes.',
+			updateKey: 'sentAssign',
+		})
+		yield put(sentAssignFailure(error))
+	}
+}
+
+function* newAssignSaga({ payload = {} }) {
+	const { id, signers } = payload
+	try {
+		const response = yield call(api.post, `/documents/${id}/signers`, {
+			...signers,
+		})
+		yield put(newAssignSuccess({ ...response.data }))
+	} catch (error) {
+		yield put(newAssignFailure(error))
 	}
 }
 

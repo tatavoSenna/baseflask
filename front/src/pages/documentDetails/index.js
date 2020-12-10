@@ -7,6 +7,7 @@ import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
 import BreadCrumb from '~/components/breadCrumb'
 import NewVersionModal from './components/modal'
+import AssignModal from './components/tabs/assignModal'
 
 import {
 	getDocumentDetail,
@@ -15,7 +16,10 @@ import {
 	previousStep,
 	nextStep,
 	setShowModal,
+	setShowAssignModal,
 	updateDescription,
+	newAssign,
+	sentAssign,
 } from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
@@ -26,7 +30,9 @@ const DocumentDetails = () => {
 		text,
 		textUpdate,
 		showModal,
+		showAssignModal,
 		description,
+		loadingSign,
 	} = useSelector(({ documentDetail }) => documentDetail)
 	const { id } = useHistory().location.state
 
@@ -42,16 +48,32 @@ const DocumentDetails = () => {
 
 	const getNextStep = () => dispatch(nextStep({ id }))
 
+	const handleSentAssign = () => {
+		dispatch(sentAssign({ id }))
+	}
+
 	const handleDescription = (form) => {
 		dispatch(updateDescription(form.getFieldsValue()))
+	}
+
+	const handleAssign = (form) => {
+		dispatch(newAssign({ id, signers: form.getFieldsValue() }))
 	}
 
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
 	}
 
-	const handleCancel = () => {
+	const handleShowAssignModal = () => {
+		dispatch(setShowAssignModal(true))
+	}
+
+	const handleCancelModal = () => {
 		dispatch(setShowModal(false))
+	}
+
+	const handleCancelAssignModal = () => {
+		dispatch(setShowAssignModal(false))
 	}
 
 	useEffect(() => {
@@ -67,11 +89,17 @@ const DocumentDetails = () => {
 				/>
 			</PageHeader>
 			<NewVersionModal
-				handleCancel={handleCancel}
+				handleCancel={handleCancelModal}
 				handleCreate={createDocumentVersion}
 				showModal={showModal}
 				description={description}
 				handleDescription={handleDescription}
+			/>
+			<AssignModal
+				handleCancel={handleCancelAssignModal}
+				handleAssign={handleAssign}
+				signers={data.signers}
+				showModal={showAssignModal}
 			/>
 			<Spin spinning={loading} />
 			{Object.keys(data).length > 0 && (
@@ -98,7 +126,12 @@ const DocumentDetails = () => {
 					<Tabs
 						signers={data.signers}
 						versions={data.versions}
-						infos={data.variables}
+						showAssignModal={handleShowAssignModal}
+						infos={data.info}
+						variables={data.variables}
+						signed={data.sent}
+						sentAssign={handleSentAssign}
+						loadingSign={loadingSign}
 					/>
 				</div>
 			)}

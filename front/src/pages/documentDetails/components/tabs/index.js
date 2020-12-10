@@ -1,16 +1,29 @@
 import React, { useState } from 'react'
-import { Radio, Typography } from 'antd'
-import { array } from 'prop-types'
+import { Form, Radio, Typography, Button, Spin } from 'antd'
+import { array, bool, func } from 'prop-types'
 import { ContainerTabs, ContainerInfo } from './styles'
+import styles from './index.module.scss'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 
 moment.locale('pt-br')
 
 const { Title, Text } = Typography
+const tailLayout = {
+	wrapperCol: { span: 24 },
+}
 
-const Tabs = ({ signers, versions, infos }) => {
+const Tabs = ({
+	signers,
+	versions,
+	infos,
+	showAssignModal,
+	signed,
+	sentAssign,
+	loadingSign,
+}) => {
 	const [value, setValue] = useState('1')
+	const [isVariables, setVariables] = useState(false)
 
 	const tab = (option) => {
 		if (option === '1') {
@@ -20,6 +33,17 @@ const Tabs = ({ signers, versions, infos }) => {
 		} else {
 			return assign()
 		}
+	}
+
+	if (!signed) {
+		signers.map((item) =>
+			item.fields.map((field) => {
+				if (field.valueVariable && !isVariables) {
+					setVariables(true)
+				}
+				return null
+			})
+		)
 	}
 
 	const info = () =>
@@ -59,16 +83,53 @@ const Tabs = ({ signers, versions, infos }) => {
 			</div>
 		))
 
-	const assign = () =>
-		signers.map((signer, index) => (
-			<ContainerTabs key={index}>
-				<Title level={4}></Title>
-				<Text>Nome</Text>
-				<Text>{signer.name}</Text>
-				<Text>E-mail</Text>
-				<Text>{signer.email}</Text>
-			</ContainerTabs>
-		))
+	const assign = () => (
+		<div>
+			{signers.map((item, index) => (
+				<ContainerTabs key={index}>
+					<Title level={4} style={{ marginTop: 20, fontSize: 18 }}>
+						{item.title}
+					</Title>
+					{item.fields.map((field, index) => (
+						<ContainerInfo key={index}>
+							<Text style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
+								{field.value}
+							</Text>
+							<Text
+								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
+								{!field.valueVariable ? '' : field.valueVariable}
+							</Text>
+						</ContainerInfo>
+					))}
+				</ContainerTabs>
+			))}
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+					marginTop: 10,
+				}}>
+				<Form.Item {...tailLayout}>
+					{!signed && (
+						<Button
+							key="editar"
+							className={styles.button}
+							onClick={() => showAssignModal(true)}>
+							Editar
+						</Button>
+					)}
+					{!signed && isVariables && (
+						<Button
+							key="assinar"
+							type="primary"
+							onClick={loadingSign ? () => {} : sentAssign}>
+							{loadingSign ? <Spin spinning={loadingSign} /> : 'Assinar'}
+						</Button>
+					)}
+				</Form.Item>
+			</div>
+		</div>
+	)
 
 	return (
 		<div
@@ -85,7 +146,10 @@ const Tabs = ({ signers, versions, infos }) => {
 			<Radio.Group
 				buttonStyle="solid"
 				value={value}
-				onChange={(e) => setValue(e.target.value)}>
+				onChange={(e) => {
+					setVariables(false)
+					setValue(e.target.value)
+				}}>
 				<Radio.Button value="1">Info</Radio.Button>
 				<Radio.Button value="2">Versões</Radio.Button>
 				<Radio.Button value="3">Assinantes</Radio.Button>
@@ -107,6 +171,10 @@ Tabs.propTypes = {
 	signers: array,
 	versions: array,
 	infos: array,
+	showAssignModal: func,
+	signed: bool,
+	sentAssign: func,
+	loadingSign: bool,
 }
 
 export default Tabs
