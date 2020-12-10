@@ -2,7 +2,7 @@ import React from 'react'
 import { string, shape } from 'prop-types'
 import { Form, Input } from 'antd'
 
-const EmailField = ({ pageFieldsData }) => {
+const EmailField = ({ pageFieldsData, inputValue }) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -15,7 +15,8 @@ const EmailField = ({ pageFieldsData }) => {
 				{ type, message: 'E-mail não é válido.' },
 				{ required: true, message: 'Este campo é obrigatório.' },
 			]}
-			colon={false}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
 			<Input placeholder="" />
 		</Form.Item>
 	)
@@ -27,6 +28,7 @@ EmailField.propTypes = {
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,
+	inputValue: string,
 }
 
 export default EmailField

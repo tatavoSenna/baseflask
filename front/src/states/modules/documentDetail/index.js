@@ -8,8 +8,10 @@ const initialState = {
 	textUpdate: '',
 	description: '',
 	showModal: false,
+	showAssignModal: false,
 	error: null,
 	loading: false,
+	loadingSign: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -31,6 +33,37 @@ const { actions, reducer } = createSlice({
 		getDocumentDetailtFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
+			}),
+		newAssign: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		newAssignSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+				error: null,
+				loading: false,
+			}),
+		newAssignFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
+		sentAssign: (state) =>
+			extend(state, {
+				loadingSign: true,
+			}),
+		sentAssignSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+				error: null,
+				loadingSign: false,
+			}),
+		sentAssignFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loadingSign: false,
 			}),
 		newVersion: (state) => extend(state),
 		newVersionSuccess: (state, { payload }) =>
@@ -45,6 +78,7 @@ const { actions, reducer } = createSlice({
 		newVersionFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		updateTextVersion: (state, { payload }) =>
 			extend(state, {
@@ -58,6 +92,7 @@ const { actions, reducer } = createSlice({
 		previousStepFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		nextStep: (state) => extend(state),
 		nextStepSuccess: (state, { payload }) =>
@@ -67,10 +102,15 @@ const { actions, reducer } = createSlice({
 		nextStepFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		setShowModal: (state, { payload }) =>
 			extend(state, {
 				showModal: payload,
+			}),
+		setShowAssignModal: (state, { payload }) =>
+			extend(state, {
+				showAssignModal: payload,
 			}),
 		updateDescription: (state, { payload }) =>
 			extend(state, {
@@ -94,7 +134,14 @@ export const {
 	nextStepSuccess,
 	nextStepFailure,
 	setShowModal,
+	setShowAssignModal,
 	updateDescription,
+	newAssign,
+	newAssignSuccess,
+	newAssignFailure,
+	sentAssign,
+	sentAssignSuccess,
+	sentAssignFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

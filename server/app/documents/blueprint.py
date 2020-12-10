@@ -274,13 +274,14 @@ def request_signatures(current_user):
     except Exception:
         abort(404, 'Document not Found')
 
-    account_ID = 'b3db6c1c-db88-4fcd-a929-a9641a56ea8d'
+    account_ID = '957b17e7-1218-4865-8fff-ad974ed8f6a7'
     token = get_token(current_user)
     if token is None:
         abort(400, "Missing DocuSign user token")
     try:
         sign_document_controller(current_document, textfile, account_ID, token)
-    except Exception:
+    except Exception as e:
+        print(e)
         abort(400, 'Error accessing docusign api.')
 
     return jsonify(DocumentSerializer().dump(current_document))

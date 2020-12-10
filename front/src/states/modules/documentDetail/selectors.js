@@ -7,6 +7,15 @@ export const selectAllDocumentDetail = (payload) => {
 				.map((item) => item.step)
 				.indexOf(payload.workflow.current_step),
 		},
+		signers: payload.signers.map((signer) => {
+			signer.fields = signer.fields.map((field) => {
+				if (payload.variables.hasOwnProperty(field.variable)) {
+					field.valueVariable = payload.variables[field.variable]
+				}
+				return field
+			})
+			return signer
+		}),
 	}
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { string, shape } from 'prop-types'
 import { Form, Input } from 'antd'
 
-const TextField = ({ pageFieldsData }) => {
+const TextField = ({ pageFieldsData, inputValue }) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -12,7 +12,8 @@ const TextField = ({ pageFieldsData }) => {
 			type={type}
 			hasFeedback
 			rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-			colon={false}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
 			<Input placeholder="" />
 		</Form.Item>
 	)
@@ -24,6 +25,7 @@ TextField.propTypes = {
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,
+	inputValue: string,
 }
 
 export default TextField
