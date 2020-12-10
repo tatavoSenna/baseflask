@@ -14,7 +14,7 @@ class RemoteDocument:
     def create(self, document):
         text_template = self.download_text_from_template(document)
         filled_text = self.fill_text_with_variables(
-            text_template, document.variables)
+            text_template, document.variables).encode()
         self.upload_filled_text_to_documents(document, filled_text)
 
     def upload_filled_text_to_documents(self, document, filled_text):
@@ -53,7 +53,7 @@ class RemoteDocument:
 
     def fill_text_with_variables(self, text_template, variables):
         jinja_template = jinja_env.from_string(text_template.decode())
-        filled_text = jinja_template.render(variables).encode()
+        filled_text = jinja_template.render(variables)
 
         return filled_text
 

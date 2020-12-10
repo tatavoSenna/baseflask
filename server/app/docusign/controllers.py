@@ -65,15 +65,19 @@ def sign_document_controller(current_document, document_text, account_ID, token)
             'signatures': signer_info['anchor']
         })
 
+    template = RemoteDocument().get_template()
+    formatted_text = RemoteDocument().fill_text_with_variables(
+        template, {'text_contract': document_text.decode("utf-8")})
+    html_definition = {"source": formatted_text}
+
     if len(signers_data) > 0:
 
         # create the DocuSign document object
         base64_document = base64.b64encode(document_text).decode("utf-8")
         document = DocusignDocument(
-            document_base64=base64_document,
             name=current_document.title,
-            file_extension='html',
-            document_id=1
+            document_id=1,
+            html_definition=html_definition
         )
 
         signers = []
