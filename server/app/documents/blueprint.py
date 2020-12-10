@@ -272,24 +272,28 @@ def request_signatures(current_user):
         textfile = download_document_text_controller(document_id, version_id)
         current_document = get_document_controller(document_id)
     except Exception:
-        abort(404, 'Document not Found')
+        abort(404, {"message": "Document not found"})
+
+    if current_document.sent == True:
+        abort(
+            400, {"message": "Signature already requested for this document"})
 
     account_ID = '957b17e7-1218-4865-8fff-ad974ed8f6a7'
     token = get_token(current_user)
     if token is None:
-        abort(400, "Missing DocuSign user token")
+        abort(400, {"message": "Missing DocuSign user token"})
     try:
         sign_document_controller(current_document, textfile, account_ID, token)
     except Exception as e:
         print(e)
-        abort(400, 'Error accessing docusign api.')
+        abort(400, {"message": "Error acessing DocuSign API"})
 
     return jsonify(DocumentSerializer().dump(current_document))
 
 
-@documents_bp.route("/<int:document_id>/signers", methods=["POST"])
-@aws_auth.authentication_required
-@get_local_user
+@ documents_bp.route("/<int:document_id>/signers", methods=["POST"])
+@ aws_auth.authentication_required
+@ get_local_user
 def save_signers(current_user, document_id):
     content = request.json
     if content:
