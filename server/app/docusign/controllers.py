@@ -20,7 +20,7 @@ from docusign_esign import (
 from app.documents.remote import RemoteDocument
 from app.docusign.serializers import EnvelopeSerializer
 
-webhook_url = 'https://a46d1b6bc4a1.ngrok.io/docusign/signed'
+webhook_url = 'https://fd335ee0317e.ngrok.io/docusign/signed'
 event_notification = {"url": webhook_url,
                       "loggingEnabled": "true",  # The api wants strings for true/false
                       "requireAcknowledgment": "true",
@@ -168,5 +168,12 @@ def update_signer_status(docusign_id=None, email=None):
                 break
 
     document.signers = signers
+    db.session.add(document)
+    db.session.commit()
+
+
+def update_envelope_status(docusign_id):
+    document = Document.query.filter_by(envelope=docusign_id).first()
+    document.signed = True
     db.session.add(document)
     db.session.commit()

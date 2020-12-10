@@ -3,7 +3,7 @@ from app.test import factories
 from unittest.mock import patch
 
 from app.docusign.controllers import(
-    sign_document_controller, update_signer_status
+    sign_document_controller, update_signer_status, update_envelope_status
 )
 from app.documents.controllers import(
     get_document_controller)
@@ -88,7 +88,7 @@ def test_sign_document(create_envelope_mock):
     assert document.sent == True
 
 
-def test_update_signer_status():
+def test_update_signer_and_envelope_status():
     email = 'teste@gmail.com'
     document_id = 15
     signers_empty = [
@@ -122,10 +122,12 @@ def test_update_signer_status():
                  "CONTRATANTE_ASSINANTE_1_EMAIL": "teste@gmail.com"
                  }
     document = factories.DocumentFactory(
-        id=document_id, signers=signers_empty, variables=variables, envelope='12')
+        id=document_id, signers=signers_empty, variables=variables, envelope='12', signed=None)
     update_signer_status(docusign_id='12', email=email)
+    update_envelope_status(docusign_id='12')
     retrieved_document = get_document_controller(document_id)
     retrieved_variables = retrieved_document.variables
+    assert retrieved_document.signed == True
     for signer_info in retrieved_document.signers:
         for signer_field in signer_info['fields']:
             if signer_field['value'] == "Email" and retrieved_variables[signer_field['variable']] == email:

@@ -299,7 +299,8 @@ def save_signers(current_user, document_id):
     if content:
         try:
             document = save_signers_controller(document_id, content)
-        except Exception:
+        except Exception as e:
+            print(e)
             abort(404, "Could not save document signers")
     else:
         abort(400, 'no content')
