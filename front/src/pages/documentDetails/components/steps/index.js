@@ -1,6 +1,6 @@
 import React from 'react'
 import { Steps as StepsAntd, Form, Button } from 'antd'
-import { string, shape, arrayOf, number, func } from 'prop-types'
+import { string, shape, arrayOf, number, func, bool } from 'prop-types'
 
 import styles from './index.module.scss'
 const { Step } = StepsAntd
@@ -9,7 +9,7 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 
-const Steps = ({ steps, current, onClickPrevious, onClickNext }) => {
+const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 	return (
 		<div
 			style={{
@@ -47,12 +47,17 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext }) => {
 							type="default"
 							htmlType="button"
 							className={styles.button}
-							onClick={onClickPrevious}>
+							onClick={onClickPrevious}
+							disabled={block}>
 							Anterior
 						</Button>
 					)}
 					{current !== steps.length - 1 && (
-						<Button type="primary" htmlType="button" onClick={onClickNext}>
+						<Button
+							type="primary"
+							htmlType="button"
+							onClick={onClickNext}
+							disabled={block}>
 							Próximo
 						</Button>
 					)}
@@ -73,6 +78,7 @@ Steps.propTypes = {
 	current: number.isRequired,
 	onClickPrevious: func.isRequired,
 	onClickNext: func.isRequired,
+	block: bool,
 }
 
 export default Steps

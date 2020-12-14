@@ -84,20 +84,28 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				textUpdate: payload.text,
 			}),
-		previousStep: (state) => extend(state),
+		previousStep: (state) =>
+			extend(state, {
+				loading: true,
+			}),
 		previousStepSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllDocumentDetail(payload),
+				loading: false,
 			}),
 		previousStepFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
 				loading: false,
 			}),
-		nextStep: (state) => extend(state),
+		nextStep: (state) =>
+			extend(state, {
+				loading: true,
+			}),
 		nextStepSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllDocumentDetail(payload),
+				loading: false,
 			}),
 		nextStepFailure: (state, { payload }) =>
 			extend(state, {

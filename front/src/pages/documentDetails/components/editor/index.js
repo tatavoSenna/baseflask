@@ -1,12 +1,12 @@
 import React from 'react'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
-import { string, func } from 'prop-types'
+import { string, func, bool } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import { Form, Button } from 'antd'
 
-const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText }) => {
+const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText, block }) => {
 	return (
 		<div
 			style={{
@@ -33,7 +33,7 @@ const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText }) => {
 					</div>
 				</div>
 			</div>
-			{text !== textUpdate && (
+			{text !== textUpdate && !block && (
 				<div
 					style={{
 						display: 'flex',
@@ -44,7 +44,8 @@ const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText }) => {
 						<Button
 							type="primary"
 							htmlType="button"
-							onClick={() => onClickUpdate(textUpdate)}>
+							onClick={() => onClickUpdate(textUpdate)}
+							disabled={block}>
 							Criar versão
 						</Button>
 					</Form.Item>
@@ -59,6 +60,7 @@ Editor.propTypes = {
 	textUpdate: string,
 	onClickUpdate: func,
 	onUpdateText: func,
+	block: bool,
 }
 
 export default Editor
