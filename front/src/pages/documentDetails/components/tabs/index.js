@@ -114,7 +114,8 @@ const Tabs = ({
 						<Button
 							key="editar"
 							className={styles.button}
-							onClick={() => showAssignModal(true)}>
+							onClick={() => showAssignModal(true)}
+							disabled={loadingSign}>
 							Editar
 						</Button>
 					)}

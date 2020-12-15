@@ -101,7 +101,7 @@ const DocumentDetails = () => {
 				signers={data.signers}
 				showModal={showAssignModal}
 			/>
-			<Spin spinning={loading} />
+			{Object.keys(data).length < 1 && <Spin spinning={loading} />}
 			{Object.keys(data).length > 0 && (
 				<div
 					style={{
@@ -115,12 +115,14 @@ const DocumentDetails = () => {
 							steps={data.workflow.steps}
 							onClickPrevious={getPreviousStep}
 							onClickNext={getNextStep}
+							block={loadingSign || loading}
 						/>
 						<Editor
 							text={text}
 							textUpdate={textUpdate}
 							onClickUpdate={handleShowModal}
 							onUpdateText={updateText}
+							block={loadingSign || loading || data.sent}
 						/>
 					</div>
 					<Tabs
