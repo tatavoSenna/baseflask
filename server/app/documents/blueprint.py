@@ -113,7 +113,8 @@ def get_document_text(current_user, document_id):
         abort(404, "Document not Found")
     return jsonify(
         {
-            "text": textfile.decode('utf-8')
+            "text": textfile.decode('utf-8'),
+            "version_id": version_id,
         }
     )
 
