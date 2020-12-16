@@ -1,7 +1,8 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 
-import { loadingMessage, errorMessage } from '~/services/messager'
+import { loadingMessage } from '~/services/messager'
 import api from '~/services/api'
+import onlineChecking from '../../errorHandling'
 import {
 	listContract,
 	listContractSuccess,
@@ -24,6 +25,7 @@ function* loginSaga({ payload = {} }) {
 
 		yield put(listContractSuccess(data))
 	} catch (error) {
+		onlineChecking()
 		yield put(listContractFailure(error))
 	}
 }
@@ -38,9 +40,6 @@ function* viewSaga({ payload }) {
 		const { data } = yield call(api.get, `/documents/${documentId}/download`)
 		window.open(data.download_url, 'self')
 	} catch (error) {
-		errorMessage({
-			content: 'Falha na conexão com o servidor. Tente novamente mais tarde.',
-			updateKey: 'viewSaga',
-		})
+		onlineChecking('viewSaga')
 	}
 }

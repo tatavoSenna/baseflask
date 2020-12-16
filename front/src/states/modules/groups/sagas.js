@@ -14,6 +14,7 @@ import {
 	resetNewGroup,
 } from '.'
 import { selectAllGroups } from './selectors'
+import onlineChecking from '../../errorHandling'
 
 export default function* rootSaga() {
 	yield takeEvery(getGroupList, getGroupListSaga)
@@ -47,11 +48,8 @@ function* createGroupSaga() {
 			updateKey: 'createGroup',
 		})
 		yield put(getGroupList())
-	} catch {
-		errorMessage({
-			content: 'Criação de grupo falhou',
-			updateKey: 'createGroup',
-		})
+	} catch (error) {
+		onlineChecking(error)
 	}
 	yield put(resetNewGroup())
 }
@@ -68,10 +66,7 @@ function* deleteGroupSaga({ payload }) {
 			updateKey: 'deleteGroup',
 		})
 		yield put(getGroupList())
-	} catch {
-		errorMessage({
-			content: 'Deleção de grupo falhou',
-			updateKey: 'deleteGroup',
-		})
+	} catch (error) {
+		onlineChecking(error)
 	}
 }

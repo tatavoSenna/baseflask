@@ -7,6 +7,7 @@ import {
 
 import api from '~/services/api'
 import { listQuestion, listQuestionSuccess, listQuestionFailure } from '.'
+import onlineChecking from '../../errorHandling'
 
 export default function* rootSaga() {
 	yield takeEvery(listQuestion, listQuestionSaga)
@@ -20,6 +21,7 @@ function* listQuestionSaga({ payload = {} }) {
 
 		yield put(listQuestionSuccess({ modelId, title, data }))
 	} catch (error) {
+		onlineChecking()
 		yield put(listQuestionFailure(error))
 	}
 }

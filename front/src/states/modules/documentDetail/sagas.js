@@ -1,9 +1,5 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
-import {
-	errorMessage,
-	successMessage,
-	loadingMessage,
-} from '~/services/messager'
+import { successMessage, loadingMessage } from '~/services/messager'
 import api from '~/services/api'
 import {
 	getDocumentDetail,
@@ -25,6 +21,7 @@ import {
 	sentAssignSuccess,
 	sentAssignFailure,
 } from '.'
+import onlineChecking from '../../errorHandling'
 
 export default function* rootSaga() {
 	yield takeEvery(getDocumentDetail, getDocumentDetailSaga)
@@ -44,6 +41,7 @@ function* getDocumentDetailSaga({ payload = {} }) {
 		])
 		yield put(getDocumentDetailSuccess({ ...detail.data, ...detailText.data }))
 	} catch (error) {
+		onlineChecking()
 		yield put(getDocumentDetailFailure(error))
 	}
 }
@@ -72,10 +70,7 @@ function* newVersionSaga({ payload = {} }) {
 			})
 		)
 	} catch (error) {
-		errorMessage({
-			content: 'Criação de nova versão falhou',
-			updateKey: 'createVersion',
-		})
+		onlineChecking('createVersion')
 		yield put(newVersionFailure(error))
 	}
 }
@@ -131,6 +126,7 @@ function* previousStepSaga({ payload }) {
 		const response = yield call(api.get, `documents/${id}/previous`)
 		yield put(previousStepSuccess(response.data))
 	} catch (error) {
+		onlineChecking()
 		yield put(previousStepFailure(error))
 	}
 }
@@ -141,6 +137,7 @@ function* nextStepSaga({ payload = {} }) {
 		const response = yield call(api.get, `documents/${id}/next`)
 		yield put(nextStepSuccess(response.data))
 	} catch (error) {
+		onlineChecking()
 		yield put(nextStepFailure(error))
 	}
 }
