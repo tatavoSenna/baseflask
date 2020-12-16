@@ -29,7 +29,7 @@ def save_keys(logged_user, company_id):
     docusign_account_id = content.get("docusign_account_id", None)
 
     try:
-        save_keys = save_company_keys_controller(
+        save_company_keys_controller(
             company=company,
             docusign_integration_key=docusign_integration_key,
             docusign_secret_key=docusign_secret_key,
