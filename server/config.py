@@ -8,8 +8,8 @@ class Config(object):
         "SQLALCHEMY_TRACK_MODIFICATIONS", False
     )
     DOCUSIGN_OAUTH_URI = os.environ.get("DOCUSIGN_OAUTH_URI")
-    DOCUSIGN_INTEGRATION_KEY = os.environ.get("DOCUSIGN_INTEGRATION_KEY")
-    DOCUSIGN_SECRET_KEY = os.environ.get("DOCUSIGN_SECRET_KEY")
+    DOCUSIGN_WEBHOOK_URL= os.environ.get("DOCUSIGN_WEBHOOK_URL")
+
     AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")

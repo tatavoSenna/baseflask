@@ -6,6 +6,7 @@ from base64 import b64encode
 import requests
 
 from app.models.user import User
+from app.models.company import Company
 from app import db
 
 
@@ -17,16 +18,32 @@ def get_token(user_data):
         print(e)
 
 
-def fetch_docusign_token(data):
+def fetch_docusign_token(current_user, data):
     """
     For the developer sandbox environment, the base URI is
     https://account-d.docusign.com/oauth
     For the production platform, the base URI is
     https://account.docusign.com/oauth
     """
+    company_id = current_user.get("company_id")
+    company = Company.query.get(company_id)
     oauth_url = os.getenv("DOCUSIGN_OAUTH_URI")
-    integration_key = os.getenv("DOCUSIGN_INTEGRATION_KEY")
-    secret_key = os.getenv("DOCUSIGN_SECRET_KEY")
+    integration_key = company.docusign_integration_key
+    secret_key = company.docusign_secret_key
+    if integration_key == None:
+        error = (
+            {
+                "error": 404,
+                "error_description": "Company integration key not found"
+            })
+        return (None, None, None, None, error)
+    if secret_key == None:
+        error = (
+            {
+                "error": 404,
+                "error_description": "Company secret key not found"
+            })
+        return (None, None, None, None, error)
 
     headers = {
         "content-type": "application/x-www-form-urlencoded",
@@ -38,7 +55,8 @@ def fetch_docusign_token(data):
     }
 
     print(data)
-    response = requests.post("{}/token".format(oauth_url), data=data, headers=headers)
+    response = requests.post(
+        "{}/token".format(oauth_url), data=data, headers=headers)
     print(response.json())
     access_token = response.json().get("access_token")
     refresh_token = response.json().get("refresh_token")

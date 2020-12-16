@@ -32,6 +32,7 @@ from app.serializers.document_serializers import (
     DocumentListSerializer
 )
 from app.models.documents import Document, DocumentTemplate
+from app.models.company import Company
 from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
@@ -278,7 +279,11 @@ def request_signatures(current_user):
         abort(
             400, {"message": "Signature already requested for this document"})
 
-    account_ID = '957b17e7-1218-4865-8fff-ad974ed8f6a7'
+    company = Company.query.get(current_user.get("company_id"))
+    account_ID = company.docusign_account_id
+    if account_ID == None:
+        abort(
+            400, {"message": "User has no Docusign Account ID registered"})
     token = get_token(current_user)
     if token is None:
         abort(400, {"message": "Missing DocuSign user token"})

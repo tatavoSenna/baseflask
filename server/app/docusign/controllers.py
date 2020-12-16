@@ -20,9 +20,8 @@ from docusign_esign import (
 from app.documents.remote import RemoteDocument
 from app.docusign.serializers import EnvelopeSerializer
 
-webhook_url = 'https://fd335ee0317e.ngrok.io/docusign/signed'
-event_notification = {"url": webhook_url,
-                      "loggingEnabled": "true",  # The api wants strings for true/false
+
+event_notification = {"loggingEnabled": "true",  # The api wants strings for true/false
                       "requireAcknowledgment": "true",
                       "useSoapInterface": "false",
                       "includeCertificateWithSoap": "false",
@@ -114,6 +113,9 @@ def sign_document_controller(current_document, document_text, account_ID, token)
             signer.tabs = Tabs(sign_here_tabs=[sign_here])
 
             signers.append(signer)
+
+        # get the event notification url form the app config
+        event_notification['url'] = current_app.config['DOCUSIGN_WEBHOOK_URL']
 
         # Next, create the top level envelope definition and populate it.
         envelope_definition = EnvelopeDefinition(
