@@ -123,7 +123,7 @@ def test_update_signer_and_envelope_status():
                  }
     document = factories.DocumentFactory(
         id=document_id, signers=signers_empty, variables=variables, envelope='12', signed=None)
-    update_signer_status(docusign_id='12', email=email)
+    update_signer_status(docusign_id='12', email=email,status='Completed')
     update_envelope_status(docusign_id='12')
     retrieved_document = get_document_controller(document_id)
     retrieved_variables = retrieved_document.variables
