@@ -6,6 +6,7 @@ import json
 
 import boto3
 import pdfrw
+import ast
 
 from flask import request, Blueprint, abort, jsonify, current_app
 from botocore.exceptions import ClientError
@@ -291,8 +292,18 @@ def request_signatures(current_user):
     try:
         sign_document_controller(current_document, textfile, account_ID, token)
     except Exception as e:
-        print(e)
-        abort(400, {"message": "Error acessing DocuSign API"})
+        dict_str = e.body.decode("utf-8")
+        ans_json = ast.literal_eval(dict_str)
+        if ans_json['errorCode'] == 'ANCHOR_TAB_STRING_NOT_FOUND':
+            abort(400, {"message": "Missing Anchor String on Document text"})
+        if ans_json['errorCode'] == 'AUTHORIZATION_INVALID_TOKEN':
+            abort(400, {"message": "Token is expired or invalid"})
+        if ans_json['errorCode'] == 'USER_AUTHENTICATION_FAILED':
+            abort(400, {"message": "Invalid Docusign access token"})
+
+        abort(400, {"message": "Something went wrong",
+                    "errorCode": ans_json['errorCode'],
+                    "errorMessage": ans_json['message']})
 
     return jsonify(DocumentSerializer().dump(current_document))
 
