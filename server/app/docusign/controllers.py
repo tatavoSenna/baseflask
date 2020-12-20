@@ -82,7 +82,6 @@ def sign_document_controller(current_document, document_text, account_ID, token)
 
         signers = []
         for index, signer_data in enumerate(signers_data):
-            print(signer_data)
             # Create the signer recipient model
 
             signer = Signer(  # The signer
