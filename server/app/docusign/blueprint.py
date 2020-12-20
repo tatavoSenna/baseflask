@@ -82,11 +82,11 @@ def docusign_follow_up():
     # check if envelope is done signing
     if envelope_status == 'Completed':
         update_envelope_status(docusign_id=envelope_id)
-    # for every signer if it has finished signing update his signing time
+    # for every signer update his status
     for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
-        if signer_status.Status.string == "Completed":
-            update_signer_status(
-                docusign_id=envelope_id,
-                email=signer_status.Email.string
-            )
+        update_signer_status(
+            docusign_id=envelope_id,
+            email=signer_status.Email.string,
+            status=signer_status.Status.string
+        )
     return ('Ok', 200)

@@ -152,7 +152,7 @@ def sign_document_controller(current_document, document_text, account_ID, token)
         # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)
 
 
-def update_signer_status(docusign_id=None, email=None):
+def update_signer_status(docusign_id=None, email=None, status=None):
     document = Document.query.filter_by(envelope=docusign_id).first()
 
     # need to make a copy so that changes in signers JSON are tracked
@@ -162,8 +162,10 @@ def update_signer_status(docusign_id=None, email=None):
     for signer_info in signers:
         for signer_field in signer_info['fields']:
             if (signer_field['value'] == 'Email') and (variables[signer_field['variable']] == email):
+                # save status and create field if not there already
+                signer_info['status'] = status
                 # register the date and time of signature if it has not yet been registered
-                if not signer_info.get('signing_date', ""):
+                if status == 'Completed' and not signer_info.get('signing_date', ""):
                     signer_info['signing_date'] = datetime.now(
                     ).astimezone().replace(microsecond=0).isoformat()
                 break
