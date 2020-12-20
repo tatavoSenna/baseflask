@@ -4,9 +4,16 @@ import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import { string, func, bool } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
-import { Form, Button } from 'antd'
+import { Form, Button, Spin } from 'antd'
 
-const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText, block }) => {
+const Editor = ({
+	text,
+	textUpdate,
+	onClickUpdate,
+	onUpdateText,
+	block,
+	versionLoading,
+}) => {
 	return (
 		<div
 			style={{
@@ -18,6 +25,20 @@ const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText, block }) => {
 					className={classNames(styles.documentEditorToolbar)}></div>
 				<div className={classNames(styles.documentEditorEditableContainer)}>
 					<div className={classNames(styles.ckEditorEditable)}>
+						{versionLoading && (
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									minHeight: 100,
+									width: '100%',
+									background: '#fff',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}>
+								<Spin spinning={versionLoading} />
+							</div>
+						)}
 						<CKEditor
 							onInit={(editor) => {
 								const toolbarContainer = document.querySelector(
@@ -28,12 +49,12 @@ const Editor = ({ text, textUpdate, onClickUpdate, onUpdateText, block }) => {
 							editor={DecoupledEditor}
 							config={{}}
 							onChange={(event, editor) => onUpdateText(editor.getData())}
-							data={text}
+							data={!versionLoading ? text : ''}
 						/>
 					</div>
 				</div>
 			</div>
-			{text !== textUpdate && !block && (
+			{text !== textUpdate && !block && !versionLoading && (
 				<div
 					style={{
 						display: 'flex',
@@ -61,6 +82,7 @@ Editor.propTypes = {
 	onClickUpdate: func,
 	onUpdateText: func,
 	block: bool,
+	versionLoading: bool,
 }
 
 export default Editor

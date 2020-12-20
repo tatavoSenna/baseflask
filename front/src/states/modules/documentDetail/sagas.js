@@ -1,5 +1,9 @@
 import { all, call, put, takeEvery, select } from 'redux-saga/effects'
-import { successMessage, loadingMessage } from '~/services/messager'
+import {
+	successMessage,
+	errorMessage,
+	loadingMessage,
+} from '~/services/messager'
 import api from '~/services/api'
 import {
 	getDocumentDetail,
@@ -20,6 +24,9 @@ import {
 	sentAssign,
 	sentAssignSuccess,
 	sentAssignFailure,
+	selectVersion,
+	selectVersionSuccess,
+	selectVersionFailure,
 } from '.'
 import onlineChecking from '../../errorHandling'
 
@@ -30,6 +37,7 @@ export default function* rootSaga() {
 	yield takeEvery(nextStep, nextStepSaga)
 	yield takeEvery(newAssign, newAssignSaga)
 	yield takeEvery(sentAssign, sentAssignSaga)
+	yield takeEvery(selectVersion, selectVersionSaga)
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {
@@ -67,11 +75,47 @@ function* newVersionSaga({ payload = {} }) {
 				text: response.data.uploaded_text,
 				versions: response.data.updated_versions_list,
 				document: documentDetail.data,
+				version_id:
+					response.data.updated_versions_list[
+						response.data.updated_versions_list.length - 1
+					].id,
 			})
 		)
 	} catch (error) {
 		onlineChecking('createVersion')
 		yield put(newVersionFailure(error))
+	}
+}
+
+function* selectVersionSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Selecionando versão do documento...',
+		updateKey: 'selectVersion',
+	})
+	const { id } = payload
+	const { documentDetail } = yield select()
+	try {
+		const response = yield call(
+			api.get,
+			`/documents/${documentDetail.data.id}/text?version=${id}`
+		)
+		successMessage({
+			content: 'Versão selecionada com sucesso.',
+			updateKey: 'selectVersion',
+		})
+		yield put(
+			selectVersionSuccess({
+				text: response.data.text,
+				document: documentDetail.data,
+				version_id: response.data.version_id,
+			})
+		)
+	} catch (error) {
+		errorMessage({
+			content: 'Seleção de versão falhou.',
+			updateKey: 'selectVersion',
+		})
+		yield put(selectVersionFailure(error))
 	}
 }
 

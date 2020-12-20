@@ -20,6 +20,7 @@ import {
 	updateDescription,
 	newAssign,
 	sentAssign,
+	selectVersion,
 } from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
@@ -33,6 +34,8 @@ const DocumentDetails = () => {
 		showAssignModal,
 		description,
 		loadingSign,
+		loadingVersion,
+		version_id,
 	} = useSelector(({ documentDetail }) => documentDetail)
 	const { id } = useHistory().location.state
 
@@ -74,6 +77,10 @@ const DocumentDetails = () => {
 
 	const handleCancelAssignModal = () => {
 		dispatch(setShowAssignModal(false))
+	}
+
+	const handleVersion = (id) => {
+		dispatch(selectVersion({ id }))
 	}
 
 	useEffect(() => {
@@ -123,6 +130,7 @@ const DocumentDetails = () => {
 							onClickUpdate={handleShowModal}
 							onUpdateText={updateText}
 							block={loadingSign || loading || data.sent}
+							versionLoading={loadingVersion}
 						/>
 					</div>
 					<Tabs
@@ -134,6 +142,8 @@ const DocumentDetails = () => {
 						signed={data.sent}
 						sentAssign={handleSentAssign}
 						loadingSign={loadingSign}
+						handleVersion={handleVersion}
+						versionId={version_id}
 					/>
 				</div>
 			)}
