@@ -1,6 +1,10 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
-import { selectAllDocumentDetail, selectAllDocumentVersions } from './selectors'
+import {
+	selectAllDocumentDetail,
+	selectAllDocumentVersions,
+	selectAllDocumentSelectVersion,
+} from './selectors'
 
 const initialState = {
 	data: {},
@@ -12,6 +16,8 @@ const initialState = {
 	error: null,
 	loading: false,
 	loadingSign: false,
+	loadingVersion: false,
+	version_id: '0',
 }
 
 const { actions, reducer } = createSlice({
@@ -27,6 +33,7 @@ const { actions, reducer } = createSlice({
 				data: selectAllDocumentDetail(payload),
 				text: payload.text,
 				textUpdate: payload.text,
+				version_id: payload.version_id,
 				error: null,
 				loading: false,
 			}),
@@ -65,20 +72,43 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loadingSign: false,
 			}),
-		newVersion: (state) => extend(state),
+		selectVersion: (state) =>
+			extend(state, {
+				loadingVersion: true,
+			}),
+		selectVersionSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentSelectVersion(payload),
+				text: payload.text,
+				textUpdate: payload.text,
+				version_id: payload.version_id,
+				description: '',
+				error: null,
+				loadingVersion: false,
+			}),
+		selectVersionFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loadingVersion: false,
+			}),
+		newVersion: (state) =>
+			extend(state, {
+				loadingVersion: true,
+			}),
 		newVersionSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllDocumentVersions(payload),
 				text: payload.text,
 				textUpdate: payload.text,
+				version_id: payload.version_id,
 				description: '',
 				error: null,
-				loading: false,
+				loadingVersion: false,
 			}),
 		newVersionFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
-				loading: false,
+				loadingVersion: false,
 			}),
 		updateTextVersion: (state, { payload }) =>
 			extend(state, {
@@ -150,6 +180,9 @@ export const {
 	sentAssign,
 	sentAssignSuccess,
 	sentAssignFailure,
+	selectVersion,
+	selectVersionSuccess,
+	selectVersionFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Form, Radio, Typography, Button, Spin } from 'antd'
-import { array, bool, func } from 'prop-types'
+import { Form, Radio, Typography, Button, Spin, Menu } from 'antd'
+import { array, bool, func, string } from 'prop-types'
 import { ContainerTabs, ContainerInfo } from './styles'
 import styles from './index.module.scss'
 import * as moment from 'moment'
@@ -19,8 +19,10 @@ const Tabs = ({
 	infos,
 	showAssignModal,
 	signed,
+	handleVersion,
 	sentAssign,
 	loadingSign,
+	versionId,
 }) => {
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
@@ -73,15 +75,31 @@ const Tabs = ({
 			)
 		})
 
-	const version = () =>
-		versions.map((item, index) => (
-			<div
-				style={{ display: 'flex', flexDirection: 'column', marginBottom: 10 }}
-				key={index}>
-				<Text>{item.description}</Text>
-				<Text>{moment(item.created_at).fromNow()}</Text>
-			</div>
-		))
+	const version = () => (
+		<Menu
+			onClick={(item) => handleVersion(item.key)}
+			style={{ width: '100%' }}
+			selectedKeys={[versionId]}
+			mode="inline">
+			{versions.map((item) => (
+				<Menu.Item style={{ height: 80 }} key={item.id}>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'center',
+						}}>
+						<Text style={{ color: '#000', fontSize: 16 }}>
+							{item.description}
+						</Text>
+						<Text style={{ color: '#646464', fontSize: 12 }}>
+							{moment(item.created_at).fromNow()}
+						</Text>
+					</div>
+				</Menu.Item>
+			))}
+		</Menu>
+	)
 
 	const assign = () => (
 		<div>
@@ -173,9 +191,11 @@ Tabs.propTypes = {
 	versions: array,
 	infos: array,
 	showAssignModal: func,
+	handleVersion: func,
 	signed: bool,
 	sentAssign: func,
 	loadingSign: bool,
+	versionId: string,
 }
 
 export default Tabs
