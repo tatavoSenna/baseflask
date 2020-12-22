@@ -88,13 +88,26 @@ const Tabs = ({
 							display: 'flex',
 							flexDirection: 'column',
 							justifyContent: 'center',
+							height: 80,
 						}}>
-						<Text style={{ color: '#000', fontSize: 16 }}>
+						<Text style={{ color: '#000', fontSize: 16, lineHeight: 2.5 }}>
 							{item.description}
 						</Text>
-						<Text style={{ color: '#646464', fontSize: 12 }}>
-							{moment(item.created_at).fromNow()}
-						</Text>
+						<div
+							style={{
+								display: 'flex',
+								flexDirection: 'column',
+							}}>
+							<Text style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
+								por{' '}
+								<Text style={{ color: '#000', fontSize: 12, lineHeight: 1.5 }}>
+									{item.email}
+								</Text>
+							</Text>
+							<Text style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
+								{moment(item.created_at).fromNow()}
+							</Text>
+						</div>
 					</div>
 				</Menu.Item>
 			))}
