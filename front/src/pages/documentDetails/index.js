@@ -7,6 +7,7 @@ import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
 import BreadCrumb from '~/components/breadCrumb'
 import NewVersionModal from './components/modal'
+import ConnectDocusignModal from './components/modalDocusignConnect'
 import AssignModal from './components/tabs/assignModal'
 
 import {
@@ -17,6 +18,7 @@ import {
 	nextStep,
 	setShowModal,
 	setShowAssignModal,
+	setShowConnectModal,
 	updateDescription,
 	newAssign,
 	sentAssign,
@@ -32,6 +34,7 @@ const DocumentDetails = () => {
 		textUpdate,
 		showModal,
 		showAssignModal,
+		showConnectModal,
 		description,
 		loadingSign,
 		loadingVersion,
@@ -75,6 +78,10 @@ const DocumentDetails = () => {
 		dispatch(setShowModal(false))
 	}
 
+	const handleCancelConnectModal = () => {
+		dispatch(setShowConnectModal(false))
+	}
+
 	const handleCancelAssignModal = () => {
 		dispatch(setShowAssignModal(false))
 	}
@@ -101,6 +108,10 @@ const DocumentDetails = () => {
 				showModal={showModal}
 				description={description}
 				handleDescription={handleDescription}
+			/>
+			<ConnectDocusignModal
+				handleCancel={handleCancelConnectModal}
+				showModal={showConnectModal}
 			/>
 			<AssignModal
 				handleCancel={handleCancelAssignModal}

@@ -13,6 +13,7 @@ const initialState = {
 	description: '',
 	showModal: false,
 	showAssignModal: false,
+	showConnectModal: false,
 	error: null,
 	loading: false,
 	loadingSign: false,
@@ -71,6 +72,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 				loadingSign: false,
+				showConnectModal: payload.showConnectModal,
 			}),
 		selectVersion: (state) =>
 			extend(state, {
@@ -150,6 +152,10 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				showAssignModal: payload,
 			}),
+		setShowConnectModal: (state, { payload }) =>
+			extend(state, {
+				showConnectModal: payload,
+			}),
 		updateDescription: (state, { payload }) =>
 			extend(state, {
 				description: payload.description,
@@ -183,6 +189,7 @@ export const {
 	selectVersion,
 	selectVersionSuccess,
 	selectVersionFailure,
+	setShowConnectModal,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'
