@@ -49,7 +49,8 @@ from .controllers import (
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
-    previous_status_controller
+    previous_status_controller,
+    document_creation_email_controller
 )
 from app.docusign.controllers import (
     sign_document_controller
@@ -174,7 +175,12 @@ def create(current_user):
         document_template_id,
         title
     )
-
+    try:
+        response = document_creation_email_controller(
+            title, current_user["company_id"], current_user["email"])
+    except Exception as e:
+        abort(400, {
+              "message": "Failed to send emails on document creation. One or more emails is bad formated or invalid"})
     return DocumentSerializer().dump(document)
 
 

@@ -5,11 +5,15 @@ from datetime import datetime
 from app import db
 from app.constants import months
 from app.models.documents import Document, DocumentTemplate
+from app.models.user import User
 from .remote import RemoteDocument
 from app.serializers.document_serializers import (
     DocumentSerializer
 )
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 import copy
+from flask import current_app
 
 
 def get_document_template_list_controller(company_id):
@@ -168,3 +172,29 @@ def previous_status_controller(document_id):
     db.session.add(document)
     db.session.commit()
     return document, 0
+
+
+def document_creation_email_controller(title, company_id, sender_email):
+    company_users = User.query.filter_by(company_id=company_id)
+    email_list = []
+    for user in company_users:
+        email_list.append(user.email)
+    response = send_email_controller(sender_email, email_list,
+                                     "New Document created", title)
+    return response
+
+
+def send_email_controller(sender_email, recipient_emails, email_subject, variable):
+
+    message = Mail(
+        from_email=sender_email,
+        to_emails=recipient_emails)
+    #make the variables substitutions on the template
+    message.dynamic_template_data = {
+        'subject': email_subject,
+        'variable': variable
+    }
+    message.template_id = 'd-50d8e7117d4640689d8bf638094f2037'
+    sg = SendGridAPIClient(current_app.config["SENDGRID_API_KEY"])
+    response = sg.send(message)
+    return response
