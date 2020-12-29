@@ -82,7 +82,7 @@ def get_document_controller(document_id):
 def get_document_version_controller(document_id):
     document = get_document_controller(document_id)
     # take size of array with will be version + 1
-    current_version = document.versions[-1]["id"]
+    current_version = document.versions[0]["id"]
     return current_version
 
 
@@ -101,7 +101,7 @@ def save_signers_controller(document_id, signers_variables):
 def create_new_version_controller(document_id, description, user_email):
     document = Document.query.filter_by(id=document_id).first()
     versions = document.versions
-    current_version = int(versions[-1]["id"])
+    current_version = int(versions[0]["id"])
     new_version = current_version + 1
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = {"description": description,
@@ -111,7 +111,7 @@ def create_new_version_controller(document_id, description, user_email):
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
-    document.versions.append(version)
+    document.versions.insert(0,version)
     db.session.add(document)
     db.session.commit()
 
