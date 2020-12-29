@@ -15,8 +15,6 @@ import {
 	updateUser,
 } from '.'
 
-import onlineChecking from '../../errorHandling'
-
 export default function* rootSaga() {
 	yield takeEvery(getUserList, getUserListSaga)
 	yield takeEvery(createUser, createUserSaga)
@@ -44,14 +42,17 @@ function* createUserSaga() {
 		updateKey: 'createUser',
 	})
 	try {
-		yield call(api.post, '/userrs', newUser)
+		yield call(api.post, '/users', newUser)
 		successMessage({
 			content: 'Usuário criado com sucesso',
 			updateKey: 'createUser',
 		})
 		yield put(getUserList())
 	} catch {
-		onlineChecking('createUser')
+		errorMessage({
+			content: 'Criação de usuário falhou',
+			updateKey: 'createUser',
+		})
 	}
 	yield put(resetNewUser())
 }
@@ -73,7 +74,10 @@ function* updateUserSaga() {
 		})
 		yield put(getUserList())
 	} catch {
-		onlineChecking('updateUser')
+		errorMessage({
+			content: 'Edição de usuário falhou',
+			updateKey: 'updateUser',
+		})
 	}
 }
 
@@ -90,6 +94,9 @@ function* deleteUserSaga({ payload }) {
 		})
 		yield put(getUserList())
 	} catch {
-		onlineChecking('deleteUser')
+		errorMessage({
+			content: 'Deleção de usuário falhou',
+			updateKey: 'deleteUser',
+		})
 	}
 }

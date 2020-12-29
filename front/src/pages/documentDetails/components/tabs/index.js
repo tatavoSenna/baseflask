@@ -132,6 +132,17 @@ const Tabs = ({
 							</Text>
 						</ContainerInfo>
 					))}
+					{signed && (
+						<ContainerInfo>
+							<Text style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
+								Status
+							</Text>
+							<Text
+								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
+								{item.status}
+							</Text>
+						</ContainerInfo>
+					)}
 				</ContainerTabs>
 			))}
 			<div
