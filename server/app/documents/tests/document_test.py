@@ -195,7 +195,7 @@ def test_create_new_document_version():
 
     create_new_version_controller(document.id, "teste", user.email)
     retrieved_document = get_document_controller(document.id)
-    new_version = retrieved_document.versions[-1]
+    new_version = retrieved_document.versions[0]
 
     assert new_version["description"] == "teste"
     assert new_version["email"] == user_email
@@ -211,7 +211,7 @@ def test_download_document_text(download_document_text_mock):
                  "id": "0"
                  }]
     document = factories.DocumentFactory(id=1, versions=versions)
-    version_id = document.versions[-1]["id"]
+    version_id = document.versions[0]["id"]
 
     textfile = download_document_text_controller(document.id, version_id)
     download_document_text_mock.assert_called_once_with(

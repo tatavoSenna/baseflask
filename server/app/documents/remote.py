@@ -18,7 +18,7 @@ class RemoteDocument:
         self.upload_filled_text_to_documents(document, filled_text)
 
     def upload_filled_text_to_documents(self, document, filled_text):
-        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[-1]["id"]}.txt'
+        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.txt'
         filled_text_io = io.BytesIO(filled_text)
 
         self.s3_client.upload_fileobj(
