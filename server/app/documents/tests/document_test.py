@@ -13,7 +13,8 @@ from app.documents.controllers import(
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
-    previous_status_controller
+    previous_status_controller,
+    document_creation_email_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -171,6 +172,30 @@ def test_create_document(create_remote_document_mock):
 
     create_remote_document_mock.assert_called_once_with(
         document
+    )
+
+
+@ patch('app.documents.controllers.send_email_controller')
+def test_email_create_document(send_email_on_document_creation_mock):
+    company_id = 134
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(
+        company=company, email="testemail@gmail.com"
+    )
+    user2 = factories.UserFactory(
+        company=company, email="testemail2@gmail.com"
+    )
+    email_title = 'teste'
+
+    email_list = []
+    email_list.append(user.email)
+    email_list.append(user2.email)
+
+    document_creation_email_controller(
+        email_title, company_id, user.email)
+
+    send_email_on_document_creation_mock.assert_called_once_with(
+        user.email, email_list, 'New Document created', email_title
     )
 
 
