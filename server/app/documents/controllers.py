@@ -5,7 +5,7 @@ from datetime import datetime
 from app import db
 from app.constants import months
 from app.models.documents import Document, DocumentTemplate
-from app.models.user import User
+from app.models.user import User, ParticipatesOn
 from .remote import RemoteDocument
 from app.serializers.document_serializers import (
     DocumentSerializer
@@ -180,21 +180,43 @@ def document_creation_email_controller(title, company_id, sender_email):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller(sender_email, email_list,
-                                     "New Document created", title)
+                                     "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
     return response
 
 
-def send_email_controller(sender_email, recipient_emails, email_subject, variable):
+def workflow_status_change_email_controller(document_id, sender_email):
+    document = get_document_controller(document_id)
+    workflow = document.workflow
+    node = workflow["current_node"]
+    groups = workflow["nodes"][node]["groups"]
+    status = workflow["nodes"][node]["title"]
+    title = document.title
+
+    email_list = []
+    # for each user group, get all users ids
+    for group in groups:
+        users = ParticipatesOn.query.filter_by(group_id=group)
+        # for each user id, add respective user email to email list
+        for user in users:
+            email = User.query.filter_by(id=user.user_id).first().email
+            if email not in email_list:
+                email_list.append(email)
+    response = send_email_controller(sender_email, email_list,
+                                     f'O Documento {title} mudou para o status {status}.', title, 'd-6b9591b72dc24aaeaac8a871e55660f4')
+    return response
+
+
+def send_email_controller(sender_email, recipient_emails, email_subject, variable, template_id):
 
     message = Mail(
         from_email=sender_email,
         to_emails=recipient_emails)
-    #make the variables substitutions on the template
+    # faz as substituições necessárias no template
     message.dynamic_template_data = {
         'subject': email_subject,
         'variable': variable
     }
-    message.template_id = 'd-50d8e7117d4640689d8bf638094f2037'
+    message.template_id = template_id
     sg = SendGridAPIClient(current_app.config["SENDGRID_API_KEY"])
     response = sg.send(message)
     return response
