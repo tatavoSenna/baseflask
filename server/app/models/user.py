@@ -43,7 +43,11 @@ class Group(db.Model):
     company_id = db.Column(
         db.Integer, db.ForeignKey("company.id"), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=True)
-
+    
+    __table_args__ = (
+        db.UniqueConstraint("name", "company_id", name="unique_group"),
+    )
+    
     # Belongs to
     company = db.relationship("Company", back_populates="groups")
 
