@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 from config import init_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
 

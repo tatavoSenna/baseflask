@@ -3,9 +3,9 @@ import logging
 import boto3
 import botocore
 
-from flask import request, Blueprint, jsonify, current_app
+from flask import request, Blueprint, jsonify, current_app, abort
 
-from app import aws_auth, db
+from app import aws_auth, db, IntegrityError
 from app.users.remote import RemoteUser, get_local_user
 from app.models.user import User, Group
 from app.serializers.user_serializers import UserSerializer, GroupSerializer
@@ -190,6 +190,7 @@ def get_group(logged_user, group_id):
 def create_group(logged_user):
     fields = request.get_json()
     required_fields = ["name"]
+    
 
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields"), 400
@@ -200,7 +201,11 @@ def create_group(logged_user):
     if not company:
         return dict(error="Couldn't find any company with the given id"), 404
 
-    new_group = create_group_controller(company.id, name)
+    try:
+        new_group = create_group_controller(company.id, name)
+    except IntegrityError as e:
+        if 'unique_group' in str(e):
+            abort(404, "Grupo já existente")      
 
     return jsonify({"group": GroupSerializer().dump(new_group)})
 
