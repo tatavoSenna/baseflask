@@ -50,7 +50,8 @@ from .controllers import (
     upload_document_text_controller,
     next_status_controller,
     previous_status_controller,
-    document_creation_email_controller
+    document_creation_email_controller,
+    workflow_status_change_email_controller
 )
 from app.docusign.controllers import (
     sign_document_controller
@@ -226,6 +227,11 @@ def next_document_status(current_user, document_id):
             abort(400, "There is no next status")
     except Exception:
         abort(404, "Could not change document status")
+    try:
+        response = workflow_status_change_email_controller(
+            document_id, current_user["email"])
+    except Exception:
+        abort(400, "Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 
@@ -242,6 +248,11 @@ def previous_document_status(current_user, document_id):
             abort(404, "There is no previous status")
     except Exception:
         abort(404, "Could not change document status")
+    try:
+        response = workflow_status_change_email_controller(
+            document_id, current_user["email"])
+    except Exception:
+        abort(400, "Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 
