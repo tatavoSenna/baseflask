@@ -46,6 +46,7 @@ from .controllers import (
     create_new_version_controller,
     get_document_controller,
     get_document_version_controller,
+    get_comments_version_controller,
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
@@ -108,6 +109,7 @@ def get_document_list(current_user):
 @get_local_user
 def get_document_text(current_user, document_id):
     version_id = request.args.get('version')
+    comments = get_comments_version_controller(document_id)
     if not version_id:
         version_id = get_document_version_controller(document_id)
     try:
@@ -118,6 +120,7 @@ def get_document_text(current_user, document_id):
         {
             "text": textfile.decode('utf-8'),
             "version_id": version_id,
+            "comments": comments
         }
     )
 
@@ -131,10 +134,11 @@ def add_document_text(current_user, document_id):
     content = request.json
     document_text = content.get("text", None)
     description = content.get("description", None)
+    comments = content.get("comments", None)
     try:
         # create new version in 'versions' array before uploading the text
         create_new_version_controller(
-            document_id, description, current_user["email"])
+            document_id, description, current_user["email"], comments)
     except Exception:
         abort(404, "Document not Found")
 

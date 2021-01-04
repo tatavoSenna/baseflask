@@ -42,7 +42,8 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     version = [{"description": "Version 0",
                 "email": user_email,
                 "created_at": current_date,
-                "id": "0"
+                "id": "0",
+                "comments": None
                 }]
     document = Document(
         user_id=user_id,
@@ -89,6 +90,10 @@ def get_document_version_controller(document_id):
     current_version = document.versions[0]["id"]
     return current_version
 
+def get_comments_version_controller(document_id):
+    document = get_document_controller(document_id)
+    current_comments = document.versions[0]["comments"]
+    return current_comments
 
 def save_signers_controller(document_id, signers_variables):
     document = get_document_controller(document_id)
@@ -102,7 +107,7 @@ def save_signers_controller(document_id, signers_variables):
     return document
 
 
-def create_new_version_controller(document_id, description, user_email):
+def create_new_version_controller(document_id, description, user_email, comments):
     document = Document.query.filter_by(id=document_id).first()
     versions = document.versions
     current_version = int(versions[0]["id"])
@@ -111,7 +116,8 @@ def create_new_version_controller(document_id, description, user_email):
     version = {"description": description,
                "email": user_email,
                "created_at": current_date,
-               "id": str(new_version)}
+               "id": str(new_version),
+               "comments": comments}
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
