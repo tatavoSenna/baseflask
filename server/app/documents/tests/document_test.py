@@ -263,7 +263,8 @@ def test_create_new_document_version():
     versions = [{"description": "Version 0",
                  "email": "aaa@gmail.com",
                  "created_at": current_date,
-                 "id": "0"
+                 "id": "0",
+                 "comments": None
                  }]
 
     company = factories.CompanyFactory(id=company_id)
@@ -275,7 +276,7 @@ def test_create_new_document_version():
         versions=versions,
     )
 
-    create_new_version_controller(document.id, "teste", user.email)
+    create_new_version_controller(document.id, "teste", user.email, "New comment")
     retrieved_document = get_document_controller(document.id)
     new_version = retrieved_document.versions[0]
 
@@ -283,6 +284,7 @@ def test_create_new_document_version():
     assert new_version["email"] == user_email
     assert new_version["created_at"] == current_date
     assert new_version["id"] == "1"
+    assert new_version["comments"] == "New comment"
 
 
 @ patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
