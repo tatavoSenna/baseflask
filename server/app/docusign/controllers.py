@@ -175,8 +175,12 @@ def update_signer_status(docusign_id=None, email=None, status=None):
     db.session.commit()
 
 
-def update_envelope_status(docusign_id):
+def update_envelope_status(docusign_id, document_bytes):
     document = Document.query.filter_by(envelope=docusign_id).first()
     document.signed = True
+
+    remote_document = RemoteDocument()
+    remote_document.upload_signed_document(document, document_bytes)
+
     db.session.add(document)
     db.session.commit()

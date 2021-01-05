@@ -3,6 +3,7 @@ import io
 
 from datetime import datetime
 from flask import current_app
+import base64
 
 from app import jinja_env
 
@@ -68,3 +69,26 @@ class RemoteDocument:
         template_file = template_file_io.getvalue()
 
         return template_file
+
+    def upload_signed_document(self, document, document_bytes):
+        remote_path = f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+        document_pdf = base64.b64decode(document_bytes)
+        filled_text_io = io.BytesIO(document_pdf)
+
+        self.s3_client.upload_fileobj(
+            filled_text_io,
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path
+        )
+
+    def download_signed_document(self, document):
+
+        document_url = self.s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                "Key": f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+            },
+            ExpiresIn=180,
+        )
+        return document_url

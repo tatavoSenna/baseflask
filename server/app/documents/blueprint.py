@@ -51,7 +51,8 @@ from .controllers import (
     next_status_controller,
     previous_status_controller,
     document_creation_email_controller,
-    workflow_status_change_email_controller
+    workflow_status_change_email_controller,
+    get_download_url_controller
 )
 from app.docusign.controllers import (
     sign_document_controller
@@ -196,20 +197,19 @@ def download(current_user, document_id):
         document = Document.query.get(document_id)
     except Exception:
         abort(404, "Document not Found")
+    if document.signed != True:
+        abort(
+            403, "Document has not finished signing yet, so it's not available for download")
 
-    s3_client = boto3.client("s3")
-    document_url = s3_client.generate_presigned_url(
-        "get_object",
-        Params={
-            "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            "Key": f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.versions[0].filename}'
-        },
-        ExpiresIn=180,
-    )
+    try:
+        document_url = get_download_url_controller(document)
+    except:
+        abort(
+            400, "Could not download document from S3")
 
     response = {
         "download_url": document_url,
-        "document_name": f"{document.versions[0].filename}.{document.template.filetype}",
+        "document_name": f"{document.title}.pdf",
     }
 
     return jsonify(response)

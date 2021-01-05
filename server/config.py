@@ -8,9 +8,9 @@ class Config(object):
         "SQLALCHEMY_TRACK_MODIFICATIONS", False
     )
     DOCUSIGN_OAUTH_URI = os.environ.get("DOCUSIGN_OAUTH_URI")
-    DOCUSIGN_WEBHOOK_URL= os.environ.get("DOCUSIGN_WEBHOOK_URL")
+    DOCUSIGN_WEBHOOK_URL = os.environ.get("DOCUSIGN_WEBHOOK_URL")
 
-    SENDGRID_API_KEY= os.environ.get("SENDGRID_API_KEY")
+    SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
 
     AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -26,6 +26,7 @@ class Config(object):
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
     AWS_S3_DOCUMENTS_ROOT = "documents"
     AWS_S3_TEMPLATES_ROOT = "templates"
+    AWS_S3_SIGNED_DOCUMENTS_ROOT = "signed_documents"
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20
 

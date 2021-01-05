@@ -115,7 +115,7 @@ def create_new_version_controller(document_id, description, user_email):
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
-    document.versions.insert(0,version)
+    document.versions.insert(0, version)
     db.session.add(document)
     db.session.commit()
 
@@ -207,7 +207,6 @@ def workflow_status_change_email_controller(document_id, sender_email):
 
 
 def send_email_controller(sender_email, recipient_emails, email_subject, variable, template_id):
-
     message = Mail(
         from_email=sender_email,
         to_emails=recipient_emails)
@@ -220,3 +219,9 @@ def send_email_controller(sender_email, recipient_emails, email_subject, variabl
     sg = SendGridAPIClient(current_app.config["SENDGRID_API_KEY"])
     response = sg.send(message)
     return response
+
+
+def get_download_url_controller(document):
+    remote_document = RemoteDocument()
+    url = remote_document.download_signed_document(document)
+    return url
