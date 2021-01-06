@@ -6,6 +6,7 @@ import CpfField from '../../../../components/cpfField'
 import EmailField from '../../../../components/emailField'
 import CurrencyField from '../../../../components/currencyField'
 import TextField from '../../../../components/textField'
+import DropdownField from '../../../../components/dropdownField'
 
 function InputFactory(pageFieldsData) {
 	const children = []
@@ -28,6 +29,11 @@ function InputFactory(pageFieldsData) {
 			case 'currency':
 				children.push(
 					<CurrencyField key={i} pageFieldsData={pageFieldsData[i]} />
+				)
+				break
+			case 'dropdown':
+				children.push(
+					<DropdownField key={i} pageFieldsData={pageFieldsData[i]} />
 				)
 				break
 			default:
