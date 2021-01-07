@@ -81,7 +81,9 @@ def docusign_follow_up():
     envelope_status = xml.EnvelopeStatus.Status.string
     # check if envelope is done signing
     if envelope_status == 'Completed':
-        update_envelope_status(docusign_id=envelope_id)
+        document_bytes = xml.DocumentPDFs.DocumentPDF.PDFBytes.string
+        update_envelope_status(docusign_id=envelope_id,
+                               document_bytes=document_bytes)
     # for every signer update his status
     for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
         update_signer_status(

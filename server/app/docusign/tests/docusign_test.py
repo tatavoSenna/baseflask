@@ -8,6 +8,8 @@ from app.docusign.controllers import(
 from app.documents.controllers import(
     get_document_controller)
 
+from app.models.documents import Document
+
 
 @patch('docusign_esign.EnvelopesApi.create_envelope')
 def test_sign_document(create_envelope_mock):
@@ -88,7 +90,7 @@ def test_sign_document(create_envelope_mock):
     assert document.sent == True
 
 
-def test_update_signer_and_envelope_status():
+def test_update_signer_status():
     email = 'teste@gmail.com'
     document_id = 15
     signers_empty = [
@@ -123,12 +125,26 @@ def test_update_signer_and_envelope_status():
                  }
     document = factories.DocumentFactory(
         id=document_id, signers=signers_empty, variables=variables, envelope='12', signed=None)
-    update_signer_status(docusign_id='12', email=email,status='Completed')
-    update_envelope_status(docusign_id='12')
+    update_signer_status(docusign_id='12', email=email, status='Completed')
     retrieved_document = get_document_controller(document_id)
     retrieved_variables = retrieved_document.variables
-    assert retrieved_document.signed == True
     for signer_info in retrieved_document.signers:
         for signer_field in signer_info['fields']:
             if signer_field['value'] == "Email" and retrieved_variables[signer_field['variable']] == email:
                 assert signer_info['signing_date'] != ""
+
+
+@patch('app.documents.controllers.RemoteDocument.upload_signed_document')
+def test_upload_signed_document_and_update_status(upload_signed_document_mock):
+    document_id = 94
+
+    document = factories.DocumentFactory(
+        id=document_id, envelope='12', signed=None)
+    document_bytes = "teste"
+    update_envelope_status('12', document_bytes)
+
+    retrieved_document = Document.query.filter_by(envelope='12').first()
+    assert retrieved_document.signed == True
+    upload_signed_document_mock.assert_called_once_with(
+        retrieved_document, document_bytes
+    )

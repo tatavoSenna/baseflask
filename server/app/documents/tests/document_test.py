@@ -15,7 +15,8 @@ from app.documents.controllers import(
     next_status_controller,
     previous_status_controller,
     document_creation_email_controller,
-    workflow_status_change_email_controller
+    workflow_status_change_email_controller,
+    get_download_url_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -402,3 +403,15 @@ def test_change_document_status_previous():
     retrieved_document, status = previous_status_controller(document.id)
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "544"
+
+
+@ patch('app.documents.controllers.RemoteDocument.download_signed_document')
+def test_download_signed_document(download_document_mock):
+    document_id = 72
+    document = factories.DocumentFactory(id=document_id)
+
+    url = get_download_url_controller(document)
+
+    download_document_mock.assert_called_once_with(
+        document
+    )
