@@ -53,6 +53,7 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         signers=document_template.signers,
         variables=variables,
         versions=version,
+        created_at=datetime.utcnow().isoformat(),
         title=title,
         document_template_id=document_template_id,
     )
@@ -90,10 +91,12 @@ def get_document_version_controller(document_id):
     current_version = document.versions[0]["id"]
     return current_version
 
+
 def get_comments_version_controller(document_id):
     document = get_document_controller(document_id)
     current_comments = document.versions[0]["comments"]
     return current_comments
+
 
 def save_signers_controller(document_id, signers_variables):
     document = get_document_controller(document_id)
