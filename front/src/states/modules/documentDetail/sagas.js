@@ -157,8 +157,7 @@ function* sentAssignSaga({ payload = {} }) {
 			showConnectModal = true
 		} else {
 			errorMessage({
-				content:
-					'Envio para docusign falhou, favor revisar os dados de assinantes.',
+				content: error.response.request.responseText,
 				updateKey: 'sentAssign',
 			})
 		}
