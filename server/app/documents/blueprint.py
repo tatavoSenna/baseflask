@@ -316,15 +316,26 @@ def request_signatures(current_user):
         dict_str = e.body.decode("utf-8")
         ans_json = ast.literal_eval(dict_str)
         if ans_json['errorCode'] == 'ANCHOR_TAB_STRING_NOT_FOUND':
-            abort(400, {"message": "Missing Anchor String on Document text"})
-        if ans_json['errorCode'] == 'AUTHORIZATION_INVALID_TOKEN':
-            abort(400, {"message": "Token is expired or invalid"})
-        if ans_json['errorCode'] == 'USER_AUTHENTICATION_FAILED':
-            abort(400, {"message": "Invalid Docusign access token"})
+            error_JSON = {
+                "message": "Missing Anchor String on Document text"
+            }
 
-        abort(400, {"message": "Something went wrong",
-                    "errorCode": ans_json['errorCode'],
-                    "errorMessage": ans_json['message']})
+        elif ans_json['errorCode'] == 'AUTHORIZATION_INVALID_TOKEN':
+            error_JSON = {
+                "message": "Token is expired or invalid"
+            }
+
+        elif ans_json['errorCode'] == 'USER_AUTHENTICATION_FAILED':
+            error_JSON = {
+                "message": "Invalid Docusign access token. User authentication failed"
+            }
+
+        else:
+            error_JSON = {
+                "message": "Something went wrong when trying to sign document, please check signers information"
+            }
+
+        return jsonify(error_JSON), 400
 
     return jsonify(DocumentSerializer().dump(current_document))
 
