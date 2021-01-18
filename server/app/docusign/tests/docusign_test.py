@@ -85,7 +85,7 @@ def test_sign_document(create_envelope_mock):
     account_ID = '12345'
     token = 'kasdhuwai214'
 
-    sign_document_controller(document, document_text, account_ID, token)
+    sign_document_controller(document, document_text, account_ID, token, 'joao')
     create_envelope_mock.assert_called_once()
     assert document.sent == True
 

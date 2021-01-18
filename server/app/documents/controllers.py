@@ -33,7 +33,7 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
@@ -45,11 +45,13 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
                 "id": "0",
                 "comments": None
                 }]
+    document_workflow = document_template.workflow
+    document_workflow['created_by'] = username
     document = Document(
         user_id=user_id,
         company_id=company_id,
         form=document_template.form,
-        workflow=document_template.workflow,
+        workflow=document_workflow,
         signers=document_template.signers,
         variables=variables,
         versions=version,
@@ -145,7 +147,7 @@ def upload_document_text_controller(document_id, document_text):
     remote_document.upload_filled_text_to_documents(document, document_text)
 
 
-def next_status_controller(document_id):
+def next_status_controller(document_id, username):
     document = get_document_controller(document_id)
     workflow = document.workflow
     next_node = workflow["nodes"][workflow["current_node"]]["next_node"]
@@ -155,6 +157,8 @@ def next_status_controller(document_id):
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.workflow = copy.deepcopy(document.workflow)
+    document.workflow["nodes"][workflow["current_node"]
+                               ]["changed_by"] = username
     document.workflow["current_node"] = next_node
     db.session.add(document)
     db.session.commit()
@@ -197,7 +201,7 @@ def workflow_status_change_email_controller(document_id, sender_email):
     document = get_document_controller(document_id)
     workflow = document.workflow
     node = workflow["current_node"]
-    groups = workflow["nodes"][node]["groups"]
+    groups = workflow["nodes"][node]["responsible_groups"]
     status = workflow["nodes"][node]["title"]
     title = document.title
 

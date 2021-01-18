@@ -179,7 +179,8 @@ def create(current_user):
         current_user["company_id"],
         variables,
         document_template_id,
-        title
+        title,
+        current_user["name"]
     )
     try:
         response = document_creation_email_controller(
@@ -224,7 +225,8 @@ def download(current_user, document_id):
 @get_local_user
 def next_document_status(current_user, document_id):
     try:
-        document, status = next_status_controller(document_id)
+        document, status = next_status_controller(
+            document_id, current_user["name"])
         if not document:
             abort(404, "Document not Found")
         if status == 1:
@@ -311,7 +313,8 @@ def request_signatures(current_user):
     if token is None:
         abort(400, {"message": "Missing DocuSign user token"})
     try:
-        sign_document_controller(current_document, textfile, account_ID, token)
+        sign_document_controller(
+            current_document, textfile, account_ID, token, current_user["name"])
     except Exception as e:
         dict_str = e.body.decode("utf-8")
         ans_json = ast.literal_eval(dict_str)
