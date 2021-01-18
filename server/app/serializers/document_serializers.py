@@ -88,6 +88,7 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
             ordered_nodes = order_nodes(obj.workflow["nodes"])
             return {
                 "current_step": obj.workflow["current_node"],
+                "created_by": obj.workflow["created_by"],
                 "steps": generate_steps(obj.workflow, ordered_nodes)
             }
 
@@ -134,7 +135,8 @@ def generate_steps(obj_workflow, ordered_nodes):
         steps.append({
             'step': node,
             'title': obj_workflow['nodes'][node]['title'],
-            'groups': obj_workflow['nodes'][node]['responsible_groups']
+            'groups': obj_workflow['nodes'][node]['responsible_groups'],
+            'changed_by': obj_workflow['nodes'][node]['changed_by']
         })
     return steps
 

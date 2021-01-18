@@ -49,7 +49,7 @@ event_notification = {"loggingEnabled": "true",  # The api wants strings for tru
                       }
 
 
-def sign_document_controller(current_document, document_text, account_ID, token):
+def sign_document_controller(current_document, document_text, account_ID, token, username):
     signers_data = []
 
     for signer_info in current_document.signers:
@@ -146,7 +146,13 @@ def sign_document_controller(current_document, document_text, account_ID, token)
         if not isinstance(envelope, MagicMock):
 
             current_document.envelope = envelope.envelope_id
-            # testar para ver se o commit está atualizando o json corretamente
+            # copy to track changes to JSON
+            workflow = copy.deepcopy(current_document.workflow)
+            current_node = workflow["current_node"]
+            workflow["nodes"][current_node]["changed_by"] = username
+            # save person who sent to signature and update it to database
+            current_document.workflow = workflow
+            db.session.add(current_document)
             db.session.commit()
 
         # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)

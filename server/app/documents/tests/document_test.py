@@ -148,8 +148,28 @@ def test_create_document(create_remote_document_mock):
     user = factories.UserFactory(
         company=company, email="testemail@gmail.com"
     )
+
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+                "changed_by": ""
+            },
+            "3485": {
+                "next_node": None,
+                "changed_by": ""
+            },
+            "5521": {
+                "next_node": "3485",
+                "changed_by": ""
+            }
+        },
+        "current_node": "544",
+        "created_by": ""
+    }
+
     document_template = factories.DocumentTemplateFactory(
-        company=company
+        company=company, workflow=workflow
     )
     title = "default title"
 
@@ -164,13 +184,15 @@ def test_create_document(create_remote_document_mock):
         user.company_id,
         variables,
         document_template.id,
-        title
+        title,
+        'Joao'
     )
 
     assert document.user_id == user.id
     assert document.company_id == company.id
     assert document.document_template_id == document_template.id
     assert document.title == title
+    assert document.workflow['created_by'] == 'Joao'
 
     create_remote_document_mock.assert_called_once_with(
         document
@@ -208,17 +230,17 @@ def test_email_change_document_workflow_status(status_change_email_mock):
         "nodes": {
             "544": {
                 "next_node": "5521",
-                "groups": [1],
+                "responsible_groups": [1],
                 "title": "Teste titulo",
             },
             "3485": {
                 "next_node": None,
-                "groups": [1],
+                "responsible_groups": [1],
                 "title": "Teste titulo 2",
             },
             "5521": {
                 "next_node": "3485",
-                "groups": [15, 18],
+                "responsible_groups": [15, 18],
                 "title": "Análise Diretoria",
             }
         },
@@ -277,7 +299,8 @@ def test_create_new_document_version():
         versions=versions,
     )
 
-    create_new_version_controller(document.id, "teste", user.email, "New comment")
+    create_new_version_controller(
+        document.id, "teste", user.email, "New comment")
     retrieved_document = get_document_controller(document.id)
     new_version = retrieved_document.versions[0]
 
@@ -324,12 +347,15 @@ def test_change_document_status_next():
         "nodes": {
             "544": {
                 "next_node": "5521",
+                "changed_by": ""
             },
             "3485": {
                 "next_node": None,
+                "changed_by": ""
             },
             "5521": {
                 "next_node": "3485",
+                "changed_by": ""
             }
         },
         "current_node": "5521"
@@ -356,9 +382,10 @@ def test_change_document_status_next():
         current_step=current_step
     )
     # call the controller to change status from '5521' to '3485'
-    retrieved_document, status = next_status_controller(document.id)
+    retrieved_document, status = next_status_controller(document.id, 'joao')
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "3485"
+    assert retrieved_document.workflow['nodes']['5521']['changed_by'] == "joao"
 
 
 def test_change_document_status_previous():
