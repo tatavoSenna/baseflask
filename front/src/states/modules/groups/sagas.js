@@ -1,9 +1,5 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import {
-	errorMessage,
-	successMessage,
-	loadingMessage,
-} from '~/services/messager'
+import { successMessage, loadingMessage } from '~/services/messager'
 
 import api from '~/services/api'
 import {
@@ -27,9 +23,7 @@ function* getGroupListSaga() {
 		const { data } = yield call(api.get, url)
 		const groupList = selectAllGroups(data.groups)
 		yield put(getGroupListSuccess(groupList))
-	} catch (error) {
-		errorMessage('Erro na conexão com o servidor. Tente novamente mais tarde')
-	}
+	} catch {}
 }
 
 function* createGroupSaga() {
@@ -47,12 +41,7 @@ function* createGroupSaga() {
 			updateKey: 'createGroup',
 		})
 		yield put(getGroupList())
-	} catch {
-		errorMessage({
-			content: 'Criação de grupo falhou',
-			updateKey: 'createGroup',
-		})
-	}
+	} catch (error) { }
 	yield put(resetNewGroup())
 }
 
@@ -68,10 +57,5 @@ function* deleteGroupSaga({ payload }) {
 			updateKey: 'deleteGroup',
 		})
 		yield put(getGroupList())
-	} catch {
-		errorMessage({
-			content: 'Deleção de grupo falhou',
-			updateKey: 'deleteGroup',
-		})
-	}
+	} catch (error) { }
 }
