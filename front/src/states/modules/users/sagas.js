@@ -1,9 +1,5 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import {
-	errorMessage,
-	successMessage,
-	loadingMessage,
-} from '~/services/messager'
+import { successMessage, loadingMessage } from '~/services/messager'
 
 import api from '~/services/api'
 import {
@@ -29,9 +25,7 @@ function* getUserListSaga({ payload = {} }) {
 	try {
 		const { data } = yield call(api.get, url)
 		yield put(getUserListSuccess(data))
-	} catch (error) {
-		errorMessage('Erro na conexão com o servidor. Tente novamente mais tarde')
-	}
+	} catch { }
 }
 
 function* createUserSaga() {
@@ -48,12 +42,7 @@ function* createUserSaga() {
 			updateKey: 'createUser',
 		})
 		yield put(getUserList())
-	} catch {
-		errorMessage({
-			content: 'Criação de usuário falhou',
-			updateKey: 'createUser',
-		})
-	}
+	} catch { }
 	yield put(resetNewUser())
 }
 
@@ -73,12 +62,7 @@ function* updateUserSaga() {
 			updateKey: 'updateUser',
 		})
 		yield put(getUserList())
-	} catch {
-		errorMessage({
-			content: 'Edição de usuário falhou',
-			updateKey: 'updateUser',
-		})
-	}
+	} catch { }
 }
 
 function* deleteUserSaga({ payload }) {
@@ -93,10 +77,5 @@ function* deleteUserSaga({ payload }) {
 			updateKey: 'deleteUser',
 		})
 		yield put(getUserList())
-	} catch {
-		errorMessage({
-			content: 'Deleção de usuário falhou',
-			updateKey: 'deleteUser',
-		})
-	}
+	} catch { }
 }

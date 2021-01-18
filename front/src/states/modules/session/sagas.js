@@ -53,9 +53,7 @@ function* getLoggedUserSaga() {
 		const url = '/users/me'
 		const { data } = yield call(api.get, url)
 		yield put(getLoggedUserSuccess(data))
-	} catch (error) {
-		errorMessage('Falha ao buscar informações do usuário logado')
-	}
+	} catch { }
 }
 
 export function setToken({ payload }) {

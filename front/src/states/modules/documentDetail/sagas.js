@@ -80,10 +80,6 @@ function* newVersionSaga({ payload = {} }) {
 			})
 		)
 	} catch (error) {
-		errorMessage({
-			content: 'Criação de nova versão falhou',
-			updateKey: 'createVersion',
-		})
 		yield put(newVersionFailure(error))
 	}
 }
