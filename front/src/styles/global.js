@@ -39,6 +39,10 @@ const GlobalStyle = createGlobalStyle`
   summary {
     cursor: pointer;
   }
+
+  tr.ant-table-row.ant-table-row-level-0 {
+      cursor: pointer;
+  }
 `
 
 export default GlobalStyle
