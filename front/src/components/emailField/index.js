@@ -1,8 +1,8 @@
 import React from 'react'
-import { string, shape } from 'prop-types'
+import { string, shape, object, func } from 'prop-types'
 import { Form, Input } from 'antd'
 
-const EmailField = ({ pageFieldsData, inputValue }) => {
+const EmailField = ({ pageFieldsData, inputValue, className, onChange }) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -10,11 +10,15 @@ const EmailField = ({ pageFieldsData, inputValue }) => {
 			name={variable}
 			label={value}
 			type={type}
+			className={className}
+			onChange={onChange}
 			hasFeedback
-			rules={[
-				{ type, message: 'E-mail não é válido.' },
-				{ required: true, message: 'Este campo é obrigatório.' },
-			]}
+			rules={
+				className !== 'inputFactory_hidden__18I0s' && [
+					{ type, message: 'E-mail não é válido.' },
+					{ required: true, message: 'Este campo é obrigatório.' },
+				]
+			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Input placeholder="" />
@@ -29,6 +33,13 @@ EmailField.propTypes = {
 		type: string.isRequired,
 	}).isRequired,
 	inputValue: string,
+	className: object,
+	onChange: func,
+}
+
+EmailField.defaultProps = {
+	className: {},
+	onChange: () => null,
 }
 
 export default EmailField

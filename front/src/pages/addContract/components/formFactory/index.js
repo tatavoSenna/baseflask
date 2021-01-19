@@ -64,9 +64,9 @@ const FormFactory = ({ pageFieldsData, isLastPage }) => {
 		>
 			<Title level={4}>{pageFieldsData ? pageFieldsData.title : ''}</Title>
 			<Divider />
-			{pageFieldsData &&
-				pageFieldsData.fields.length > 0 &&
-				InputFactory(pageFieldsData.fields)}
+			{pageFieldsData && pageFieldsData.fields.length > 0 && (
+				<InputFactory data={pageFieldsData.fields} />
+			)}
 			<div
 				// {...tailLayout}
 				style={{
