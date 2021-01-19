@@ -7,6 +7,8 @@ import EmailField from '../../../../components/emailField'
 import CurrencyField from '../../../../components/currencyField'
 import TextField from '../../../../components/textField'
 import DropdownField from '../../../../components/dropdownField'
+import DateField from '../../../../components/dateField'
+
 import styles from './index.module.scss'
 
 function InputFactory({ data: pageFieldsData }) {
@@ -140,6 +142,18 @@ function InputFactory({ data: pageFieldsData }) {
 			case 'dropdown':
 				children.push(
 					<DropdownField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'date':
+				children.push(
+					<DateField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={hiddenInput[0][i] ? styles.hidden : undefined}
