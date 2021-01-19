@@ -79,6 +79,7 @@ def docusign_follow_up():
     xml = BeautifulSoup(request.data, "xml")
     envelope_id = xml.EnvelopeStatus.EnvelopeID.string
     envelope_status = xml.EnvelopeStatus.Status.string
+    timezone_offset = int(xml.TimeZoneOffset.string)
     # check if envelope is done signing
     if envelope_status == 'Completed':
         document_bytes = xml.DocumentPDFs.DocumentPDF.PDFBytes.string
@@ -86,9 +87,15 @@ def docusign_follow_up():
                                document_bytes=document_bytes)
     # for every signer update his status
     for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
+        signing_time = None
+        status = signer_status.Status.string
+        if status == 'Completed':
+            signing_time = signer_status.Signed.string
         update_signer_status(
             docusign_id=envelope_id,
             email=signer_status.Email.string,
-            status=signer_status.Status.string
+            status=status,
+            signing_time=signing_time,
+            timezone_offset=timezone_offset
         )
     return ('Ok', 200)

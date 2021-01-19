@@ -125,13 +125,14 @@ def test_update_signer_status():
                  }
     document = factories.DocumentFactory(
         id=document_id, signers=signers_empty, variables=variables, envelope='12', signed=None)
-    update_signer_status(docusign_id='12', email=email, status='Completed')
+    update_signer_status(docusign_id='12', email=email, status='Completed',
+                         signing_time='2021-01-12T12:25:04.1', timezone_offset=-8)
     retrieved_document = get_document_controller(document_id)
     retrieved_variables = retrieved_document.variables
     for signer_info in retrieved_document.signers:
         for signer_field in signer_info['fields']:
             if signer_field['value'] == "Email" and retrieved_variables[signer_field['variable']] == email:
-                assert signer_info['signing_date'] != ""
+                assert signer_info['signing_date'] == "2021-01-12T12:25:04.1-08:00"
 
 
 @patch('app.documents.controllers.RemoteDocument.upload_signed_document')

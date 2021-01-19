@@ -158,7 +158,7 @@ def sign_document_controller(current_document, document_text, account_ID, token,
         # envelop_summary_2 = envelope_api.get_envelope('957b17e7-1218-4865-8fff-ad974ed8f6a7', envelope_summary.envelope_id)
 
 
-def update_signer_status(docusign_id=None, email=None, status=None):
+def update_signer_status(docusign_id=None, email=None, status=None, signing_time=None, timezone_offset=None):
     document = Document.query.filter_by(envelope=docusign_id).first()
 
     # need to make a copy so that changes in signers JSON are tracked
@@ -172,8 +172,12 @@ def update_signer_status(docusign_id=None, email=None, status=None):
                 signer_info['status'] = status
                 # register the date and time of signature if it has not yet been registered
                 if status == 'Completed' and not signer_info.get('signing_date', ""):
-                    signer_info['signing_date'] = datetime.now(
-                    ).astimezone().replace(microsecond=0).isoformat()
+                    #now convert so that it can be stored on correct format
+                    if timezone_offset < 0:
+                        timezone_offset = -1*timezone_offset
+                        signer_info['signing_date'] = f'{signing_time}-0{timezone_offset}:00'
+                    else:
+                        signer_info['signing_date'] = f'{signing_time}+0{timezone_offset}:00'
                 break
 
     document.signers = signers
