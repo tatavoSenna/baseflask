@@ -150,10 +150,11 @@ def map_variables_to_form(variables, form):
             "fields": []
         })
         for question in group['fields']:
-            filled_form[-1]["fields"].append({
-                # MUDAR PARA question['label'] após refatoração do form
-                "label": question['value'],
-                "variable": question['variable'],
-                "value": variables[question['variable']]
-            })
+            if variables.get(question['variable']):
+                filled_form[-1]["fields"].append({
+                    # MUDAR PARA question['label'] após refatoração do form
+                    "label": question['value'],
+                    "variable": question['variable'],
+                    "value": variables[question['variable']]
+                })
     return filled_form
