@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Layout, PageHeader } from 'antd'
+import { Layout } from 'antd'
 import { useHistory } from 'react-router-dom'
 
-import BreadCrumb from '~/components/breadCrumb'
 import FormFactory from './components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
@@ -17,7 +16,7 @@ function AddContract() {
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
-	const { data: questions, loading } = useSelector(({ question }) => question)
+	const { data: questions } = useSelector(({ question }) => question)
 
 	useEffect(() => {
 		dispatch(listQuestion({ modelId: values.modelId, title: values.title }))
@@ -33,21 +32,7 @@ function AddContract() {
 		setStepComponent(pageFormComponent)
 	}, [currentPage, questions])
 
-	return (
-		<Layout>
-			<PageHeader>
-				<BreadCrumb parent="Contratos" current={'Novo Contrato'} />
-			</PageHeader>
-			<Card
-				style={{
-					maxWidth: '800px',
-					width: '100%',
-				}}
-				loading={loading}>
-				{stepComponent}
-			</Card>
-		</Layout>
-	)
+	return <Layout style={{ backgroundColor: '#fff' }}>{stepComponent}</Layout>
 }
 
 export default AddContract

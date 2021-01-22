@@ -25,7 +25,7 @@ function* getUserListSaga({ payload = {} }) {
 	try {
 		const { data } = yield call(api.get, url)
 		yield put(getUserListSuccess(data))
-	} catch { }
+	} catch {}
 }
 
 function* createUserSaga() {
@@ -42,7 +42,7 @@ function* createUserSaga() {
 			updateKey: 'createUser',
 		})
 		yield put(getUserList())
-	} catch { }
+	} catch {}
 	yield put(resetNewUser())
 }
 
@@ -62,7 +62,7 @@ function* updateUserSaga() {
 			updateKey: 'updateUser',
 		})
 		yield put(getUserList())
-	} catch { }
+	} catch {}
 }
 
 function* deleteUserSaga({ payload }) {
@@ -77,5 +77,5 @@ function* deleteUserSaga({ payload }) {
 			updateKey: 'deleteUser',
 		})
 		yield put(getUserList())
-	} catch { }
+	} catch {}
 }

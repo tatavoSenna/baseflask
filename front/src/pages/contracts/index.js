@@ -49,11 +49,11 @@ const Contracts = () => {
 	}, [dispatch])
 
 	return (
-		<Layout>
+		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
 				<BreadCrumb parent="Contratos" current="Lista" />
 			</PageHeader>
-			<Layout>
+			<Layout style={{ backgroundColor: '#fff' }}>
 				{models.length > 0 && (
 					<ContractModal
 						handleCancel={handleCancel}
@@ -63,16 +63,16 @@ const Contracts = () => {
 					/>
 				)}
 				<DataTable
-					columns={getColumns()}
+					columns={getColumns(handleToGo)}
 					dataSource={contracts}
 					pages={pages}
 					onChangePageNumber={getContracts}
 					onSearch={handleSearch}
 					onClickButton={handleShowModal}
-					textButton="+ Contrato"
+					textButton="Novo Documento"
+					placeholderSearch="Buscar Documento"
 					placeholderNoData={!loading ? 'Nenhum contrato encontrado' : ''}
 					loading={loading}
-					onClickRow={handleToGo}
 				/>
 			</Layout>
 		</Layout>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { bool, func } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, Typography } from 'antd'
 import {
 	FolderOpenOutlined,
 	TeamOutlined,
@@ -13,8 +13,10 @@ import { listModel } from '~/states/modules/model'
 
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
-import logo from '~/assets/logo.svg'
-import logoSmall from '~/assets/logo-small.svg'
+import logo from '~/assets/logo.png'
+import logoSmall from '~/assets/logo-small.png'
+
+const { Text } = Typography
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const dispatch = useDispatch()
@@ -36,36 +38,45 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	return (
 		<>
 			{isWeb ? (
-				<Sider trigger={null} collapsible collapsed={collapsed}>
+				<Sider
+					className={styles.sider}
+					trigger={null}
+					collapsible
+					collapsed={collapsed}>
 					<div className={styles.logoWrapper}>
 						{collapsed ? (
 							<img
 								src={logoSmall}
 								alt="logo"
 								className={styles.logoCollapsed}
+								width="11"
+								height="50"
 							/>
 						) : (
 							<img src={logo} alt="logo" className={styles.logo} />
 						)}
 					</div>
-					<Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+					<Menu
+						className={styles.menu}
+						mode="inline"
+						defaultSelectedKeys={['1']}>
 						<Menu.Item
 							key="/"
 							onClick={() => handleGoTo('/')}
 							icon={<FolderOpenOutlined />}>
-							Contratos
+							<Text className={styles.menuItem}>Documentos</Text>
 						</Menu.Item>
 						<Menu.Item
 							key="users"
 							icon={<TeamOutlined />}
 							onClick={() => handleGoTo('/users')}>
-							Usuários
+							<Text className={styles.menuItem}>Usuários</Text>
 						</Menu.Item>
 						<Menu.Item
 							key="integration"
 							icon={<DeploymentUnitOutlined />}
 							onClick={() => handleGoTo('/integrations')}>
-							Integração
+							<Text className={styles.menuItem}>Integração</Text>
 						</Menu.Item>
 					</Menu>
 				</Sider>

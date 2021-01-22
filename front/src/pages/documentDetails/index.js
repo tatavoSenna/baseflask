@@ -95,7 +95,7 @@ const DocumentDetails = () => {
 	}, [dispatch, id])
 
 	return (
-		<Layout style={{ padding: '0 24px 24px' }}>
+		<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
 			<PageHeader>
 				<BreadCrumb
 					parent="Contratos"
