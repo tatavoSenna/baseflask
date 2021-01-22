@@ -5,14 +5,13 @@ import { useDispatch } from 'react-redux'
 import { Form, Button } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import InputFactory from '../inputFactory'
-import { Typography, Divider } from 'antd'
 import styles from './index.module.scss'
 
 const layout = {
 	labelCol: {
-		lg: { span: 12 },
-		md: { span: 24 },
-		sm: { span: 24 },
+		lg: { span: 6 },
+		md: { span: 12 },
+		sm: { span: 12 },
 	},
 	wrapperCol: {
 		lg: { offset: 1, span: 11 },
@@ -23,8 +22,6 @@ const layout = {
 const tailLayout = {
 	wrapperCol: { span: 24 },
 }
-
-const { Title } = Typography
 
 const FormFactory = ({ pageFieldsData, isLastPage }) => {
 	const { values } = useHistory().location.state
@@ -54,43 +51,53 @@ const FormFactory = ({ pageFieldsData, isLastPage }) => {
 	}
 
 	return (
-		<Form
-			{...layout}
-			form={form}
-			layout="horizontal"
-			hideRequiredMark
-			onFinish={onSubmit}
-			// initialValues={data}
-		>
-			<Title level={4}>{pageFieldsData ? pageFieldsData.title : ''}</Title>
-			<Divider />
-			{pageFieldsData && pageFieldsData.fields.length > 0 && (
-				<InputFactory data={pageFieldsData.fields} />
-			)}
-			<div
-				// {...tailLayout}
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginBottom: '20px',
-				}}>
-				<Form.Item {...tailLayout}>
-					{true && (
-						<Button
-							type="default"
-							htmlType="button"
-							className={styles.button}
-							onClick={handleBack}>
-							Anterior
-						</Button>
+		<div
+			style={{
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				marginTop: 150,
+			}}>
+			<Form
+				{...layout}
+				form={form}
+				layout="horizontal"
+				hideRequiredMark
+				onFinish={onSubmit}>
+				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+					<InputFactory data={pageFieldsData.fields} />
+				)}
+				<div
+					style={{
+						minWidth: 800,
+					}}>
+					{pageFieldsData && pageFieldsData.fields.length > 0 && (
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'flex-end',
+								width: 600,
+							}}>
+							<Form.Item {...tailLayout}>
+								{true && (
+									<Button
+										type="default"
+										htmlType="button"
+										className={styles.button}
+										onClick={handleBack}>
+										Anterior
+									</Button>
+								)}
+								<Button type="primary" htmlType="submit">
+									{isLastPage ? 'Enviar' : 'Proximo'}
+								</Button>
+							</Form.Item>
+						</div>
 					)}
-					<Button type="primary" htmlType="submit">
-						{isLastPage ? 'Enviar' : 'Proximo'}
-					</Button>
-				</Form.Item>
-			</div>
-		</Form>
+				</div>
+			</Form>
+		</div>
 	)
 }
 

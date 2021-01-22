@@ -1,13 +1,14 @@
 import React from 'react'
 import { func, bool } from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Layout, Menu, Dropdown } from 'antd'
+import { Layout, Menu, Dropdown, Avatar, Typography, Space, Badge } from 'antd'
 import {
-	MenuUnfoldOutlined,
-	MenuFoldOutlined,
+	ArrowLeftOutlined,
+	ArrowRightOutlined,
 	DownOutlined,
-	UserOutlined,
+	BellOutlined,
+	MessageOutlined,
 } from '@ant-design/icons'
 
 import { logout } from '~/states/modules/session'
@@ -15,9 +16,13 @@ import { classNames } from '~/utils'
 
 import styles from './index.module.scss'
 
+const { Text } = Typography
+
 function Head({ handleCollapsed, isCollapsed, isWeb }) {
 	const history = useHistory()
 	const dispatch = useDispatch()
+
+	const { loggedUser } = useSelector(({ session }) => session)
 
 	const handleLogout = () => {
 		dispatch(logout({ history }))
@@ -50,7 +55,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 			className={classNames(styles.siteLayout, { [styles.mobile]: !isWeb })}>
 			{isWeb ? (
 				React.createElement(
-					isCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+					isCollapsed ? ArrowRightOutlined : ArrowLeftOutlined,
 					{
 						className: styles.trigger,
 						onClick: () => handleCollapsed(),
@@ -59,14 +64,39 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 			) : (
 				<div />
 			)}
-			<Dropdown overlay={() => getMenu()}>
-				<div
-					className={classNames(styles.profile, {
-						[styles.profileMobile]: !isWeb,
-					})}>
-					<UserOutlined /> <DownOutlined />
-				</div>
-			</Dropdown>
+			<div
+				className={classNames(styles.profile, {
+					[styles.profileMobile]: !isWeb,
+				})}>
+				<Space size={12}>
+					<Badge count={2}>
+						<MessageOutlined style={{ fontSize: '20px' }} />
+					</Badge>
+					<Badge count={2}>
+						<BellOutlined style={{ fontSize: '20px' }} />
+					</Badge>
+					<Dropdown overlay={() => getMenu()}>
+						<Space size={10}>
+							<Avatar>
+								<Text style={{ color: '#333' }}>
+									{(loggedUser && loggedUser.name
+										? loggedUser.name.substring(0, 1)
+										: '') +
+										(loggedUser && loggedUser.surname
+											? loggedUser.surname.substring(0, 1)
+											: '')}
+								</Text>
+							</Avatar>
+							<Text style={{ color: '#333' }}>
+								{loggedUser && loggedUser.name
+									? `${loggedUser.name} ${loggedUser.surname}`
+									: ''}
+							</Text>
+							<DownOutlined />
+						</Space>
+					</Dropdown>
+				</Space>
+			</div>
 		</Header>
 	)
 }

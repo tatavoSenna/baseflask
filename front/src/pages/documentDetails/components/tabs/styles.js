@@ -8,5 +8,4 @@ export const ContainerTabs = styled.div`
 export const ContainerInfo = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin-left: 5%;
 `

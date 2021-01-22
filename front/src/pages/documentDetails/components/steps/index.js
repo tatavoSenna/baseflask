@@ -1,9 +1,18 @@
 import React from 'react'
-import { Steps as StepsAntd, Form, Button } from 'antd'
+import {
+	Steps as StepsAntd,
+	Form,
+	Button,
+	Avatar,
+	Typography,
+	Space,
+} from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 import { string, shape, arrayOf, number, func, bool } from 'prop-types'
 
 import styles from './index.module.scss'
 const { Step } = StepsAntd
+const { Title, Text } = Typography
 
 const tailLayout = {
 	wrapperCol: { span: 24 },
@@ -19,12 +28,15 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 				margin: 5,
 				minHeight: 200,
 				background: '#fff',
+				border: '1px solid #F0F0F0',
 			}}>
+			<Title level={3}>Evolução do Documento</Title>
 			<StepsAntd
 				style={{
 					marginTop: '5%',
 					marginBottom: '5%',
 				}}
+				progressDot
 				current={current}
 				labelPlacement="vertical">
 				{steps.map((item, index) => (
@@ -39,7 +51,27 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 			<div
 				style={{
 					display: 'flex',
-					justifyContent: 'flex-end',
+					justifyContent: 'space-between',
+					minHeight: 100,
+					background: '#fff',
+				}}>
+				{steps.map((item, index) => (
+					<div key={index} className="steps-content">
+						{index <= current ? (
+							<Space size={8}>
+								<Avatar size={'large'} icon={<UserOutlined />} />
+								<Text>André Cordeiro</Text>
+							</Space>
+						) : (
+							<div style={{ width: 180 }}></div>
+						)}
+					</div>
+				))}
+			</div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
 				}}>
 				<Form.Item {...tailLayout}>
 					{current !== 0 && (
@@ -49,7 +81,7 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 							className={styles.button}
 							onClick={onClickPrevious}
 							disabled={block}>
-							Anterior
+							Reprovar
 						</Button>
 					)}
 					{current !== steps.length - 1 && (
@@ -58,7 +90,7 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 							htmlType="button"
 							onClick={onClickNext}
 							disabled={block}>
-							Próximo
+							Aprovar
 						</Button>
 					)}
 				</Form.Item>

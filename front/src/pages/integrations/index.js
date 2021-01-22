@@ -23,7 +23,7 @@ const Integrations = () => {
 		form.setFieldsValue(company)
 	}
 	return (
-		<Layout>
+		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
 				<BreadCrumb parent="Integração" current={'Docusign'} />
 			</PageHeader>

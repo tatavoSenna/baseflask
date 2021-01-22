@@ -15,7 +15,6 @@ const DataTable = ({
 	onClickButton,
 	placeholderNoData,
 	loading,
-	onClickRow,
 	buttons,
 }) => {
 	const [search, setSearch] = useState('')
@@ -25,7 +24,6 @@ const DataTable = ({
 				className="searchbox"
 				style={{
 					display: 'flex',
-					justifyContent: 'flex-end',
 					gap: '5px',
 					margin: '24px 0',
 				}}>
@@ -34,11 +32,13 @@ const DataTable = ({
 					onSearch={(search) => onSearch({ page: 1, perPage: 10, search })}
 					onChange={(e) => setSearch(e.target.value)}
 					enterButton
-					style={{ width: '50%' }}
+					style={{ width: '30%' }}
 				/>
-				<Button onClick={onClickButton}>{textButton}</Button>
+				<Button onClick={onClickButton} type="primary">
+					{textButton}
+				</Button>
 				{buttons.map((button, index) => (
-					<Button key={index} onClick={button.onClick}>
+					<Button type="primary" key={index} onClick={button.onClick}>
 						{button.title}
 					</Button>
 				))}
@@ -46,15 +46,10 @@ const DataTable = ({
 			<Table
 				columns={columns}
 				dataSource={dataSource}
-				onRow={(record, rowIndex) => {
-					return {
-						onClick: () => onClickRow(record, rowIndex),
-					}
-				}}
 				pagination={{
 					showSizeChanger: true,
 					pageSize: pages.per_page,
-					position: ['bottomCenter'],
+					position: ['bottomRight'],
 					total: pages.total,
 					current: pages.page,
 					onShowSizeChange: (page, perPage) =>
@@ -90,7 +85,6 @@ DataTable.propTypes = {
 	onClickButton: func.isRequired,
 	placeholderNoData: string,
 	loading: bool,
-	onClickRow: func,
 	buttons: array,
 }
 
@@ -98,7 +92,6 @@ DataTable.defaultProps = {
 	placeholderSearch: 'Search',
 	placeholderNoData: 'Nenhum dado encontrado',
 	loading: false,
-	onClickRow: () => {},
 	buttons: [],
 }
 

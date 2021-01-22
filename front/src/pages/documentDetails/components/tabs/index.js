@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Radio, Typography, Button, Spin, Menu } from 'antd'
+import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
 import { array, bool, func, string } from 'prop-types'
 import { ContainerTabs, ContainerInfo } from './styles'
 import styles from './index.module.scss'
@@ -71,6 +71,7 @@ const Tabs = ({
 							</ContainerInfo>
 						)
 					})}
+					{infos.length - 1 !== index && <Divider />}
 				</ContainerTabs>
 			)
 		})
@@ -78,9 +79,9 @@ const Tabs = ({
 	const version = () => (
 		<Menu
 			onClick={(item) => handleVersion(item.key)}
-			style={{ width: '100%' }}
+			style={{ width: '100%', border: 'none' }}
 			selectedKeys={[versionId]}
-			mode="inline">
+			mode="vertical">
 			{versions.map((item) => (
 				<Menu.Item style={{ height: 80 }} key={item.id}>
 					<div
@@ -185,18 +186,25 @@ const Tabs = ({
 				minWidth: 500,
 				background: '#fff',
 				alignItems: 'center',
+				border: '1px solid #F0F0F0',
 			}}>
-			<Radio.Group
-				buttonStyle="solid"
-				value={value}
-				onChange={(e) => {
+			<Menu
+				onClick={(e) => {
 					setVariables(false)
-					setValue(e.target.value)
-				}}>
-				<Radio.Button value="1">Info</Radio.Button>
-				<Radio.Button value="2">Versões</Radio.Button>
-				<Radio.Button value="3">Assinantes</Radio.Button>
-			</Radio.Group>
+					setValue(e.key)
+				}}
+				selectedKeys={[value]}
+				mode="horizontal">
+				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="1">
+					Info
+				</Menu.Item>
+				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="2">
+					Versões
+				</Menu.Item>
+				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="3">
+					Assinantes
+				</Menu.Item>
+			</Menu>
 			<div
 				style={{
 					padding: 10,

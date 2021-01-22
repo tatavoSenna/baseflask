@@ -115,11 +115,11 @@ function Users() {
 	const columns = getColumns({ handleDelete, loggedUser, handleEdit })
 
 	return (
-		<Layout>
+		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
 				<BreadCrumb parent="Usuários" current="Lista" />
 			</PageHeader>
-			<Layout>
+			<Layout style={{ backgroundColor: '#fff' }}>
 				<UserModal
 					handleCancel={handleCancel}
 					handleCreate={handleCreate}

@@ -41,7 +41,7 @@ function* createGroupSaga() {
 			updateKey: 'createGroup',
 		})
 		yield put(getGroupList())
-	} catch (error) { }
+	} catch (error) {}
 	yield put(resetNewGroup())
 }
 
@@ -57,5 +57,5 @@ function* deleteGroupSaga({ payload }) {
 			updateKey: 'deleteGroup',
 		})
 		yield put(getGroupList())
-	} catch (error) { }
+	} catch (error) {}
 }

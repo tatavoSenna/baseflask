@@ -1,7 +1,6 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 
 import api from '~/services/api'
-import { errorMessage } from '~/services/messager'
 import {
 	getJWToken,
 	getJWTFailure,
@@ -53,7 +52,7 @@ function* getLoggedUserSaga() {
 		const url = '/users/me'
 		const { data } = yield call(api.get, url)
 		yield put(getLoggedUserSuccess(data))
-	} catch { }
+	} catch {}
 }
 
 export function setToken({ payload }) {

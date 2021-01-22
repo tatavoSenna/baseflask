@@ -9,7 +9,7 @@ import SideBar from '../sidebar'
 import styles from './index.module.scss'
 
 function Wrapper({ children }) {
-	const [collapsed, setCollapsed] = useState(true)
+	const [collapsed, setCollapsed] = useState(false)
 	const isDesktopOrLaptop = useMediaQuery({
 		query: '(min-device-width: 1224px)',
 	})
