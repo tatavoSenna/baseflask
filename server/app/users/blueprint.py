@@ -93,11 +93,14 @@ def create(logged_user):
             email=fields.get("email"),
             name=fields.get("name"),
             group_ids=fields.get("groups"),
-            company_id = logged_user["company_id"]
+            company_id=logged_user["company_id"]
         )
     except:
         return {}, 500
-
+    new_user = User.query.filter_by(email=fields.get("email")).first()
+    new_user.name = fields.get("name")
+    db.session.add(new_user)
+    db.session.commit()
     return jsonify({"user": UserSerializer().dump(new_user)})
 
 
@@ -190,7 +193,6 @@ def get_group(logged_user, group_id):
 def create_group(logged_user):
     fields = request.get_json()
     required_fields = ["name"]
-    
 
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields"), 400
@@ -205,7 +207,7 @@ def create_group(logged_user):
         new_group = create_group_controller(company.id, name)
     except IntegrityError as e:
         if 'unique_group' in str(e):
-            abort(404, "Grupo já existente")      
+            abort(404, "Grupo já existente")
 
     return jsonify({"group": GroupSerializer().dump(new_group)})
 
