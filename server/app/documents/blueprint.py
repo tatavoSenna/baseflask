@@ -23,6 +23,7 @@ from docusign_esign import (
 from docxtpl import DocxTemplate
 from slugify import slugify
 from sqlalchemy import desc
+import logging
 
 
 from app import db, aws_auth
@@ -186,8 +187,8 @@ def create(current_user):
         response = document_creation_email_controller(
             title, current_user["company_id"], current_user["email"])
     except Exception as e:
-        abort(400, {
-              "message": "Failed to send emails on document creation. One or more emails is bad formated or invalid"})
+        logging.exception(
+            "Failed to send emails on document creation. One or more emails is bad formated or invalid")
     return DocumentSerializer().dump(document)
 
 
@@ -237,7 +238,8 @@ def next_document_status(current_user, document_id):
         response = workflow_status_change_email_controller(
             document_id, current_user["email"])
     except Exception:
-        abort(400, "Could not send email after changing workflow status")
+        logging.exception(
+            "Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 
@@ -258,7 +260,8 @@ def previous_document_status(current_user, document_id):
         response = workflow_status_change_email_controller(
             document_id, current_user["email"])
     except Exception:
-        abort(400, "Could not send email after changing workflow status")
+        logging.exception(
+            "Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 

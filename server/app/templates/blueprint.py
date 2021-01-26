@@ -9,6 +9,7 @@ from .controllers import (
 
 templates_bp = Blueprint("templates", __name__)
 
+
 @templates_bp.route("/", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
@@ -25,10 +26,11 @@ def create_template(current_user):
     signers = content.get("signers", None)
     company_id = current_user["company_id"]
 
-    document_template_id = create_template_controller(company_id, name, form, workflow, signers)
+    document_template_id = create_template_controller(
+        company_id, name, form, workflow, signers)
 
     return jsonify(
-        { 
+        {
             "id": document_template_id
         }
     )
