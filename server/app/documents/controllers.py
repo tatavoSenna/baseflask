@@ -204,7 +204,8 @@ def workflow_status_change_email_controller(document_id, sender_email):
     groups = workflow["nodes"][node]["responsible_groups"]
     status = workflow["nodes"][node]["title"]
     title = document.title
-
+    if groups == []:
+        return
     email_list = []
     # for each user group, get all users ids
     for group in groups:
