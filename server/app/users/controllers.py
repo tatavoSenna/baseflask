@@ -27,7 +27,6 @@ def create_user_controller(email, name, group_ids=None, company_id=None):
     return new_user
 
 
-
 def get_user_controller(email):
     user = User.query.filter_by(email=email).first()
 
@@ -40,6 +39,7 @@ def get_user_controller(email):
     }
 
     return data
+
 
 def list_user_controller(company_id, page=1, per_page=20, search_param=''):
     paginated_query = (
