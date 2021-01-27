@@ -41,7 +41,7 @@ class Document(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    title = db.Column(db.String(255), unique=True, nullable=True)
+    title = db.Column(db.String(255), unique=False, nullable=True)
     company_id = db.Column(db.Integer, db.ForeignKey(
         "company.id"), nullable=False)
     document_template_id = db.Column(
