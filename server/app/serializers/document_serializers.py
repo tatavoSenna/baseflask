@@ -134,9 +134,10 @@ def generate_steps(obj_workflow, ordered_nodes):
     for node in ordered_nodes:
         steps.append({
             'step': node,
-            'title': obj_workflow['nodes'][node]['title'],
-            'groups': obj_workflow['nodes'][node]['responsible_groups'],
-            'changed_by': obj_workflow['nodes'][node]['changed_by']
+            'title': obj_workflow['nodes'][node].get('title', ''),
+            'groups': obj_workflow['nodes'][node].get('responsible_groups', '[]'),
+            'changed_by': obj_workflow['nodes'][node].get('changed_by', ''),
+            'color': obj_workflow['nodes'][node].get('color', '#696969')
         })
     return steps
 
