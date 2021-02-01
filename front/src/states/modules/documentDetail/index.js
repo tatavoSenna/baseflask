@@ -160,6 +160,19 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				description: payload.description,
 			}),
+		downloadLink: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		downloadLinkSuccess: (state, { payload }) =>
+			extend(state, {
+				loading: false,
+			}),
+		downloadLinkFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -190,6 +203,9 @@ export const {
 	selectVersionSuccess,
 	selectVersionFailure,
 	setShowConnectModal,
+	downloadLink,
+	downloadLinkSuccess,
+	downloadLinkFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

@@ -18,7 +18,15 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 
-const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
+const Steps = ({
+	steps,
+	current,
+	onClickPrevious,
+	onClickNext,
+	onClickDownload,
+	block,
+	signed,
+}) => {
 	return (
 		<div
 			style={{
@@ -74,7 +82,7 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 					justifyContent: 'center',
 				}}>
 				<Form.Item {...tailLayout}>
-					{current !== 0 && (
+					{current !== 0 && signed !== true && (
 						<Button
 							type="default"
 							htmlType="button"
@@ -84,13 +92,23 @@ const Steps = ({ steps, current, onClickPrevious, onClickNext, block }) => {
 							Reprovar
 						</Button>
 					)}
-					{current !== steps.length - 1 && (
+					{current !== steps.length - 1 && signed !== true && (
 						<Button
 							type="primary"
 							htmlType="button"
 							onClick={onClickNext}
 							disabled={block}>
 							Aprovar
+						</Button>
+					)}
+					{signed === true && (
+						<Button
+							type="primary"
+							htmlType="button"
+							className={styles.button}
+							onClick={onClickDownload}
+							disabled={block}>
+							Baixar Documento
 						</Button>
 					)}
 				</Form.Item>
@@ -110,7 +128,9 @@ Steps.propTypes = {
 	current: number.isRequired,
 	onClickPrevious: func.isRequired,
 	onClickNext: func.isRequired,
+	onClickDownload: func.isRequired,
 	block: bool,
+	signed: bool,
 }
 
 export default Steps
