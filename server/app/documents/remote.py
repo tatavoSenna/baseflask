@@ -71,7 +71,7 @@ class RemoteDocument:
         return template_file
 
     def upload_signed_document(self, document, document_bytes):
-        remote_path = f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+        remote_path = f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
         document_pdf = base64.b64decode(document_bytes)
         filled_text_io = io.BytesIO(document_pdf)
 
@@ -87,7 +87,7 @@ class RemoteDocument:
             "get_object",
             Params={
                 "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-                "Key": f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+                "Key": f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
             },
             ExpiresIn=180,
         )

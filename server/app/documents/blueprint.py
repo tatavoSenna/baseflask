@@ -214,8 +214,7 @@ def download(current_user, document_id):
             400, "Could not download document from S3")
 
     response = {
-        "download_url": document_url,
-        "document_name": f"{document.title}.pdf",
+        "download_url": document_url
     }
 
     return jsonify(response)
