@@ -24,10 +24,11 @@ def create_template(current_user):
     form = content.get("form", None)
     workflow = content.get("workflow", None)
     signers = content.get("signers", None)
+    template_text = content.get("text", None)
     company_id = current_user["company_id"]
 
     document_template_id = create_template_controller(
-        company_id, name, form, workflow, signers)
+        company_id, name, form, workflow, signers, template_text)
 
     return jsonify(
         {
