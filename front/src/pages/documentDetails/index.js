@@ -23,6 +23,7 @@ import {
 	newAssign,
 	sentAssign,
 	selectVersion,
+	downloadLink,
 } from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
@@ -53,6 +54,8 @@ const DocumentDetails = () => {
 	const getPreviousStep = () => dispatch(previousStep({ id }))
 
 	const getNextStep = () => dispatch(nextStep({ id }))
+
+	const downloadDocument = () => dispatch(downloadLink({ id }))
 
 	const handleSentAssign = () => {
 		dispatch(sentAssign({ id }))
@@ -133,7 +136,9 @@ const DocumentDetails = () => {
 							steps={data.workflow.steps}
 							onClickPrevious={getPreviousStep}
 							onClickNext={getNextStep}
+							onClickDownload={downloadDocument}
 							block={loadingSign || loading}
+							signed={data.signed}
 						/>
 						<Editor
 							text={text}

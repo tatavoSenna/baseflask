@@ -27,6 +27,9 @@ import {
 	selectVersion,
 	selectVersionSuccess,
 	selectVersionFailure,
+	downloadLink,
+	downloadLinkSuccess,
+	downloadLinkFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -37,6 +40,7 @@ export default function* rootSaga() {
 	yield takeEvery(newAssign, newAssignSaga)
 	yield takeEvery(sentAssign, sentAssignSaga)
 	yield takeEvery(selectVersion, selectVersionSaga)
+	yield takeEvery(downloadLink, downloadLinkSaga)
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {
@@ -190,5 +194,17 @@ function* nextStepSaga({ payload = {} }) {
 		yield put(nextStepSuccess(response.data))
 	} catch (error) {
 		yield put(nextStepFailure(error))
+	}
+}
+
+function* downloadLinkSaga({ payload = {} }) {
+	const { id } = payload
+	try {
+		const response = yield call(api.get, `documents/${id}/download`)
+		window.open(response.data.download_url, '_blank', 'noopener,noreferrer')
+
+		yield put(downloadLinkSuccess())
+	} catch (error) {
+		yield put(downloadLinkFailure(error))
 	}
 }
