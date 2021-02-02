@@ -24,7 +24,7 @@ const DataTable = ({
 				className="searchbox"
 				style={{
 					display: 'flex',
-					gap: '5px',
+					gap: '6px',
 					margin: '24px 0',
 				}}>
 				<Search

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { bool, func } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Menu, Layout, Typography } from 'antd'
+import { Menu, Layout, Tooltip } from 'antd'
 import {
 	FolderOpenOutlined,
 	TeamOutlined,
@@ -15,8 +15,6 @@ import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logo from '~/assets/logo.png'
 import logoSmall from '~/assets/logo-small.png'
-
-const { Text } = Typography
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const dispatch = useDispatch()
@@ -64,19 +62,19 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							key="/"
 							onClick={() => handleGoTo('/')}
 							icon={<FolderOpenOutlined />}>
-							<Text className={styles.menuItem}>Documentos</Text>
+							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="users"
 							icon={<TeamOutlined />}
 							onClick={() => handleGoTo('/users')}>
-							<Text className={styles.menuItem}>Usuários</Text>
+							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="integration"
 							icon={<DeploymentUnitOutlined />}
 							onClick={() => handleGoTo('/integrations')}>
-							<Text className={styles.menuItem}>Integração</Text>
+							<Tooltip className={styles.tooltip}>Integração</Tooltip>
 						</Menu.Item>
 					</Menu>
 				</Sider>
