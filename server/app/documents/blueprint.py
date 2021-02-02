@@ -225,8 +225,12 @@ def download(current_user, document_id):
 @get_local_user
 def next_document_status(current_user, document_id):
     try:
+        if current_user["name"] == None:
+            user = current_user["email"]
+        else:
+            user = current_user["name"] + " " + current_user["surname"]
         document, status = next_status_controller(
-            document_id, current_user["name"])
+            document_id, user)
         if not document:
             abort(404, "Document not Found")
         if status == 1:

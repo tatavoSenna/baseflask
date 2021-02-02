@@ -65,10 +65,10 @@ const Steps = ({
 				}}>
 				{steps.map((item, index) => (
 					<div key={index} className="steps-content">
-						{index <= current ? (
+						{index < current ? (
 							<Space size={8}>
 								<Avatar size={'large'} icon={<UserOutlined />} />
-								<Text>André Cordeiro</Text>
+								<Text>{item.changed_by}</Text>
 							</Space>
 						) : (
 							<div style={{ width: 180 }}></div>
