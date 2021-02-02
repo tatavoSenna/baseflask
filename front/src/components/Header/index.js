@@ -68,7 +68,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
 				})}>
-				<Space size={12}>
+				<Space size={32}>
 					<Badge count={2}>
 						<MessageOutlined style={{ fontSize: '20px' }} />
 					</Badge>

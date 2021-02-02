@@ -35,7 +35,7 @@ const UserEditModal = ({
 					Cancelar
 				</Button>,
 				<Button key="criar" onClick={handleUpdate} form="editUserForm">
-					Editar
+					Salvar
 				</Button>,
 			]}>
 			<Form form={form} id="editUserForm" onChange={() => handleEditUser(form)}>
