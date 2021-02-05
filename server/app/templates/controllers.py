@@ -4,15 +4,16 @@ from app.models.documents import DocumentTemplate
 
 from .remote import RemoteTemplate
 
-def create_template_controller(company_id, name, form, workflow, signers, text):
+
+def create_template_controller(company_id, user_id, name, form, workflow, signers, text):
 
     document_template = DocumentTemplate(
         company_id=company_id,
+        user_id=user_id,
         name=name,
         form=form,
         workflow=workflow,
-        signers=signers,
-        filetype="pdf"
+        signers=signers
     )
 
     db.session.add(document_template)

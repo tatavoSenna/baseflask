@@ -6,6 +6,7 @@ import { Menu, Layout, Tooltip } from 'antd'
 import {
 	FolderOpenOutlined,
 	TeamOutlined,
+	LayoutOutlined,
 	DeploymentUnitOutlined,
 } from '@ant-design/icons'
 
@@ -71,6 +72,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
 						</Menu.Item>
 						<Menu.Item
+							key="templates"
+							icon={<LayoutOutlined />}
+							onClick={() => handleGoTo('/templates')}>
+							<Tooltip className={styles.tooltip}>Templates</Tooltip>
+						</Menu.Item>
+						<Menu.Item
 							key="integration"
 							icon={<DeploymentUnitOutlined />}
 							onClick={() => handleGoTo('/integrations')}>
@@ -109,6 +116,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<TeamOutlined />}
 							onClick={() => handleGoTo('/users')}>
 							Usuários
+						</Menu.Item>
+						<Menu.Item
+							key="templates"
+							icon={<LayoutOutlined />}
+							onClick={() => handleGoTo('/templates')}>
+							Templates
 						</Menu.Item>
 						<Menu.Item
 							key="integration"

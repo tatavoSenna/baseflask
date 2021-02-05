@@ -5,13 +5,14 @@ from app.serializers.user_serializers import UserSerializer
 
 
 class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
+    user = ma.Nested(UserSerializer)
+
     class Meta:
         exclude = (
             "company_id",
             "textfile",
             "workflow",
             "signers",
-            "filetype",
             "company",
             "documents",
         )
@@ -19,19 +20,22 @@ class DocumentTemplateSerializer(ma.SQLAlchemyAutoSchema):
 
 
 class DocumentTemplateListSerializer(ma.SQLAlchemyAutoSchema):
+    user = ma.Function(lambda obj: {
+        "email": obj.user.email
+    })
+
     class Meta:
         exclude = (
-            "company_id",
             "textfile",
             "workflow",
             "form",
             "signers",
-            "filetype",
             "company",
             "documents",
         )
         model = DocumentTemplate
         include_fk = True
+        include_relationships = True
 
 
 class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
