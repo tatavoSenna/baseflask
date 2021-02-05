@@ -28,6 +28,7 @@ class User(db.Model):
 
     # Has many
     documents = db.relationship("Document", back_populates="user")
+    templates = db.relationship("DocumentTemplate", back_populates="user")
     participates_on = db.relationship(
         "ParticipatesOn", back_populates="user")
 
@@ -43,11 +44,11 @@ class Group(db.Model):
     company_id = db.Column(
         db.Integer, db.ForeignKey("company.id"), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=True)
-    
+
     __table_args__ = (
         db.UniqueConstraint("name", "company_id", name="unique_group"),
     )
-    
+
     # Belongs to
     company = db.relationship("Company", back_populates="groups")
 

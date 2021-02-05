@@ -10,6 +10,7 @@ import { persistStore } from 'redux-persist'
 import persistReducers from './persistReducer'
 import session, { sessionSaga } from './modules/session'
 import contract, { contractSaga } from './modules/contract'
+import template, { templateSaga } from './modules/templates'
 import model, { modelSaga } from './modules/model'
 import question, { questionSaga } from './modules/question'
 import answer, { answerSaga } from './modules/answer'
@@ -29,6 +30,7 @@ const middleware = [
 const reducers = combineReducers({
 	session,
 	contract,
+	template,
 	model,
 	question,
 	answer,
@@ -50,6 +52,7 @@ const rootSaga = function* () {
 	yield all([
 		sessionSaga(),
 		contractSaga(),
+		templateSaga(),
 		modelSaga(),
 		questionSaga(),
 		answerSaga(),
