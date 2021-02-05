@@ -1,8 +1,8 @@
 import React from 'react'
-import { object, bool } from 'prop-types'
+import { object, bool, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { Form, Button } from 'antd'
+import { Form, Button, Typography } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
@@ -23,12 +23,13 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 
-const FormFactory = ({ pageFieldsData, isLastPage }) => {
+const FormFactory = ({ pageFieldsData, isLastPage, pageNumber }) => {
 	const { values } = useHistory().location.state
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
+	const lastPage = pageNumber
 
 	const handleBack = () => {
 		const previousPage = currentPage - 1
@@ -80,7 +81,7 @@ const FormFactory = ({ pageFieldsData, isLastPage }) => {
 								width: 600,
 							}}>
 							<Form.Item {...tailLayout}>
-								{true && (
+								{true && currentPage > 0 && (
 									<Button
 										type="default"
 										htmlType="button"
@@ -89,8 +90,18 @@ const FormFactory = ({ pageFieldsData, isLastPage }) => {
 										Anterior
 									</Button>
 								)}
-								<Button type="primary" htmlType="submit">
-									{isLastPage ? 'Enviar' : 'Proximo'}
+							</Form.Item>
+							{lastPage > 1 && (
+								<Typography className={styles.text}>
+									{currentPage + 1} de {lastPage}
+								</Typography>
+							)}
+							<Form.Item {...tailLayout}>
+								<Button
+									type="primary"
+									className={styles.button}
+									htmlType="submit">
+									{isLastPage ? 'Enviar' : 'Próximo'}
 								</Button>
 							</Form.Item>
 						</div>
@@ -106,6 +117,7 @@ export default FormFactory
 FormFactory.propTypes = {
 	pageFieldsData: object,
 	isLastPage: bool,
+	pageNumber: string,
 }
 FormFactory.defaultProps = {
 	content: [],

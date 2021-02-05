@@ -7,8 +7,12 @@ import FormFactory from './components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
 
-const getCurrentStepAndComponent = (pageFieldsData, isLastPage) => (
-	<FormFactory pageFieldsData={pageFieldsData} isLastPage={isLastPage} />
+const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
+	<FormFactory
+		pageFieldsData={pageFieldsData}
+		isLastPage={isLastPage}
+		pageNumber={pageNumber}
+	/>
 )
 
 function AddContract() {
@@ -25,10 +29,13 @@ function AddContract() {
 	useEffect(() => {
 		const pageFieldsData = questions ? questions[currentPage] : null
 		const isLastPage = currentPage === questions.length - 1
+		const pageNumber = questions.length
 		const pageFormComponent = getCurrentStepAndComponent(
 			pageFieldsData,
-			isLastPage
+			isLastPage,
+			pageNumber
 		)
+
 		setStepComponent(pageFormComponent)
 	}, [currentPage, questions])
 
