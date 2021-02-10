@@ -1,8 +1,10 @@
 import pytest
+import json
 from app.test import factories
 from flask import jsonify
 from unittest.mock import patch
 from datetime import datetime
+from datetime import date
 
 from app.models.documents import Document, DocumentTemplate
 from app.documents.controllers import(
@@ -16,7 +18,8 @@ from app.documents.controllers import(
     previous_status_controller,
     document_creation_email_controller,
     workflow_status_change_email_controller,
-    get_download_url_controller
+    get_download_url_controller,
+    fill_signing_date_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -442,3 +445,28 @@ def test_download_signed_document(download_document_mock):
     download_document_mock.assert_called_once_with(
         document
     )
+
+
+@ patch('app.documents.controllers.RemoteDocument.fill_text_with_variables')
+def test_fill_signing_date(fill_signing_date_mock):
+    company_id = 144
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(
+        company=company
+    )
+    doc_variables = {"RANDOM_INFO": "info"}
+    document = factories.DocumentFactory(
+        company=company,
+        user=user,
+        variables=doc_variables
+    )
+    text = "texto qualquer"
+    date_today = date.today()
+    signing_date = json.dumps(date.today().strftime('%d/%m/%Y'), default=str).replace('"', " ")
+    variable = {"CURRENT_DATE": signing_date}
+
+    fill_signing_date_controller(document, text)
+    fill_signing_date_mock.assert_called_once_with(
+        text, variable
+    )
+    assert document.variables["SIGN_DATE"] == signing_date
