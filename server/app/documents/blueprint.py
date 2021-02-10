@@ -54,7 +54,8 @@ from .controllers import (
     previous_status_controller,
     document_creation_email_controller,
     workflow_status_change_email_controller,
-    get_download_url_controller
+    get_download_url_controller,
+    fill_signing_date_controller
 )
 from app.docusign.controllers import (
     sign_document_controller
@@ -319,9 +320,15 @@ def request_signatures(current_user):
     if token is None:
         abort(400, {"message": "Missing DocuSign user token"})
     try:
+        textfile = fill_signing_date_controller(current_document, textfile)
+    except:
+        logging.exception(
+            "Could not fill Current Date variable. Please add variable to document before signing")
+    try:
         sign_document_controller(
             current_document, textfile, account_ID, token, current_user["name"])
     except Exception as e:
+        print(e)
         dict_str = e.body.decode("utf-8")
         ans_json = ast.literal_eval(dict_str)
         if ans_json['errorCode'] == 'ANCHOR_TAB_STRING_NOT_FOUND':

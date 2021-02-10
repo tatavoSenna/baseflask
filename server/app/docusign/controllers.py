@@ -6,7 +6,6 @@ from unittest.mock import MagicMock
 from datetime import datetime
 from flask import request, Blueprint, abort, jsonify, current_app
 from app.models.documents import Document
-import base64
 from docusign_esign import (
     ApiClient,
     EnvelopesApi,
@@ -66,13 +65,11 @@ def sign_document_controller(current_document, document_text, account_ID, token,
 
     template = RemoteDocument().get_template()
     formatted_text = RemoteDocument().fill_text_with_variables(
-        template, {'text_contract': document_text.decode("utf-8")})
+        template, {'text_contract': document_text})
     html_definition = {"source": formatted_text}
 
     if len(signers_data) > 0:
 
-        # create the DocuSign document object
-        base64_document = base64.b64encode(document_text).decode("utf-8")
         document = DocusignDocument(
             name=current_document.title,
             document_id=1,

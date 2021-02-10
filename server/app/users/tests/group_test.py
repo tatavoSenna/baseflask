@@ -58,7 +58,7 @@ def test_delete_group():
 
 
 def test_list_groups_pagination():
-    company_id = 1
+    company_id = 17
     company = factories.CompanyFactory(id=company_id)
     number_of_groups = 25
 

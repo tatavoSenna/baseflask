@@ -1,6 +1,7 @@
 import json
 import uuid
 from datetime import datetime
+from datetime import date
 
 from app import db
 from app.constants import months
@@ -239,3 +240,15 @@ def get_download_url_controller(document):
     remote_document = RemoteDocument()
     url = remote_document.download_signed_document(document)
     return url
+
+
+def fill_signing_date_controller(document, text):
+    signing_date = json.dumps(date.today().strftime('%d/%m/%Y'), default=str).replace('"', " ")
+    variable = {"CURRENT_DATE": signing_date}
+    remote_document = RemoteDocument()
+    filled_text = remote_document.fill_text_with_variables(
+        text, variable)
+    document.variables["SIGN_DATE"] = signing_date
+    db.session.add(document)
+    db.session.commit()
+    return filled_text
