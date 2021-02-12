@@ -58,7 +58,8 @@ from .controllers import (
     fill_signing_date_controller
 )
 from app.docusign.controllers import (
-    sign_document_controller
+    sign_document_controller,
+    void_envelope_controller
 )
 
 documents_bp = Blueprint("documents", __name__)
@@ -369,5 +370,35 @@ def save_signers(current_user, document_id):
             abort(404, "Could not save document signers")
     else:
         abort(400, 'no content')
+
+    return jsonify(DocumentSerializer(many=False).dump(document))
+
+
+@ documents_bp.route("/<int:document_id>/void", methods=["PUT"])
+@ aws_auth.authentication_required
+@ get_local_user
+def void_envelope(current_user, document_id):
+    content = request.json
+    try:
+        document = get_document_controller(document_id)
+    except Exception as e:
+        abort(404, "Document not found")
+    if document.sent != True:
+        abort(400, "Document has not been sent to signing yet")
+    if document.signed == True:
+        abort(400, "Can't void an envelope that has finished signing")
+    token = get_token(current_user)
+    if token is None:
+        abort(400, "Missing DocuSign user token")
+    company = Company.query.get(current_user.get("company_id"))
+    account_ID = company.docusign_account_id
+    if account_ID == None:
+        abort(400, "User has no Docusign Account ID registered")
+    try:
+        response = void_envelope_controller(
+            document, document.envelope, token, account_ID)
+    except Exception as e:
+        print(e)
+        abort(400, "Could not delete docusign envelope")
 
     return jsonify(DocumentSerializer(many=False).dump(document))

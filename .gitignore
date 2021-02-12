@@ -116,3 +116,4 @@ temp/
 *.swo
 
 .env$
+.vscode/settings.json

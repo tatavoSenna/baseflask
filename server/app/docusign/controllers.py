@@ -9,6 +9,7 @@ from app.models.documents import Document
 from docusign_esign import (
     ApiClient,
     EnvelopesApi,
+    Envelope,
     EnvelopeDefinition,
     Signer,
     SignHere,
@@ -169,7 +170,7 @@ def update_signer_status(docusign_id=None, email=None, status=None, signing_time
                 signer_info['status'] = status
                 # register the date and time of signature if it has not yet been registered
                 if status == 'Completed' and not signer_info.get('signing_date', ""):
-                    #now convert so that it can be stored on correct format
+                    # now convert so that it can be stored on correct format
                     if timezone_offset < 0:
                         timezone_offset = -1*timezone_offset
                         signer_info['signing_date'] = f'{signing_time}-0{timezone_offset}:00'
@@ -191,3 +192,29 @@ def update_envelope_status(docusign_id, document_bytes):
 
     db.session.add(document)
     db.session.commit()
+
+
+def void_envelope_controller(document, envelope_id, token, account_id):
+    api_client = ApiClient()
+    api_client.host = 'https://demo.docusign.net/restapi'
+
+    api_client.set_default_header(
+        "Authorization",
+        "Bearer " + token
+    )
+    envelopes_api = EnvelopesApi(api_client)
+    env = Envelope()
+    env.status = 'voided'
+    env.voided_reason = 'Envelope void was requested'
+    results = envelopes_api.update(
+        account_id=account_id,
+        envelope_id=envelope_id,
+        envelope=env,
+        resend_envelope=False
+    )
+    document.sent = False
+    document.envelope = None
+    db.session.add(document)
+    db.session.commit()
+
+    return results

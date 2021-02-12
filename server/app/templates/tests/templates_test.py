@@ -15,7 +15,7 @@ def test_create_template_controller(upload_template_mock):
     template_text = [{"text": "file text"}]
     company = factories.CompanyFactory()
     user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
+        id=7, company=company, email="testemail@gmail.com"
     )
 
     template_id = create_template_controller(
