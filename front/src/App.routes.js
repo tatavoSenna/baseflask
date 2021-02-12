@@ -9,6 +9,7 @@ import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
 import Users from './pages/users'
 import Templates from './pages/templates'
+import AddTemplate from './pages/addTemplate'
 import DocumentDetails from './pages/documentDetails'
 import Integrations from './pages/integrations'
 
@@ -22,6 +23,7 @@ export const ROUTES = {
 	form: '/contracts/new',
 	users: '/users',
 	templates: '/templates',
+	newTemplate: '/templates/new',
 	documentDetails: '/documentDetails',
 	integrations: '/integrations',
 }
@@ -50,6 +52,12 @@ function Routes() {
 						exact
 						path={ROUTES.templates}
 						component={Templates}
+						isPrivate
+					/>
+					<AdminRoute
+						exact
+						path={ROUTES.newTemplate}
+						component={AddTemplate}
 						isPrivate
 					/>
 					<AdminRoute

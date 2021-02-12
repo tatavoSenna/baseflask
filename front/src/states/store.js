@@ -11,6 +11,7 @@ import persistReducers from './persistReducer'
 import session, { sessionSaga } from './modules/session'
 import contract, { contractSaga } from './modules/contract'
 import template, { templateSaga } from './modules/templates'
+import postTemplate, { postTemplateSaga } from './modules/postTemplate'
 import model, { modelSaga } from './modules/model'
 import question, { questionSaga } from './modules/question'
 import answer, { answerSaga } from './modules/answer'
@@ -31,6 +32,7 @@ const reducers = combineReducers({
 	session,
 	contract,
 	template,
+	postTemplate,
 	model,
 	question,
 	answer,
@@ -53,6 +55,7 @@ const rootSaga = function* () {
 		sessionSaga(),
 		contractSaga(),
 		templateSaga(),
+		postTemplateSaga(),
 		modelSaga(),
 		questionSaga(),
 		answerSaga(),
