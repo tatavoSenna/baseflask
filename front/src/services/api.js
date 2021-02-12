@@ -21,10 +21,12 @@ api.interceptors.response.use(
 			store.dispatch(logout())
 
 			return Promise.reject(error)
+		} else if (error.response.status === 400) {
+			return Promise.reject(error)
 		} else {
 			errorMessage({
 				content:
-					'Ooops, ccorreu um erro. Já avisamos nossos engenheiros, por favor tente mais tarde.',
+					'Ooops, ocorreu um erro. Já avisamos nossos engenheiros, por favor tente mais tarde.',
 			})
 		}
 	}
