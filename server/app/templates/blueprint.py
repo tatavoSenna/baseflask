@@ -1,4 +1,5 @@
 from flask import request, Blueprint, abort, jsonify, current_app
+from sqlalchemy import desc
 
 from app import aws_auth, db
 from app.users.remote import get_local_user
@@ -8,7 +9,7 @@ from app.models.documents import DocumentTemplate
 from .controllers import (
     create_template_controller
 )
-from sqlalchemy import desc
+
 
 templates_bp = Blueprint("templates", __name__)
 
@@ -21,15 +22,15 @@ def create_template(current_user):
         return jsonify({"message": "Accepts only content-type json."}), 400
 
     content = request.json
-    name = content.get("name", None)
+    name = content.get("title", None)
     if name == None:
-        abort(400, 'Missing document name')
+        abort(400, 'Missing template name')
     form = content.get("form", None)
     workflow = content.get("workflow", None)
     signers = content.get("signers", None)
     template_text = content.get("text", None)
     company_id = current_user["company_id"]
-    user_id = current_user["user_id"]
+    user_id = current_user["id"]
 
     document_template_id = create_template_controller(
         company_id, user_id, name, form, workflow, signers, template_text)
