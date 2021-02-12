@@ -3,7 +3,7 @@ from app.test import factories
 from unittest.mock import patch
 
 from app.docusign.controllers import(
-    sign_document_controller, update_signer_status, update_envelope_status
+    sign_document_controller, update_signer_status, update_envelope_status, void_envelope_controller
 )
 from app.documents.controllers import(
     get_document_controller)
@@ -85,7 +85,8 @@ def test_sign_document(create_envelope_mock):
     account_ID = '12345'
     token = 'kasdhuwai214'
 
-    sign_document_controller(document, document_text, account_ID, token, 'joao')
+    sign_document_controller(document, document_text,
+                             account_ID, token, 'joao')
     create_envelope_mock.assert_called_once()
     assert document.sent == True
 
@@ -149,3 +150,23 @@ def test_upload_signed_document_and_update_status(upload_signed_document_mock):
     upload_signed_document_mock.assert_called_once_with(
         retrieved_document, document_bytes
     )
+
+
+@patch('docusign_esign.EnvelopesApi.update')
+def test_void_document(void_document_mock):
+    company = factories.CompanyFactory(id=177)
+    user = factories.UserFactory(id=185, company=company)
+
+    document = factories.DocumentFactory(
+        company=company,
+        user=user,
+        envelope='6777',
+        sent=True
+    )
+    account_ID = '12345'
+    token = 'kasdhuwai214'
+
+    void_envelope_controller(document, '6777', token, account_ID)
+    void_document_mock.assert_called_once()
+    assert document.sent == False
+    assert document.envelope == None
