@@ -49,6 +49,18 @@ services:
       - dev-network
     tmpfs:
       - /tmp
+  
+  metabase-app:
+    image: metabase/metabase
+    restart: always
+    ports:
+      - 3001:3000
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    networks:
+      - dev-network
 
 networks:
   dev-network:
