@@ -1,4 +1,14 @@
+.content {
+	background-color: #fff;
+	padding: 3% 21% 0 1%;
+}
+
 .button {
-	margin-right: 20px;
-	margin-bottom: 10px;
+	display: flex;
+	margin-left: auto;
+	margin-top: .5rem;
+}
+
+.empty {
+	color: #fc2003;
 }

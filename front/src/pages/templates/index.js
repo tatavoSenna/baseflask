@@ -21,7 +21,7 @@ const Templates = () => {
 		dispatch(postTemplateTitle({ title }))
 		return history.push({
 			pathname: `/templates/new/`,
-			state: { current: 0 },
+			state: { current: 'form' },
 		})
 	}
 
