@@ -135,29 +135,28 @@ function* sentAssignSaga({ payload = {} }) {
 				content: 'Enviamos, via docusign, o documento para assinatura.',
 				updateKey: 'sentAssign',
 			})
+			yield put(sentAssignSuccess({ ...response.data }))
 		} else {
-			successMessage({
+			errorMessage({
 				content:
 					'Envio para docusign falhou, favor revisar os dados de assinantes.',
 				updateKey: 'sentAssign',
 			})
 		}
-		yield put(sentAssignSuccess({ ...response.data }))
+		yield put(
+			sentAssignFailure({
+				error:
+					'Envio para docusign falhou, favor revisar os dados de assinantes.',
+				showConnectModal: false,
+			})
+		)
 	} catch (error) {
 		let showConnectModal = false
-		if (
-			error &&
-			error.response &&
-			error.response.request &&
-			error.response.request.responseText &&
-			error.response.request.responseText.includes(
-				'Invalid Docusign access token'
-			)
-		) {
+		if (error.response.data.message.includes('Invalid Docusign access token')) {
 			showConnectModal = true
 		} else {
 			errorMessage({
-				content: error.response.request.responseText,
+				content: error.response.data.message,
 				updateKey: 'sentAssign',
 			})
 		}
