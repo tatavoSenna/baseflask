@@ -26,6 +26,7 @@ class Config(object):
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
     AWS_S3_DOCUMENTS_ROOT = "documents"
     AWS_S3_TEMPLATES_ROOT = "templates"
+    AWS_S3_COMPANY_ROOT = "company"
     AWS_S3_SIGNED_DOCUMENTS_ROOT = "signed_documents"
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20

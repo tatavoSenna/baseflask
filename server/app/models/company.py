@@ -9,6 +9,7 @@ class Company(db.Model):
     docusign_integration_key = db.Column(db.String(1500), unique=False, nullable=True)
     docusign_secret_key = db.Column(db.String(1500), unique=False, nullable=True)
     docusign_account_id = db.Column(db.String(1500), unique=False, nullable=True)
+    logo_url = db.Column(db.String(1500), unique=False, nullable=True)
 
     # Has many
     users = db.relationship("User", back_populates="company")
