@@ -17,9 +17,7 @@ export default function* rootSaga() {
 	yield takeEvery(postTemplateRequest, postTemplateSaga)
 }
 
-function* postTemplateSaga({ payload }) {
-	const { history } = payload
-
+function* postTemplateSaga() {
 	loadingMessage({ content: 'Criando template...', updateKey: 'postTemplate' })
 
 	const data = yield select((state) => {
@@ -41,7 +39,7 @@ function* postTemplateSaga({ payload }) {
 			content: 'Template criado com sucesso!',
 			updateKey: 'postTemplate',
 		})
-		history.push('/templates')
+		window.location.href = '/templates'
 	} catch (error) {
 		yield put(postTemplateFailure(error))
 		errorMessage({
