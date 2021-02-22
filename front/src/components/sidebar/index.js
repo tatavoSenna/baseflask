@@ -48,8 +48,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								src={logoSmall}
 								alt="logo"
 								className={styles.logoCollapsed}
-								width="11"
-								height="50"
+								width="5"
+								height="42"
 							/>
 						) : (
 							<img src={logo} alt="logo" className={styles.logo} />
@@ -62,24 +62,44 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						<Menu.Item
 							key="/"
 							onClick={() => handleGoTo('/')}
-							icon={<FolderOpenOutlined />}>
+							icon={
+								<FolderOpenOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}>
 							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="users"
-							icon={<TeamOutlined />}
+							icon={
+								<TeamOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}
 							onClick={() => handleGoTo('/users')}>
 							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="templates"
-							icon={<LayoutOutlined />}
+							icon={
+								<LayoutOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}
 							onClick={() => handleGoTo('/templates')}>
 							<Tooltip className={styles.tooltip}>Templates</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="integration"
-							icon={<DeploymentUnitOutlined />}
+							icon={
+								<DeploymentUnitOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}
 							onClick={() => handleGoTo('/integrations')}>
 							<Tooltip className={styles.tooltip}>Integração</Tooltip>
 						</Menu.Item>

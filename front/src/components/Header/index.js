@@ -68,33 +68,39 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
 				})}>
-				<Space size={32}>
-					<Badge count={2}>
-						<MessageOutlined style={{ fontSize: '20px' }} />
-					</Badge>
-					<Badge count={2}>
-						<BellOutlined style={{ fontSize: '20px' }} />
-					</Badge>
-					<Dropdown overlay={() => getMenu()}>
-						<Space size={10}>
-							<Avatar>
-								<Text style={{ color: '#333' }}>
-									{(loggedUser && loggedUser.name
-										? loggedUser.name.substring(0, 1)
-										: '') +
-										(loggedUser && loggedUser.surname
-											? loggedUser.surname.substring(0, 1)
-											: '')}
-								</Text>
-							</Avatar>
-							<Text style={{ color: '#333' }}>
-								{loggedUser && loggedUser.name
-									? `${loggedUser.name} ${loggedUser.surname}`
-									: ''}
-							</Text>
-							<DownOutlined />
+				<Space size={48}>
+					<div style={{ paddingTop: 12 }}>
+						<Space size={28}>
+							<Badge count={2}>
+								<MessageOutlined style={{ fontSize: '20px' }} />
+							</Badge>
+							<Badge count={2}>
+								<BellOutlined style={{ fontSize: '20px' }} />
+							</Badge>
 						</Space>
-					</Dropdown>
+					</div>
+					<Space size={12}>
+						<Dropdown overlay={() => getMenu()}>
+							<Space size={10}>
+								<Avatar>
+									<Text style={{ color: '#333' }}>
+										{(loggedUser && loggedUser.name
+											? loggedUser.name.substring(0, 1)
+											: '') +
+											(loggedUser && loggedUser.surname
+												? loggedUser.surname.substring(0, 1)
+												: '')}
+									</Text>
+								</Avatar>
+								<Text style={{ color: '#333' }}>
+									{loggedUser && loggedUser.name
+										? `${loggedUser.name} ${loggedUser.surname}`
+										: ''}
+								</Text>
+								<DownOutlined />
+							</Space>
+						</Dropdown>
+					</Space>
 				</Space>
 			</div>
 		</Header>
