@@ -183,7 +183,7 @@ const Tabs = ({
 				padding: 24,
 				margin: 5,
 				minHeight: 500,
-				minWidth: 500,
+				width: 350,
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
@@ -195,13 +195,13 @@ const Tabs = ({
 				}}
 				selectedKeys={[value]}
 				mode="horizontal">
-				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="1">
+				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="1">
 					Info
 				</Menu.Item>
-				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="2">
+				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="2">
 					Versões
 				</Menu.Item>
-				<Menu.Item style={{ width: 145, textAlign: 'center' }} key="3">
+				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
 					Assinantes
 				</Menu.Item>
 			</Menu>
