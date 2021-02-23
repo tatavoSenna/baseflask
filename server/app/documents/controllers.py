@@ -15,6 +15,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import copy
 from flask import current_app
+from unittest.mock import MagicMock
 
 
 def get_document_template_list_controller(company_id):
@@ -86,6 +87,16 @@ def get_current_date_dict():
 def get_document_controller(document_id):
     document = Document.query.filter_by(id=document_id).first()
     return document
+
+
+def delete_document_controller(document):
+    remote_document = RemoteDocument()
+    remote_document.delete_document(document)
+    if document.signed:
+        remote_document.delete_signed_document(document)
+    if not isinstance(document, MagicMock):
+        db.session.delete(document)
+        db.session.commit()
 
 
 def get_document_version_controller(document_id):
@@ -243,7 +254,8 @@ def get_download_url_controller(document):
 
 
 def fill_signing_date_controller(document, text):
-    signing_date = json.dumps(date.today().strftime('%d/%m/%Y'), default=str).replace('"', " ")
+    signing_date = json.dumps(date.today().strftime(
+        '%d/%m/%Y'), default=str).replace('"', " ")
     variable = {"CURRENT_DATE": signing_date}
     remote_document = RemoteDocument()
     filled_text = remote_document.fill_text_with_variables(
