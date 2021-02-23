@@ -315,11 +315,16 @@ def request_signatures(current_user):
     company = Company.query.get(current_user.get("company_id"))
     account_ID = company.docusign_account_id
     if account_ID == None:
-        abort(
-            400, {"message": "User has no Docusign Account ID registered"})
+        error_JSON = {
+                "message": "User has no Docusign Account ID registered"
+            }
+        return jsonify(error_JSON), 400
     token = get_token(current_user)
     if token is None:
-        abort(400, {"message": "Missing DocuSign user token"})
+        error_JSON = {
+                "message": "Missing DocuSign user token"
+            }
+        return jsonify(error_JSON), 400
     try:
         textfile = fill_signing_date_controller(current_document, textfile)
     except:
