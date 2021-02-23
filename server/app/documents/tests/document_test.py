@@ -19,7 +19,8 @@ from app.documents.controllers import(
     document_creation_email_controller,
     workflow_status_change_email_controller,
     get_download_url_controller,
-    fill_signing_date_controller
+    fill_signing_date_controller,
+    delete_document_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -462,7 +463,8 @@ def test_fill_signing_date(fill_signing_date_mock):
     )
     text = "texto qualquer"
     date_today = date.today()
-    signing_date = json.dumps(date.today().strftime('%d/%m/%Y'), default=str).replace('"', " ")
+    signing_date = json.dumps(date.today().strftime(
+        '%d/%m/%Y'), default=str).replace('"', " ")
     variable = {"CURRENT_DATE": signing_date}
 
     fill_signing_date_controller(document, text)
@@ -470,3 +472,19 @@ def test_fill_signing_date(fill_signing_date_mock):
         text, variable
     )
     assert document.variables["SIGN_DATE"] == signing_date
+
+
+@ patch('app.documents.controllers.RemoteDocument.delete_document')
+@ patch('app.documents.controllers.RemoteDocument.delete_signed_document')
+def test_delete_document(delete_document_mock, delete_signed_document_mock):
+    document = factories.DocumentFactory(id=73, signed=True)
+    ret_document = get_document_controller(document.id)
+    delete_document_controller(ret_document)
+
+    assert get_document_controller(73) == None
+    delete_document_mock.assert_called_once_with(
+        ret_document
+    )
+    delete_signed_document_mock.assert_called_once_with(
+        ret_document
+    )

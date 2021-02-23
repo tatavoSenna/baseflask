@@ -55,7 +55,8 @@ from .controllers import (
     document_creation_email_controller,
     workflow_status_change_email_controller,
     get_download_url_controller,
-    fill_signing_date_controller
+    fill_signing_date_controller,
+    delete_document_controller
 )
 from app.docusign.controllers import (
     sign_document_controller,
@@ -176,15 +177,20 @@ def create(current_user):
     if not document_template_id or not variables:
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
-    document = create_document_controller(
-        current_user["id"],
-        current_user["email"],
-        current_user["company_id"],
-        variables,
-        document_template_id,
-        title,
-        current_user["name"]
-    )
+    try:
+        document = create_document_controller(
+            current_user["id"],
+            current_user["email"],
+            current_user["company_id"],
+            variables,
+            document_template_id,
+            title,
+            current_user["name"]
+        )
+    except Exception as e:
+        logging.exception(
+            "Could not create document")
+        abort(400, "Could not create document")
     try:
         response = document_creation_email_controller(
             title, current_user["company_id"], current_user["email"])
@@ -238,6 +244,8 @@ def next_document_status(current_user, document_id):
         if status == 1:
             abort(400, "There is no next status")
     except Exception:
+        logging.exception(
+            "Could not change document status")
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
@@ -260,6 +268,8 @@ def previous_document_status(current_user, document_id):
         if status == 1:
             abort(404, "There is no previous status")
     except Exception:
+        logging.exception(
+            "Could not change document status")
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
@@ -407,3 +417,24 @@ def void_envelope(current_user, document_id):
         abort(400, "Could not delete docusign envelope")
 
     return jsonify(DocumentSerializer(many=False).dump(document))
+
+
+@documents_bp.route("/<int:document_id>/delete")
+@aws_auth.authentication_required
+@get_local_user
+def delete_document(current_user, document_id):
+    try:
+        document = get_document_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+    try:
+        delete_document_controller(document)
+    except Exception:
+        logging.exception(
+            "The document could not be deleted")
+        abort(400, "The document could not be deleted")
+    msg_JSON = {
+        "message": "The document was deleted"
+    }
+
+    return jsonify(msg_JSON), 200

@@ -18,6 +18,20 @@ class RemoteDocument:
             text_template, document.variables).encode()
         self.upload_filled_text_to_documents(document, filled_text)
 
+    def delete_document(self, document):
+        s3_resource = boto3.resource("s3")
+        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/'
+        bucket = s3_resource.Bucket(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"])
+        bucket.objects.filter(Prefix=remote_path).delete()
+
+    def delete_signed_document(self, document):
+        s3_resource = boto3.resource("s3")
+        remote_path = f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/'
+        bucket = s3_resource.Bucket(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"])
+        bucket.objects.filter(Prefix=remote_path).delete()
+
     def upload_filled_text_to_documents(self, document, filled_text):
         remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.txt'
         filled_text_io = io.BytesIO(filled_text)
