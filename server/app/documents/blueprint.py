@@ -236,7 +236,7 @@ def next_document_status(current_user, document_id):
         if current_user["name"] == None:
             user = current_user["email"]
         else:
-            user = current_user["name"] + " " + current_user["surname"]
+            user = current_user["name"]
         document, status = next_status_controller(
             document_id, user)
         if not document:
