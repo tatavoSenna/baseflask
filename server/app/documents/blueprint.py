@@ -326,14 +326,14 @@ def request_signatures(current_user):
     account_ID = company.docusign_account_id
     if account_ID == None:
         error_JSON = {
-                "message": "User has no Docusign Account ID registered"
-            }
+            "message": "User has no Docusign Account ID registered"
+        }
         return jsonify(error_JSON), 400
     token = get_token(current_user)
     if token is None:
         error_JSON = {
-                "message": "Missing DocuSign user token"
-            }
+            "message": "Missing DocuSign user token"
+        }
         return jsonify(error_JSON), 400
     try:
         textfile = fill_signing_date_controller(current_document, textfile)
@@ -419,7 +419,7 @@ def void_envelope(current_user, document_id):
     return jsonify(DocumentSerializer(many=False).dump(document))
 
 
-@documents_bp.route("/<int:document_id>/delete")
+@documents_bp.route("/<int:document_id>", methods=["DELETE"])
 @aws_auth.authentication_required
 @get_local_user
 def delete_document(current_user, document_id):
