@@ -1,5 +1,4 @@
 import json
-import uuid
 from datetime import datetime
 from datetime import date
 
@@ -61,11 +60,12 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         title=title,
         document_template_id=document_template_id,
     )
-    db.session.add(document)
-    db.session.commit()
 
     remote_document = RemoteDocument()
     remote_document.create(document)
+
+    db.session.add(document)
+    db.session.commit()
 
     return document
 

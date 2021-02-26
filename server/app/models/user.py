@@ -31,6 +31,8 @@ class User(db.Model):
     templates = db.relationship("DocumentTemplate", back_populates="user")
     participates_on = db.relationship(
         "ParticipatesOn", back_populates="user")
+    external_tokens = db.relationship(
+        "ExternalToken", back_populates="user")
 
     def __repr__(self):
         return "<User %r>" % self.username
