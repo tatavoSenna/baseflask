@@ -38,6 +38,25 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
+		deleteContract: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		deleteContractSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllContracts(payload.items),
+				pages: {
+					page: payload.page,
+					per_page: payload.per_page,
+					total: payload.total,
+				},
+				error: null,
+				loading: false,
+			}),
+		deleteContractFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+			}),
 		viewContract: (state) => state,
 		setShowModal: (state, { payload }) =>
 			extend(state, {
@@ -48,6 +67,9 @@ const { actions, reducer } = createSlice({
 
 export const {
 	listContract,
+	deleteContract,
+	deleteContractSuccess,
+	deleteContractFailure,
 	listContractSuccess,
 	listContractFailure,
 	viewContract,
