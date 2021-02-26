@@ -6,7 +6,11 @@ import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
 import ContractModal from './components/modal'
 import { getColumns } from './columns'
-import { listContract, setShowModal } from '~/states/modules/contract'
+import {
+	listContract,
+	deleteContract,
+	setShowModal,
+} from '~/states/modules/contract'
 
 const Contracts = () => {
 	const dispatch = useDispatch()
@@ -38,6 +42,9 @@ const Contracts = () => {
 			state: { id: record.id },
 		})
 
+	const handleDeleteContract = (record) =>
+		dispatch(deleteContract({ id: record.id, pages }))
+
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search }))
 
@@ -63,7 +70,7 @@ const Contracts = () => {
 					/>
 				)}
 				<DataTable
-					columns={getColumns(handleToGo)}
+					columns={getColumns(handleToGo, handleDeleteContract)}
 					dataSource={contracts}
 					pages={pages}
 					onChangePageNumber={getContracts}

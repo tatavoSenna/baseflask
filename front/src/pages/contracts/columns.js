@@ -2,7 +2,7 @@ import React from 'react'
 import { Tag, Button, Dropdown, Menu } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 
-export const getColumns = (handleToGo) => [
+export const getColumns = (handleToGo, handleDeleteContract) => [
 	{
 		title: 'Descrição',
 		dataIndex: 'title',
@@ -80,17 +80,17 @@ export const getColumns = (handleToGo) => [
 		title: '',
 		dataIndex: 'action',
 		key: 'action',
-		render: (text) => (
-			<Dropdown overlay={() => getMenu()}>
+		render: (text, row) => (
+			<Dropdown overlay={() => getMenu(row, handleDeleteContract)}>
 				<MoreOutlined />
 			</Dropdown>
 		),
 	},
 ]
 
-export const getMenu = () => (
+export const getMenu = (row, handleDeleteContract) => (
 	<Menu style={{ zIndex: 1 }}>
-		<Menu.Item onClick={() => {}}>Deletar</Menu.Item>
+		<Menu.Item onClick={() => handleDeleteContract(row)}>Deletar</Menu.Item>
 		<Menu.Item onClick={() => {}}>Compartilhar</Menu.Item>
 		<Menu.Item onClick={() => {}}>Imprimir</Menu.Item>
 	</Menu>
