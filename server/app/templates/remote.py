@@ -7,8 +7,8 @@ class RemoteTemplate:
 
     s3_client = boto3.client("s3")
         
-    def upload_template(self, template_text, template_id):
-        template_path = f'{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{template_id}.txt'
+    def upload_template(self, template_text, template_id, company_id):
+        template_path = f'{company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{template_id}.txt'
         template_text = template_text.encode()
         template = io.BytesIO(template_text)
         self.s3_client.upload_fileobj(
