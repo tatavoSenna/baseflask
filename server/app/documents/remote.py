@@ -33,7 +33,7 @@ class RemoteDocument:
         bucket.objects.filter(Prefix=remote_path).delete()
 
     def upload_filled_text_to_documents(self, document, filled_text):
-        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.txt'
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.txt'
         filled_text_io = io.BytesIO(filled_text)
 
         self.s3_client.upload_fileobj(
@@ -44,7 +44,7 @@ class RemoteDocument:
 
     def download_text_from_documents(self, document, version_id):
         text_file_io = io.BytesIO()
-        remote_path = f'{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.txt'
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.txt'
 
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
@@ -56,7 +56,7 @@ class RemoteDocument:
 
     def download_text_from_template(self, document):
         text_file_io = io.BytesIO()
-        remote_path = f'{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document.document_template_id}.txt'
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document.document_template_id}.txt'
 
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
@@ -85,7 +85,7 @@ class RemoteDocument:
         return template_file
 
     def upload_signed_document(self, document, document_bytes):
-        remote_path = f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
         document_pdf = base64.b64decode(document_bytes)
         filled_text_io = io.BytesIO(document_pdf)
 
@@ -101,7 +101,7 @@ class RemoteDocument:
             "get_object",
             Params={
                 "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-                "Key": f'{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
+                "Key": f'{document.company_id}/{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
             },
             ExpiresIn=180,
         )
