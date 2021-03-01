@@ -25,12 +25,20 @@ function* postTemplateSaga() {
 		return postTemplate.data
 	})
 
+	const arrangedSigners = (signers) => {
+		const signersArray = []
+		signers.parties.map((party) =>
+			party.partySigners.map((partySigner) => signersArray.push(partySigner))
+		)
+		return signersArray
+	}
+
 	try {
 		const { post } = yield call(api.post, '/templates/', {
 			title: data.title,
 			form: JSON.parse(data.form),
 			workflow: JSON.parse(data.workflow),
-			signers: JSON.parse(data.signers),
+			signers: arrangedSigners(data.signers),
 			text: data.text,
 		})
 
