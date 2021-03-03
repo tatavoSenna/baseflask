@@ -2,13 +2,20 @@ import React from 'react'
 import { func, bool } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Layout, Menu, Dropdown, Avatar, Typography, Space, Badge } from 'antd'
+import {
+	Layout,
+	Menu,
+	Dropdown,
+	Avatar,
+	Typography,
+	Space /*, Badge*/,
+} from 'antd'
 import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
 	DownOutlined,
-	BellOutlined,
-	MessageOutlined,
+	/*BellOutlined,
+	MessageOutlined,*/
 } from '@ant-design/icons'
 
 import { logout } from '~/states/modules/session'
@@ -69,6 +76,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 					[styles.profileMobile]: !isWeb,
 				})}>
 				<Space size={48}>
+					{/*
 					<div style={{ paddingTop: 12 }}>
 						<Space size={28}>
 							<Badge count={2}>
@@ -79,6 +87,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 							</Badge>
 						</Space>
 					</div>
+					*/}
 					<Space size={12}>
 						<Dropdown overlay={() => getMenu()}>
 							<Space size={10}>
