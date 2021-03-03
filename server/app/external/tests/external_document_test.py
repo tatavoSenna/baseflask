@@ -16,13 +16,15 @@ def test_generate_token():
     document_template = factories.DocumentTemplateFactory(id=template_id)
     company = factories.CompanyFactory(id=company_id)
     user = factories.UserFactory(id=user_id, company=company)
-    test_token = generate_external_token_controller(template_id, user_id)
+    test_token = generate_external_token_controller(
+        template_id, "documento novo", user_id)
     retrieved_token = ExternalToken.query.filter_by(
         token=str(test_token)).first()
 
     assert retrieved_token.document_template_id == template_id
     assert retrieved_token.token == str(test_token)
     assert retrieved_token.user_id == 222
+    assert retrieved_token.title == "documento novo"
 
 
 def test_authorize_token():
@@ -32,7 +34,8 @@ def test_authorize_token():
     document_template = factories.DocumentTemplateFactory(id=template_id)
     company = factories.CompanyFactory(id=company_id)
     user = factories.UserFactory(id=user_id, company=company)
-    test_token = generate_external_token_controller(template_id, user_id)
+    test_token = generate_external_token_controller(
+        template_id, "novo documento", user_id)
     response, template_response = authorize_external_token_controller(
         test_token)
     assert template_response == template_id
@@ -74,26 +77,23 @@ def test_create_external_document(create_remote_document_mock):
 
     variables = {}
     test_token = generate_external_token_controller(
-        document_template.id, user_id)
+        document_template.id, title, user_id)
 
     status, document = create_external_document_controller(
         variables,
         document_template.id,
-        title,
         test_token
     )
 
     status_2, document_2 = create_external_document_controller(
         variables,
         document_template.id,
-        title,
         test_token
     )
 
     status_3, document_3 = create_external_document_controller(
         variables,
         document_template.id,
-        title,
         "abc"
     )
 

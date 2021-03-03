@@ -75,6 +75,7 @@ class ExternalToken(db.Model):
     __tablename__ = "external_token"
 
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), unique=False, nullable=True)
     document_template_id = db.Column(
         db.Integer, db.ForeignKey("document_template.id"), nullable=False
     )
