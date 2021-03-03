@@ -3,6 +3,7 @@ import io
 from flask import current_app
 import base64
 
+
 class RemoteTemplate:
 
     s3_client = boto3.client("s3")
@@ -16,3 +17,10 @@ class RemoteTemplate:
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             template_path
         )
+
+    def delete_template(self, document_template):
+        s3_resource = boto3.resource("s3")
+        remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}.txt'
+        bucket = s3_resource.Bucket(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"])
+        bucket.objects.filter(Prefix=remote_path).delete()
