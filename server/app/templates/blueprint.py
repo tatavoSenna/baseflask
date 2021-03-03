@@ -7,7 +7,9 @@ from app.serializers.document_serializers import DocumentTemplateListSerializer
 from app.models.documents import DocumentTemplate
 
 from .controllers import (
-    create_template_controller
+    create_template_controller,
+    get_template_controller,
+    delete_template_controller
 )
 
 
@@ -70,3 +72,24 @@ def get_template_list(current_user):
             "items": DocumentTemplateListSerializer(many=True).dump(paginated_query.items),
         }
     )
+
+
+@templates_bp.route("/<int:document_template_id>", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def delete_document_template(current_user, document_template_id):
+    try:
+        document_template = get_template_controller(
+            current_user["company_id"],
+            document_template_id)
+    except Exception:
+        abort(404, "Template not Found")
+    try:
+        delete_template_controller(document_template)
+    except Exception:
+        abort(400, "The document template could not be deleted, there are documents linked to it")
+    msg_JSON = {
+        "message": "The document template was deleted"
+    }
+
+    return jsonify(msg_JSON), 200
