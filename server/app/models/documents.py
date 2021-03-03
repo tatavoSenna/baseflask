@@ -33,6 +33,8 @@ class DocumentTemplate(db.Model):
 
     # Has many
     documents = db.relationship("Document", back_populates="template")
+    external_tokens = db.relationship(
+        "ExternalToken", back_populates="template")
 
     def __repr__(self):
         return "<Document Template %r>" % self.name
@@ -67,3 +69,20 @@ class Document(db.Model):
     template = db.relationship("DocumentTemplate", back_populates="documents")
 
     # Has many
+
+
+class ExternalToken(db.Model):
+    __tablename__ = "external_token"
+
+    id = db.Column(db.Integer, primary_key=True)
+    document_template_id = db.Column(
+        db.Integer, db.ForeignKey("document_template.id"), nullable=False
+    )
+    token = db.Column(db.String(255), unique=True, nullable=False)
+    used = db.Column(Boolean, nullable=True, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    # Belongs to
+    template = db.relationship(
+        "DocumentTemplate", back_populates="external_tokens")
+    user = db.relationship("User", back_populates="external_tokens")

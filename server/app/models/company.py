@@ -6,9 +6,12 @@ class Company(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=False, nullable=False)
-    docusign_integration_key = db.Column(db.String(1500), unique=False, nullable=True)
-    docusign_secret_key = db.Column(db.String(1500), unique=False, nullable=True)
-    docusign_account_id = db.Column(db.String(1500), unique=False, nullable=True)
+    docusign_integration_key = db.Column(
+        db.String(1500), unique=False, nullable=True)
+    docusign_secret_key = db.Column(
+        db.String(1500), unique=False, nullable=True)
+    docusign_account_id = db.Column(
+        db.String(1500), unique=False, nullable=True)
     logo_url = db.Column(db.String(1500), unique=False, nullable=True)
 
     # Has many

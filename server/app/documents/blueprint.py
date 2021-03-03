@@ -23,7 +23,6 @@ from docusign_esign import (
 from docxtpl import DocxTemplate
 from slugify import slugify
 from sqlalchemy import desc
-import logging
 
 
 from app import db, aws_auth
