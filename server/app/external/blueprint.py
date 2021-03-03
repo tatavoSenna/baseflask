@@ -28,9 +28,12 @@ external_bp = Blueprint("external", __name__)
 def generate_token(current_user):
     content = request.json
     template_id = content.get("document_template", None)
+    title = content.get("title", None)
+    if title is None:
+        abort(400, "Document must have a title")
     try:
-        token = generate_external_token_controller(template_id,
-                                                   current_user["id"])
+        token = generate_external_token_controller(
+            template_id, title, current_user["id"])
         token_JSON = {"token": token}
     except Exception as e:
         logging.exception(
@@ -60,7 +63,6 @@ def create_document_from_token():
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
-    title = content.get("title", None)
     token = content.get("token", None)
 
     if not document_template_id or not variables:
@@ -70,7 +72,6 @@ def create_document_from_token():
         status, document = create_external_document_controller(
             variables,
             document_template_id,
-            title,
             token
         )
     except Exception as e:

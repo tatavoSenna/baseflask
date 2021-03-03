@@ -8,12 +8,13 @@ from app.documents.controllers import get_current_date_dict
 from app.documents.remote import RemoteDocument
 
 
-def generate_external_token_controller(template_id, user_id):
+def generate_external_token_controller(template_id, title, user_id):
     generated_token = uuid.uuid4()
     new_token = ExternalToken(
         document_template_id=template_id,
         token=generated_token,
-        user_id=user_id
+        user_id=user_id,
+        title=title
     )
     db.session.add(new_token)
     db.session.commit()
@@ -40,7 +41,7 @@ def get_template_controller(template_id):
     return template
 
 
-def create_external_document_controller(variables, template_id, title, token):
+def create_external_document_controller(variables, template_id, token):
     document_template = DocumentTemplate.query.filter_by(
         id=template_id).first()
     creation_token = ExternalToken.query.filter_by(token=str(token)).first()
@@ -70,7 +71,7 @@ def create_external_document_controller(variables, template_id, title, token):
         variables=variables,
         versions=version,
         created_at=datetime.utcnow().isoformat(),
-        title=title,
+        title=creation_token.title,
         document_template_id=template_id,
     )
 
