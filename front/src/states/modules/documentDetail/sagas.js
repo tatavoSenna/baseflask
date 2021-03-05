@@ -65,8 +65,9 @@ function* newVersionSaga({ payload = {} }) {
 	const { documentDetail } = yield select()
 	try {
 		const response = yield call(api.post, `/documents/${id}/text`, {
-			text,
+			text: text.text,
 			description,
+			comments: text.comments,
 		})
 		successMessage({
 			content: 'Versão criada com sucesso',
@@ -107,6 +108,7 @@ function* selectVersionSaga({ payload = {} }) {
 		yield put(
 			selectVersionSuccess({
 				text: response.data.text,
+				comments: response.data.comments,
 				document: documentDetail.data,
 				version_id: response.data.version_id,
 			})

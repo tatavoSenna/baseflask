@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons'
 
 import { listModel } from '~/states/modules/model'
+import { getUserList } from '~/states/modules/users'
 
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
@@ -24,6 +25,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 
 	useEffect(() => {
 		dispatch(listModel())
+		dispatch(getUserList())
 	}, [dispatch])
 
 	function handleGoTo(path) {

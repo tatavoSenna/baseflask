@@ -32,6 +32,7 @@ const DocumentDetails = () => {
 		data,
 		loading,
 		text,
+		comments,
 		textUpdate,
 		showModal,
 		showAssignModal,
@@ -49,7 +50,8 @@ const DocumentDetails = () => {
 		form.resetFields()
 	}
 
-	const updateText = (text) => dispatch(updateTextVersion({ text }))
+	const updateText = (text, comments) =>
+		dispatch(updateTextVersion({ text, comments }))
 
 	const getPreviousStep = () => dispatch(previousStep({ id }))
 
@@ -143,6 +145,7 @@ const DocumentDetails = () => {
 						<Editor
 							text={text}
 							textUpdate={textUpdate}
+							comments={comments}
 							onClickUpdate={handleShowModal}
 							onUpdateText={updateText}
 							block={loadingSign || loading || data.sent}

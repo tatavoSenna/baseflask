@@ -1,6 +1,7 @@
 export const selectAllUsers = (payload) =>
 	payload.map((user) => {
 		return {
+			id: user.id.toString(),
 			name: user.name,
 			username: user.username,
 			surname: user.surname,

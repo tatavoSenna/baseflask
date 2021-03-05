@@ -9,7 +9,11 @@ import {
 const initialState = {
 	data: {},
 	text: '',
-	textUpdate: '',
+	comments: [],
+	textUpdate: {
+		text: '',
+		comments: [],
+	},
 	description: '',
 	showModal: false,
 	showAssignModal: false,
@@ -27,13 +31,24 @@ const { actions, reducer } = createSlice({
 	reducers: {
 		getDocumentDetail: (state) =>
 			extend(state, {
+				data: {},
 				loading: true,
+				text: '',
+				comments: [],
+				textUpdate: {
+					text: '',
+					comments: [],
+				},
 			}),
 		getDocumentDetailSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllDocumentDetail(payload),
 				text: payload.text,
-				textUpdate: payload.text,
+				comments: payload.comments ? payload.comments : [],
+				textUpdate: {
+					text: payload.text,
+					comments: payload.comments ? payload.comments : [],
+				},
 				version_id: payload.version_id,
 				error: null,
 				loading: false,
@@ -82,7 +97,11 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: selectAllDocumentSelectVersion(payload),
 				text: payload.text,
-				textUpdate: payload.text,
+				comments: payload.comments ? payload.comments : [],
+				textUpdate: {
+					text: payload.text,
+					comments: payload.comments ? payload.comments : [],
+				},
 				version_id: payload.version_id,
 				description: '',
 				error: null,
@@ -101,7 +120,15 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: selectAllDocumentVersions(payload),
 				text: payload.text,
-				textUpdate: payload.text,
+				comments: payload.versions[0].comments
+					? payload.versions[0].comments
+					: [],
+				textUpdate: {
+					text: payload.text,
+					comments: payload.versions[0].comments
+						? payload.versions[0].comments
+						: [],
+				},
 				version_id: payload.version_id,
 				description: '',
 				error: null,
@@ -114,7 +141,7 @@ const { actions, reducer } = createSlice({
 			}),
 		updateTextVersion: (state, { payload }) =>
 			extend(state, {
-				textUpdate: payload.text,
+				textUpdate: payload,
 			}),
 		previousStep: (state) =>
 			extend(state, {
