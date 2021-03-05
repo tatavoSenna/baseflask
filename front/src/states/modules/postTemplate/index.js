@@ -8,7 +8,7 @@ const initialState = {
 		title: '',
 		form: {},
 		workflow: {},
-		text: {},
+		text: '',
 		signers: {
 			parties: [
 				{

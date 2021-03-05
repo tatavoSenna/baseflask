@@ -113,7 +113,10 @@ function AddTemplate() {
 	}
 
 	const updateForm = (e, name) => {
-		const value = e.target.value
+		let value = e
+		if (e.target) {
+			value = e.target.value
+		}
 		dispatch(postTemplateAppend({ name, value }))
 	}
 

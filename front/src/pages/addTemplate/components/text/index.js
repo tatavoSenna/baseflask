@@ -1,26 +1,25 @@
 import React from 'react'
-import { object, func } from 'prop-types'
-import { Form, Input } from 'antd'
+import { string, func } from 'prop-types'
+import Editor from './editor'
 
 const Text = ({ data, updateForm }) => {
 	return (
-		<Form.Item
-			name="text"
-			onChange={(e) => updateForm(e, 'text')}
-			value={data.text}>
-			<Input.TextArea
-				style={{
-					width: '100%',
-					height: '42rem',
-				}}
-			/>
-		</Form.Item>
+		<div
+			style={{
+				display: 'flex',
+				flexWrap: 'wrap',
+				paddingBottom: 50,
+			}}>
+			<div>
+				<Editor text={data} onUpdateText={updateForm} />
+			</div>
+		</div>
 	)
 }
 
 export default Text
 
 Text.propTypes = {
-	data: object,
+	data: string,
 	updateForm: func,
 }
