@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { bool, func } from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Menu, Layout, Tooltip } from 'antd'
 import {
@@ -8,17 +8,17 @@ import {
 	TeamOutlined,
 	LayoutOutlined,
 	DeploymentUnitOutlined,
+	SettingOutlined,
 } from '@ant-design/icons'
-
 import { listModel } from '~/states/modules/model'
 import { getUserList } from '~/states/modules/users'
-
+import { getSettings } from '~/states/modules/settings'
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
-import logo from '~/assets/logo.png'
 import logoSmall from '~/assets/logo-small.png'
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
+	const { data } = useSelector(({ settings }) => settings)
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const { pathname } = useLocation()
@@ -26,6 +26,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	useEffect(() => {
 		dispatch(listModel())
 		dispatch(getUserList())
+	}, [dispatch])
+
+	useEffect(() => {
+		dispatch(getSettings())
 	}, [dispatch])
 
 	function handleGoTo(path) {
@@ -54,7 +58,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								height="42"
 							/>
 						) : (
-							<img src={logo} alt="logo" className={styles.logo} />
+							data && <img src={data.url} alt="logo" className={styles.logo} />
 						)}
 					</div>
 					<Menu
@@ -105,6 +109,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/integrations')}>
 							<Tooltip className={styles.tooltip}>Integração</Tooltip>
 						</Menu.Item>
+						<Menu.Item
+							key="settings"
+							icon={<SettingOutlined />}
+							onClick={() => handleGoTo('/settings')}>
+							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
+						</Menu.Item>
 					</Menu>
 				</Sider>
 			) : (
@@ -150,6 +160,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<DeploymentUnitOutlined />}
 							onClick={() => handleGoTo('/integrations')}>
 							Integração
+						</Menu.Item>
+						<Menu.Item
+							key="settings"
+							icon={<SettingOutlined />}
+							onClick={() => handleGoTo('/settings')}>
+							Configurações
 						</Menu.Item>
 					</Menu>
 				</Sider>

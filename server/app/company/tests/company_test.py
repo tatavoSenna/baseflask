@@ -1,6 +1,7 @@
 from app.company.controllers import (
     save_company_keys_controller, 
-    upload_logo_controller
+    upload_logo_controller,
+    get_download_url_controller
 )
 from app.test import factories
 import pytest
@@ -31,7 +32,7 @@ def test_save_keys():
     assert company.docusign_secret_key == "453456574yf4hyv6h767"
     assert company.docusign_account_id == docusign_account_id
 
-@ patch('app.company.controllers.RemoteCompany.upload_logo', return_value="url")
+@ patch('app.company.controllers.RemoteCompany.upload_logo')
 def test_upload_logo(upload_logo_mock):
     company_id = 123
     company = factories.CompanyFactory(id=company_id)
@@ -41,6 +42,15 @@ def test_upload_logo(upload_logo_mock):
     upload_logo_controller(company.id, logo_img)
 
     upload_logo_mock.assert_called_once_with(company.id, logo_img)
+
+@ patch('app.company.controllers.RemoteCompany.download_logo_url')
+def test_download_logo(download_logo_mock):
+    company_id = 123
+    company = factories.CompanyFactory(id=company_id)
+
+    get_download_url_controller(company.id)
+
+    download_logo_mock.assert_called_once_with(company.id)
 
 
 
