@@ -1,6 +1,7 @@
 import React from 'react'
-import { Tag, Button, Dropdown, Menu } from 'antd'
-import { MoreOutlined } from '@ant-design/icons'
+import { Tag, Button, Space } from 'antd'
+
+import Delete from '~/components/deleteConfirm'
 
 export const getColumns = (handleToGo, handleDeleteContract) => [
 	{
@@ -81,17 +82,12 @@ export const getColumns = (handleToGo, handleDeleteContract) => [
 		dataIndex: 'action',
 		key: 'action',
 		render: (text, row) => (
-			<Dropdown overlay={() => getMenu(row, handleDeleteContract)}>
-				<MoreOutlined />
-			</Dropdown>
+			<Space size="middle">
+				<Delete
+					title="Deseja excluir esse documento?"
+					handle={() => handleDeleteContract(row)}
+				/>
+			</Space>
 		),
 	},
 ]
-
-export const getMenu = (row, handleDeleteContract) => (
-	<Menu style={{ zIndex: 1 }}>
-		<Menu.Item onClick={() => handleDeleteContract(row)}>Deletar</Menu.Item>
-		<Menu.Item onClick={() => {}}>Compartilhar</Menu.Item>
-		<Menu.Item onClick={() => {}}>Imprimir</Menu.Item>
-	</Menu>
-)
