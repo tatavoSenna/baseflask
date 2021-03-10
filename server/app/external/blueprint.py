@@ -77,9 +77,9 @@ def create_document_from_token():
     except Exception as e:
         logging.exception(
             "Could not create document")
-        abort(400, "Could not create document")
+        return jsonify({"Authorized": False}), 200
     if status == 0:
         abort(400, "Token not found")
     elif status == -1:
         abort(400, "This Token has already been used")
-    return jsonify(DocumentSerializer(many=False).dump(document))
+    return jsonify({"Authorized": True}), 200
