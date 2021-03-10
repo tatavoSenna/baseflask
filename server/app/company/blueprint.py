@@ -7,7 +7,8 @@ from app.serializers.company_serializers import CompanySerializer
 
 from .controllers import (
     save_company_keys_controller,
-    upload_logo_controller
+    upload_logo_controller,
+    get_download_url_controller
 )
 
 company_bp = Blueprint("company", __name__)
@@ -55,7 +56,7 @@ def get_keys(logged_user, company_id):
 
     return jsonify({"company": CompanySerializer().dump(company)})
 
-@company_bp.route("/", methods=["POST"])
+@company_bp.route("/upload", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def upload_logo(logged_user):
@@ -69,3 +70,13 @@ def upload_logo(logged_user):
     url = upload_logo_controller(company_id, logo_img)
 
     return url
+
+@company_bp.route("/download", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def download_logo_url(logged_user):
+    company_id = logged_user.get("company_id")
+
+    url = get_download_url_controller(company_id)
+
+    return jsonify({"url": url})

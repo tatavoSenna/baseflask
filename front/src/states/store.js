@@ -20,6 +20,7 @@ import users, { usersSaga } from './modules/users'
 import groups, { groupsSaga } from './modules/groups'
 import documentDetail, { documentDetailSaga } from './modules/documentDetail'
 import integrations, { integrationsSaga } from './modules/integrations'
+import settings, { settingsSaga } from './modules/settings'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -41,6 +42,7 @@ const reducers = combineReducers({
 	groups,
 	documentDetail,
 	integrations,
+	settings,
 })
 
 const store = configureStore({
@@ -64,6 +66,7 @@ const rootSaga = function* () {
 		groupsSaga(),
 		documentDetailSaga(),
 		integrationsSaga(),
+		settingsSaga(),
 	])
 }
 

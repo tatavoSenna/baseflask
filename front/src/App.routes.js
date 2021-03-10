@@ -12,6 +12,7 @@ import Templates from './pages/templates'
 import AddTemplate from './pages/addTemplate'
 import DocumentDetails from './pages/documentDetails'
 import Integrations from './pages/integrations'
+import Settings from './pages/settings'
 
 import Wrapper from '~/components/wrapper'
 
@@ -26,6 +27,7 @@ export const ROUTES = {
 	newTemplate: '/templates/new',
 	documentDetails: '/documentDetails',
 	integrations: '/integrations',
+	settings: '/settings',
 }
 
 function Routes() {
@@ -70,6 +72,12 @@ function Routes() {
 						exact
 						path={ROUTES.integrations}
 						component={Integrations}
+						isPrivate
+					/>
+					<AdminRoute
+						exact
+						path={ROUTES.settings}
+						component={Settings}
 						isPrivate
 					/>
 				</Wrapper>
