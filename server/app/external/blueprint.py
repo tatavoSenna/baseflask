@@ -16,7 +16,8 @@ from .controllers import (
     generate_external_token_controller,
     authorize_external_token_controller,
     get_template_controller,
-    create_external_document_controller
+    create_external_document_controller,
+    ExceptionWithMsg
 )
 
 external_bp = Blueprint("external", __name__)
@@ -47,15 +48,20 @@ def authorize_token():
     content = request.json
     token = content.get("token", None)
     if token is None:
-        abort(404, "A Token must be provided")
-    response, template_id = authorize_external_token_controller(token)
-    if template_id == 0:
-        abort(400, response)
-    else:
-        document_template = get_template_controller(template_id)
-        if document_template is None:
-            abort(404, "Document template not found")
-        return jsonify(DocumentTemplateSerializer(many=False).dump(document_template))
+        return jsonify({"Authorized": False,
+                        "Message": "Token is missing"}), 200
+    try:
+        template_id = authorize_external_token_controller(token)
+    except ExceptionWithMsg as e:
+        return jsonify({"Authorized": False,
+                        "Message": e.msg}), 200
+    document_template = get_template_controller(template_id)
+    if document_template is None:
+        return jsonify({"Authorized": False,
+                        "Message": "Document Template not found in database"}), 200
+    return jsonify({"Authorized": True,
+                    "Message": "Document was created",
+                    "Template": DocumentTemplateSerializer(many=False).dump(document_template)}), 200
 
 
 @external_bp.route("/create", methods=["POST"])
@@ -66,20 +72,19 @@ def create_document_from_token():
     token = content.get("token", None)
 
     if not document_template_id or not variables:
-        error_msg = "Value is missing. Needs variables and template id"
-        return jsonify({"message": error_msg}), 400
+        abort(400, "Need to provide variables and template id")
     try:
-        status, document = create_external_document_controller(
+        document = create_external_document_controller(
             variables,
             document_template_id,
             token
         )
+    except ExceptionWithMsg as e:
+        logging.exception(
+            "Could not create document")
+        abort(400, e.msg)
     except Exception as e:
         logging.exception(
             "Could not create document")
-        return jsonify({"Authorized": False}), 200
-    if status == 0:
-        abort(400, "Token not found")
-    elif status == -1:
-        abort(400, "This Token has already been used")
-    return jsonify({"Authorized": True}), 200
+        abort(400, "Could not create document")
+    return jsonify(DocumentSerializer(many=False).dump(document))

@@ -8,6 +8,20 @@ from app.documents.controllers import get_current_date_dict
 from app.documents.remote import RemoteDocument
 
 
+class ExceptionWithMsg(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return repr(self.msg)
+
+
+def get_template_controller(template_id):
+    template = DocumentTemplate.query.filter_by(id=template_id).first()
+
+    return template
+
+
 def generate_external_token_controller(template_id, title, user_id):
     generated_token = uuid.uuid4()
     new_token = ExternalToken(
@@ -24,21 +38,11 @@ def generate_external_token_controller(template_id, title, user_id):
 def authorize_external_token_controller(token):
     token = ExternalToken.query.filter_by(token=str(token)).first()
     if token is None:
-        msg = "Unauthorized token"
-        template_id = 0
+        raise ExceptionWithMsg("Unauthorized token")
     elif token.used == True:
-        msg = "This token has already been used"
-        template_id = 0
-    else:
-        msg = "Token Found"
-        template_id = token.document_template_id
-    return msg, template_id
-
-
-def get_template_controller(template_id):
-    template = DocumentTemplate.query.filter_by(id=template_id).first()
-
-    return template
+        raise ExceptionWithMsg("This token has already been used")
+    template_id = token.document_template_id
+    return template_id
 
 
 def create_external_document_controller(variables, template_id, token):
@@ -46,9 +50,9 @@ def create_external_document_controller(variables, template_id, token):
         id=template_id).first()
     creation_token = ExternalToken.query.filter_by(token=str(token)).first()
     if creation_token == None:
-        return 0, ""
+        raise ExceptionWithMsg("Token not found")
     elif creation_token.used == True:
-        return -1, ""
+        raise ExceptionWithMsg("This Token has already been used")
     user = User.query.filter_by(id=creation_token.user_id).first()
 
     current_date_dict = get_current_date_dict()
@@ -83,4 +87,4 @@ def create_external_document_controller(variables, template_id, token):
     db.session.add(creation_token)
     db.session.commit()
 
-    return 1, document
+    return document
