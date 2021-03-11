@@ -36,10 +36,9 @@ def test_authorize_token():
     user = factories.UserFactory(id=user_id, company=company)
     test_token = generate_external_token_controller(
         template_id, "novo documento", user_id)
-    response, template_response = authorize_external_token_controller(
+    template_response = authorize_external_token_controller(
         test_token)
     assert template_response == template_id
-    assert response == "Token Found"
 
 
 @ patch('app.documents.controllers.RemoteDocument.create')
@@ -79,33 +78,16 @@ def test_create_external_document(create_remote_document_mock):
     test_token = generate_external_token_controller(
         document_template.id, title, user_id)
 
-    status, document = create_external_document_controller(
+    document = create_external_document_controller(
         variables,
         document_template.id,
         test_token
     )
-
-    status_2, document_2 = create_external_document_controller(
-        variables,
-        document_template.id,
-        test_token
-    )
-
-    status_3, document_3 = create_external_document_controller(
-        variables,
-        document_template.id,
-        "abc"
-    )
-
     assert document.user_id == user.id
     assert document.company_id == company.id
     assert document.document_template_id == document_template.id
     assert document.title == title
     assert document.workflow['created_by'] == "External User"
-    assert status_2 == -1
-    assert document_2 == ""
-    assert status_3 == 0
-    assert document_3 == ""
 
     create_remote_document_mock.assert_called_once_with(
         document
