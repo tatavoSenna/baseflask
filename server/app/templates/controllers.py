@@ -30,8 +30,6 @@ def get_template_controller(company_id, document_template_id):
     document_template = DocumentTemplate.query.filter_by(
         company_id=company_id, id=document_template_id
     ).first()
-    if document_template == None:
-        raise Exception
     return document_template
 
 

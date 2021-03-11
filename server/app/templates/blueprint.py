@@ -82,6 +82,8 @@ def delete_document_template(current_user, document_template_id):
         document_template = get_template_controller(
             current_user["company_id"],
             document_template_id)
+        if document_template == None:
+            raise Exception
     except Exception:
         abort(404, "Template not Found")
     try:
