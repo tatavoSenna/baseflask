@@ -1,7 +1,9 @@
 import pytest
 from app.test import factories
 from app.templates.controllers import (
-    create_template_controller
+    create_template_controller,
+    get_template_controller,
+    delete_template_controller
 )
 from unittest.mock import patch
 
@@ -25,3 +27,15 @@ def test_create_template_controller(upload_template_mock):
         template_text, template_id, user.company_id)
 
     assert template_id == 1
+
+@ patch('app.templates.controllers.RemoteTemplate.delete_template')
+def test_delete_template(delete_template_mock):
+    company = factories.CompanyFactory(id=17)
+    template = factories.DocumentTemplateFactory(id=77, company=company)
+    ret_template = get_template_controller(template.company.id, template.id)
+    delete_template_controller(ret_template)
+
+    assert get_template_controller(17, 77) == None
+    delete_template_mock.assert_called_once_with(
+        ret_template
+    )
