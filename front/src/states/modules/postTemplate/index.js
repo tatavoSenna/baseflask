@@ -1,13 +1,23 @@
 import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { selectParties } from './selectors'
+import { selectStep, addStep, removeStep, selectParties } from './selectors'
 
 const initialState = {
 	data: {
 		title: '',
 		form: {},
-		workflow: {},
+		workflow: {
+			nodes: [
+				{
+					title: '',
+					next_node: null,
+					responsible_user: '',
+					responsible_groups: [],
+					changed_by: '',
+				},
+			],
+		},
 		text: '',
 		signers: {
 			parties: [
@@ -42,16 +52,6 @@ const initialState = {
 							signing_date: '',
 						},
 					],
-					validation: {
-						title: false,
-						signers: [
-							{
-								title: false,
-								anchor: [{ anchor_string: false }],
-								fields: [false, false],
-							},
-						],
-					},
 				},
 			],
 		},
@@ -70,6 +70,25 @@ const { actions, reducer } = createSlice({
 			})
 			state.data.title = payload.title
 		},
+		postTemplateStepInfo: (state, { payload }) => {
+			return extend(state, {
+				data: extend(state.data, {
+					workflow: selectStep(state.data.workflow, payload),
+				}),
+			})
+		},
+		postTemplateStepAdd: (state, { payload }) => {
+			return extend(state, {
+				data: extend(state.data, {
+					workflow: addStep(state.data.workflow, payload),
+				}),
+			})
+		},
+		postTemplateStepRemove: (state, { payload }) => {
+			return extend(state, {
+				workflow: removeStep(state.data.workflow, payload),
+			})
+		},
 		postTemplateSignersInfo: (state, { payload }) => {
 			return extend(state, {
 				data: extend(state.data, {
@@ -77,7 +96,7 @@ const { actions, reducer } = createSlice({
 				}),
 			})
 		},
-		postTemplateSignersAdd: (state, { payload }) => {
+		postTemplateSignerAdd: (state, { payload }) => {
 			return extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -85,9 +104,6 @@ const { actions, reducer } = createSlice({
 							if (index === payload.partyIndex) {
 								return extend(party, {
 									partySigners: [...party.partySigners, payload.newSigner],
-									validation: extend(party.validation, {
-										signers: [...party.validation.signers, payload.validation],
-									}),
 								})
 							}
 							return party
@@ -96,7 +112,7 @@ const { actions, reducer } = createSlice({
 				}),
 			})
 		},
-		postTemplateSignersRemove: (state, { payload }) => {
+		postTemplateSignerRemove: (state, { payload }) => {
 			return extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -106,11 +122,6 @@ const { actions, reducer } = createSlice({
 									partySigners: party.partySigners.filter(
 										(signer, index) => index !== payload.signerIndex
 									),
-									validation: extend(party.validation, {
-										signers: party.validation.signers.filter(
-											(signer, index) => index !== payload.signerIndex
-										),
-									}),
 								})
 							}
 							return party
@@ -161,9 +172,12 @@ const { actions, reducer } = createSlice({
 
 export const {
 	postTemplateTitle,
+	postTemplateStepInfo,
+	postTemplateStepAdd,
+	postTemplateStepRemove,
 	postTemplateSignersInfo,
-	postTemplateSignersAdd,
-	postTemplateSignersRemove,
+	postTemplateSignerAdd,
+	postTemplateSignerRemove,
 	postTemplatePartyAdd,
 	postTemplatePartyRemove,
 	postTemplateSignersAppend,

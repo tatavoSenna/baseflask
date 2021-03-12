@@ -11,7 +11,6 @@ import {
 import {
 	postTemplateAppend,
 	postTemplateRequest,
-	postTemplateSignersInfo,
 } from '~/states/modules/postTemplate'
 
 import BreadCrumb from '~/components/breadCrumb'
@@ -22,12 +21,13 @@ import Text from './components/text'
 
 import styles from './index.module.scss'
 
-function AddTemplate() {
+const AddTemplate = () => {
 	const { data } = useSelector(({ postTemplate }) => postTemplate)
 	const { current } = useHistory().location.state
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
+
 	const [inputsFilled, setInputsFilled] = useState({
 		form: false,
 		workflow: false,
@@ -42,66 +42,44 @@ function AddTemplate() {
 		})
 	}
 
-	// Checks if all fields are filled (only signers fields for now)
+	// Checks if all fields are filled (all but form tab for now)
 	const validate = () => {
-		let count = 0
-		data.signers.parties.map((party, partyIndex) => {
-			if (!party.partyTitle.length) {
-				dispatch(
-					postTemplateSignersInfo({
-						partyIndex,
-						value: party.partyTitle,
-						name: 'partyTitle',
-					})
-				)
-				count++
+		const redirect = (tab) => {
+			return history.push({ state: { current: tab } })
+		}
+		data.workflow.nodes.forEach((node) => {
+			if (
+				node.title === '' ||
+				node.responsible_groups === [] ||
+				node.responsible_user === ''
+			) {
+				redirect('workflow')
+				return false
 			}
-			party.partySigners.map((signer, signerIndex) => {
-				if (!signer.title.length) {
-					dispatch(
-						postTemplateSignersInfo({
-							partyIndex,
-							signerIndex,
-							value: signer.title,
-							name: 'title',
-						})
-					)
-					count++
-				}
-				if (!signer.anchor[0].anchor_string.length) {
-					dispatch(
-						postTemplateSignersInfo({
-							partyIndex,
-							signerIndex,
-							value: signer.anchor[0].anchor_string,
-							name: 'anchor_string',
-						})
-					)
-					count++
-				}
-				signer.fields.map((field, index) => {
-					if (!field.variable.length) {
-						dispatch(
-							postTemplateSignersInfo({
-								partyIndex,
-								signerIndex,
-								value: field.variable,
-								name: index,
-							})
-						)
-						count++
-					}
-					return null
-				})
-				return null
-			})
-			return null
 		})
-
-		if (count > 0) {
-			history.push({ state: { current: 'signers' } })
+		if (data.text === '') {
+			redirect('text')
 			return false
 		}
+		data.signers.parties.forEach((party) => {
+			if (party.partyTitle === '') {
+				redirect('signers')
+				return false
+			}
+			party.partySigners.forEach((signer) => {
+				if (signer.title === '' || signer.anchor[0].anchor_string === '') {
+					redirect('signers')
+					return false
+				}
+				signer.fields.forEach((field) => {
+					if (field.variable === '') {
+						redirect('signers')
+						return false
+					}
+				})
+			})
+		})
+
 		return true
 	}
 
@@ -120,7 +98,7 @@ function AddTemplate() {
 		dispatch(postTemplateAppend({ name, value }))
 	}
 
-	// Each tab has a useEffect dedicated to overwatch if it is empty
+	// Each tab has a useEffect dedicated to check if it is empty, thus determining their color
 
 	// Signers tab
 	useEffect(() => {
@@ -224,20 +202,22 @@ function AddTemplate() {
 					Assinantes
 				</Menu.Item>
 			</Menu>
+			<Button
+				form="createTemplate"
+				key="button"
+				type="primary"
+				htmlType="submit"
+				className={styles.button}
+				disabled={!Object.values(inputsFilled).every(Boolean)}>
+				Enviar
+			</Button>
 			<Layout className={styles.content}>
 				<Form
+					id="createTemplate"
 					form={form}
 					layout="horizontal"
 					hideRequiredMark
 					onFinish={onSubmit}>
-					<Button
-						key="button"
-						type="primary"
-						htmlType="submit"
-						className={styles.button}
-						disabled={!Object.values(inputsFilled).every(Boolean)}>
-						Enviar
-					</Button>
 					{current === 'form' && (
 						<TemplateForm data={data.form} updateForm={updateForm} />
 					)}
