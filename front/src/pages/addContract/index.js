@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Layout } from 'antd'
 import { useHistory } from 'react-router-dom'
 
-import FormFactory from './components/formFactory'
+import FormFactory from '~/components/formFactory'
 
 import { listQuestion } from '~/states/modules/question'
 
@@ -12,6 +12,7 @@ const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
 		pageFieldsData={pageFieldsData}
 		isLastPage={isLastPage}
 		pageNumber={pageNumber}
+		url="/contracts/new/"
 	/>
 )
 

@@ -5,19 +5,28 @@ import { Layout, PageHeader } from 'antd'
 import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
 import ContractModal from './components/modal'
+import LinkModal from './components/modalLink'
 import { getColumns } from './columns'
 import {
 	listContract,
 	deleteContract,
+	createLink,
 	setShowModal,
+	setShowLinkModal,
 } from '~/states/modules/contract'
 
 const Contracts = () => {
 	const dispatch = useDispatch()
 	const history = useHistory()
-	const { data: contracts, loading, pages, showModal } = useSelector(
-		({ contract }) => contract
-	)
+	const {
+		data: contracts,
+		loading,
+		pages,
+		showModal,
+		showLinkModal,
+		link,
+	} = useSelector(({ contract }) => contract)
+
 	const { data: models } = useSelector(({ model }) => model)
 
 	const handleCreate = (values) => {
@@ -28,12 +37,20 @@ const Contracts = () => {
 		})
 	}
 
+	const handleCreateLinkExternal = (values) => {
+		dispatch(createLink(values))
+	}
+
 	const handleCancel = () => {
 		dispatch(setShowModal(false))
 	}
 
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
+	}
+
+	const handleCancelLinkModal = () => {
+		dispatch(setShowLinkModal(false))
 	}
 
 	const handleToGo = (record) =>
@@ -65,10 +82,16 @@ const Contracts = () => {
 					<ContractModal
 						handleCancel={handleCancel}
 						handleCreate={handleCreate}
+						handleCreateLink={handleCreateLinkExternal}
 						showModal={showModal}
 						models={models}
 					/>
 				)}
+				<LinkModal
+					handleOk={handleCancelLinkModal}
+					showModal={showLinkModal}
+					link={link}
+				/>
 				<DataTable
 					columns={getColumns(handleToGo, handleDeleteContract)}
 					dataSource={contracts}

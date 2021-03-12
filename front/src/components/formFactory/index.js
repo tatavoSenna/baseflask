@@ -1,9 +1,10 @@
 import React from 'react'
-import { object, bool, number } from 'prop-types'
+import { object, bool, number, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Form, Button, Typography, PageHeader } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
+import { createContractExternal } from '~/states/modules/externalContract'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
 
@@ -23,8 +24,18 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 
-const FormFactory = ({ pageFieldsData, isLastPage, pageNumber }) => {
-	const { values } = useHistory().location.state
+const FormFactory = ({
+	pageFieldsData,
+	isLastPage,
+	pageNumber,
+	url,
+	token,
+}) => {
+	const state = useHistory().location.state
+	let values = { current: 0 }
+	if (state && state.values) {
+		values = state.values
+	}
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const history = useHistory()
@@ -34,7 +45,7 @@ const FormFactory = ({ pageFieldsData, isLastPage, pageNumber }) => {
 	const handleBack = () => {
 		const previousPage = currentPage - 1
 		history.push({
-			pathname: `/contracts/new/`,
+			pathname: url,
 			state: { values: { ...values, current: previousPage } },
 		})
 	}
@@ -44,11 +55,15 @@ const FormFactory = ({ pageFieldsData, isLastPage, pageNumber }) => {
 		if (!isLastPage) {
 			const nextPage = currentPage + 1
 			return history.push({
-				pathname: `/contracts/new/`,
+				pathname: url,
 				state: { values: { ...values, current: nextPage } },
 			})
 		}
-		dispatch(answerRequest({ history }))
+		if (token) {
+			dispatch(createContractExternal())
+		} else {
+			dispatch(answerRequest({ history }))
+		}
 	}
 
 	return (
@@ -123,6 +138,8 @@ FormFactory.propTypes = {
 	pageFieldsData: object,
 	isLastPage: bool,
 	pageNumber: number,
+	url: string,
+	token: string,
 }
 FormFactory.defaultProps = {
 	content: [],

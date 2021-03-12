@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { store } from '~/states/store'
 
 import AdminRoute from './services/AdminRoutes'
 
@@ -12,6 +13,7 @@ import Templates from './pages/templates'
 import AddTemplate from './pages/addTemplate'
 import DocumentDetails from './pages/documentDetails'
 import Integrations from './pages/integrations'
+import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
 
 import Wrapper from '~/components/wrapper'
@@ -27,13 +29,20 @@ export const ROUTES = {
 	newTemplate: '/templates/new',
 	documentDetails: '/documentDetails',
 	integrations: '/integrations',
+	externalContract: '/documentcreate/:token',
 	settings: '/settings',
 }
 
 function Routes() {
+	const { signed } = store.getState().session
 	return (
 		<Router>
 			<Switch>
+				<AdminRoute
+					path={ROUTES.externalContract}
+					component={AddContractExternal}
+					isPrivate={signed}
+				/>
 				<AdminRoute path={ROUTES.token} component={Token} />
 				<AdminRoute path={ROUTES.docusign} component={Docusign} isPrivate />
 				<Wrapper>

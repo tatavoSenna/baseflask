@@ -10,6 +10,9 @@ import {
 	listContract,
 	listContractSuccess,
 	listContractFailure,
+	createLink,
+	createLinkSuccess,
+	createLinkFailure,
 	deleteContract,
 	deleteContractSuccess,
 	deleteContractFailure,
@@ -18,6 +21,7 @@ import {
 
 export default function* rootSaga() {
 	yield takeEvery(listContract, loginSaga)
+	yield takeEvery(createLink, createLinkSaga)
 	yield takeEvery(deleteContract, deleteContractSaga)
 	yield takeEvery(viewContract, viewSaga)
 }
@@ -33,6 +37,35 @@ function* loginSaga({ payload = {} }) {
 		yield put(listContractSuccess(data))
 	} catch (error) {
 		yield put(listContractFailure(error))
+	}
+}
+
+function* createLinkSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Criando link externo...',
+		updateKey: 'createLinkSaga',
+	})
+	const { modelId, title } = payload
+	try {
+		const { data } = yield call(api.post, `/external/token`, {
+			document_template: modelId,
+			title,
+		})
+		yield put(
+			createLinkSuccess({
+				link: `${process.env.REACT_APP_BASE_URL}/documentcreate/${data.token}`,
+			})
+		)
+		successMessage({
+			content: 'Contrato excluído com sucesso.',
+			updateKey: 'createLinkSaga',
+		})
+	} catch (error) {
+		yield put(createLinkFailure(error))
+		errorMessage({
+			content: 'Exclusão do contrato falhou.',
+			updateKey: 'createLinkSaga',
+		})
 	}
 }
 
