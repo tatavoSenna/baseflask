@@ -79,12 +79,13 @@ def create_external_document_controller(variables, template_id, token):
         document_template_id=template_id,
     )
 
-    remote_document = RemoteDocument()
-    remote_document.create(document)
     creation_token.used = True
 
     db.session.add(document)
     db.session.add(creation_token)
     db.session.commit()
+
+    remote_document = RemoteDocument()
+    remote_document.create(document)
 
     return document

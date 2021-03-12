@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
-import { Input, Button, Modal, Form } from 'antd'
+import { Input, Button, Modal, Form, Checkbox } from 'antd'
 import PropTypes from 'prop-types'
 import { AutoComplete } from 'antd'
 
-const ContractModal = ({ handleCreate, handleCancel, showModal, models }) => {
+const ContractModal = ({
+	handleCreate,
+	handleCreateLink,
+	handleCancel,
+	showModal,
+	models,
+}) => {
 	const [form] = Form.useForm()
 	const [modelId, setModelId] = useState('')
 	const [title, setTitle] = useState('')
 	const [options, setOptions] = useState(models)
+	const [checked, setChecked] = useState(false)
 
 	const onSearch = (searchText) =>
 		setOptions(
@@ -28,7 +35,11 @@ const ContractModal = ({ handleCreate, handleCancel, showModal, models }) => {
 				</Button>,
 				<Button
 					key="criar"
-					onClick={() => handleCreate({ title, modelId })}
+					onClick={() =>
+						checked
+							? handleCreateLink({ title, modelId })
+							: handleCreate({ title, modelId })
+					}
 					form="newContractForm"
 					disabled={!(title && modelId)}>
 					Criar
@@ -48,6 +59,11 @@ const ContractModal = ({ handleCreate, handleCancel, showModal, models }) => {
 						onSearch={onSearch}
 					/>
 				</Form.Item>
+				<Checkbox
+					onChange={(e) => setChecked(e.target.checked)}
+					checked={checked}>
+					Criar URL externa
+				</Checkbox>
 			</Form>
 		</Modal>
 	)
@@ -55,6 +71,7 @@ const ContractModal = ({ handleCreate, handleCancel, showModal, models }) => {
 
 ContractModal.propTypes = {
 	handleCreate: PropTypes.func,
+	handleCreateLink: PropTypes.func,
 	handleCancel: PropTypes.func,
 	handleNewContract: PropTypes.func,
 	newContract: PropTypes.object,

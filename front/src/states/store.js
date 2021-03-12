@@ -14,6 +14,9 @@ import template, { templateSaga } from './modules/templates'
 import postTemplate, { postTemplateSaga } from './modules/postTemplate'
 import model, { modelSaga } from './modules/model'
 import question, { questionSaga } from './modules/question'
+import externalContract, {
+	externalContractSaga,
+} from './modules/externalContract'
 import answer, { answerSaga } from './modules/answer'
 import docusign, { docusignSaga } from './modules/docusign'
 import users, { usersSaga } from './modules/users'
@@ -39,6 +42,7 @@ const reducers = combineReducers({
 	postTemplate,
 	model,
 	question,
+	externalContract,
 	answer,
 	docusign,
 	users,
@@ -66,6 +70,7 @@ const rootSaga = function* () {
 		postTemplateSaga(),
 		modelSaga(),
 		questionSaga(),
+		externalContractSaga(),
 		answerSaga(),
 		docusignSaga(),
 		usersSaga(),
