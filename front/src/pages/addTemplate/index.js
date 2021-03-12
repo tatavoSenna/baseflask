@@ -50,8 +50,8 @@ const AddTemplate = () => {
 		data.workflow.nodes.forEach((node) => {
 			if (
 				node.title === '' ||
-				node.responsible_groups === [] ||
-				node.responsible_user === ''
+				node.responsible_group === '' ||
+				node.responsible_users === []
 			) {
 				redirect('workflow')
 				return false

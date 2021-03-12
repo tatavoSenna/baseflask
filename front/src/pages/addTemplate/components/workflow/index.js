@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { object, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { postTemplateStepAdd } from '~/states/modules/postTemplate'
@@ -26,8 +26,8 @@ const Workflow = ({ data }) => {
 		const newStep = {
 			title: '',
 			next_node: null,
-			responsible_user: '',
-			responsible_groups: [],
+			responsible_users: [],
+			responsible_group: '',
 			changed_by: '',
 		}
 
