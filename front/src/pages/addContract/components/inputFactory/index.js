@@ -8,6 +8,9 @@ import CurrencyField from '../../../../components/currencyField'
 import TextField from '../../../../components/textField'
 import DropdownField from '../../../../components/dropdownField'
 import DateField from '../../../../components/dateField'
+import StateField from '../../../../components/stateField'
+import CnaeField from '../../../../components/cnaeField'
+import CityField from '../../../../components/cityField'
 
 import styles from './index.module.scss'
 
@@ -154,6 +157,42 @@ function InputFactory({ data: pageFieldsData }) {
 			case 'date':
 				children.push(
 					<DateField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'state':
+				children.push(
+					<StateField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'cnae':
+				children.push(
+					<CnaeField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'city':
+				children.push(
+					<CityField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={hiddenInput[0][i] ? styles.hidden : undefined}

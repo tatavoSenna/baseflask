@@ -21,6 +21,9 @@ import groups, { groupsSaga } from './modules/groups'
 import documentDetail, { documentDetailSaga } from './modules/documentDetail'
 import integrations, { integrationsSaga } from './modules/integrations'
 import settings, { settingsSaga } from './modules/settings'
+import stateField, { stateFieldSaga } from './modules/stateField'
+import cnaeField, { cnaeFieldSaga } from './modules/cnaeField'
+import cityField, { cityFieldSaga } from './modules/cityField'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -43,6 +46,9 @@ const reducers = combineReducers({
 	documentDetail,
 	integrations,
 	settings,
+	stateField,
+	cnaeField,
+	cityField,
 })
 
 const store = configureStore({
@@ -67,6 +73,9 @@ const rootSaga = function* () {
 		documentDetailSaga(),
 		integrationsSaga(),
 		settingsSaga(),
+		stateFieldSaga(),
+		cnaeFieldSaga(),
+		cityFieldSaga(),
 	])
 }
 
