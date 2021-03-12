@@ -62,7 +62,7 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     )
     db.session.add(document)
     db.session.commit()
-    
+
     remote_document = RemoteDocument()
     remote_document.create(document)
 
@@ -212,20 +212,19 @@ def workflow_status_change_email_controller(document_id, sender_email):
     document = get_document_controller(document_id)
     workflow = document.workflow
     node = workflow["current_node"]
-    groups = workflow["nodes"][node]["responsible_groups"]
+    group = workflow["nodes"][node]["responsible_group"]
     status = workflow["nodes"][node]["title"]
     title = document.title
-    if groups == []:
+    if group == "":
         return
     email_list = []
-    # for each user group, get all users ids
-    for group in groups:
-        users = ParticipatesOn.query.filter_by(group_id=group)
-        # for each user id, add respective user email to email list
-        for user in users:
-            email = User.query.filter_by(id=user.user_id).first().email
-            if email not in email_list:
-                email_list.append(email)
+    # get all user ids for the responsible group
+    users = ParticipatesOn.query.filter_by(group_id=group)
+    # for each user id, add respective user email to email list
+    for user in users:
+        email = User.query.filter_by(id=user.user_id).first().email
+        if email not in email_list:
+            email_list.append(email)
     response = send_email_controller(sender_email, email_list,
                                      f'O Documento {title} mudou para o status {status}.', title, 'd-6b9591b72dc24aaeaac8a871e55660f4')
     return response

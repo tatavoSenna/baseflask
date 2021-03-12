@@ -234,17 +234,17 @@ def test_email_change_document_workflow_status(status_change_email_mock):
         "nodes": {
             "544": {
                 "next_node": "5521",
-                "responsible_groups": [1],
+                "responsible_group": "1",
                 "title": "Teste titulo",
             },
             "3485": {
                 "next_node": None,
-                "responsible_groups": [1],
+                "responsible_group": "1",
                 "title": "Teste titulo 2",
             },
             "5521": {
                 "next_node": "3485",
-                "responsible_groups": [15, 18],
+                "responsible_group": "15",
                 "title": "Análise Diretoria",
             }
         },
@@ -257,8 +257,6 @@ def test_email_change_document_workflow_status(status_change_email_mock):
 
     email_list = []
     email_list.append('teste1@gmail.com')
-    email_list.append('teste2@gmail.com')
-    email_list.append('teste3@gmail.com')
 
     document = factories.DocumentFactory(
         id=document_id, workflow=workflow, title=title)

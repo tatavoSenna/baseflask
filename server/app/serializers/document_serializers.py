@@ -139,7 +139,8 @@ def generate_steps(obj_workflow, ordered_nodes):
         steps.append({
             'step': node,
             'title': obj_workflow['nodes'][node].get('title', ''),
-            'groups': obj_workflow['nodes'][node].get('responsible_groups', '[]'),
+            'group': obj_workflow['nodes'][node].get('responsible_group', ""),
+            'responsible_users': obj_workflow['nodes'][node].get('responsible_users', ''),
             'changed_by': obj_workflow['nodes'][node].get('changed_by', ''),
             'color': obj_workflow['nodes'][node].get('color', '#696969')
         })
