@@ -1,20 +1,64 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { object, func } from 'prop-types'
-import { Form, Input } from 'antd'
+import { Empty, Button } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { postTemplateStepAdd } from '~/states/modules/postTemplate'
+import { getGroupList } from '~/states/modules/groups'
+import { getUserList } from '~/states/modules/users'
 
-const Workflow = ({ data, updateForm }) => {
+import Step from './step'
+
+const Workflow = ({ data }) => {
+	const dispatch = useDispatch()
+
+	const { groupList } = useSelector(({ groups }) => groups)
+	const { userList } = useSelector(({ users }) => users)
+	const { loggedUser } = useSelector(({ session }) => session)
+
+	useEffect(() => {
+		dispatch(getGroupList())
+		dispatch(getUserList())
+	}, [dispatch, loggedUser])
+
+	const handleAddStep = () => {
+		const count = Object.keys(data.nodes).length
+		const newStep = {
+			title: '',
+			next_node: null,
+			responsible_user: '',
+			responsible_groups: [],
+			changed_by: '',
+		}
+
+		dispatch(postTemplateStepAdd({ newStep, count }))
+	}
+
 	return (
-		<Form.Item
-			name="workflow"
-			onChange={(e) => updateForm(e, 'workflow')}
-			value={data.workflow}>
-			<Input.TextArea
-				style={{
-					width: '100%',
-					height: '42rem',
-				}}
-			/>
-		</Form.Item>
+		<div style={{ maxWidth: '40rem' }}>
+			{!Object.keys(data.nodes).length ? (
+				<Empty description="Sem Passos" style={{ marginBottom: '1.5rem' }} />
+			) : (
+				data.nodes.map((node, index) => (
+					<Step
+						key={index}
+						node={node}
+						groups={groupList}
+						users={userList}
+						index={index}
+					/>
+				))
+			)}
+			<Button
+				block
+				icon={<PlusOutlined />}
+				size="large"
+				type="dashed"
+				onClick={() => handleAddStep()}
+				style={{ height: '4rem', marginBottom: '1rem' }}>
+				Novo Passo
+			</Button>
+		</div>
 	)
 }
 
@@ -22,5 +66,4 @@ export default Workflow
 
 Workflow.propTypes = {
 	data: object,
-	updateForm: func,
 }

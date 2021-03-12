@@ -5,16 +5,10 @@ import { Card, Form, Input, InputNumber, Badge, Divider } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
 import {
 	postTemplateSignersInfo,
-	postTemplateSignersRemove,
+	postTemplateSignerRemove,
 } from '~/states/modules/postTemplate'
 
-const Signer = ({
-	data,
-	partyIndex,
-	signerIndex,
-	updateSignerInfo,
-	validation,
-}) => {
+const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 	const dispatch = useDispatch()
 	const { fields } = data
 
@@ -24,7 +18,7 @@ const Signer = ({
 	}
 
 	const handleRemoveSigner = (partyIndex, signerIndex) => {
-		dispatch(postTemplateSignersRemove({ partyIndex, signerIndex }))
+		dispatch(postTemplateSignerRemove({ partyIndex, signerIndex }))
 	}
 
 	return (
@@ -40,27 +34,27 @@ const Signer = ({
 				marginBottom: '3%',
 			}}>
 			<Form.Item
+				name={`title_${signerIndex}`}
 				label="Título"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 'title')}
-				validateStatus={validation.title && 'error'}
-				help={validation.title && 'Este campo é obrigatório.'}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input value={data.title} />
 			</Form.Item>
 			<Form.Item
+				name={`name_${signerIndex}`}
 				label="Variável do nome"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 0)}
-				validateStatus={validation.fields[0] && 'error'}
-				help={validation.fields[0] && 'Este campo é obrigatório.'}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={fields[0].variable}
 					style={{ textTransform: 'uppercase' }}
 				/>
 			</Form.Item>
 			<Form.Item
+				name={`email_${signerIndex}`}
 				label="Variável do email"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 1)}
-				validateStatus={validation.fields[1] && 'error'}
-				help={validation.fields[1] && 'Este campo é obrigatório.'}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={fields[1].variable}
 					style={{ textTransform: 'uppercase' }}
@@ -68,14 +62,12 @@ const Signer = ({
 			</Form.Item>
 			<Divider />
 			<Form.Item
+				name={`anchor_${signerIndex}`}
 				label="Variável da âncora"
 				onChange={(e) =>
 					updateSignerInfo(e, partyIndex, signerIndex, 'anchor_string')
 				}
-				validateStatus={validation.anchor[0].anchor_string && 'error'}
-				help={
-					validation.anchor[0].anchor_string && 'Este campo é obrigatório.'
-				}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={data.anchor[0].anchor_string}
 					style={{ textTransform: 'uppercase' }}
@@ -128,5 +120,4 @@ Signer.propTypes = {
 	partyIndex: number,
 	signerIndex: number,
 	updateSignerInfo: func,
-	validation: object,
 }

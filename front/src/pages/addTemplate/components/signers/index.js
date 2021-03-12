@@ -1,11 +1,9 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { object } from 'prop-types'
-import { Empty } from 'antd'
+import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { postTemplatePartyAdd } from '~/states/modules/postTemplate'
-
-import { Button } from 'antd'
 
 import Party from './components/party'
 
@@ -44,16 +42,6 @@ const Signers = ({ data }) => {
 					signing_date: '',
 				},
 			],
-			validation: {
-				title: false,
-				signers: [
-					{
-						title: false,
-						anchor: [{ anchor_string: false }],
-						fields: [false, false],
-					},
-				],
-			},
 		}
 
 		dispatch(postTemplatePartyAdd({ newParty }))
@@ -70,7 +58,6 @@ const Signers = ({ data }) => {
 						signers={item.partySigners}
 						partyIndex={index}
 						title={item.partyTitle}
-						validation={item.validation}
 					/>
 				))
 			)}

@@ -1,5 +1,66 @@
 import { extend } from 'lodash'
 
+export const selectStep = (workflow, payload) => {
+	return extend(workflow, {
+		nodes: workflow.nodes.map((node, index) => {
+			if (index === payload.index) {
+				switch (payload.name) {
+					case 'title':
+						return extend(node, {
+							title: payload.value,
+						})
+					case 'responsible_user':
+						return extend(node, {
+							responsible_user: payload.value,
+						})
+					case 'responsible_groups':
+						return extend(node, {
+							responsible_groups: [payload.value],
+						})
+					default:
+						return node
+				}
+			} else {
+				return node
+			}
+		}),
+	})
+}
+
+export const addStep = (workflow, payload) => {
+	const tmpList = workflow.nodes.map((node, index) => {
+		if (index === payload.count - 1) {
+			return extend(node, {
+				next_node: `${payload.count}`,
+			})
+		}
+		return node
+	})
+	return extend(workflow, {
+		nodes: [...tmpList, payload.newStep],
+	})
+}
+
+export const removeStep = (workflow, payload) => {
+	const tmpList = workflow.nodes.filter(
+		(node, index) => index !== payload.index
+	)
+	return extend(workflow, {
+		nodes: tmpList.map((node, index) => {
+			if (index === tmpList.length - 1) {
+				return extend(node, {
+					next_node: null,
+				})
+			} else if (index >= payload.index) {
+				return extend(node, {
+					next_node: `${node.next_node - 1}`,
+				})
+			}
+			return node
+		}),
+	})
+}
+
 export const selectParties = (signers, payload) => {
 	// If payload.name is an integer, means the field that triggered the event is on the fields array
 	if (Number.isInteger(payload.name)) {
@@ -22,21 +83,6 @@ export const selectParties = (signers, payload) => {
 							}
 							return signer
 						}),
-						validation: extend(party.validation, {
-							signers: party.validation.signers.map((signer, index) => {
-								if (index === payload.signerIndex) {
-									return extend(signer, {
-										fields: signer.fields.map((field, index) => {
-											if (index === payload.name) {
-												return !payload.value
-											}
-											return field
-										}),
-									})
-								}
-								return signer
-							}),
-						}),
 					})
 				}
 				return party
@@ -57,16 +103,6 @@ export const selectParties = (signers, payload) => {
 							}
 							return signer
 						}),
-						validation: extend(party.validation, {
-							signers: party.validation.signers.map((signer, index) => {
-								if (index === payload.signerIndex) {
-									return extend(signer, {
-										title: !payload.value,
-									})
-								}
-								return signer
-							}),
-						}),
 					})
 				}
 				return party
@@ -85,9 +121,6 @@ export const selectParties = (signers, payload) => {
 								party: payload.value,
 							})
 						),
-						validation: extend(party.validation, {
-							title: !payload.value,
-						}),
 					})
 				}
 				return party
@@ -111,20 +144,6 @@ export const selectParties = (signers, payload) => {
 								})
 							}
 							return signer
-						}),
-						validation: extend(party.validation, {
-							signers: party.validation.signers.map((signer, index) => {
-								if (index === payload.signerIndex) {
-									return extend(signer, {
-										anchor: signer.anchor.map((anchor) => {
-											return extend(anchor, {
-												anchor_string: !payload.value,
-											})
-										}),
-									})
-								}
-								return signer
-							}),
 						}),
 					})
 				}
