@@ -55,7 +55,8 @@ from .controllers import (
     workflow_status_change_email_controller,
     get_download_url_controller,
     fill_signing_date_controller,
-    delete_document_controller
+    delete_document_controller,
+    convert_pdf_controller
 )
 from app.docusign.controllers import (
     sign_document_controller,
@@ -122,7 +123,7 @@ def get_document_text(current_user, document_id):
         abort(404, "Document not Found")
     return jsonify(
         {
-            "text": textfile.decode('utf-8'),
+            "text": textfile,
             "version_id": version_id,
             "comments": comments
         }
@@ -311,15 +312,28 @@ def request_signatures(current_user):
         abort(400, 'Missing document id')
 
     try:
+        current_document = get_document_controller(document_id)
         version_id = get_document_version_controller(document_id)
         textfile = download_document_text_controller(document_id, version_id)
-        current_document = get_document_controller(document_id)
-    except Exception:
-        abort(404, {"message": "Document not found"})
+    except Exception as e:
+        logging.exception("Could not get document text")
+        abort(404, "Could not get document text")
 
     if current_document.sent == True:
         abort(
             400, {"message": "Signature already requested for this document"})
+
+    try:
+        textfile = fill_signing_date_controller(current_document, textfile)
+    except Exception as e:
+        logging.exception(
+            "Could not fill Current Date variable. Please add variable to document before signing")
+
+    try:
+        pdf_document = convert_pdf_controller(current_document, textfile)
+    except Exception as e:
+        logging.exception("Could not convert to pdf and save it on s3")
+        abort(404, "Could not convert document to pdf")
 
     company = Company.query.get(current_user.get("company_id"))
     account_ID = company.docusign_account_id
@@ -334,16 +348,12 @@ def request_signatures(current_user):
             "message": "Missing DocuSign user token"
         }
         return jsonify(error_JSON), 400
-    try:
-        textfile = fill_signing_date_controller(current_document, textfile)
-    except:
-        logging.exception(
-            "Could not fill Current Date variable. Please add variable to document before signing")
+
     try:
         sign_document_controller(
-            current_document, textfile, account_ID, token, current_user["name"])
+            current_document, pdf_document, account_ID, token, current_user["name"])
     except Exception as e:
-        print(e)
+        logging.exception("Could not sign document")
         dict_str = e.body.decode("utf-8")
         ans_json = ast.literal_eval(dict_str)
         if ans_json['errorCode'] == 'ANCHOR_TAB_STRING_NOT_FOUND':

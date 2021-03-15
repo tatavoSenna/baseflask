@@ -1,11 +1,5 @@
-import json
-import copy
-import logging
-from app import db
-from unittest.mock import MagicMock
-from datetime import datetime
-from flask import request, Blueprint, abort, jsonify, current_app
-from app.models.documents import Document
+from app.docusign.serializers import EnvelopeSerializer
+from app.documents.remote import RemoteDocument
 from docusign_esign import (
     ApiClient,
     EnvelopesApi,
@@ -17,8 +11,15 @@ from docusign_esign import (
     Recipients,
     Document as DocusignDocument,
 )
-from app.documents.remote import RemoteDocument
-from app.docusign.serializers import EnvelopeSerializer
+from app.models.documents import Document
+from flask import request, Blueprint, abort, jsonify, current_app
+from datetime import datetime
+from unittest.mock import MagicMock
+from app import db
+import logging
+import json
+import copy
+import base64
 
 
 event_notification = {"loggingEnabled": "true",  # The api wants strings for true/false
@@ -49,7 +50,7 @@ event_notification = {"loggingEnabled": "true",  # The api wants strings for tru
                       }
 
 
-def sign_document_controller(current_document, document_text, account_ID, token, username):
+def sign_document_controller(current_document, pdf_document, account_ID, token, username):
     signers_data = []
 
     for signer_info in current_document.signers:
@@ -63,18 +64,14 @@ def sign_document_controller(current_document, document_text, account_ID, token,
             'email': current_document.variables[email],
             'signatures': signer_info['anchor']
         })
-
-    template = RemoteDocument().get_template()
-    formatted_text = RemoteDocument().fill_text_with_variables(
-        template, {'text_contract': document_text})
-    html_definition = {"source": formatted_text}
-
+    document_b64 = base64.b64encode(pdf_document).decode("utf-8")
     if len(signers_data) > 0:
 
         document = DocusignDocument(
+            document_base64=document_b64,
             name=current_document.title,
-            document_id=1,
-            html_definition=html_definition
+            file_extension="pdf",
+            document_id=1
         )
 
         signers = []

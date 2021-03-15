@@ -84,9 +84,9 @@ def test_sign_document(create_envelope_mock):
     document_text = bytearray("Texto de teste", 'utf-8')
     account_ID = '12345'
     token = 'kasdhuwai214'
+    pdf_test = b'string para teste'
 
-    sign_document_controller(document, document_text,
-                             account_ID, token, 'joao')
+    sign_document_controller(document, pdf_test, account_ID, token, 'joao')
     create_envelope_mock.assert_called_once()
     assert document.sent == True
 

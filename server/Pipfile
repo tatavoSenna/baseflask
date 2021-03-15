@@ -36,6 +36,7 @@ Flask-SQLAlchemy = "==2.3.0"
 PyJWT = "==1.7.1"
 BeautifulSoup4 = "==4.9.1"
 sendgrid = "==6.4.8"
+convertapi = "==1.4.0"
 
 [requires]
 python_version = "3.8"
