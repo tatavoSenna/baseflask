@@ -10,8 +10,9 @@ class Config(object):
     DOCUSIGN_OAUTH_URI = os.environ.get("DOCUSIGN_OAUTH_URI")
     DOCUSIGN_WEBHOOK_URL = os.environ.get("DOCUSIGN_WEBHOOK_URL")
 
+    CONVERTAPI_SECRET_KEY = os.environ.get("CONVERTAPI_SECRET_KEY")
+
     SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
-    CONVERTAPI_API_KEY = os.environ.get("CONVERTAPI_API_KEY")
 
     AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")

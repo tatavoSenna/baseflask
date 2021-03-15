@@ -26,6 +26,8 @@ class DocumentTemplate(db.Model):
     workflow = db.Column(JSONB, unique=False, nullable=True)
     form = db.Column(JSONB, unique=False, nullable=True)
     signers = db.Column(JSONB, unique=False, nullable=True)
+    text_type = db.Column(db.String(255), unique=False, nullable=True)
+    filename = db.Column(db.String(255), unique=False, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="templates")
@@ -62,6 +64,7 @@ class Document(db.Model):
     sent = db.Column(Boolean, nullable=True, default=False)
     signed = db.Column(Boolean, nullable=True, default=False)
     current_step = db.Column(db.String(255), nullable=True)
+    text_type = db.Column(db.String(255), unique=False, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="documents")
