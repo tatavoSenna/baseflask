@@ -79,7 +79,8 @@ def test_sign_document(create_envelope_mock):
         user=user,
         title="teste",
         signers=signers,
-        variables=variables
+        variables=variables,
+        text_type=".txt"
     )
     document_text = bytearray("Texto de teste", 'utf-8')
     account_ID = '12345'

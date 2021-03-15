@@ -20,7 +20,8 @@ from app.documents.controllers import(
     workflow_status_change_email_controller,
     get_download_url_controller,
     fill_signing_date_controller,
-    delete_document_controller
+    delete_document_controller,
+    get_pdf_download_url_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -148,7 +149,7 @@ def test_update_document_signers():
 
 @ patch('app.documents.controllers.RemoteDocument.create')
 def test_create_document(create_remote_document_mock):
-    company = factories.CompanyFactory()
+    company = factories.CompanyFactory(id=17)
     user = factories.UserFactory(
         company=company, email="testemail@gmail.com"
     )
@@ -172,35 +173,61 @@ def test_create_document(create_remote_document_mock):
         "created_by": ""
     }
 
-    document_template = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow
+    document_template_txt = factories.DocumentTemplateFactory(
+        company=company, workflow=workflow, text_type=".txt"
     )
+
+    document_template_docx = factories.DocumentTemplateFactory(
+        company=company, workflow=workflow, text_type=".docx"
+    )
+
     title = "default title"
 
     variables = {}
 
     assert DocumentTemplate.query.get(
-        document_template.id).company_id == company.id
+        document_template_txt.id).company_id == company.id
 
-    document = create_document_controller(
+    assert DocumentTemplate.query.get(
+        document_template_docx.id).company_id == company.id
+
+    document_txt = create_document_controller(
         user.id,
         user.email,
         user.company_id,
         variables,
-        document_template.id,
+        document_template_txt.id,
         title,
         'Joao'
     )
 
-    assert document.user_id == user.id
-    assert document.company_id == company.id
-    assert document.document_template_id == document_template.id
-    assert document.title == title
-    assert document.workflow['created_by'] == 'Joao'
-
-    create_remote_document_mock.assert_called_once_with(
-        document
+    create_remote_document_mock.assert_called_with(
+        document_txt, document_template_txt, 17
     )
+
+    document_docx = create_document_controller(
+        user.id,
+        user.email,
+        user.company_id,
+        variables,
+        document_template_docx.id,
+        title,
+        'Joao'
+    )
+
+    create_remote_document_mock.assert_called_with(
+        document_docx, document_template_docx, 17
+    )
+
+    assert document_txt.user_id == user.id
+    assert document_txt.company_id == company.id
+    assert document_txt.document_template_id == document_template_txt.id
+    assert document_txt.title == title
+    assert document_txt.workflow['created_by'] == 'Joao'
+    assert document_txt.text_type == ".txt"
+
+    assert document_docx.document_template_id == document_template_docx.id
+    assert document_docx.text_type == ".docx"
 
 
 @ patch('app.documents.controllers.send_email_controller')
@@ -446,6 +473,18 @@ def test_download_signed_document(download_document_mock):
     )
 
 
+@ patch('app.documents.controllers.RemoteDocument.download_pdf_document')
+def test_download_pdf_document(download_pdf_mock):
+    document_id = 77
+    document = factories.DocumentFactory(id=document_id)
+
+    url = get_pdf_download_url_controller(document)
+
+    download_pdf_mock.assert_called_once_with(
+        document
+    )
+
+
 @ patch('app.documents.controllers.RemoteDocument.fill_text_with_variables')
 def test_fill_signing_date(fill_signing_date_mock):
     company_id = 144
@@ -457,7 +496,8 @@ def test_fill_signing_date(fill_signing_date_mock):
     document = factories.DocumentFactory(
         company=company,
         user=user,
-        variables=doc_variables
+        variables=doc_variables,
+        text_type=".txt"
     )
     text = "texto qualquer"
     date_today = date.today()

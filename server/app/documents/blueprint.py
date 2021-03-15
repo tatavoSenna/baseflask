@@ -48,6 +48,7 @@ from .controllers import (
     get_document_version_controller,
     get_comments_version_controller,
     download_document_text_controller,
+    download_document_docx_controller,
     upload_document_text_controller,
     next_status_controller,
     previous_status_controller,
@@ -56,6 +57,7 @@ from .controllers import (
     get_download_url_controller,
     fill_signing_date_controller,
     delete_document_controller,
+    get_pdf_download_url_controller,
     convert_pdf_controller
 )
 from app.docusign.controllers import (
@@ -128,6 +130,29 @@ def get_document_text(current_user, document_id):
             "comments": comments
         }
     )
+
+
+@documents_bp.route("/<int:document_id>/pdf", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_document_pdf(current_user, document_id):
+    if not document_id:
+        abort(400, "Missing document id")
+    try:
+        document = Document.query.get(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+
+    try:
+        pdf_url = get_pdf_download_url_controller(document)
+    except:
+        abort(
+            400, "Could not download document pdf from S3")
+
+    response = {
+        "download_url": pdf_url
+    }
+    return jsonify(response)
 
 
 @documents_bp.route("/<int:document_id>/text", methods=["POST"])
@@ -314,8 +339,18 @@ def request_signatures(current_user):
     try:
         current_document = get_document_controller(document_id)
         version_id = get_document_version_controller(document_id)
-        textfile = download_document_text_controller(document_id, version_id)
-    except Exception as e:
+        current_document = get_document_controller(document_id)
+        document_type = current_document.text_type
+
+        if document_type == ".txt":
+            textfile = download_document_text_controller(
+                document_id, version_id)
+        elif document_type == ".docx":
+            docx_io = download_document_docx_controller(
+                document_id, version_id)
+        else:
+            abort(400, "Document has no type defined in database")
+    except Exception:
         logging.exception("Could not get document text")
         abort(404, "Could not get document text")
 
@@ -324,16 +359,19 @@ def request_signatures(current_user):
             400, {"message": "Signature already requested for this document"})
 
     try:
-        textfile = fill_signing_date_controller(current_document, textfile)
-    except Exception as e:
+        if document_type == ".txt":
+            textfile = fill_signing_date_controller(current_document, textfile)
+        elif document_type == ".docx":
+            docx_io = fill_signing_date_controller(current_document, docx_io)
+    except:
         logging.exception(
             "Could not fill Current Date variable. Please add variable to document before signing")
-
-    try:
-        pdf_document = convert_pdf_controller(current_document, textfile)
-    except Exception as e:
-        logging.exception("Could not convert to pdf and save it on s3")
-        abort(404, "Could not convert document to pdf")
+    if document_type == ".txt":
+        try:
+            pdf_document = convert_pdf_controller(current_document, textfile)
+        except Exception as e:
+            logging.exception("Could not convert to pdf and save it on s3")
+            abort(404, "Could not convert document to pdf")
 
     company = Company.query.get(current_user.get("company_id"))
     account_ID = company.docusign_account_id
@@ -348,10 +386,13 @@ def request_signatures(current_user):
             "message": "Missing DocuSign user token"
         }
         return jsonify(error_JSON), 400
-
     try:
-        sign_document_controller(
-            current_document, pdf_document, account_ID, token, current_user["name"])
+        if document_type == ".txt":
+            sign_document_controller(
+                current_document, pdf_document, account_ID, token, current_user["name"])
+        elif document_type == ".docx":
+            sign_document_controller(
+                current_document, docx_io, account_ID, token, current_user["name"])
     except Exception as e:
         logging.exception("Could not sign document")
         dict_str = e.body.decode("utf-8")

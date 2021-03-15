@@ -1,5 +1,12 @@
-from app.docusign.serializers import EnvelopeSerializer
-from app.documents.remote import RemoteDocument
+import json
+import copy
+import logging
+import base64
+from app import db
+from unittest.mock import MagicMock
+from datetime import datetime
+from flask import request, Blueprint, abort, jsonify, current_app
+from app.models.documents import Document
 from docusign_esign import (
     ApiClient,
     EnvelopesApi,
@@ -13,6 +20,7 @@ from docusign_esign import (
 )
 from app.models.documents import Document
 from flask import request, Blueprint, abort, jsonify, current_app
+from app.documents.remote import RemoteDocument
 from datetime import datetime
 from unittest.mock import MagicMock
 from app import db
@@ -50,7 +58,7 @@ event_notification = {"loggingEnabled": "true",  # The api wants strings for tru
                       }
 
 
-def sign_document_controller(current_document, pdf_document, account_ID, token, username):
+def sign_document_controller(current_document, document_file, account_ID, token, username):
     signers_data = []
 
     for signer_info in current_document.signers:
@@ -64,15 +72,25 @@ def sign_document_controller(current_document, pdf_document, account_ID, token, 
             'email': current_document.variables[email],
             'signatures': signer_info['anchor']
         })
-    document_b64 = base64.b64encode(pdf_document).decode("utf-8")
+
     if len(signers_data) > 0:
 
-        document = DocusignDocument(
-            document_base64=document_b64,
-            name=current_document.title,
-            file_extension="pdf",
-            document_id=1
-        )
+        if current_document.text_type == ".txt":
+            document = DocusignDocument(
+                name=current_document.title,
+                document_id=1,
+                file_extension="pdf",
+                document_base64=base64.b64encode(document_file).decode("utf-8")
+            )
+
+        elif current_document.text_type == ".docx":
+            document = DocusignDocument(
+                name=current_document.title,
+                document_id=1,
+                file_extension=".docx",
+                document_base64=base64.b64encode(
+                    document_file.getvalue()).decode("ascii")
+            )
 
         signers = []
         for index, signer_data in enumerate(signers_data):

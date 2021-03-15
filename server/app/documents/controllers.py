@@ -9,9 +9,6 @@ from app.constants import months
 from app.models.documents import Document, DocumentTemplate
 from app.models.user import User, ParticipatesOn
 from .remote import RemoteDocument
-from app.serializers.document_serializers import (
-    DocumentSerializer
-)
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import copy
@@ -62,12 +59,13 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         created_at=datetime.utcnow().isoformat(),
         title=title,
         document_template_id=document_template_id,
+        text_type=document_template.text_type,
     )
     db.session.add(document)
     db.session.commit()
 
     remote_document = RemoteDocument()
-    remote_document.create(document)
+    remote_document.create(document, document_template, company_id)
 
     return document
 
@@ -151,6 +149,14 @@ def download_document_text_controller(document_id, version_id):
     textfile = remote_document.download_text_from_documents(
         document, version_id).decode('utf-8')
     return textfile
+
+
+def download_document_docx_controller(document_id, version_id):
+    document = get_document_controller(document_id)
+    remote_document = RemoteDocument()
+    docx_io = remote_document.download_docx_from_documents(
+        document, version_id)
+    return docx_io
 
 
 def upload_document_text_controller(document_id, document_text):
@@ -254,16 +260,28 @@ def get_download_url_controller(document):
     return url
 
 
+def get_pdf_download_url_controller(document):
+    remote_document = RemoteDocument()
+    url = remote_document.download_pdf_document(document)
+    return url
+
+
 def fill_signing_date_controller(document, text):
     signing_date = json.dumps(date.today().strftime(
         '%d/%m/%Y'), default=str).replace('"', " ")
     variable = {"CURRENT_DATE": signing_date}
-    remote_document = RemoteDocument()
-    filled_text = remote_document.fill_text_with_variables(
-        text, variable)
     document.variables["SIGN_DATE"] = signing_date
     db.session.add(document)
     db.session.commit()
+
+    remote_document = RemoteDocument()
+    if document.text_type == ".txt":
+        filled_text = remote_document.fill_text_with_variables(
+            text, variable)
+    elif document.text_type == ".docx":
+        filled_text = remote_document.fill_docx_with_variables(
+            text, variable)
+
     return filled_text
 
 
@@ -272,7 +290,7 @@ def convert_pdf_controller(document, text):
     template = remote_document.get_template()
     formatted_text = remote_document.fill_text_with_variables(
         template, {'text_contract': text}).encode('utf-8')
-    convertapi.api_secret = current_app.config["CONVERTAPI_API_KEY"]
+    convertapi.api_secret = current_app.config["CONVERTAPI_SECRET_KEY"]
     upload_io = convertapi.UploadIO(formatted_text, 'test.html')
     result = convertapi.convert(
         'pdf',
