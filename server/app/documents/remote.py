@@ -74,7 +74,7 @@ class RemoteDocument:
 
     def get_template(self):
         template_file_io = io.BytesIO()
-        remote_path = 'template.html'
+        remote_path = 'template_ckeditor.html'
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             remote_path,
@@ -96,7 +96,6 @@ class RemoteDocument:
         )
 
     def download_signed_document(self, document):
-
         document_url = self.s3_client.generate_presigned_url(
             "get_object",
             Params={
