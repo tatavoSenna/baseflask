@@ -90,5 +90,5 @@ def test_create_external_document(create_remote_document_mock):
     assert document.workflow['created_by'] == "External User"
 
     create_remote_document_mock.assert_called_once_with(
-        document
+        document, document_template, 444
     )

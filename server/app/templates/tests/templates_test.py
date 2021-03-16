@@ -21,12 +21,13 @@ def test_create_template_controller(upload_template_mock):
     )
 
     template_id = create_template_controller(
-        user.company_id, user.id, name, form, workflow, signers, template_text)
+        user.company_id, user.id, name, form, workflow, signers, template_text, ".txt")
 
     upload_template_mock.assert_called_once_with(
-        template_text, template_id, user.company_id)
+        template_text, template_id)
 
     assert template_id == 1
+
 
 @ patch('app.templates.controllers.RemoteTemplate.delete_template')
 def test_delete_template(delete_template_mock):
