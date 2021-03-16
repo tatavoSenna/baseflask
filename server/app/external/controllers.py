@@ -86,6 +86,6 @@ def create_external_document_controller(variables, template_id, token):
     db.session.commit()
 
     remote_document = RemoteDocument()
-    remote_document.create(document)
+    remote_document.create(document, document_template, user.company_id)
 
     return document
