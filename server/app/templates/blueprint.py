@@ -1,4 +1,7 @@
+import os
+
 from flask import request, Blueprint, abort, jsonify, current_app
+from werkzeug.utils import secure_filename
 from sqlalchemy import desc
 
 from app import aws_auth, db
@@ -9,7 +12,8 @@ from app.models.documents import DocumentTemplate
 from .controllers import (
     create_template_controller,
     get_template_controller,
-    delete_template_controller
+    delete_template_controller,
+    upload_file_to_template_controller
 )
 
 
@@ -33,9 +37,10 @@ def create_template(current_user):
     template_text = content.get("text", None)
     company_id = current_user["company_id"]
     user_id = current_user["id"]
+    text_type = content.get("text_type", None)
 
     document_template_id = create_template_controller(
-        company_id, user_id, name, form, workflow, signers, template_text)
+        company_id, user_id, name, form, workflow, signers, template_text, text_type)
 
     return jsonify(
         {
@@ -95,3 +100,35 @@ def delete_document_template(current_user, document_template_id):
     }
 
     return jsonify(msg_JSON), 200
+
+
+@templates_bp.route("/<int:document_template_id>/upload", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def upload_file_to_template(current_user, document_template_id):
+    uploaded_file = request.files['file']
+    filename = secure_filename(uploaded_file.filename)
+
+    if filename == "":
+        abort(400, 'Missing file')
+
+    file_root, file_ext = os.path.splitext(filename)
+
+    document_template = get_template_controller(
+        current_user["company_id"],
+        document_template_id
+    )
+    if document_template is None:
+        abort(404, "Template not found")
+
+    if file_ext != document_template.text_type:
+        abort(400, 'File extension not accepted')
+
+    upload_file_to_template_controller(
+        uploaded_file, filename, file_root, document_template_id)
+
+    return jsonify(
+        {
+            "message": "Successfully upload file to document template"
+        }
+    )
