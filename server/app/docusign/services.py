@@ -49,9 +49,9 @@ def fetch_docusign_token(current_user, data):
         "content-type": "application/x-www-form-urlencoded",
         "Authorization": "Basic {}".format(
             b64encode(
-                "{}:{}".format(integration_key, secret_key).encode("utf-8")
-            ).decode("utf-8")
-        ),
+                "{}:{}".format(integration_key, secret_key).encode("ascii")
+            ).decode("ascii")
+        ),  
     }
 
     print(data)
