@@ -9,13 +9,13 @@ export const selectStep = (workflow, payload) => {
 						return extend(node, {
 							title: payload.value,
 						})
-					case 'responsible_user':
+					case 'responsible_users':
 						return extend(node, {
-							responsible_user: payload.value,
+							responsible_users: payload.value,
 						})
-					case 'responsible_groups':
+					case 'responsible_group':
 						return extend(node, {
-							responsible_groups: [payload.value],
+							responsible_group: payload.value,
 						})
 					default:
 						return node

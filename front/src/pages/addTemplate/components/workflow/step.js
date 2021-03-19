@@ -33,19 +33,19 @@ const Step = ({ node, groups, users, index }) => {
 		return list
 	}
 
-	const usersList = listUsers(node.responsible_groups[0])
+	const usersList = listUsers(node.responsible_group)
 	const [usersChildren, setUsersChildren] = useState(usersList)
 
 	const updateStepInfo = (e, index, name) => {
 		if (name === 'title') {
 			const value = e.target.value
 			dispatch(postTemplateStepInfo({ value, index, name }))
-		} else if (name === 'responsible_groups') {
+		} else if (name === 'responsible_group') {
 			let value = e
 			setUsersChildren(listUsers(value))
 			dispatch(postTemplateStepInfo({ value, index, name }))
 			dispatch(
-				postTemplateStepInfo({ value: '', index, name: 'responsible_user' })
+				postTemplateStepInfo({ value: '', index, name: 'responsible_users' })
 			)
 		} else {
 			const value = e
@@ -78,12 +78,12 @@ const Step = ({ node, groups, users, index }) => {
 				label="Grupo"
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Select
-					value={node.responsible_groups[0]}
+					value={node.responsible_group}
 					ref={(select) => (groupSelect = select)}
 					allowClear
 					style={{ width: '100%' }}
 					placeholder="Selecione o grupo"
-					onChange={(e) => updateStepInfo(e, index, 'responsible_groups')}
+					onChange={(e) => updateStepInfo(e, index, 'responsible_group')}
 					onSelect={() => groupSelect.blur()}
 					onDeselect={() => groupSelect.blur()}>
 					{groupsChildren}
@@ -94,13 +94,14 @@ const Step = ({ node, groups, users, index }) => {
 				label="Responsável"
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Select
-					value={node.responsible_user}
+					value={node.responsible_users}
 					ref={(select) => (groupSelect = select)}
+					mode="multiple"
 					allowClear
 					showSearch
 					optionFilterProp="children"
 					placeholder="Selecione o responsável"
-					onChange={(e) => updateStepInfo(e, index, 'responsible_user')}
+					onChange={(e) => updateStepInfo(e, index, 'responsible_users')}
 					onSelect={() => groupSelect.blur()}
 					onDeselect={() => groupSelect.blur()}>
 					{usersChildren}

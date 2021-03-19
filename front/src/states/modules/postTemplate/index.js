@@ -12,8 +12,8 @@ const initialState = {
 				{
 					title: '',
 					next_node: null,
-					responsible_user: '',
-					responsible_groups: [],
+					responsible_users: [],
+					responsible_group: '',
 					changed_by: '',
 				},
 			],
