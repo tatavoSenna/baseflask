@@ -61,6 +61,38 @@ export const removeStep = (workflow, payload) => {
 	})
 }
 
+export const selectEdit = (data, payload) => {
+	let partiesList = []
+	let signersCount = 0
+	while (signersCount < payload.signers.length) {
+		const party = {
+			partyTitle: payload.signers[signersCount].party,
+			partySigners: [],
+		}
+		for (let i = signersCount; i < payload.signers.length; i++) {
+			if (payload.signers[i].party === party.partyTitle) {
+				party.partySigners.push(payload.signers[i])
+				signersCount += 1
+			} else {
+				break
+			}
+		}
+		partiesList.push(party)
+	}
+
+	return extend(data, {
+		title: payload.name,
+		form: JSON.stringify(payload.form, undefined, 2),
+		text: payload.textfile,
+		workflow: extend(data.workflow, {
+			nodes: Object.values(payload.workflow.nodes),
+		}),
+		signers: extend(data.signers, {
+			parties: partiesList,
+		}),
+	})
+}
+
 export const selectParties = (signers, payload) => {
 	// If payload.name is an integer, means the field that triggered the event is on the fields array
 	if (Number.isInteger(payload.name)) {

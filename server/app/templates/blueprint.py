@@ -7,13 +7,16 @@ from sqlalchemy import desc
 from app import aws_auth, db
 from app.users.remote import get_local_user
 from app.serializers.document_serializers import DocumentTemplateListSerializer
+from app.serializers.template_serializers import TemplateSerializer
 from app.models.documents import DocumentTemplate
 
 from .controllers import (
     create_template_controller,
+    edit_template_controller,
     get_template_controller,
     delete_template_controller,
-    upload_file_to_template_controller
+    upload_file_to_template_controller,
+    download_template_text_controller,
 )
 
 
@@ -47,6 +50,53 @@ def create_template(current_user):
             "id": document_template_id
         }
     )
+
+
+@templates_bp.route("/<int:template_id>", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def edit_template(current_user, template_id):
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    content = request.json
+    form = content.get("form", None)
+    workflow = content.get("workflow", None)
+    signers = content.get("signers", None)
+    template_text = content.get("text", None)
+    company_id = current_user["company_id"]
+    user_id = current_user["id"]
+
+    document_template_id = edit_template_controller(
+        company_id, user_id, template_id, form, workflow, signers, template_text)
+
+    return jsonify({"id": document_template_id})
+
+
+@templates_bp.route("/<int:template_id>")
+@aws_auth.authentication_required
+@get_local_user
+def get_template_detail(current_user, template_id):
+    try:
+        template = get_template_controller(
+            current_user["company_id"], template_id)
+        if not template:
+            abort(404, "Template not Found")
+    except Exception:
+        abort(404, "Template not Found")
+    return jsonify(TemplateSerializer(many=False).dump(template))
+
+
+@templates_bp.route("/<int:template_id>/text")
+@aws_auth.authentication_required
+@get_local_user
+def get_template_text(current_user, template_id):
+    try:
+        textfile = download_template_text_controller(
+            current_user["company_id"], template_id)
+    except Exception:
+        abort(404, "Template not Found")
+    return jsonify(textfile.decode('utf-8'))
 
 
 @templates_bp.route("/")

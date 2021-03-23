@@ -73,7 +73,10 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 					style={{ textTransform: 'uppercase' }}
 				/>
 			</Form.Item>
-			<Form.Item label="Deslocamento em X" help="Máx. ±10">
+			<Form.Item
+				name={`x_offset_${signerIndex}`}
+				label="Deslocamento em X"
+				help="Máx. ±10">
 				<InputNumber
 					value={data.anchor[0].anchor_x_offset}
 					formatter={(value) => `${value} pol`}
@@ -91,9 +94,12 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 					}
 				/>
 			</Form.Item>
-			<Form.Item label="Deslocamento em Y" help="Máx. ±10">
+			<Form.Item
+				name={`y_offset_${signerIndex}`}
+				label="Deslocamento em Y"
+				help="Máx. ±10">
 				<InputNumber
-					defaultValue={data.anchor[0].anchor_y_offset}
+					value={data.anchor[0].anchor_y_offset}
 					formatter={(value) => `${value} pol`}
 					parser={(value) => value.replace(/[pol ]{1,4}/g, '')}
 					min={-10}

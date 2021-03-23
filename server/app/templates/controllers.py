@@ -2,6 +2,8 @@
 from app import db
 from app.models.documents import DocumentTemplate
 from unittest.mock import MagicMock
+import boto3
+import io
 
 from .remote import RemoteTemplate
 
@@ -28,11 +30,37 @@ def create_template_controller(company_id, user_id, name, form, workflow, signer
     return document_template.id
 
 
+def edit_template_controller(company_id, user_id, template_id, form, workflow, signers, text):
+    template = DocumentTemplate.query.filter_by(id=template_id).first()
+
+    if template.company_id != company_id:
+        raise Exception('Invalid company')
+
+    template.form = form
+    template.workflow = workflow
+    template.text = text
+    template.signers = signers
+    db.session.commit()
+
+    remote_template = RemoteTemplate()
+    remote_template.upload_template(
+        text, template.id, template.company_id)
+
+    return template.id
+
+
 def get_template_controller(company_id, document_template_id):
     document_template = DocumentTemplate.query.filter_by(
         company_id=company_id, id=document_template_id
     ).first()
     return document_template
+
+
+def download_template_text_controller(company_id, template_id):
+    template = get_template_controller(company_id, template_id)
+    remote_template = RemoteTemplate()
+    textfile = remote_template.download_text_from_template(template)
+    return textfile
 
 
 def delete_template_controller(document_template):

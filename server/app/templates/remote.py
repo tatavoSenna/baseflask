@@ -18,6 +18,18 @@ class RemoteTemplate:
             template_path
         )
 
+    def download_text_from_template(self, document_template):
+        text_file_io = io.BytesIO()
+        remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}.txt'
+
+        self.s3_client.download_fileobj(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path,
+            text_file_io)
+        text_file = text_file_io.getvalue()
+
+        return text_file
+
     def delete_template(self, document_template):
         s3_resource = boto3.resource("s3")
         remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}.txt'
