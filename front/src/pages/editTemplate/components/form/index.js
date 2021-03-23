@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, func } from 'prop-types'
+import { string, func } from 'prop-types'
 import { Form, Input } from 'antd'
 
 const TemplateForm = ({ data, updateForm }) => {
@@ -7,7 +7,7 @@ const TemplateForm = ({ data, updateForm }) => {
 		<Form.Item
 			name="form"
 			onChange={(e) => updateForm(e, 'form')}
-			value={data.form}>
+			initialValue={!data.form ? '' : data.form}>
 			<Input.TextArea
 				style={{
 					width: '100%',
@@ -21,6 +21,6 @@ const TemplateForm = ({ data, updateForm }) => {
 export default TemplateForm
 
 TemplateForm.propTypes = {
-	data: object,
+	data: string,
 	updateForm: func,
 }

@@ -90,8 +90,8 @@ const Step = ({ node, groups, users, index }) => {
 				</Select>
 			</Form.Item>
 			<Form.Item
-				name={`responsible_${index}`}
-				label="Responsável"
+				name={`users_${index}`}
+				label="Responsáveis"
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Select
 					value={node.responsible_users}

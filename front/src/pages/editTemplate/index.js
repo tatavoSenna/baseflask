@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Menu, Form, Button, PageHeader, Layout } from 'antd'
+import { Menu, Form, Button, PageHeader, Layout, Spin } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
@@ -9,6 +9,7 @@ import {
 	TeamOutlined,
 } from '@ant-design/icons'
 import {
+	getTemplateDetail,
 	postTemplateAppend,
 	postTemplateRequest,
 } from '~/states/modules/postTemplate'
@@ -21,32 +22,27 @@ import Text from './components/text'
 
 import styles from './index.module.scss'
 
-const AddTemplate = () => {
-	const { data } = useSelector(({ postTemplate }) => postTemplate)
-	const { current } = useHistory().location.state
+const EditTemplate = () => {
+	const { data, loading } = useSelector(({ postTemplate }) => postTemplate)
+	const { id } = useHistory().location.state
+	const edit = Number.isInteger(id)
 	const dispatch = useDispatch()
-	const history = useHistory()
 	const [form] = Form.useForm()
-
+	const [current, setCurrent] = useState('form')
 	const [inputsFilled, setInputsFilled] = useState({
-		form: false,
-		workflow: false,
-		text: false,
-		signers: false,
+		form: edit,
+		workflow: edit,
+		text: edit,
+		signers: edit,
 	})
 
 	const handleNav = (e) => {
-		history.push({
-			pathname: `/templates/new/`,
-			state: { current: e.key },
-		})
+		setCurrent(e.key)
 	}
 
 	// Checks if all fields are filled (all but form tab for now)
 	const validate = () => {
-		const redirect = (tab) => {
-			return history.push({ state: { current: tab } })
-		}
+		const redirect = (tab) => setCurrent(tab)
 		data.workflow.nodes.forEach((node) => {
 			if (
 				node.title === '' ||
@@ -86,7 +82,7 @@ const AddTemplate = () => {
 	const onSubmit = () => {
 		const isValid = validate()
 		if (isValid) {
-			dispatch(postTemplateRequest())
+			dispatch(postTemplateRequest({ id }))
 		}
 	}
 
@@ -138,14 +134,14 @@ const AddTemplate = () => {
 		setInputsFilled({
 			...inputsFilled,
 			workflow: (() => {
-				if (data.workflow === '') {
-					return false
+				if (data.workflow.nodes.length > 0) {
+					return true
 				}
-				return true
+				return false
 			})(),
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.workflow])
+	}, [data.workflow.nodes])
 
 	// Text tab
 	useEffect(() => {
@@ -161,11 +157,41 @@ const AddTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data.text])
 
-	// Set signers tab to red on mount
 	useEffect(() => {
-		setInputsFilled({ ...inputsFilled, signers: false })
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+		if (Number.isInteger(id)) {
+			dispatch(getTemplateDetail({ id }))
+		}
+	}, [dispatch, id])
+
+	if (edit) {
+		form.setFieldsValue({
+			form: data.form,
+		})
+
+		data.workflow.nodes.forEach((node, index) =>
+			form.setFieldsValue({
+				[`description_${index}`]: node.title,
+				[`group_${index}`]: node.responsible_group,
+				[`users_${index}`]: node.responsible_users,
+			})
+		)
+
+		data.signers.parties.forEach((party, index) => {
+			form.setFieldsValue({
+				[`party_${index}`]: party.partyTitle,
+			})
+			party.partySigners.forEach((signer, index) => {
+				form.setFieldsValue({
+					[`title_${index}`]: signer.title,
+					[`name_${index}`]: signer.fields[0].variable,
+					[`email_${index}`]: signer.fields[1].variable,
+					[`anchor_${index}`]: signer.anchor[0].anchor_string,
+					[`x_offset_${index}`]: signer.anchor[0].anchor_x_offset,
+					[`y_offset_${index}`]: signer.anchor[0].anchor_y_offset,
+				})
+			})
+		})
+	}
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
@@ -212,26 +238,28 @@ const AddTemplate = () => {
 				Enviar
 			</Button>
 			<Layout className={styles.content}>
-				<Form
-					id="createTemplate"
-					form={form}
-					layout="horizontal"
-					hideRequiredMark
-					onFinish={onSubmit}>
-					{current === 'form' && (
-						<TemplateForm data={data.form} updateForm={updateForm} />
-					)}
-					{current === 'workflow' && (
-						<Workflow data={data.workflow} updateForm={updateForm} />
-					)}
-					{current === 'text' && (
-						<Text data={data.text} updateForm={updateForm} />
-					)}
-					{current === 'signers' && <Signers data={data.signers} />}
-				</Form>
+				{loading ? (
+					<Spin spinning={loading} className={styles.spin} />
+				) : (
+					<Form
+						id="createTemplate"
+						form={form}
+						layout="horizontal"
+						hideRequiredMark
+						onFinish={onSubmit}>
+						{current === 'form' && (
+							<TemplateForm data={data.form} updateForm={updateForm} />
+						)}
+						{current === 'workflow' && <Workflow data={data.workflow} />}
+						{current === 'text' && (
+							<Text data={data.text} updateForm={updateForm} />
+						)}
+						{current === 'signers' && <Signers data={data.signers} />}
+					</Form>
+				)}
 			</Layout>
 		</Layout>
 	)
 }
 
-export default AddTemplate
+export default EditTemplate

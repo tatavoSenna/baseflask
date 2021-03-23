@@ -38,6 +38,25 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 			}),
+		deleteTemplate: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		deleteTemplateSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllTemplates(payload.items),
+				pages: {
+					page: payload.page,
+					per_page: payload.per_page,
+					total: payload.total,
+				},
+				error: null,
+				loading: false,
+			}),
+		deleteTemplateFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+			}),
 		viewTemplate: (state) => state,
 		setShowModal: (state, { payload }) =>
 			extend(state, {
@@ -50,6 +69,9 @@ export const {
 	listTemplate,
 	listTemplateSuccess,
 	listTemplateFailure,
+	deleteTemplate,
+	deleteTemplateSuccess,
+	deleteTemplateFailure,
 	viewTemplate,
 	setShowModal,
 } = actions

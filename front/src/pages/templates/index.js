@@ -6,7 +6,11 @@ import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
 import TemplateModal from './components/modal'
 import { getColumns } from './columns'
-import { listTemplate, setShowModal } from '../../states/modules/templates'
+import {
+	listTemplate,
+	deleteTemplate,
+	setShowModal,
+} from '../../states/modules/templates'
 import { postTemplateTitle } from '../../states/modules/postTemplate'
 
 const Templates = () => {
@@ -21,9 +25,15 @@ const Templates = () => {
 		dispatch(postTemplateTitle({ title }))
 		return history.push({
 			pathname: `/templates/new/`,
-			state: { current: 'form' },
+			state: { id: 'new' },
 		})
 	}
+
+	const handleToGo = (template) =>
+		history.push({
+			pathname: `templates/edit`,
+			state: { id: template.id },
+		})
 
 	const handleCancel = () => {
 		dispatch(setShowModal(false))
@@ -32,6 +42,9 @@ const Templates = () => {
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
 	}
+
+	const handleDeleteTemplate = (template) =>
+		dispatch(deleteTemplate({ id: template.id, pages }))
 
 	const getTemplates = ({ page, perPage, search }) =>
 		dispatch(listTemplate({ page, perPage, search }))
@@ -55,7 +68,7 @@ const Templates = () => {
 					showModal={showModal}
 				/>
 				<DataTable
-					columns={getColumns()}
+					columns={getColumns(handleToGo, handleDeleteTemplate)}
 					dataSource={templates}
 					pages={pages}
 					onChangePageNumber={getTemplates}
