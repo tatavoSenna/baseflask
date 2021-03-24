@@ -25,7 +25,7 @@ def create_template_controller(company_id, user_id, name, form, workflow, signer
 
     if text_type == ".txt":
         remote_template = RemoteTemplate()
-        remote_template.upload_template(text, document_template.id)
+        remote_template.upload_template(text, document_template.id, company_id)
 
     return document_template.id
 
