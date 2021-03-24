@@ -11,6 +11,9 @@ import DateField from '~/components/dateField'
 import StateField from '~/components/stateField'
 import CnaeField from '~/components/cnaeField'
 import CityField from '~/components/cityField'
+import CheckboxField from '~/components/checkboxField'
+import SliderField from '~/components/sliderField'
+import BankField from '~/components/bankField'
 
 import styles from './index.module.scss'
 
@@ -178,6 +181,18 @@ function InputFactory({ data: pageFieldsData }) {
 					/>
 				)
 				break
+			case 'checkbox':
+				children.push(
+					<CheckboxField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
 			case 'cnae':
 				children.push(
 					<CnaeField
@@ -202,6 +217,30 @@ function InputFactory({ data: pageFieldsData }) {
 					/>
 				)
 				break
+			case 'slider':
+				children.push(
+					<SliderField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'bank':
+				children.push(
+					<BankField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
 			default:
 				children.push(
 					<TextField
@@ -215,8 +254,6 @@ function InputFactory({ data: pageFieldsData }) {
 				)
 		}
 	}
-	// }
-
 	return children
 }
 
