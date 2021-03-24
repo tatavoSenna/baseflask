@@ -198,5 +198,6 @@ class RemoteDocument:
         self.s3_client.upload_fileobj(
             pdf_io,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            remote_path
+            remote_path, 
+            ExtraArgs={'ContentType': "application/pdf"}
         )
