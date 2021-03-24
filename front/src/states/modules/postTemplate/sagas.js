@@ -79,6 +79,7 @@ function* postTemplateSaga({ payload = {} }) {
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text: data.text,
+				text_type: '.txt',
 			})
 
 			yield put(postTemplateSuccess(post))
