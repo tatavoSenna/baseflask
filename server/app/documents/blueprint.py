@@ -65,6 +65,8 @@ from app.docusign.controllers import (
     void_envelope_controller
 )
 
+from .variables import specify_variables
+
 documents_bp = Blueprint("documents", __name__)
 
 
@@ -202,6 +204,14 @@ def create(current_user):
     if not document_template_id or not variables:
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
+
+    try:
+        variables = specify_variables(variables, document_template_id)
+    except Exception as e:
+        logging.exception(e)
+        error_msg = "Variable specification is incorrect"
+        return jsonify({"message": error_msg}), 400
+
     try:
         document = create_document_controller(
             current_user["id"],

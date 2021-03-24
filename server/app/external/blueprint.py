@@ -20,6 +20,8 @@ from .controllers import (
     ExceptionWithMsg
 )
 
+from app.documents.variables import specify_variables
+
 external_bp = Blueprint("external", __name__)
 
 
@@ -73,6 +75,14 @@ def create_document_from_token():
 
     if not document_template_id or not variables:
         abort(400, "Need to provide variables and template id")
+
+    try:
+        variables = specify_variables(variables, document_template_id)
+    except Exception as e:
+        logging.exception(e)
+        error_msg = "Variable specification is incorrect"
+        return jsonify({"message": error_msg}), 400
+
     try:
         document = create_external_document_controller(
             variables,

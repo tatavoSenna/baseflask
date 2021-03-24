@@ -27,6 +27,7 @@ class DocumentTemplate(db.Model):
     form = db.Column(JSONB, unique=False, nullable=True)
     signers = db.Column(JSONB, unique=False, nullable=True)
     text_type = db.Column(db.String(255), unique=False, nullable=True)
+    variables = db.Column(JSONB, unique=False, nullable=True)
     filename = db.Column(db.String(255), unique=False, nullable=True)
 
     # Belongs to
