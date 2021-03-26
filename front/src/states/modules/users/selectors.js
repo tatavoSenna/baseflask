@@ -4,7 +4,6 @@ export const selectAllUsers = (payload) =>
 			id: user.id.toString(),
 			name: user.name,
 			username: user.username,
-			surname: user.surname,
 			key: user.email,
 			email: user.email,
 			groups: user.participates_on.sort((a, b) => {

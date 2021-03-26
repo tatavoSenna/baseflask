@@ -36,14 +36,12 @@ def test_retrieve_specific_users():
         email='testing@testCorp.com',
         username='b1',
         name='tester1',
-        surname='b1',
     )
     factories.UserFactory(
         company=company,
         email='test@testCorp.com',
         username='b2',
         name='tester2',
-        surname='b2',
     )
 
     paginated_query2 = list_user_controller(company.id)

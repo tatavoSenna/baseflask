@@ -42,7 +42,6 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
     # user = ma.Nested(UserSerializer)
     user = ma.Function(lambda obj: {
         "name": obj.user.name,
-        "surname": obj.user.surname,
         "email": obj.user.email
     })
     status = ma.Method("get_status")

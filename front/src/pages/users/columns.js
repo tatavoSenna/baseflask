@@ -12,11 +12,6 @@ export function getColumns({ handleDelete, loggedUser, handleEdit }) {
 			key: 'name',
 		},
 		{
-			title: 'Sobrenome',
-			dataIndex: 'surname',
-			key: 'surname',
-		},
-		{
 			title: 'Email',
 			dataIndex: 'email',
 			key: 'email',

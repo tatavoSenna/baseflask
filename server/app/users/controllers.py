@@ -33,7 +33,6 @@ def get_user_controller(email):
     data = {
         "id": user.id,
         "name": user.name,
-        "surname": user.surname,
         "email": user.email,
         "company_id": user.company_id,
     }
@@ -45,7 +44,6 @@ def list_user_controller(company_id, page=1, per_page=20, search_param=''):
     paginated_query = (
         User.query.filter_by(company_id=company_id, active=True)
         .filter(or_(User.name.ilike(f"%{search_param}%"),
-                    User.surname.ilike(f"%{search_param}%"),
                     User.email.ilike(f"%{search_param}%")))
         .order_by(User.name)
         .paginate(page=page, per_page=per_page)
@@ -104,7 +102,6 @@ def list_users_on_group_controller(group_id, page=1, per_page=20, search_param="
         User.query
         .filter(User.id.in_(user_id_list))
         .filter(or_(User.name.ilike(f"%{search_param}%"),
-                    User.surname.ilike(f"%{search_param}%"),
                     User.email.ilike(f"%{search_param}%")))
         .order_by(User.name)
         .paginate(page=page, per_page=per_page)

@@ -93,18 +93,13 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 							<Space size={10}>
 								<Avatar>
 									<Text style={{ color: '#333' }}>
-										{(loggedUser && loggedUser.name
+										{loggedUser && loggedUser.name
 											? loggedUser.name.substring(0, 1)
-											: '') +
-											(loggedUser && loggedUser.surname
-												? loggedUser.surname.substring(0, 1)
-												: '')}
+											: ''}
 									</Text>
 								</Avatar>
 								<Text style={{ color: '#333' }}>
-									{loggedUser && loggedUser.name
-										? `${loggedUser.name} ${loggedUser.surname}`
-										: ''}
+									{loggedUser && loggedUser.name ? `${loggedUser.name}` : ''}
 								</Text>
 								<DownOutlined />
 							</Space>
