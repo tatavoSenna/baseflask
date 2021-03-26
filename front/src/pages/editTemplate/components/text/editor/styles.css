@@ -1,3 +1,7 @@
 .ck-editor__editable_inline {
 	min-height: 24cm;
 }
+
+.ck-comment__input .ck-editor__editable_inline{
+	min-height: auto;
+}
