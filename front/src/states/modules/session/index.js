@@ -11,7 +11,6 @@ const initialState = {
 		username: '',
 		email: '',
 		name: '',
-		surname: '',
 		companyId: null,
 	},
 }
@@ -49,7 +48,6 @@ const { actions, reducer } = createSlice({
 					username: '',
 					email: '',
 					name: '',
-					surname: '',
 					companyId: null,
 				}),
 			}),
@@ -65,7 +63,6 @@ const { actions, reducer } = createSlice({
 					username: payload.username,
 					email: payload.email,
 					name: payload.name,
-					surname: payload.surname,
 					companyId: payload.company_id,
 				}),
 			}),

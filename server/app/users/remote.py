@@ -37,6 +37,9 @@ class RemoteUser:
     def email(self):
         return self.__extract_user_attributes("email")
 
+    def name(self):
+        return self.__extract_user_attributes("name")
+
     def sub(self):
         return self.__extract_user_attributes("sub")
 
@@ -48,7 +51,7 @@ class RemoteUser:
         local_user = User.query.filter_by(sub=self.sub(), active=True).first()
         default_company = Company.query.filter_by(id="1").first()
         user_attributes = dict(
-            username=self.username(), email=self.email(), sub=self.sub()
+            username=self.username(), email=self.email(), sub=self.sub(), name=self.name()
         )
 
         if local_user:

@@ -92,7 +92,7 @@ def test_document_list_serializer():
     }
     company = factories.CompanyFactory(id=company_id)
     user = factories.UserFactory(
-        id=user_id, name='Pedro', surname='Costa', email='testemail@gmail.com', company=company)
+        id=user_id, name='Pedro', email='testemail@gmail.com', company=company)
     document = factories.DocumentFactory(
         company=company, user=user, workflow=workflow)
     query = (
@@ -100,7 +100,6 @@ def test_document_list_serializer():
     )
     test_info = DocumentListSerializer(many=False).dump(query)
     assert test_info["user"]["name"] == "Pedro"
-    assert test_info["user"]["surname"] == "Costa"
     assert test_info["user"]["email"] == "testemail@gmail.com"
     assert test_info["status"] == "Passo atual"
 

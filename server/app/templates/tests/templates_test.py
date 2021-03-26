@@ -24,7 +24,7 @@ def test_create_template_controller(upload_template_mock):
         user.company_id, user.id, name, form, workflow, signers, template_text, ".txt")
 
     upload_template_mock.assert_called_once_with(
-        template_text, template_id)
+        template_text, template_id, company.id)
 
     assert template_id == 1
 

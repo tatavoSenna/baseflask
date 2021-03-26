@@ -34,7 +34,6 @@ class UserFactory(BaseFactory):
     id = factory.Sequence(lambda n: n)
     sub = factory.Faker("uuid4")
     name = factory.Faker("first_name_nonbinary")
-    surname = factory.Faker("last_name_nonbinary")
     email = factory.Faker("email")
     username = factory.Faker("slug")
     company = factory.SubFactory(CompanyFactory)

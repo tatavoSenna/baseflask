@@ -18,7 +18,7 @@ export const selectAllContracts = (payload) =>
 		author: (
 			<>
 				<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{' '}
-				<Text>{contract.user.name + ' ' + contract.user.surname}</Text>
+				<Text>{contract.user.name}</Text>
 			</>
 		),
 		authorEmail: contract.user.email,

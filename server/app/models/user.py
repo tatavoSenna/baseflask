@@ -9,7 +9,6 @@ class User(db.Model):
     sub = db.Column(db.String(128), unique=True, nullable=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), unique=False, nullable=True)
-    surname = db.Column(db.String(255), unique=False, nullable=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     company_id = db.Column(
         db.Integer,
