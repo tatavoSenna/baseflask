@@ -79,7 +79,18 @@ const Editor = ({
 		},
 		language: 'pt-br',
 		image: {
-			toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side'],
+			styles: ['alignLeft', 'alignCenter', 'alignRight'],
+			toolbar: [
+				'imageStyle:alignLeft',
+				'imageStyle:alignCenter',
+				'imageStyle:alignRight',
+				'|',
+				'imageResize',
+				'|',
+				'imageTextAlternative',
+				'|',
+				'linkImage',
+			],
 		},
 		table: {
 			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
