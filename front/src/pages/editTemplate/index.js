@@ -35,6 +35,8 @@ const EditTemplate = () => {
 		text: edit,
 		signers: edit,
 	})
+	const [files, postFiles] = useState([])
+	const [checked, setChecked] = useState(false)
 
 	const handleNav = (e) => {
 		setCurrent(e.key)
@@ -53,7 +55,7 @@ const EditTemplate = () => {
 				return false
 			}
 		})
-		if (data.text === '') {
+		if (data.text === '' && !data.isFile) {
 			redirect('text')
 			return false
 		}
@@ -82,7 +84,7 @@ const EditTemplate = () => {
 	const onSubmit = () => {
 		const isValid = validate()
 		if (isValid) {
-			dispatch(postTemplateRequest({ id }))
+			dispatch(postTemplateRequest({ id, files }))
 		}
 	}
 
@@ -148,14 +150,14 @@ const EditTemplate = () => {
 		setInputsFilled({
 			...inputsFilled,
 			text: (() => {
-				if (data.text === '') {
+				if (data.text === '' && !data.isFile) {
 					return false
 				}
 				return true
 			})(),
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.text])
+	}, [data.text, data.isFile])
 
 	useEffect(() => {
 		if (Number.isInteger(id)) {
@@ -252,7 +254,14 @@ const EditTemplate = () => {
 						)}
 						{current === 'workflow' && <Workflow data={data.workflow} />}
 						{current === 'text' && (
-							<Text data={data.text} updateForm={updateForm} />
+							<Text
+								data={data.text}
+								files={files}
+								updateFile={postFiles}
+								updateForm={updateForm}
+								checked={checked}
+								setChecked={setChecked}
+							/>
 						)}
 						{current === 'signers' && <Signers data={data.signers} />}
 					</Form>

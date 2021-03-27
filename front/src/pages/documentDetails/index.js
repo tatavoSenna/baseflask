@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Steps from '~/pages/documentDetails/components/steps'
 import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
+import PdfReader from '~/components/pdfFileReader'
 import BreadCrumb from '~/components/breadCrumb'
 import NewVersionModal from './components/modal'
 import ConnectDocusignModal from './components/modalDocusignConnect'
@@ -41,6 +42,7 @@ const DocumentDetails = () => {
 		loadingSign,
 		loadingVersion,
 		version_id,
+		file,
 	} = useSelector(({ documentDetail }) => documentDetail)
 	const { id } = useHistory().location.state
 
@@ -142,15 +144,26 @@ const DocumentDetails = () => {
 							block={loadingSign || loading}
 							signed={data.signed}
 						/>
-						<Editor
-							text={text}
-							textUpdate={textUpdate}
-							comments={comments}
-							onClickUpdate={handleShowModal}
-							onUpdateText={updateText}
-							block={loadingSign || loading || data.sent}
-							versionLoading={loadingVersion}
-						/>
+						{file ? (
+							<div
+								style={{
+									display: 'flex',
+									minHeight: '29.7cm',
+									minWidth: '21cm',
+								}}>
+								<PdfReader url={file} />
+							</div>
+						) : (
+							<Editor
+								text={text}
+								textUpdate={textUpdate}
+								comments={comments}
+								onClickUpdate={handleShowModal}
+								onUpdateText={updateText}
+								block={loadingSign || loading || data.sent}
+								versionLoading={loadingVersion}
+							/>
+						)}
 					</div>
 					<Tabs
 						signers={data.signers}

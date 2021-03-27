@@ -9,6 +9,7 @@ import {
 const initialState = {
 	data: {},
 	text: '',
+	file: '',
 	comments: [],
 	textUpdate: {
 		text: '',
@@ -43,12 +44,13 @@ const { actions, reducer } = createSlice({
 		getDocumentDetailSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllDocumentDetail(payload),
-				text: payload.text,
+				text: payload.text ? payload.text : '',
 				comments: payload.comments ? payload.comments : [],
 				textUpdate: {
-					text: payload.text,
+					text: payload.text ? payload.text : '',
 					comments: payload.comments ? payload.comments : [],
 				},
+				file: payload.download_url ? payload.download_url : '',
 				version_id: payload.version_id,
 				error: null,
 				loading: false,
