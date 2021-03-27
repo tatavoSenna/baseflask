@@ -25,6 +25,7 @@ const initialState = {
 			],
 		},
 		text: '',
+		isFile: false,
 		signers: {
 			parties: [
 				{
@@ -169,7 +170,7 @@ const { actions, reducer } = createSlice({
 					[payload.name]: payload.value,
 				}),
 			}),
-		postTemplateRequest: (state, { payload }) =>
+		postTemplateRequest: (state) =>
 			extend(state, {
 				loading: true,
 			}),

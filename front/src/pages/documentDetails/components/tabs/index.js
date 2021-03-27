@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
 import { array, bool, func, string } from 'prop-types'
-import { ContainerTabs, ContainerInfo } from './styles'
+import { ContainerTabs } from './styles'
 import styles from './index.module.scss'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 
 moment.locale('pt-br')
 
-const { Title, Text } = Typography
+const { Title, Text, Paragraph } = Typography
 const tailLayout = {
 	wrapperCol: { span: 24 },
 }
@@ -55,22 +55,20 @@ const Tabs = ({
 					<Title key={index} level={4} style={{ marginTop: 20, fontSize: 18 }}>
 						{item.title}
 					</Title>
-					{item.fields.map((item, index) => {
-						return (
-							<ContainerInfo key={index}>
-								<Text
-									style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-									key={item.label + index}>
-									{item.label}:
-								</Text>
-								<Text
-									style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
-									key={item.value + index}>
-									{item.value}
-								</Text>
-							</ContainerInfo>
-						)
-					})}
+					{item.fields.map((item, index) => (
+						<div key={index}>
+							<Paragraph
+								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+								key={item.label + index}>
+								{item.label}:
+							</Paragraph>
+							<Paragraph
+								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+								key={item.value + index}>
+								{item.value}
+							</Paragraph>
+						</div>
+					))}
 					{infos.length - 1 !== index && <Divider />}
 				</ContainerTabs>
 			)
@@ -123,26 +121,28 @@ const Tabs = ({
 						{item.title}
 					</Title>
 					{item.fields.map((field, index) => (
-						<ContainerInfo key={index}>
-							<Text style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
+						<div key={index}>
+							<Paragraph
+								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
 								{field.value}
-							</Text>
-							<Text
+							</Paragraph>
+							<Paragraph
 								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
 								{!field.valueVariable ? '' : field.valueVariable}
-							</Text>
-						</ContainerInfo>
+							</Paragraph>
+						</div>
 					))}
 					{signed && (
-						<ContainerInfo>
-							<Text style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
+						<div>
+							<Paragraph
+								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
 								Status
-							</Text>
-							<Text
+							</Paragraph>
+							<Paragraph
 								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
 								{item.status}
-							</Text>
-						</ContainerInfo>
+							</Paragraph>
+						</div>
 					)}
 				</ContainerTabs>
 			))}

@@ -45,7 +45,7 @@ function* getTemplateDetailSaga({ payload = {} }) {
 function* postTemplateSaga({ payload = {} }) {
 	loadingMessage({ content: 'Enviando template...', updateKey: 'postTemplate' })
 
-	const { id } = payload
+	const { id, files } = payload
 	const data = yield select((state) => {
 		const { postTemplate } = state
 		return postTemplate.data
@@ -73,16 +73,24 @@ function* postTemplateSaga({ payload = {} }) {
 
 	if (id === 'new') {
 		try {
-			const { post } = yield call(api.post, '/templates/', {
+			const response = yield call(api.post, '/templates/', {
 				title: data.title,
 				form: JSON.parse(data.form),
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text: data.text,
-				text_type: '.txt',
+				text_type: files.length > 0 ? '.docx' : '.txt',
 			})
 
-			yield put(postTemplateSuccess(post))
+			if (files.length > 0) {
+				const formData = new FormData()
+				const docFile = files[0]
+				formData.append('file', docFile, docFile.name)
+
+				yield call(api.post, `/templates/${response.data.id}/upload`, formData)
+			}
+
+			yield put(postTemplateSuccess())
 			successMessage({
 				content: 'Template criado com sucesso!',
 				updateKey: 'postTemplate',
@@ -102,8 +110,16 @@ function* postTemplateSaga({ payload = {} }) {
 				form: JSON.parse(data.form),
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
-				text: data.text,
+				text_type: files.length > 0 ? '.docx' : '.txt',
 			})
+
+			if (files.length > 0) {
+				const formData = new FormData()
+				const docFile = files[0]
+				formData.append('file', docFile, docFile.name)
+
+				yield call(api.post, `/templates/${id}/upload`, formData)
+			}
 
 			yield put(postTemplateSuccess(patch))
 			successMessage({

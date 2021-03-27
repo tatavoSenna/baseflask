@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, select } from 'redux-saga/effects'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
 import {
 	successMessage,
 	loadingMessage,
@@ -46,11 +46,14 @@ export default function* rootSaga() {
 function* getDocumentDetailSaga({ payload = {} }) {
 	const { id } = payload
 	try {
-		const [detail, detailText] = yield all([
-			call(api.get, `/documents/${id}`),
-			call(api.get, `/documents/${id}/text`),
-		])
-		yield put(getDocumentDetailSuccess({ ...detail.data, ...detailText.data }))
+		const { data } = yield call(api.get, `/documents/${id}`)
+		let response
+		if (data.text_type === '.docx') {
+			response = yield call(api.get, `/documents/${id}/pdf`)
+		} else {
+			response = yield call(api.get, `/documents/${id}/text`)
+		}
+		yield put(getDocumentDetailSuccess({ ...data, ...response.data }))
 	} catch (error) {
 		yield put(getDocumentDetailFailure(error))
 	}
