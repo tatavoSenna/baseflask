@@ -20,8 +20,8 @@ const DropdownField = ({ pageFieldsData, className, onChange }) => {
 			colon={false}>
 			<Select>
 				{options.map((option, index) => (
-					<Select.Option key={index} value={option} onChange={onChange}>
-						{option}
+					<Select.Option key={index} value={option.value} onChange={onChange}>
+						{option.label}
 					</Select.Option>
 				))}
 			</Select>
