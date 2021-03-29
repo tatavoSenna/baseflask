@@ -75,7 +75,7 @@ function* postTemplateSaga({ payload = {} }) {
 		try {
 			const response = yield call(api.post, '/templates/', {
 				title: data.title,
-				form: JSON.parse(data.form),
+				form: data.form,
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text: data.text,
@@ -107,7 +107,7 @@ function* postTemplateSaga({ payload = {} }) {
 		try {
 			const { patch } = yield call(api.patch, `/templates/${id}`, {
 				title: data.title,
-				form: JSON.parse(data.form),
+				form: data.form,
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text_type: files.length > 0 ? '.docx' : '.txt',

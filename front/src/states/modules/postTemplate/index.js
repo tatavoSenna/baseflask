@@ -2,6 +2,9 @@ import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
+	selectForm,
+	addField,
+	removeField,
 	selectStep,
 	addStep,
 	removeStep,
@@ -12,7 +15,19 @@ import {
 const initialState = {
 	data: {
 		title: '',
-		form: '',
+		form: [
+			{
+				title: '',
+				fields: [
+					{
+						type: '',
+						label: '',
+						value: '',
+						variable: '',
+					},
+				],
+			},
+		],
 		workflow: {
 			nodes: [
 				{
@@ -81,16 +96,47 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loading: true,
 			}),
-		getTemplateDetailSuccess: (state, { payload }) => {
+		getTemplateDetailSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectEdit(state.data, payload),
 				loading: false,
-			})
-		},
+			}),
 		getTemplateDetailFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
 				loading: false,
+			}),
+		postTemplateFormInfo: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: selectForm(state.data.form, payload),
+				}),
+			}),
+		postTemplatePageAdd: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: [...state.data.form, payload.newPage],
+				}),
+			}),
+		postTemplatePageRemove: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: state.data.form.filter(
+						(page, index) => index !== payload.pageIndex
+					),
+				}),
+			}),
+		postTemplateFieldAdd: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: addField(state.data.form, payload),
+				}),
+			}),
+		postTemplateFieldRemove: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: removeField(state.data.form, payload),
+				}),
 			}),
 		postTemplateStepInfo: (state, { payload }) =>
 			extend(state, {
@@ -191,6 +237,11 @@ export const {
 	getTemplateDetail,
 	getTemplateDetailSuccess,
 	getTemplateDetailFailure,
+	postTemplateFormInfo,
+	postTemplatePageAdd,
+	postTemplatePageRemove,
+	postTemplateFieldAdd,
+	postTemplateFieldRemove,
 	postTemplateStepInfo,
 	postTemplateStepAdd,
 	postTemplateStepRemove,

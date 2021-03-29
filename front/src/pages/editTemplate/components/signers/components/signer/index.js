@@ -34,14 +34,14 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				marginBottom: '3%',
 			}}>
 			<Form.Item
-				name={`title_${signerIndex}`}
+				name={`title_${partyIndex}_${signerIndex}`}
 				label="Título"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 'title')}
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input value={data.title} />
 			</Form.Item>
 			<Form.Item
-				name={`name_${signerIndex}`}
+				name={`name_${partyIndex}_${signerIndex}`}
 				label="Variável do nome"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 0)}
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
@@ -51,7 +51,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				/>
 			</Form.Item>
 			<Form.Item
-				name={`email_${signerIndex}`}
+				name={`email_${partyIndex}_${signerIndex}`}
 				label="Variável do email"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 1)}
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
@@ -62,7 +62,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 			</Form.Item>
 			<Divider />
 			<Form.Item
-				name={`anchor_${signerIndex}`}
+				name={`anchor_${partyIndex}_${signerIndex}`}
 				label="Variável da âncora"
 				onChange={(e) =>
 					updateSignerInfo(e, partyIndex, signerIndex, 'anchor_string')
@@ -74,7 +74,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				/>
 			</Form.Item>
 			<Form.Item
-				name={`x_offset_${signerIndex}`}
+				name={`x_offset_${partyIndex}_${signerIndex}`}
 				label="Deslocamento em X"
 				help="Máx. ±10">
 				<InputNumber
@@ -95,7 +95,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				/>
 			</Form.Item>
 			<Form.Item
-				name={`y_offset_${signerIndex}`}
+				name={`y_offset_${partyIndex}_${signerIndex}`}
 				label="Deslocamento em Y"
 				help="Máx. ±10">
 				<InputNumber

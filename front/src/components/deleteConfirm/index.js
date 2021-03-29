@@ -8,7 +8,12 @@ const Delete = ({ handle, title, disabled }) => (
 		<Tooltip title={disabled ? '' : 'Deletar'}>
 			<Popconfirm disabled={disabled} title={title} onConfirm={handle}>
 				<DeleteOutlined
-					style={{ fontSize: '20px', color: disabled ? 'lightgray' : 'red' }}
+					style={{
+						fontSize: '20px',
+						color: disabled ? 'lightgray' : '#1890FF',
+						marginLeft: 'auto',
+						marginRight: 'auto',
+					}}
 				/>
 			</Popconfirm>
 		</Tooltip>
