@@ -82,6 +82,7 @@ function InputFactory({ data: pageFieldsData }) {
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional } = pageFieldsData[i]
 		const isConditional = !!conditional
+		const first = i === 0
 
 		switch (type) {
 			case 'radio':
@@ -105,6 +106,7 @@ function InputFactory({ data: pageFieldsData }) {
 						onChange={
 							isConditional ? (e) => checkField(e.target.value, i) : undefined
 						}
+						first={first}
 					/>
 				)
 				break
@@ -117,6 +119,7 @@ function InputFactory({ data: pageFieldsData }) {
 						onChange={
 							isConditional ? (e) => checkField(e.target.value, i) : undefined
 						}
+						first={first}
 					/>
 				)
 				break
@@ -129,6 +132,7 @@ function InputFactory({ data: pageFieldsData }) {
 						onChange={
 							isConditional ? (e) => checkField(e.target.value, i) : undefined
 						}
+						first={first}
 					/>
 				)
 				break
@@ -259,6 +263,7 @@ function InputFactory({ data: pageFieldsData }) {
 						onChange={
 							isConditional ? (e) => checkField(e.target.value, i) : undefined
 						}
+						first={first}
 					/>
 				)
 		}

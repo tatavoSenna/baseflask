@@ -1,10 +1,10 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form } from 'antd'
 import { validateCNPJ } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 
-const CnpjField = ({ pageFieldsData, className, onChange }) => {
+const CnpjField = ({ pageFieldsData, className, onChange, first }) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -31,7 +31,7 @@ const CnpjField = ({ pageFieldsData, className, onChange }) => {
 				]
 			}
 			colon={false}>
-			<MaskedInput mask="11.111.111/1111-11" placeholder="" />
+			<MaskedInput autoFocus={first} mask="11.111.111/1111-11" placeholder="" />
 		</Form.Item>
 	)
 }
@@ -44,6 +44,7 @@ CnpjField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	first: number,
 }
 
 CnpjField.defaultProps = {

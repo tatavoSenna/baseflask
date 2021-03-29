@@ -1,10 +1,10 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form } from 'antd'
 import { validateCPF } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 
-const CpfField = ({ pageFieldsData, className, onChange }) => {
+const CpfField = ({ pageFieldsData, className, onChange, first }) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -31,7 +31,7 @@ const CpfField = ({ pageFieldsData, className, onChange }) => {
 				]
 			}
 			colon={false}>
-			<MaskedInput mask="111.111.111-11" placeholder="" />
+			<MaskedInput autoFocus={first} mask="111.111.111-11" placeholder="" />
 		</Form.Item>
 	)
 }
@@ -44,6 +44,7 @@ CpfField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	first: number,
 }
 
 CpfField.defaultProps = {

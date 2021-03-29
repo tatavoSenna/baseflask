@@ -1,8 +1,14 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form, Input } from 'antd'
 
-const EmailField = ({ pageFieldsData, inputValue, className, onChange }) => {
+const EmailField = ({
+	pageFieldsData,
+	inputValue,
+	className,
+	onChange,
+	first,
+}) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -21,7 +27,7 @@ const EmailField = ({ pageFieldsData, inputValue, className, onChange }) => {
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Input placeholder="" />
+			<Input autoFocus={first} placeholder="" />
 		</Form.Item>
 	)
 }
@@ -35,6 +41,7 @@ EmailField.propTypes = {
 	inputValue: string,
 	className: object,
 	onChange: func,
+	first: number,
 }
 
 EmailField.defaultProps = {
