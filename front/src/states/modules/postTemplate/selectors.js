@@ -1,4 +1,101 @@
 import { extend } from 'lodash'
+import { errorMessage, successMessage } from '~/services/messager'
+
+export const selectEdit = (data, payload) => {
+	let partiesList = []
+	let signersCount = 0
+	while (signersCount < payload.signers.length) {
+		const party = {
+			partyTitle: payload.signers[signersCount].party,
+			partySigners: [],
+		}
+		for (let i = signersCount; i < payload.signers.length; i++) {
+			if (payload.signers[i].party === party.partyTitle) {
+				party.partySigners.push(payload.signers[i])
+				signersCount += 1
+			} else {
+				break
+			}
+		}
+		partiesList.push(party)
+	}
+
+	return extend(data, {
+		title: payload.name,
+		form: payload.form,
+		text: payload.textfile,
+		workflow: extend(data.workflow, {
+			nodes: Object.values(payload.workflow.nodes),
+		}),
+		signers: extend(data.signers, {
+			parties: partiesList,
+		}),
+	})
+}
+
+export const selectForm = (form, payload) => {
+	if (payload.name === 'title') {
+		return form.map((page, index) => {
+			if (index === payload.pageIndex) {
+				return extend(page, {
+					title: payload.value,
+				})
+			}
+			return page
+		})
+	} else if (payload.name === 'field') {
+		return form.map((page, index) => {
+			if (index === payload.pageIndex) {
+				page.fields.map((field, index) => {
+					if (index === payload.fieldIndex) {
+						try {
+							const fieldJSON = JSON.parse(payload.value)
+							for (const key in fieldJSON) {
+								extend(field, {
+									[key]: fieldJSON[key],
+								})
+							}
+							successMessage({
+								content: 'Campo salvo com sucesso.',
+							})
+							return field
+						} catch {
+							errorMessage({
+								content: 'Não foi possível salvar o campo. Insira JSON válido.',
+							})
+						}
+					}
+					return field
+				})
+			}
+			return page
+		})
+	}
+}
+
+export const addField = (form, payload) => {
+	return form.map((page, index) => {
+		if (index === payload.pageIndex) {
+			return extend(page, {
+				fields: [...page.fields, payload.newField],
+			})
+		}
+		return page
+	})
+}
+
+export const removeField = (form, payload) => {
+	return form.map((page, index) => {
+		if (index === payload.pageIndex) {
+			return extend(page, {
+				fields: page.fields.filter(
+					(field, index) => index !== payload.fieldIndex
+				),
+			})
+		}
+		return page
+	})
+}
 
 export const selectStep = (workflow, payload) => {
 	return extend(workflow, {
@@ -57,38 +154,6 @@ export const removeStep = (workflow, payload) => {
 				})
 			}
 			return node
-		}),
-	})
-}
-
-export const selectEdit = (data, payload) => {
-	let partiesList = []
-	let signersCount = 0
-	while (signersCount < payload.signers.length) {
-		const party = {
-			partyTitle: payload.signers[signersCount].party,
-			partySigners: [],
-		}
-		for (let i = signersCount; i < payload.signers.length; i++) {
-			if (payload.signers[i].party === party.partyTitle) {
-				party.partySigners.push(payload.signers[i])
-				signersCount += 1
-			} else {
-				break
-			}
-		}
-		partiesList.push(party)
-	}
-
-	return extend(data, {
-		title: payload.name,
-		form: JSON.stringify(payload.form, undefined, 2),
-		text: payload.textfile,
-		workflow: extend(data.workflow, {
-			nodes: Object.values(payload.workflow.nodes),
-		}),
-		signers: extend(data.signers, {
-			parties: partiesList,
 		}),
 	})
 }
