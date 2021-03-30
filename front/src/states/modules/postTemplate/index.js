@@ -92,6 +92,7 @@ const { actions, reducer } = createSlice({
 					title: payload.title,
 				}),
 			}),
+		resetTemplateState: () => initialState,
 		getTemplateDetail: (state) =>
 			extend(state, {
 				loading: true,
@@ -234,6 +235,7 @@ const { actions, reducer } = createSlice({
 
 export const {
 	postTemplateTitle,
+	resetTemplateState,
 	getTemplateDetail,
 	getTemplateDetailSuccess,
 	getTemplateDetailFailure,

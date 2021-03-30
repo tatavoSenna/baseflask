@@ -110,6 +110,7 @@ function* postTemplateSaga({ payload = {} }) {
 				form: data.form,
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
+				text: data.text,
 				text_type: files.length > 0 ? '.docx' : '.txt',
 			})
 
