@@ -31,7 +31,7 @@ export const getColumns = (handleToGo, handleDeleteTemplate) => [
 		render: (text, row) => (
 			<Space size="middle">
 				<Delete
-					title="Deseja excluir esse documento?"
+					title="Deseja excluir essa template?"
 					handle={() => handleDeleteTemplate(row)}
 				/>
 			</Space>
