@@ -48,7 +48,11 @@ const ContractModal = ({
 			<Form form={form} id="newContractForm">
 				<Form.Item label="Novo Documento"></Form.Item>
 				<Form.Item label="Título" name="title">
-					<Input value={title} onChange={(e) => setTitle(e.target.value)} />
+					<Input
+						autoFocus
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
 				</Form.Item>
 				<Form.Item label="Modelo" name="model">
 					<AutoComplete
