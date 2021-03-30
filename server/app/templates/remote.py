@@ -32,7 +32,12 @@ class RemoteTemplate:
 
     def delete_template(self, document_template):
         s3_resource = boto3.resource("s3")
-        remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}.txt'
+
+        if document_template.text_type == ".txt":
+            remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}.txt'
+        else:
+            remote_path = f'{document_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document_template.id}/'
+
         bucket = s3_resource.Bucket(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"])
         bucket.objects.filter(Prefix=remote_path).delete()
