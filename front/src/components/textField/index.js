@@ -1,8 +1,14 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form, Input } from 'antd'
 
-const TextField = ({ pageFieldsData, inputValue, className, onChange }) => {
+const TextField = ({
+	pageFieldsData,
+	inputValue,
+	className,
+	onChange,
+	first,
+}) => {
 	const { value, variable, type, id } = pageFieldsData
 	return (
 		<Form.Item
@@ -20,7 +26,7 @@ const TextField = ({ pageFieldsData, inputValue, className, onChange }) => {
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Input placeholder="" />
+			<Input autoFocus={first} placeholder="" />
 		</Form.Item>
 	)
 }
@@ -34,6 +40,7 @@ TextField.propTypes = {
 	inputValue: string,
 	className: object,
 	onChange: func,
+	first: number,
 }
 
 TextField.defaultProps = {
