@@ -9,7 +9,6 @@ import {
 	TeamOutlined,
 } from '@ant-design/icons'
 import {
-	resetTemplateState,
 	getTemplateDetail,
 	postTemplateAppend,
 	postTemplateRequest,
@@ -163,8 +162,6 @@ const EditTemplate = () => {
 	useEffect(() => {
 		if (Number.isInteger(id)) {
 			dispatch(getTemplateDetail({ id }))
-		} else {
-			dispatch(resetTemplateState())
 		}
 	}, [dispatch, id])
 

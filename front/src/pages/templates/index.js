@@ -11,7 +11,10 @@ import {
 	deleteTemplate,
 	setShowModal,
 } from '../../states/modules/templates'
-import { postTemplateTitle } from '../../states/modules/postTemplate'
+import {
+	resetTemplateState,
+	postTemplateTitle,
+} from '../../states/modules/postTemplate'
 
 const Templates = () => {
 	const dispatch = useDispatch()
@@ -22,6 +25,7 @@ const Templates = () => {
 
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))
+		dispatch(resetTemplateState())
 		dispatch(postTemplateTitle({ title }))
 		return history.push({
 			pathname: `/templates/new/`,
