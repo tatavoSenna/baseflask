@@ -50,6 +50,8 @@ const Editor = ({
 				'|',
 				'fontSize',
 				'fontFamily',
+				'fontColor',
+				'fontBackgroundColor',
 				'|',
 				'bold',
 				'italic',
@@ -70,6 +72,7 @@ const Editor = ({
 				'blockQuote',
 				'imageUpload',
 				'insertTable',
+				'horizontalLine',
 				'mediaEmbed',
 				'|',
 				'undo',
@@ -93,7 +96,13 @@ const Editor = ({
 			],
 		},
 		table: {
-			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
+			contentToolbar: [
+				'tableColumn',
+				'tableRow',
+				'mergeTableCells',
+				'tableProperties',
+				'tableCellProperties',
+			],
 		},
 		licenseKey: 'mboC54zxmZJKbEk7qX54q1Do7KHIuLn2fwPhCh4EsmrFlMGa2wi/lfvS',
 		extraPlugins: [CommentsIntegration],
@@ -108,6 +117,10 @@ const Editor = ({
 				margin_left: '12.5mm',
 				page_orientation: 'portrait',
 			},
+		},
+		fontSize: {
+			options: [8, 10, 12, 'default', 18, 20, 22],
+			supportAllValues: true,
 		},
 	}
 

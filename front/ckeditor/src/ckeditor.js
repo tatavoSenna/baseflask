@@ -11,14 +11,18 @@ import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote.js'
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold.js'
 import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder.js'
 import CKFinderUploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter.js'
+import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard.js'
 import Comments from '@ckeditor/ckeditor5-comments/src/comments.js'
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js'
 import ExportToPDF from '@ckeditor/ckeditor5-export-pdf/src/exportpdf.js'
 import ExportToWord from '@ckeditor/ckeditor5-export-word/src/exportword.js'
+import FontBackgroundColor from '@ckeditor/ckeditor5-font/src/fontbackgroundcolor.js'
+import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js'
 import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily.js'
 import FontSize from '@ckeditor/ckeditor5-font/src/fontsize.js'
 import Heading from '@ckeditor/ckeditor5-heading/src/heading.js'
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight.js'
+import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline.js'
 import Image from '@ckeditor/ckeditor5-image/src/image.js'
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption.js'
 import ImageInsert from '@ckeditor/ckeditor5-image/src/imageinsert.js'
@@ -37,6 +41,8 @@ import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js'
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice.js'
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough.js'
 import Table from '@ckeditor/ckeditor5-table/src/table.js'
+import TableCellProperties from '@ckeditor/ckeditor5-table/src/tablecellproperties.js'
+import TableProperties from '@ckeditor/ckeditor5-table/src/tableproperties.js'
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js'
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation.js'
 import TodoList from '@ckeditor/ckeditor5-list/src/todolist.js'
@@ -54,14 +60,18 @@ Editor.builtinPlugins = [
 	Bold,
 	CKFinder,
 	CKFinderUploadAdapter,
+	Clipboard,
 	Comments,
 	Essentials,
 	ExportToPDF,
 	ExportToWord,
+	FontBackgroundColor,
+	FontColor,
 	FontFamily,
 	FontSize,
 	Heading,
 	Highlight,
+	HorizontalLine,
 	Image,
 	ImageCaption,
 	ImageInsert,
@@ -80,6 +90,8 @@ Editor.builtinPlugins = [
 	PasteFromOffice,
 	Strikethrough,
 	Table,
+	TableCellProperties,
+	TableProperties,
 	TableToolbar,
 	TextTransformation,
 	TodoList,
