@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 const Delete = ({ handle, title, disabled }) => (
 	<div style={{ display: 'flex', gap: '5px', justifyContent: 'flex-end' }}>
-		<Tooltip title={disabled ? '' : 'Deletar'}>
+		<Tooltip title={disabled ? '' : 'Deletar'} placement="left">
 			<Popconfirm disabled={disabled} title={title} onConfirm={handle}>
 				<DeleteOutlined
 					style={{
