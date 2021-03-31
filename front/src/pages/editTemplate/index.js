@@ -178,18 +178,21 @@ const EditTemplate = () => {
 			})
 		)
 
-		data.signers.parties.forEach((party, index) => {
+		data.signers.parties.forEach((party, partyIndex) => {
 			form.setFieldsValue({
-				[`party_${index}`]: party.partyTitle,
+				[`party_${partyIndex}`]: party.partyTitle,
 			})
-			party.partySigners.forEach((signer, index) => {
+			party.partySigners.forEach((signer, signerIndex) => {
 				form.setFieldsValue({
-					[`title_${index}`]: signer.title,
-					[`name_${index}`]: signer.fields[0].variable,
-					[`email_${index}`]: signer.fields[1].variable,
-					[`anchor_${index}`]: signer.anchor[0].anchor_string,
-					[`x_offset_${index}`]: signer.anchor[0].anchor_x_offset,
-					[`y_offset_${index}`]: signer.anchor[0].anchor_y_offset,
+					[`title_${partyIndex}_${signerIndex}`]: signer.title,
+					[`name_${partyIndex}_${signerIndex}`]: signer.fields[0].variable,
+					[`email_${partyIndex}_${signerIndex}`]: signer.fields[1].variable,
+					[`anchor_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_string,
+					[`x_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_x_offset,
+					[`y_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_y_offset,
 				})
 			})
 		})
