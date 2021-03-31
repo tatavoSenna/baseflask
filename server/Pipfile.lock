@@ -158,11 +158,11 @@
         },
         "docxtpl": {
             "hashes": [
-                "sha256:a502d1137bc44527f801ccb87026dd85493b4984d75c9fccc8802a4239926900",
-                "sha256:c65f5142a03d52cd669e2cdcf34de6eed71c8440887bcaa1b7acf0352936198c"
+                "sha256:79abf3e334215ea21f79b8dd43a689da55c9c984d9ecc84a17570eeeb03dbedc",
+                "sha256:84e314a2d9cbd9e1e099e49ac921dbfd52b5a119bbd1050c48ec090afc9e705e"
             ],
             "index": "pypi",
-            "version": "==0.6.3"
+            "version": "==0.11.0"
         },
         "ecdsa": {
             "hashes": [

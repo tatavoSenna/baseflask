@@ -65,7 +65,7 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     db.session.commit()
 
     remote_document = RemoteDocument()
-    remote_document.create(document, document_template, company_id)
+    remote_document.create(document, document_template, company_id, variables)
 
     return document
 

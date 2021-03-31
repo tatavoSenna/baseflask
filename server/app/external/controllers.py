@@ -77,6 +77,7 @@ def create_external_document_controller(variables, template_id, token):
         created_at=datetime.utcnow().isoformat(),
         title=creation_token.title,
         document_template_id=template_id,
+        text_type=document_template.text_type,
     )
 
     creation_token.used = True
@@ -86,6 +87,6 @@ def create_external_document_controller(variables, template_id, token):
     db.session.commit()
 
     remote_document = RemoteDocument()
-    remote_document.create(document, document_template, user.company_id)
+    remote_document.create(document, document_template, user.company_id, variables)
 
     return document

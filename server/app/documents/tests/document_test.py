@@ -201,7 +201,7 @@ def test_create_document(create_remote_document_mock):
     )
 
     create_remote_document_mock.assert_called_with(
-        document_txt, document_template_txt, 17
+        document_txt, document_template_txt, 17, variables
     )
 
     document_docx = create_document_controller(
@@ -215,7 +215,7 @@ def test_create_document(create_remote_document_mock):
     )
 
     create_remote_document_mock.assert_called_with(
-        document_docx, document_template_docx, 17
+        document_docx, document_template_docx, 17, variables
     )
 
     assert document_txt.user_id == user.id
