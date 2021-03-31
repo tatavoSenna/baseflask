@@ -124,7 +124,7 @@ const Tabs = ({
 						<div key={index}>
 							<Paragraph
 								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
-								{field.value}
+								{field.value}:
 							</Paragraph>
 							<Paragraph
 								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
