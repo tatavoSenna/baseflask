@@ -18,14 +18,7 @@ const initialState = {
 		form: [
 			{
 				title: '',
-				fields: [
-					{
-						type: '',
-						label: '',
-						value: '',
-						variable: '',
-					},
-				],
+				fields: [],
 			},
 		],
 		workflow: {

@@ -30,9 +30,8 @@ const Field = ({ data, pageIndex, fieldIndex, updateFormInfo }) => {
 				style={{ marginBottom: '0' }}>
 				<JSONInput
 					id={`json_${pageIndex}_${fieldIndex}`}
-					onChange={(e) =>
-						updateFormInfo(e.json, 'field', pageIndex, fieldIndex)
-					}
+					onBlur={(e) => updateFormInfo(e.json, 'field', pageIndex, fieldIndex)}
+					waitAfterKeyPress={7000}
 					placeholder={data}
 					locale={locale}
 					confirmGood={false}
