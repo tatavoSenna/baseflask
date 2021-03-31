@@ -16,18 +16,18 @@ class RemoteDocument:
 
     s3_client = boto3.client("s3")
 
-    def create(self, document, document_template, company_id):
+    def create(self, document, document_template, company_id, variables):
         if document_template.text_type == ".txt":
             text_template = self.download_text_from_template(document)
             filled_text = self.fill_text_with_variables(
-                text_template, document.variables).encode()
+                text_template, variables).encode()
             self.upload_filled_text_to_documents(document, filled_text)
 
         else:
             docx_io = self.download_docx_from_template(
                 document_template, company_id)
             filled_docx_io = self.fill_docx_with_variables(
-                docx_io, document.variables)
+                docx_io, variables)
 
             copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
 
