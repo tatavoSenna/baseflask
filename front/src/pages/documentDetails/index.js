@@ -160,7 +160,12 @@ const DocumentDetails = () => {
 								comments={comments}
 								onClickUpdate={handleShowModal}
 								onUpdateText={updateText}
-								block={loadingSign || loading || data.sent}
+								block={
+									loadingSign ||
+									loading ||
+									data.sent ||
+									version_id !== data.versions[0].id
+								}
 								versionLoading={loadingVersion}
 							/>
 						)}

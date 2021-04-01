@@ -76,15 +76,15 @@ function* newVersionSaga({ payload = {} }) {
 			content: 'Versão criada com sucesso',
 			updateKey: 'createVersion',
 		})
+
+		let version_id = response.data.updated_versions_list[0].id
+
 		yield put(
 			newVersionSuccess({
 				text: response.data.uploaded_text,
 				versions: response.data.updated_versions_list,
-				document: documentDetail.data,
-				version_id:
-					response.data.updated_versions_list[
-						response.data.updated_versions_list.length - 1
-					].id,
+				document: { ...documentDetail.data, version_id },
+				version_id,
 			})
 		)
 	} catch (error) {
@@ -112,7 +112,10 @@ function* selectVersionSaga({ payload = {} }) {
 			selectVersionSuccess({
 				text: response.data.text,
 				comments: response.data.comments,
-				document: documentDetail.data,
+				document: {
+					...documentDetail.data,
+					version_id: response.data.version_id,
+				},
 				version_id: response.data.version_id,
 			})
 		)
