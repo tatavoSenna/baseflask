@@ -55,7 +55,7 @@ const { actions, reducer } = createSlice({
 				error: null,
 				loading: false,
 			}),
-		getDocumentDetailtFailure: (state, { payload }) =>
+		getDocumentDetailFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
 				loading: false,

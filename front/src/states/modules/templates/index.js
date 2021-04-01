@@ -37,6 +37,7 @@ const { actions, reducer } = createSlice({
 		listTemplateFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		deleteTemplate: (state) =>
 			extend(state, {
@@ -56,6 +57,7 @@ const { actions, reducer } = createSlice({
 		deleteTemplateFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		viewTemplate: (state) => state,
 		setShowModal: (state, { payload }) =>

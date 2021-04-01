@@ -28,6 +28,7 @@ const { actions, reducer } = createSlice({
 		listQuestionFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 	},
 })

@@ -55,6 +55,11 @@ function* getDocumentDetailSaga({ payload = {} }) {
 		}
 		yield put(getDocumentDetailSuccess({ ...data, ...response.data }))
 	} catch (error) {
+		errorMessage({
+			content:
+				'Ooops, ocorreu um erro. Já avisamos nossos engenheiros, por favor tente mais tarde.',
+			updateKey: 'getDocumentDetail',
+		})
 		yield put(getDocumentDetailFailure(error))
 	}
 }
