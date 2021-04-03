@@ -7,6 +7,7 @@ import DataTable from '~/components/dataTable'
 import ContractModal from './components/modal'
 import LinkModal from './components/modalLink'
 import { getColumns } from './columns'
+import { listModel } from '~/states/modules/model'
 import {
 	listContract,
 	deleteContract,
@@ -46,6 +47,7 @@ const Contracts = () => {
 	}
 
 	const handleShowModal = () => {
+		dispatch(listModel())
 		dispatch(setShowModal(true))
 	}
 

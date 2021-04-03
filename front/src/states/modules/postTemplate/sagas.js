@@ -45,7 +45,7 @@ function* getTemplateDetailSaga({ payload = {} }) {
 function* postTemplateSaga({ payload = {} }) {
 	loadingMessage({ content: 'Enviando template...', updateKey: 'postTemplate' })
 
-	const { id, files } = payload
+	const { id, files, history } = payload
 	const data = yield select((state) => {
 		const { postTemplate } = state
 		return postTemplate.data
@@ -95,7 +95,7 @@ function* postTemplateSaga({ payload = {} }) {
 				content: 'Template criado com sucesso!',
 				updateKey: 'postTemplate',
 			})
-			window.location.href = '/templates'
+			history.push('/templates')
 		} catch (error) {
 			yield put(postTemplateFailure(error))
 			errorMessage({
@@ -127,7 +127,7 @@ function* postTemplateSaga({ payload = {} }) {
 				content: 'Template atualizado com sucesso!',
 				updateKey: 'postTemplate',
 			})
-			window.location.href = '/templates'
+			history.push('/templates')
 		} catch (error) {
 			yield put(postTemplateFailure(error))
 			errorMessage({

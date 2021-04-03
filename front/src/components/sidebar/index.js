@@ -10,7 +10,6 @@ import {
 	DeploymentUnitOutlined,
 	SettingOutlined,
 } from '@ant-design/icons'
-import { listModel } from '~/states/modules/model'
 import { getUserList } from '~/states/modules/users'
 import { getSettings } from '~/states/modules/settings'
 import styles from './index.module.scss'
@@ -24,7 +23,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const { pathname } = useLocation()
 
 	useEffect(() => {
-		dispatch(listModel())
 		dispatch(getUserList())
 	}, [dispatch])
 

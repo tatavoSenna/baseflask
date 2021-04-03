@@ -25,6 +25,7 @@ import styles from './index.module.scss'
 const EditTemplate = () => {
 	const { data, loading } = useSelector(({ postTemplate }) => postTemplate)
 	const { id } = useHistory().location.state
+	const history = useHistory()
 	const edit = Number.isInteger(id)
 	const dispatch = useDispatch()
 	const [form] = Form.useForm()
@@ -84,7 +85,7 @@ const EditTemplate = () => {
 	const onSubmit = () => {
 		const isValid = validate()
 		if (isValid) {
-			dispatch(postTemplateRequest({ id, files }))
+			dispatch(postTemplateRequest({ id, files, history }))
 		}
 	}
 
