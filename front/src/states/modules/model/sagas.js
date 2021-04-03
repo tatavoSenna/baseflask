@@ -9,10 +9,7 @@ export default function* rootSaga() {
 
 function* listModelSaga() {
 	try {
-		const { data } = yield call(
-			api.get,
-			`/documents/templates`
-		)
+		const { data } = yield call(api.get, `/documents/templates`)
 		yield put(listModelSuccess(data))
 	} catch (error) {
 		yield put(listModelFailure(error))
