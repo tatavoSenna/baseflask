@@ -9,7 +9,7 @@ export function errorMessage(payload) {
 }
 
 export function loadingMessage(payload) {
-	message.loading(formatParams(payload))
+	message.loading(formatParams({ ...payload, duration: 0 }))
 }
 
 export function infoMessage(payload) {
@@ -37,7 +37,7 @@ function formatParams(payload) {
 	if (typeof payload === 'string') {
 		return payload
 	} else {
-		const { content, onClose, updateKey } = payload
-		return { content, onClose, key: updateKey }
+		const { content, onClose, updateKey, duration } = payload
+		return { content, onClose, key: updateKey, duration }
 	}
 }
