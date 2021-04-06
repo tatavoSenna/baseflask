@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { object } from 'prop-types'
+import { object, func } from 'prop-types'
 import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { postTemplatePartyAdd } from '~/states/modules/postTemplate'
 
 import Party from './components/party'
 
-const Signers = ({ data }) => {
+const Signers = ({ data, setInputsFilled, inputsFilled }) => {
 	const dispatch = useDispatch()
+
+	// Once signers is rendered, it removes the red color on its tab
+	useEffect(() => {
+		setInputsFilled({ ...inputsFilled, signers: true })
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const handleAddParty = () => {
 		const newParty = {
@@ -78,4 +84,6 @@ export default Signers
 
 Signers.propTypes = {
 	data: object,
+	inputsFilled: object,
+	setInputsFilled: func,
 }
