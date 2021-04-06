@@ -35,40 +35,7 @@ const initialState = {
 		text: '',
 		isFile: false,
 		signers: {
-			parties: [
-				{
-					partyTitle: '',
-					partySigners: [
-						{
-							title: '',
-							party: '',
-							anchor: [
-								{
-									anchor_string: '',
-									anchor_x_offset: 0.0,
-									anchor_y_offset: 0.0,
-								},
-							],
-							fields: [
-								{
-									type: 'text',
-									label: '',
-									value: 'Nome',
-									variable: '',
-								},
-								{
-									type: 'email',
-									label: '',
-									value: 'Email',
-									variable: '',
-								},
-							],
-							status: '',
-							signing_date: '',
-						},
-					],
-				},
-			],
+			parties: [],
 		},
 	},
 	error: null,

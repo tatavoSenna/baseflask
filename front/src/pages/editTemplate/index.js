@@ -96,26 +96,7 @@ const EditTemplate = () => {
 		dispatch(postTemplateAppend({ name, value }))
 	}
 
-	// Each tab has a useEffect dedicated to check if it is empty, thus determining their color
-
-	// Signers tab
-	useEffect(() => {
-		setInputsFilled({
-			...inputsFilled,
-			signers: (() => {
-				// Return true if Signers tab has at least one signer, including an empty one
-				if (data.signers.parties.length > 0) {
-					for (const index in data.signers.parties) {
-						if (data.signers.parties[index].partySigners.length > 0) {
-							return true
-						}
-					}
-				}
-				return false
-			})(),
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.signers])
+	// Each tab (except for signers, which is optional) has a useEffect dedicated to check if it is empty, thus determining their color
 
 	// Form tab
 	useEffect(() => {
@@ -266,7 +247,13 @@ const EditTemplate = () => {
 								setChecked={setChecked}
 							/>
 						)}
-						{current === 'signers' && <Signers data={data.signers} />}
+						{current === 'signers' && (
+							<Signers
+								data={data.signers}
+								inputsFilled={inputsFilled}
+								setInputsFilled={setInputsFilled}
+							/>
+						)}
 					</Form>
 				)}
 			</Layout>

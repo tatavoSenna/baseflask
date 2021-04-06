@@ -201,9 +201,11 @@ const Tabs = ({
 				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="2">
 					Versões
 				</Menu.Item>
-				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
-					Assinantes
-				</Menu.Item>
+				{signers.length > 0 && (
+					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
+						Assinantes
+					</Menu.Item>
+				)}
 			</Menu>
 			<div
 				style={{
