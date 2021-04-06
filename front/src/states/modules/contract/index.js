@@ -39,6 +39,7 @@ const { actions, reducer } = createSlice({
 		listContractFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		createLink: (state) =>
 			extend(state, {
@@ -75,6 +76,7 @@ const { actions, reducer } = createSlice({
 		deleteContractFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
+				loading: false,
 			}),
 		viewContract: (state) => state,
 		setShowModal: (state, { payload }) =>

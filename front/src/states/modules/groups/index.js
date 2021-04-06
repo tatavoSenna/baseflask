@@ -47,7 +47,6 @@ const { actions, reducer } = createSlice({
 export const {
 	getGroupList,
 	getGroupListSuccess,
-	getGroupListFailure,
 	createGroup,
 	deleteGroup,
 	setShowGroupModal,
