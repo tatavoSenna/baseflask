@@ -4,10 +4,11 @@ import { Form, Slider } from 'antd'
 
 const SliderField = ({ pageFieldsData, className, onChange }) => {
 	const { value, variable, type, options, id } = pageFieldsData
+	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
-			key={`${variable}_${id}`}
-			name={variable}
+			key={`${isObj ? variable.name : variable}_${id}`}
+			name={isObj ? variable.name : variable}
 			label={value}
 			className={className}
 			type={type}

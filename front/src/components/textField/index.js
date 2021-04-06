@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, shape, object, func, number } from 'prop-types'
+import { string, shape, object, func, boolean } from 'prop-types'
 import { Form, Input } from 'antd'
 
 const TextField = ({
@@ -10,10 +10,11 @@ const TextField = ({
 	first,
 }) => {
 	const { value, variable, type, id } = pageFieldsData
+	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
-			key={`${variable}_${id}`}
-			name={variable}
+			key={`${isObj ? variable.name : variable}_${id}`}
+			name={isObj ? variable.name : variable}
 			label={value}
 			type={type}
 			className={className}
@@ -40,7 +41,7 @@ TextField.propTypes = {
 	inputValue: string,
 	className: object,
 	onChange: func,
-	first: number,
+	first: boolean,
 }
 
 TextField.defaultProps = {

@@ -155,11 +155,21 @@ def map_variables_to_form(variables, form):
             "fields": []
         })
         for question in group['fields']:
-            if variables.get(question['variable']):
-                filled_form[-1]["fields"].append({
-                    # MUDAR PARA question['label'] após refatoração do form
-                    "label": question['value'],
-                    "variable": question['variable'],
-                    "value": variables[question['variable']]
-                })
+            # This 'if' is here so templates whose variables are not objects still work
+            if type(question['variable']) == str:
+                if variables.get(question['variable']):
+                    filled_form[-1]["fields"].append({
+                        # MUDAR PARA question['label'] após refatoração do form
+                        "label": question['value'],
+                        "variable": question['variable'],
+                        "value": variables[question['variable']]
+                    })
+            else:
+                if variables.get(question['variable']['name']):
+                    filled_form[-1]["fields"].append({
+                        # MUDAR PARA question['label'] após refatoração do form
+                        "label": question['value'],
+                        "variable": question['variable']['name'],
+                        "value": variables[question['variable']['name']]
+                    })
     return filled_form

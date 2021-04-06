@@ -4,10 +4,11 @@ import { Form, InputNumber } from 'antd'
 
 const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 	const { value, variable, type, id } = pageFieldsData
+	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
-			key={`${variable}_${id}`}
-			name={variable}
+			key={`${isObj ? variable.name : variable}_${id}`}
+			name={isObj ? variable.name : variable}
 			label={value}
 			type={type}
 			className={className}

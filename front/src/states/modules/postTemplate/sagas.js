@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, select } from 'redux-saga/effects'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
 import { extend } from 'lodash'
 
 import {
@@ -24,12 +24,17 @@ export default function* rootSaga() {
 }
 
 function* getTemplateDetailSaga({ payload = {} }) {
-	const { id } = payload
+	const { id, editDOCX } = payload
 	try {
-		const [detail, text] = yield all([
-			call(api.get, `/templates/${id}`),
-			call(api.get, `/templates/${id}/text`),
-		])
+		const detail = yield call(api.get, `/templates/${id}`)
+
+		let text = {}
+		if (detail.data.text_type === '.txt') {
+			text = yield call(api.get, `/templates/${id}/text`)
+		} else {
+			editDOCX()
+		}
+
 		yield put(
 			getTemplateDetailSuccess(
 				extend(detail.data, {
@@ -65,6 +70,22 @@ function* postTemplateSaga({ payload = {} }) {
 		return signersArray
 	}
 
+	const arrangedVariables = (variables) => {
+		const variablesObj = {}
+		variables.forEach((page) =>
+			page.fields.forEach((field) => {
+				const variable = {}
+				for (const key in field) {
+					if (key !== 'name') {
+						variable[key] = field[key]
+					}
+				}
+				variablesObj[field.name] = variable
+			})
+		)
+		return variablesObj
+	}
+
 	const workflow = {
 		nodes: toObject(data.workflow.nodes),
 		current_node: '0',
@@ -80,6 +101,7 @@ function* postTemplateSaga({ payload = {} }) {
 				signers: arrangedSigners(data.signers),
 				text: data.text,
 				text_type: files.length > 0 ? '.docx' : '.txt',
+				variables: arrangedVariables(data.variables),
 			})
 
 			if (files.length > 0) {
@@ -112,9 +134,10 @@ function* postTemplateSaga({ payload = {} }) {
 				signers: arrangedSigners(data.signers),
 				text: data.text,
 				text_type: files.length > 0 ? '.docx' : '.txt',
+				variables: arrangedVariables(data.variables),
 			})
 
-			if (files.length > 0) {
+			if (files.length > 0 && files[0].uid !== 'edit') {
 				const formData = new FormData()
 				const docFile = files[0]
 				formData.append('file', docFile, docFile.name)

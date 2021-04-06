@@ -49,11 +49,11 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 		switch (type) {
 			case 'date':
 				newField.variable.type = 'date'
-				newField.variable.doc_display_type = '%d%m%Y'
+				newField.variable.doc_display_style = '%d%m%Y'
 				break
 			case 'checkbox':
 				newField.variable.type = 'list'
-				newField.variable.doc_display_type = 'commas | bullets'
+				newField.variable.doc_display_style = 'commas | bullets'
 				break
 			case 'slider':
 				newField.options = ['min', 'max']
@@ -63,10 +63,13 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				newField.variable.database_name = ''
 				break
 			case 'variable_file':
+				newField.variable.type = 'variable_file'
+				newField.variable.doc_display_style = 'plain'
+
 				break
 			default:
 				newField.variable.type = 'string'
-				newField.variable.doc_display_type = 'plain'
+				newField.variable.doc_display_style = 'plain'
 				break
 		}
 
@@ -102,7 +105,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 					style={{ width: '50%', margin: '0 0 0 8px' }}
 					onChange={(e) => updateFormInfo(e.target.value, 'title', pageIndex)}
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
-					<Input value={data.title} />
+					<Input autoFocus value={data.title} />
 				</Form.Item>
 				<Delete
 					title="Deseja excluir esse esse conjunto de campos?"

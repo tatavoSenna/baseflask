@@ -41,9 +41,10 @@ def create_template(current_user):
     company_id = current_user["company_id"]
     user_id = current_user["id"]
     text_type = content.get("text_type", None)
+    variables = content.get("variables", None)
 
     document_template_id = create_template_controller(
-        company_id, user_id, name, form, workflow, signers, template_text, text_type)
+        company_id, user_id, name, form, workflow, signers, template_text, text_type, variables)
 
     return jsonify(
         {
@@ -64,11 +65,13 @@ def edit_template(current_user, template_id):
     workflow = content.get("workflow", None)
     signers = content.get("signers", None)
     template_text = content.get("text", None)
+    text_type = content.get("text_type", None)
+    variables = content.get("variables", None)
     company_id = current_user["company_id"]
     user_id = current_user["id"]
 
     document_template_id = edit_template_controller(
-        company_id, user_id, template_id, form, workflow, signers, template_text)
+        company_id, user_id, template_id, form, workflow, signers, template_text, text_type, variables)
 
     return jsonify({"id": document_template_id})
 

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const CnaeField = ({ pageFieldsData, className, onChange }) => {
 	const { value, variable, type, id } = pageFieldsData
+	const isObj = typeof variable === 'object'
 	const dispatch = useDispatch()
 	const cnaeDescription = []
 	useEffect(() => {
@@ -20,8 +21,8 @@ const CnaeField = ({ pageFieldsData, className, onChange }) => {
 
 	return (
 		<Form.Item
-			key={`${variable}_${id}`}
-			name={variable}
+			key={`${isObj ? variable.name : variable}_${id}`}
+			name={isObj ? variable.name : variable}
 			label={value}
 			hasFeedback
 			className={className}
