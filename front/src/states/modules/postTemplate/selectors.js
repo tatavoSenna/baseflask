@@ -20,6 +20,17 @@ export const selectEdit = (data, payload) => {
 		partiesList.push(party)
 	}
 
+	let pagesList = []
+	payload.form.forEach((page) => {
+		const pageObj = {
+			fields: [],
+		}
+		page.fields.forEach((field) => {
+			pageObj.fields.push(field.variable)
+		})
+		pagesList.push(pageObj)
+	})
+
 	return extend(data, {
 		title: payload.name,
 		form: payload.form,
@@ -30,6 +41,7 @@ export const selectEdit = (data, payload) => {
 		signers: extend(data.signers, {
 			parties: partiesList,
 		}),
+		variables: pagesList,
 	})
 }
 
@@ -277,4 +289,53 @@ export const selectParties = (signers, payload) => {
 			}),
 		})
 	}
+}
+
+export const addVariable = (variables, payload) => {
+	return variables.map((page, index) => {
+		if (index === payload.pageIndex) {
+			return extend(page, {
+				fields: [...page.fields, payload.newField.variable],
+			})
+		}
+		return page
+	})
+}
+
+export const removeVariable = (variables, payload) => {
+	return variables.map((page, index) => {
+		if (index === payload.pageIndex) {
+			return extend(page, {
+				fields: page.fields.filter(
+					(field, index) => index !== payload.fieldIndex
+				),
+			})
+		}
+		return page
+	})
+}
+
+export const selectVariable = (variables, payload) => {
+	if (payload.name === 'field') {
+		return variables.map((page, index) => {
+			if (index === payload.pageIndex) {
+				page.fields.map((field, index) => {
+					if (index === payload.fieldIndex) {
+						try {
+							const fieldJSON = JSON.parse(payload.value)
+							const variable = fieldJSON.variable
+							for (const key in variable) {
+								extend(field, {
+									[key]: variable[key],
+								})
+							}
+						} catch {}
+					}
+					return field
+				})
+			}
+			return page
+		})
+	}
+	return variables
 }

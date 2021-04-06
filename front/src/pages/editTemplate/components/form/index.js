@@ -19,14 +19,7 @@ const TemplateForm = ({ data }) => {
 		if (e.key === '+') {
 			const newPage = {
 				title: '',
-				fields: [
-					{
-						type: '',
-						label: '',
-						value: '',
-						variable: '',
-					},
-				],
+				fields: [],
 			}
 			dispatch(postTemplatePageAdd({ newPage }))
 			setCurrent(`${data.length}`)

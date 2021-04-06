@@ -10,7 +10,6 @@ import {
 } from '@ant-design/icons'
 import {
 	getTemplateDetail,
-	postTemplateAppend,
 	postTemplateRequest,
 } from '~/states/modules/postTemplate'
 
@@ -39,6 +38,11 @@ const EditTemplate = () => {
 	const [files, postFiles] = useState([])
 	const [checked, setChecked] = useState(false)
 
+	const editDOCX = () => {
+		setChecked(true)
+		postFiles([{ uid: 'edit', name: 'Arquivo Atual' }])
+	}
+
 	const handleNav = (e) => {
 		setCurrent(e.key)
 	}
@@ -46,6 +50,11 @@ const EditTemplate = () => {
 	// Checks if all fields are filled (all but form tab for now)
 	const validate = () => {
 		const redirect = (tab) => setCurrent(tab)
+		data.form.forEach((page) => {
+			if (page.title === '') {
+				redirect('form')
+			}
+		})
 		data.workflow.nodes.forEach((node) => {
 			if (
 				node.title === '' ||
@@ -56,7 +65,7 @@ const EditTemplate = () => {
 				return false
 			}
 		})
-		if (data.text === '' && !data.isFile) {
+		if (data.text === '' && !files.length) {
 			redirect('text')
 			return false
 		}
@@ -89,14 +98,6 @@ const EditTemplate = () => {
 		}
 	}
 
-	const updateForm = (e, name) => {
-		let value = e
-		if (e.target) {
-			value = e.target.value
-		}
-		dispatch(postTemplateAppend({ name, value }))
-	}
-
 	// Each tab has a useEffect dedicated to check if it is empty, thus determining their color
 
 	// Signers tab
@@ -123,10 +124,10 @@ const EditTemplate = () => {
 		setInputsFilled({
 			...inputsFilled,
 			form: (() => {
-				if (data.form === '') {
-					return false
+				if (data.form.length > 0) {
+					return true
 				}
-				return true
+				return false
 			})(),
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,24 +152,26 @@ const EditTemplate = () => {
 		setInputsFilled({
 			...inputsFilled,
 			text: (() => {
-				if (data.text === '' && !data.isFile) {
+				if (data.text === '' && !files.length) {
 					return false
 				}
 				return true
 			})(),
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.text, data.isFile])
+	}, [data.text, files])
 
 	useEffect(() => {
 		if (Number.isInteger(id)) {
-			dispatch(getTemplateDetail({ id }))
+			dispatch(getTemplateDetail({ id, editDOCX }))
 		}
 	}, [dispatch, id])
 
 	if (edit) {
-		form.setFieldsValue({
-			form: data.form,
+		data.form.forEach((page, index) => {
+			form.setFieldsValue({
+				[`title_${index}`]: page.title,
+			})
 		})
 
 		data.workflow.nodes.forEach((node, index) =>
@@ -253,18 +256,17 @@ const EditTemplate = () => {
 						layout="horizontal"
 						hideRequiredMark
 						onFinish={onSubmit}>
-						{current === 'form' && (
-							<TemplateForm data={data.form} updateForm={updateForm} />
-						)}
+						{current === 'form' && <TemplateForm data={data.form} />}
 						{current === 'workflow' && <Workflow data={data.workflow} />}
 						{current === 'text' && (
 							<Text
 								data={data.text}
 								files={files}
 								updateFile={postFiles}
-								updateForm={updateForm}
 								checked={checked}
 								setChecked={setChecked}
+								setInputsFilled={setInputsFilled}
+								inputsFilled={inputsFilled}
 							/>
 						)}
 						{current === 'signers' && <Signers data={data.signers} />}

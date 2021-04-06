@@ -10,6 +10,9 @@ import {
 	removeStep,
 	selectParties,
 	selectEdit,
+	addVariable,
+	removeVariable,
+	selectVariable,
 } from './selectors'
 
 const initialState = {
@@ -70,6 +73,7 @@ const initialState = {
 				},
 			],
 		},
+		variables: [{ fields: [] }],
 	},
 	error: null,
 	loading: false,
@@ -104,12 +108,14 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: extend(state.data, {
 					form: selectForm(state.data.form, payload),
+					variables: selectVariable(state.data.variables, payload),
 				}),
 			}),
 		postTemplatePageAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: [...state.data.form, payload.newPage],
+					variables: [...state.data.variables, { fields: [] }],
 				}),
 			}),
 		postTemplatePageRemove: (state, { payload }) =>
@@ -118,18 +124,23 @@ const { actions, reducer } = createSlice({
 					form: state.data.form.filter(
 						(page, index) => index !== payload.pageIndex
 					),
+					variables: state.data.variables.filter(
+						(page, index) => index !== payload.pageIndex
+					),
 				}),
 			}),
 		postTemplateFieldAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: addField(state.data.form, payload),
+					variables: addVariable(state.data.variables, payload),
 				}),
 			}),
 		postTemplateFieldRemove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: removeField(state.data.form, payload),
+					variables: removeVariable(state.data.variables, payload),
 				}),
 			}),
 		postTemplateStepInfo: (state, { payload }) =>
@@ -204,10 +215,10 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
-		postTemplateAppend: (state, { payload }) =>
+		postTemplateText: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
-					[payload.name]: payload.value,
+					text: payload.value,
 				}),
 			}),
 		postTemplateRequest: (state) =>
@@ -246,7 +257,7 @@ export const {
 	postTemplatePartyAdd,
 	postTemplatePartyRemove,
 	postTemplateSignersAppend,
-	postTemplateAppend,
+	postTemplateText,
 	postTemplateRequest,
 	postTemplateSuccess,
 	postTemplateFailure,

@@ -1,12 +1,32 @@
 import React from 'react'
-import { string, func, array, bool } from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { string, object, func, array, bool } from 'prop-types'
 import Editor from './editor'
 import Uploader from '~/components/uploadFile'
 import { Switch, Typography } from 'antd'
+import { postTemplateText } from '~/states/modules/postTemplate'
 
 const { Title } = Typography
 
-const Text = ({ data, files, updateFile, updateForm, checked, setChecked }) => {
+const Text = ({
+	data,
+	files,
+	updateFile,
+	checked,
+	setChecked,
+	setInputsFilled,
+	inputsFilled,
+}) => {
+	const dispatch = useDispatch()
+
+	const updateText = (e) => {
+		let value = e
+		if (e.target) {
+			value = e.target.value
+		}
+		dispatch(postTemplateText({ value }))
+	}
+
 	return (
 		<div
 			style={{
@@ -37,7 +57,6 @@ const Text = ({ data, files, updateFile, updateForm, checked, setChecked }) => {
 					<Uploader
 						setFileList={(files) => {
 							updateFile(files)
-							updateForm(files.length > 0, 'isFile')
 						}}
 						fileList={files}
 						allowedTypes={[
@@ -46,7 +65,7 @@ const Text = ({ data, files, updateFile, updateForm, checked, setChecked }) => {
 					/>
 				</div>
 			) : (
-				<Editor text={data} onUpdateText={updateForm} />
+				<Editor text={data} onUpdateText={updateText} />
 			)}
 		</div>
 	)
@@ -61,4 +80,6 @@ Text.propTypes = {
 	updateFile: func,
 	checked: bool,
 	setChecked: func,
+	setInputsFilled: func,
+	inputsFilled: object,
 }

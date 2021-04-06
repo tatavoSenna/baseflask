@@ -8,7 +8,7 @@ import io
 from .remote import RemoteTemplate
 
 
-def create_template_controller(company_id, user_id, name, form, workflow, signers, text, text_type):
+def create_template_controller(company_id, user_id, name, form, workflow, signers, text, text_type, variables):
 
     document_template = DocumentTemplate(
         company_id=company_id,
@@ -17,7 +17,8 @@ def create_template_controller(company_id, user_id, name, form, workflow, signer
         form=form,
         workflow=workflow,
         signers=signers,
-        text_type=text_type
+        text_type=text_type,
+        variables=variables
     )
 
     db.session.add(document_template)
@@ -30,7 +31,7 @@ def create_template_controller(company_id, user_id, name, form, workflow, signer
     return document_template.id
 
 
-def edit_template_controller(company_id, user_id, template_id, form, workflow, signers, text):
+def edit_template_controller(company_id, user_id, template_id, form, workflow, signers, text, text_type, variables):
     template = DocumentTemplate.query.filter_by(id=template_id).first()
 
     if template.company_id != company_id:
@@ -40,11 +41,13 @@ def edit_template_controller(company_id, user_id, template_id, form, workflow, s
     template.workflow = workflow
     template.text = text
     template.signers = signers
+    template.text_type = text_type
+    template.variables = variables
     db.session.commit()
 
-    remote_template = RemoteTemplate()
-    remote_template.upload_template(
-        text, template.id, template.company_id)
+    if text_type == ".txt":
+        remote_template = RemoteTemplate()
+        remote_template.upload_template(text, template.id, template.company_id)
 
     return template.id
 

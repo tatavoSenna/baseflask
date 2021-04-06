@@ -25,7 +25,11 @@ const TemplateModal = ({ handleCreate, handleCancel, showModal }) => {
 			<Form form={form} id="newTemplateForm">
 				<Form.Item label="Novo Template"></Form.Item>
 				<Form.Item label="Título" name="title">
-					<Input value={title} onChange={(e) => setTitle(e.target.value)} />
+					<Input
+						autoFocus
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
 				</Form.Item>
 			</Form>
 		</Modal>
