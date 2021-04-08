@@ -15,6 +15,7 @@ import CheckboxField from '~/components/checkboxField'
 import SliderField from '~/components/sliderField'
 import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
+import TimeField from '~/components/timeField'
 
 import styles from './index.module.scss'
 
@@ -163,6 +164,18 @@ function InputFactory({ data: pageFieldsData }) {
 			case 'date':
 				children.push(
 					<DateField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						onChange={
+							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'time':
+				children.push(
+					<TimeField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={hiddenInput[0][i] ? styles.hidden : undefined}

@@ -76,3 +76,10 @@ export const validateCNPJ = (cnpj) => {
 	if (result !== parseInt(digits.charAt(1))) return false
 	return true
 }
+
+export const validateTime = (time) => {
+	if (time.includes('_')) return false
+	if (time.substring(0, 2) > '24') return false
+	if (time.substring(3, 5) > '59') return false
+	return true
+}
