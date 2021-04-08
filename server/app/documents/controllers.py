@@ -1,4 +1,5 @@
 import json
+import base64
 import io
 import requests
 from datetime import datetime
@@ -12,9 +13,8 @@ from .remote import RemoteDocument
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import copy
-from flask import current_app
+from flask import current_app, jsonify
 from unittest.mock import MagicMock
-import convertapi
 
 
 def get_document_template_list_controller(company_id):
@@ -285,19 +285,11 @@ def fill_signing_date_controller(document, text):
     return filled_text
 
 
-def convert_pdf_controller(document, text):
+def convert_pdf_controller(text):
     remote_document = RemoteDocument()
     template = remote_document.get_template()
     formatted_text = remote_document.fill_text_with_variables(
-        template, {'text_contract': text}).encode('utf-8')
-    convertapi.api_secret = current_app.config["CONVERTAPI_SECRET_KEY"]
-    upload_io = convertapi.UploadIO(formatted_text, 'test.html')
-    result = convertapi.convert(
-        'pdf',
-        {'File': upload_io,
-         'PdfResolution': '200', },
-        from_format='html'
-    )
-    result_JSON = json.loads(json.dumps(result.__dict__))
-    response = requests.get(result_JSON["response"]["Files"][0]["Url"])
-    return response.content
+        template, {'text_contract': text})
+    document_pdf = requests.post(
+        current_app.config["HTMLTOPDF_API_URL"], data=formatted_text.encode('utf-8')).content
+    return base64.b64decode(document_pdf)

@@ -167,7 +167,7 @@ class RemoteDocument:
             ExpiresIn=180,
         )
         return document_url
-    
+
     def download_pdf_document(self, document):
         document_url = self.s3_client.generate_presigned_url(
             "get_object",
@@ -185,8 +185,8 @@ class RemoteDocument:
         upload_io = convertapi.UploadIO(filled_docx_io, 'filled_docx_io.docx')
 
         result = convertapi.convert(
-            'pdf', 
-            {'File': upload_io}, 
+            'pdf',
+            {'File': upload_io},
             from_format='docx')
 
         response = requests.get(result.response['Files'][0]['Url'])
@@ -198,6 +198,6 @@ class RemoteDocument:
         self.s3_client.upload_fileobj(
             pdf_io,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-            remote_path, 
+            remote_path,
             ExtraArgs={'ContentType': "application/pdf"}
         )

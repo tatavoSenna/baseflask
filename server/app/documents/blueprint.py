@@ -378,7 +378,7 @@ def request_signatures(current_user):
             "Could not fill Current Date variable. Please add variable to document before signing")
     if document_type == ".txt":
         try:
-            pdf_document = convert_pdf_controller(current_document, textfile)
+            pdf_document = convert_pdf_controller(textfile)
         except Exception as e:
             logging.exception("Could not convert to pdf and save it on s3")
             abort(404, "Could not convert document to pdf")
