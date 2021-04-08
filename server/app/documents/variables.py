@@ -14,6 +14,13 @@ def specify_variables(variables, document_template_id):
     for variable in variables:
         if not variable in variables_specification:
             continue
+        if variables_specification[variable]["type"] == "string":
+            if variables_specification[variable]["doc_display_style"] == "sentence_case":
+                variables[variable] = variables[variable].capitalize()
+            if variables_specification[variable]["doc_display_style"] == "uppercase":
+                variables[variable] = variables[variable].upper()
+            if variables_specification[variable]["doc_display_style"] == "lowercase":
+                variables[variable] = variables[variable].lower()
         if variables_specification[variable]["type"] == "date":
             date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
             variables[variable] = date.strftime(variables_specification[variable]["doc_display_style"])

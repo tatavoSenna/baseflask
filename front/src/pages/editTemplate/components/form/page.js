@@ -63,11 +63,11 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'variable_file':
 				newField.variable.type = 'variable_file'
 				newField.variable.doc_display_style = 'plain'
-
 				break
 			default:
 				newField.variable.type = 'string'
-				newField.variable.doc_display_style = 'plain'
+				newField.variable.doc_display_style =
+					'plain | sentence_case | uppercase | lowercase'
 				break
 		}
 
