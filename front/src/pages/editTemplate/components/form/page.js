@@ -4,12 +4,10 @@ import { object, number, func } from 'prop-types'
 import { Card, Form, Input, Button, Dropdown, Menu, Empty } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import Delete from '~/components/deleteConfirm'
-
 import {
 	postTemplateFieldAdd,
 	postTemplateFormInfo,
 } from '~/states/modules/postTemplate'
-
 import Field from './field'
 
 const Page = ({ pageIndex, data, handleRemovePage }) => {
@@ -91,13 +89,19 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 
 	return (
 		<Card
-			style={{ marginBottom: '1rem', marginTop: '2rem', maxWidth: '40rem' }}>
+			style={{
+				marginBottom: '1rem',
+				marginTop: '2rem',
+				maxWidth: '40rem',
+				boxShadow: '0 1px 4px 0 rgba(192, 208, 230, 0.8)',
+				borderRadius: '5px',
+			}}>
 			<div
 				style={{
 					display: 'flex',
 					justifyContent: 'space-between',
-					marginBottom: '1.5rem',
 					alignItems: 'center',
+					marginBottom: '24px',
 				}}>
 				<Form.Item
 					name={`title_${pageIndex}`}

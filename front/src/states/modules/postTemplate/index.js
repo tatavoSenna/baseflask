@@ -13,6 +13,7 @@ import {
 	addVariable,
 	removeVariable,
 	selectVariable,
+	move,
 } from './selectors'
 
 const initialState = {
@@ -182,6 +183,10 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
+		postTemplateMove: (state, { payload }) =>
+			extend(state, {
+				data: move(state.data, payload),
+			}),
 		postTemplateText: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
@@ -228,6 +233,7 @@ export const {
 	postTemplateRequest,
 	postTemplateSuccess,
 	postTemplateFailure,
+	postTemplateMove,
 } = actions
 
 export { default as postTemplateSaga } from './sagas'

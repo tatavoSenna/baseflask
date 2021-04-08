@@ -339,3 +339,62 @@ export const selectVariable = (variables, payload) => {
 	}
 	return variables
 }
+
+export const move = (data, payload) => {
+	switch (payload.name) {
+		case 'form':
+			return extend(data, {
+				form: data.form.map((page, index) => {
+					if (index === payload.listIndex) {
+						let tmpList = page.fields
+						const dragged = tmpList[payload.from]
+						tmpList.splice(payload.from, 1)
+						tmpList.splice(payload.to, 0, dragged)
+
+						return extend(page, {
+							fields: tmpList,
+						})
+					}
+					return page
+				}),
+			})
+
+		case 'workflow':
+			let tmpList = data.workflow.nodes
+			const dragged = tmpList[payload.from]
+			tmpList.splice(payload.from, 1)
+			tmpList.splice(payload.to, 0, dragged)
+
+			tmpList.forEach((node, index) => {
+				node.next_node = index === tmpList.length - 1 ? null : `${index + 1}`
+			})
+
+			return extend(data, {
+				workflow: extend(data.workflow, {
+					nodes: tmpList,
+				}),
+			})
+
+		case 'signers':
+			return extend(data, {
+				signers: {
+					parties: data.signers.parties.map((party, index) => {
+						if (index === payload.listIndex) {
+							let tmpList = party.partySigners
+							const dragged = tmpList[payload.from]
+							tmpList.splice(payload.from, 1)
+							tmpList.splice(payload.to, 0, dragged)
+
+							return extend(party, {
+								partySigners: tmpList,
+							})
+						}
+						return party
+					}),
+				},
+			})
+
+		default:
+			return data
+	}
+}

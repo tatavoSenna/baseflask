@@ -1,9 +1,13 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { object, func, number } from 'prop-types'
-import { Card, Form } from 'antd'
-import { postTemplateFieldRemove } from '~/states/modules/postTemplate'
+import { Form } from 'antd'
+import {
+	postTemplateFieldRemove,
+	postTemplateMove,
+} from '~/states/modules/postTemplate'
 import Delete from '~/components/deleteConfirm'
+import DragDropCard from '~/components/dragDropCard'
 import JSONInput from 'react-json-editor-ajrm'
 import locale from 'react-json-editor-ajrm/locale/pt'
 
@@ -15,19 +19,15 @@ const Field = ({ data, pageIndex, fieldIndex, updateFormInfo }) => {
 	}
 
 	return (
-		<Card
-			actions={[
-				<Delete
-					handle={() => handleRemoveField()}
-					title="Deseja excluir esse campo?"
-				/>,
-			]}
-			style={{
-				marginBottom: '3%',
-			}}>
+		<DragDropCard
+			move={postTemplateMove}
+			name="form"
+			index={fieldIndex}
+			listIndex={pageIndex}
+			style={{ padding: '20px 0 0 0' }}>
 			<Form.Item
 				name={`field_${pageIndex}_${fieldIndex}`}
-				style={{ marginBottom: '0' }}>
+				style={{ marginBottom: '20px' }}>
 				<JSONInput
 					id={`json_${pageIndex}_${fieldIndex}`}
 					onBlur={(e) => updateFormInfo(e.json, 'field', pageIndex, fieldIndex)}
@@ -38,10 +38,21 @@ const Field = ({ data, pageIndex, fieldIndex, updateFormInfo }) => {
 					theme="light_mitsuketa_tribute"
 					height="100%"
 					width="100%"
-					style={{ fontSize: '40px' }}
 				/>
 			</Form.Item>
-		</Card>
+			<div
+				style={{
+					display: 'flex',
+					background: 'rgba(230, 236, 245, 0.5)',
+					height: '40px',
+					justifyContent: 'center',
+				}}>
+				<Delete
+					handle={() => handleRemoveField()}
+					title="Deseja excluir esse campo?"
+				/>
+			</div>
+		</DragDropCard>
 	)
 }
 
