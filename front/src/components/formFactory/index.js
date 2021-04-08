@@ -10,18 +10,17 @@ import styles from './index.module.scss'
 
 const layout = {
 	labelCol: {
-		lg: { span: 6 },
-		md: { span: 12 },
-		sm: { span: 12 },
+		xs: { span: 24 },
+		sm: { span: 24 },
+		md: { span: 8 },
+		lg: { span: 8 },
 	},
 	wrapperCol: {
-		lg: { offset: 1, span: 11 },
-		md: { span: 24 },
+		xs: { span: 24 },
 		sm: { span: 24 },
+		md: { span: 12 },
+		lg: { span: 12 },
 	},
-}
-const tailLayout = {
-	wrapperCol: { span: 24 },
 }
 
 const FormFactory = ({
@@ -71,63 +70,63 @@ const FormFactory = ({
 			{pageFieldsData && pageFieldsData.fields.length > 0 && (
 				<PageHeader className={styles.title}>{pageFieldsData.title}</PageHeader>
 			)}
-			<div
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginTop: 70,
-				}}>
-				<Form
-					{...layout}
-					form={form}
-					layout="horizontal"
-					hideRequiredMark
-					onFinish={onSubmit}>
+			<Form
+				{...layout}
+				style={{ width: '100%' }}
+				form={form}
+				layout="horizontal"
+				hideRequiredMark
+				onFinish={onSubmit}>
+				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+					<InputFactory data={pageFieldsData.fields} />
+				)}
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'flex-end',
+						alignSelf: 'center',
+						paddingLeft: '20%',
+						paddingRight: '20%',
+					}}>
 					{pageFieldsData && pageFieldsData.fields.length > 0 && (
-						<InputFactory data={pageFieldsData.fields} />
-					)}
-					<div
-						style={{
-							minWidth: 800,
-						}}>
-						{pageFieldsData && pageFieldsData.fields.length > 0 && (
-							<div
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'flex-end',
-									width: 600,
-								}}>
-								<Form.Item {...tailLayout}>
-									{true && currentPage > 0 && (
-										<Button
-											type="default"
-											htmlType="button"
-											className={styles.button}
-											onClick={handleBack}>
-											Anterior
-										</Button>
-									)}
-								</Form.Item>
-								{lastPage > 1 && (
-									<Typography className={styles.text}>
-										{currentPage + 1} de {lastPage}
-									</Typography>
-								)}
-								<Form.Item {...tailLayout}>
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+								width: 350,
+								minWidth: '50%',
+								maxWidth: '100%',
+							}}>
+							<Form.Item>
+								{true && currentPage > 0 && (
 									<Button
-										type="primary"
+										type="default"
+										htmlType="button"
 										className={styles.button}
-										htmlType="submit">
-										{isLastPage ? 'Enviar' : 'Próximo'}
+										onClick={handleBack}>
+										Anterior
 									</Button>
-								</Form.Item>
-							</div>
-						)}
-					</div>
-				</Form>
-			</div>
+								)}
+							</Form.Item>
+							{lastPage > 1 && (
+								<Typography className={styles.text}>
+									{currentPage + 1} de {lastPage}
+								</Typography>
+							)}
+							<Form.Item>
+								<Button
+									type="primary"
+									className={styles.button}
+									htmlType="submit">
+									{isLastPage ? 'Enviar' : 'Próximo'}
+								</Button>
+							</Form.Item>
+						</div>
+					)}
+				</div>
+			</Form>
 		</div>
 	)
 }
