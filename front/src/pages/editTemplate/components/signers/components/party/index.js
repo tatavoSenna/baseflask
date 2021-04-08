@@ -2,14 +2,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { array, number, string } from 'prop-types'
 import { Card, Form, Input, Button, Empty } from 'antd'
-import { UserAddOutlined, DeleteOutlined } from '@ant-design/icons'
-
+import { UserAddOutlined } from '@ant-design/icons'
 import {
 	postTemplateSignersInfo,
 	postTemplateSignerAdd,
 	postTemplatePartyRemove,
 } from '~/states/modules/postTemplate'
-
+import Delete from '~/components/deleteConfirm'
 import Signer from '../signer'
 
 const Party = ({ signers, partyIndex, title }) => {
@@ -56,17 +55,31 @@ const Party = ({ signers, partyIndex, title }) => {
 	}
 
 	return (
-		<Card style={{ marginBottom: '1rem' }}>
-			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+		<Card
+			style={{
+				marginBottom: '1rem',
+				boxShadow: '0 1px 4px 0 rgba(192, 208, 230, 0.8)',
+				borderRadius: '5px',
+			}}>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+					marginBottom: '24px',
+				}}>
 				<Form.Item
 					name={`party_${partyIndex}`}
 					label="Parte"
-					style={{ width: '50%', marginLeft: '8px' }}
+					style={{ width: '50%', margin: '0 0 0 8px' }}
 					onChange={(e) => updateSignerInfo(e, partyIndex, 0, 'partyTitle')}
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 					<Input value={title} />
 				</Form.Item>
-				<Button icon={<DeleteOutlined />} onClick={() => handleRemoveParty()} />
+				<Delete
+					handle={() => handleRemoveParty()}
+					title="Deseja excluir essa parte?"
+				/>
 			</div>
 			{!signers.length ? (
 				<Empty description="Sem Assinantes" style={{ marginBottom: '1rem' }} />

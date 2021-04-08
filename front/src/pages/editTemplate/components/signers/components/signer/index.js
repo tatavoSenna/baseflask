@@ -1,12 +1,14 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { object, func, number } from 'prop-types'
-import { Card, Form, Input, InputNumber, Badge, Divider } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
+import { Form, Input, InputNumber, Badge, Divider } from 'antd'
 import {
 	postTemplateSignersInfo,
 	postTemplateSignerRemove,
+	postTemplateMove,
 } from '~/states/modules/postTemplate'
+import DragDropCard from '~/components/dragDropCard'
+import Delete from '~/components/deleteConfirm'
 
 const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 	const dispatch = useDispatch()
@@ -17,22 +19,16 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 		dispatch(postTemplateSignersInfo({ value, partyIndex, signerIndex, name }))
 	}
 
-	const handleRemoveSigner = (partyIndex, signerIndex) => {
+	const handleRemoveSigner = () => {
 		dispatch(postTemplateSignerRemove({ partyIndex, signerIndex }))
 	}
 
 	return (
-		<Card
-			actions={[
-				<Badge count={signerIndex + 1} style={{ background: '#1890ff' }} />,
-				<DeleteOutlined
-					onClick={() => handleRemoveSigner(partyIndex, signerIndex)}
-					key="delete"
-				/>,
-			]}
-			style={{
-				marginBottom: '3%',
-			}}>
+		<DragDropCard
+			move={postTemplateMove}
+			name="signers"
+			index={signerIndex}
+			listIndex={partyIndex}>
 			<Form.Item
 				name={`title_${partyIndex}_${signerIndex}`}
 				label="Título"
@@ -115,7 +111,30 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 					}
 				/>
 			</Form.Item>
-		</Card>
+			<div
+				style={{
+					display: 'flex',
+					background: 'rgba(230, 236, 245, 0.5)',
+					height: '40px',
+					justifyContent: 'space-evenly',
+					alignItems: 'center',
+					margin: '25px -25px -10px -25px',
+				}}>
+				<Badge count={signerIndex + 1} style={{ background: '#1890ff' }} />
+				<Divider
+					type="vertical"
+					style={{
+						height: '20px',
+						borderLeft: '1px solid #bdbdbd',
+						marginTop: '2px',
+					}}
+				/>
+				<Delete
+					handle={() => handleRemoveSigner()}
+					title="Deseja excluir esse assinante?"
+				/>
+			</div>
+		</DragDropCard>
 	)
 }
 

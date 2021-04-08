@@ -11,8 +11,7 @@ const Delete = ({ handle, title, disabled }) => (
 					style={{
 						fontSize: '20px',
 						color: disabled ? 'lightgray' : '#1890FF',
-						marginLeft: 'auto',
-						marginRight: 'auto',
+						margin: 'auto',
 					}}
 				/>
 			</Popconfirm>

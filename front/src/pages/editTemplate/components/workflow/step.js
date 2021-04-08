@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, array, number } from 'prop-types'
-import { Card, Form, Input, Select, Button } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
+import { Form, Input, Select } from 'antd'
 import {
 	postTemplateStepInfo,
 	postTemplateStepRemove,
+	postTemplateMove,
 } from '~/states/modules/postTemplate'
+import DragDropCard from '~/components/dragDropCard'
+import Delete from '~/components/deleteConfirm'
 
 const { Option } = Select
 var groupSelect = null
@@ -58,8 +60,14 @@ const Step = ({ node, groups, users, index }) => {
 	}
 
 	return (
-		<Card style={{ marginBottom: '1rem' }}>
-			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+		<DragDropCard index={index} move={postTemplateMove} name={'workflow'}>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					height: '32px',
+					marginBottom: '24px',
+				}}>
 				<Form.Item
 					name={`description_${index}`}
 					label="Descrição"
@@ -67,10 +75,9 @@ const Step = ({ node, groups, users, index }) => {
 					onChange={(e) => updateStepInfo(e, index, 'title')}>
 					<Input value={node.title} />
 				</Form.Item>
-				<Button
-					icon={<DeleteOutlined />}
-					onClick={() => handleRemoveStep()}
-					style={{}}
+				<Delete
+					handle={() => handleRemoveStep()}
+					title="Deseja excluir esse passo?"
 				/>
 			</div>
 			<Form.Item
@@ -107,7 +114,7 @@ const Step = ({ node, groups, users, index }) => {
 					{usersChildren}
 				</Select>
 			</Form.Item>
-		</Card>
+		</DragDropCard>
 	)
 }
 
