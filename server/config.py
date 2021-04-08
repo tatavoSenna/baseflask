@@ -13,6 +13,8 @@ class Config(object):
     CONVERTAPI_SECRET_KEY = os.environ.get("CONVERTAPI_SECRET_KEY")
 
     SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+    
+    HTMLTOPDF_API_URL = os.environ.get("HTMLTOPDF_API_URL")
 
     AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
