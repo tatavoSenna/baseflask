@@ -93,7 +93,8 @@ class RemoteDocument:
 
     def download_text_from_template(self, document):
         text_file_io = io.BytesIO()
-        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{document.document_template_id}.txt'
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}' \
+            + f'/{document.document_template_id}/{document.document_template_id}.txt'
 
         self.s3_client.download_fileobj(
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
