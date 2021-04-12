@@ -40,7 +40,7 @@ function* verifyTokenSaga({ payload = {} }) {
 
 function* createContractExternalSaga() {
 	loadingMessage({
-		content: 'Criando documento...',
+		content: 'Nossos robôs estão trabalhando para gerar seu documento',
 		updateKey: 'createContractExternal',
 	})
 

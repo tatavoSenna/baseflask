@@ -16,7 +16,10 @@ export default function* rootSaga() {
 function* answerSaga({ payload }) {
 	const { history } = payload
 
-	loadingMessage({ content: 'Criando documento...', updateKey: 'answer' })
+	loadingMessage({
+		content: 'Nossos robôs estão trabalhando para gerar seu documento',
+		updateKey: 'answer',
+	})
 
 	const { answer, modelId, title } = yield select((state) => {
 		const {
