@@ -21,7 +21,7 @@ def test_create_template_controller(upload_template_mock):
     )
 
     template_id = create_template_controller(
-        user.company_id, user.id, name, form, workflow, signers, template_text, ".txt")
+        user.company_id, user.id, name, form, workflow, signers, template_text, ".txt","")
 
     upload_template_mock.assert_called_once_with(
         template_text, template_id, company.id)

@@ -246,38 +246,46 @@ def test_email_create_document(send_email_on_document_creation_mock):
     email_list.append(user2.email)
 
     document_creation_email_controller(
-        email_title, company_id, user.email)
+        email_title, company_id)
 
     send_email_on_document_creation_mock.assert_called_once_with(
-        user.email, email_list, 'New Document created', email_title, 'd-50d8e7117d4640689d8bf638094f2037'
+        'leon@lawing.com.br', email_list, 'New Document created', email_title, 'd-50d8e7117d4640689d8bf638094f2037'
     )
 
 
 @ patch('app.documents.controllers.send_email_controller')
 def test_email_change_document_workflow_status(status_change_email_mock):
     document_id = 72
+    group1 = factories.GroupFactory(id=15)
+    group2 = factories.GroupFactory(id=18)
+    user1 = factories.UserFactory(id=32, email="teste1@gmail.com")
+    user2 = factories.UserFactory(id=34, email="teste2@gmail.com")
+    user3 = factories.UserFactory(id=36, email="teste3@gmail.com")
     workflow = {
         "nodes": {
             "544": {
                 "next_node": "5521",
                 "responsible_group": "1",
+                "responsible_users": "32",
                 "title": "Teste titulo",
             },
             "3485": {
                 "next_node": None,
                 "responsible_group": "1",
+                "responsible_users": "32",
                 "title": "Teste titulo 2",
             },
             "5521": {
                 "next_node": "3485",
                 "responsible_group": "15",
+                "responsible_users": [32],
                 "title": "Análise Diretoria",
             }
         },
         "current_node": "5521"
     }
 
-    sender_email = 'teste@gmail.com'
+    sender_email = 'leon@lawing.com.br'
     status = 'Análise Diretoria'
     title = 'Documento de teste'
 
@@ -287,22 +295,16 @@ def test_email_change_document_workflow_status(status_change_email_mock):
     document = factories.DocumentFactory(
         id=document_id, workflow=workflow, title=title)
 
-    group1 = factories.GroupFactory(id=15)
-    group2 = factories.GroupFactory(id=18)
-    user1 = factories.UserFactory(id=32, email="teste1@gmail.com")
-    user2 = factories.UserFactory(id=34, email="teste2@gmail.com")
-    user3 = factories.UserFactory(id=36, email="teste3@gmail.com")
-
     participant1 = factories.ParticipatesOnFactory(group=group1, user=user1)
     participant2 = factories.ParticipatesOnFactory(group=group2, user=user1)
     participant3 = factories.ParticipatesOnFactory(group=group2, user=user2)
     participant4 = factories.ParticipatesOnFactory(group=group2, user=user3)
 
     workflow_status_change_email_controller(
-        document_id, sender_email)
+        document_id)
 
     status_change_email_mock.assert_called_once_with(
-        sender_email, email_list, f'O Documento {title} mudou para o status {status}.', title, 'd-6b9591b72dc24aaeaac8a871e55660f4'
+        'leon@lawing.com.br', email_list, f'O Documento {title} mudou para o status {status}.', title, 'd-d869f27633274db3810abaa3b60f1833'
     )
 
 

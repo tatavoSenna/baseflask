@@ -7,7 +7,7 @@ from datetime import date
 from app import db
 from app.constants import months
 from app.models.documents import Document, DocumentTemplate
-from app.models.user import User, ParticipatesOn
+from app.models.user import User
 from .remote import RemoteDocument
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -207,35 +207,34 @@ def previous_status_controller(document_id):
     return document, 0
 
 
-def document_creation_email_controller(title, company_id, sender_email):
+def document_creation_email_controller(title, company_id):
     company_users = User.query.filter_by(company_id=company_id)
     email_list = []
     for user in company_users:
         email_list.append(user.email)
-    response = send_email_controller(sender_email, email_list,
+    response = send_email_controller('leon@lawing.com.br', email_list,
                                      "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
     return response
 
 
-def workflow_status_change_email_controller(document_id, sender_email):
+def workflow_status_change_email_controller(document_id):
     document = get_document_controller(document_id)
     workflow = document.workflow
     node = workflow["current_node"]
-    group = workflow["nodes"][node]["responsible_group"]
+    users_IDS = workflow["nodes"][node]["responsible_users"]
     status = workflow["nodes"][node]["title"]
     title = document.title
-    if group == "":
-        return
     email_list = []
-    # get all user ids for the responsible group
-    users = ParticipatesOn.query.filter_by(group_id=group)
+
     # for each user id, add respective user email to email list
-    for user in users:
-        email = User.query.filter_by(id=user.user_id).first().email
+    for user_id in users_IDS:
+        email = User.query.filter_by(id=user_id).first().email
         if email not in email_list:
             email_list.append(email)
-    response = send_email_controller(sender_email, email_list,
-                                     f'O Documento {title} mudou para o status {status}.', title, 'd-6b9591b72dc24aaeaac8a871e55660f4')
+    if len(email_list) == 0:
+        return
+    response = send_email_controller('leon@lawing.com.br', email_list,
+                                     f'O Documento {title} mudou para o status {status}.', title, 'd-d869f27633274db3810abaa3b60f1833')
     return response
 
 
