@@ -29,9 +29,14 @@ function InputFactory({ data: pageFieldsData }) {
 	const [hiddenInput, setHiddenInput] = useState([hiddenInputList])
 
 	function checkField(input, i) {
-		const targetIndex = pageFieldsData.findIndex(
-			(field) => field.variable === pageFieldsData[i].conditional
-		)
+		const targetIndex = pageFieldsData.findIndex((field) => {
+			// This 'if' is here so templates whose variables are not objects still work
+			if (typeof field === 'string') {
+				return field.variable === pageFieldsData[i].conditional
+			} else {
+				return field.variable.name === pageFieldsData[i].conditional
+			}
+		})
 		const { operator, value } = pageFieldsData[targetIndex].condition
 		let comparison
 
