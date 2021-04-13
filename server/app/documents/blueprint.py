@@ -228,7 +228,7 @@ def create(current_user):
         abort(400, "Could not create document")
     try:
         response = document_creation_email_controller(
-            title, current_user["company_id"], current_user["email"])
+            title, current_user["company_id"])
     except Exception as e:
         logging.exception(
             "Failed to send emails on document creation. One or more emails is bad formated or invalid")
@@ -284,7 +284,7 @@ def next_document_status(current_user, document_id):
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
-            document_id, current_user["email"])
+            document_id)
     except Exception:
         logging.exception(
             "Could not send email after changing workflow status")
@@ -308,7 +308,7 @@ def previous_document_status(current_user, document_id):
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
-            document_id, current_user["email"])
+            document_id)
     except Exception:
         logging.exception(
             "Could not send email after changing workflow status")
