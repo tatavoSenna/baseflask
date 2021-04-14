@@ -3,14 +3,14 @@ import { string, shape } from 'prop-types'
 import { Form, DatePicker } from 'antd'
 
 const DateField = ({ pageFieldsData }) => {
-	const { value, variable, type, id } = pageFieldsData
+	const { label, variable, type, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
 			type={type}
+			label={label}
 			hasFeedback
 			rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
 			colon={false}>
@@ -21,7 +21,7 @@ const DateField = ({ pageFieldsData }) => {
 
 DateField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 	}).isRequired,
 }

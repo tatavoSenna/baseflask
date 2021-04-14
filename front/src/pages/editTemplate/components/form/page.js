@@ -38,7 +38,6 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 		let newField = {
 			type: `${type}`,
 			label: '',
-			value: '',
 			variable: {
 				name: '',
 			},

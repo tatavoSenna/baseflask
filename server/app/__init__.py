@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from config import init_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
+import click
 
 
 db = SQLAlchemy()
@@ -67,6 +68,10 @@ def create_app():
 
     @app.route("/", methods=["GET"])
     def welcome():
-        return "Welcome do Doing.law API"
+        return "Welcome to Doing.law API"
+
+    from .scripts.blueprint import scripts_bp
+
+    app.register_blueprint(scripts_bp)
 
     return app

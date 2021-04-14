@@ -159,16 +159,14 @@ def map_variables_to_form(variables, form):
             if type(question['variable']) == str:
                 if variables.get(question['variable']):
                     filled_form[-1]["fields"].append({
-                        # MUDAR PARA question['label'] após refatoração do form
-                        "label": question['value'],
+                        "label": question['label'],
                         "variable": question['variable'],
                         "value": variables[question['variable']]
                     })
             else:
                 if variables.get(question['variable']['name']):
                     filled_form[-1]["fields"].append({
-                        # MUDAR PARA question['label'] após refatoração do form
-                        "label": question['value'],
+                        "label": question['label'],
                         "variable": question['variable']['name'],
                         "value": variables[question['variable']['name']]
                     })

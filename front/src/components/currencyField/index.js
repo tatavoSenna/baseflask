@@ -3,13 +3,13 @@ import { string, shape, object, func } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 
 const CurrencyField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, type, id } = pageFieldsData
+	const { label, variable, type, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
+			label={label}
 			type={type}
 			className={className}
 			onChange={onChange}
@@ -43,7 +43,7 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 
 CurrencyField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,

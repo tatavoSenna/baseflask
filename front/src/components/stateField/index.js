@@ -5,7 +5,7 @@ import { getStateField } from '~/states/modules/stateField'
 import { useDispatch, useSelector } from 'react-redux'
 
 const StateField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, type, id } = pageFieldsData
+	const { label, variable, type, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const dispatch = useDispatch()
 	const stateName = []
@@ -21,7 +21,7 @@ const StateField = ({ pageFieldsData, className, onChange }) => {
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
+			label={label}
 			hasFeedback
 			className={className}
 			rules={
@@ -44,7 +44,7 @@ const StateField = ({ pageFieldsData, className, onChange }) => {
 
 StateField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,
