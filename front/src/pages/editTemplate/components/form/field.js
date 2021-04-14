@@ -27,7 +27,7 @@ const Field = ({ data, pageIndex, fieldIndex, updateFormInfo }) => {
 			style={{ padding: '20px 0 0 0' }}>
 			<Form.Item
 				name={`field_${pageIndex}_${fieldIndex}`}
-				style={{ marginBottom: '20px' }}>
+				style={{ marginBottom: '20px', cursor: 'text' }}>
 				<JSONInput
 					id={`json_${pageIndex}_${fieldIndex}`}
 					onBlur={(e) => updateFormInfo(e.json, 'field', pageIndex, fieldIndex)}

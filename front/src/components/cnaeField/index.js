@@ -5,7 +5,7 @@ import { getCnaeField } from '~/states/modules/cnaeField'
 import { useDispatch, useSelector } from 'react-redux'
 
 const CnaeField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, type, id } = pageFieldsData
+	const { label, variable, type, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const dispatch = useDispatch()
 	const cnaeDescription = []
@@ -23,7 +23,7 @@ const CnaeField = ({ pageFieldsData, className, onChange }) => {
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
+			label={label}
 			hasFeedback
 			className={className}
 			rules={
@@ -46,7 +46,7 @@ const CnaeField = ({ pageFieldsData, className, onChange }) => {
 
 CnaeField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,

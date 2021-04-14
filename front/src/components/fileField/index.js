@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 const { Dragger } = Upload
 
 const FileField = ({ pageFieldsData }) => {
-	const { value, id, url } = pageFieldsData
+	const { label, id, url } = pageFieldsData
 	const dispatch = useDispatch()
 	const { loading, data } = useSelector(({ fileField }) => fileField)
 	const [empty, setEmpty] = useState(true)
@@ -24,7 +24,7 @@ const FileField = ({ pageFieldsData }) => {
 	}
 
 	return (
-		<Form.Item key={`fileField_${id}`} label={value} colon={false}>
+		<Form.Item key={`fileField_${id}`} label={label} colon={false}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Dragger
 					action={(file) => handleFileUpload(file)}
@@ -109,7 +109,7 @@ const FileField = ({ pageFieldsData }) => {
 
 FileField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 	}).isRequired,
 }

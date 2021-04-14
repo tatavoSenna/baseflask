@@ -4,13 +4,13 @@ import { Form, Select } from 'antd'
 import bank from './bankName'
 
 const BankField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, type, id } = pageFieldsData
+	const { label, variable, type, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
+			label={label}
 			hasFeedback
 			className={className}
 			rules={
@@ -33,7 +33,7 @@ const BankField = ({ pageFieldsData, className, onChange }) => {
 
 BankField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
 	}).isRequired,

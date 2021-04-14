@@ -3,13 +3,13 @@ import { string, shape, array, object, func } from 'prop-types'
 import { Form, Checkbox } from 'antd'
 
 const CheckboxField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, type, options, id } = pageFieldsData
+	const { label, variable, type, options, id } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={value}
+			label={label}
 			className={className}
 			hasFeedback
 			type={type}
@@ -27,7 +27,7 @@ const CheckboxField = ({ pageFieldsData, className, onChange }) => {
 
 CheckboxField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
+		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
