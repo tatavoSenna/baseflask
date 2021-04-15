@@ -25,6 +25,7 @@ import {
 	sentAssign,
 	selectVersion,
 	downloadLink,
+	getDocumentWordDownload,
 } from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
@@ -95,6 +96,10 @@ const DocumentDetails = () => {
 
 	const handleVersion = (id) => {
 		dispatch(selectVersion({ id }))
+	}
+
+	const getDocumentWord = () => {
+		dispatch(getDocumentWordDownload({ id }))
 	}
 
 	useEffect(() => {
@@ -171,6 +176,8 @@ const DocumentDetails = () => {
 						)}
 					</div>
 					<Tabs
+						textType={data.text_type}
+						downloadDocument={getDocumentWord}
 						signers={data.signers}
 						versions={data.versions}
 						showAssignModal={handleShowAssignModal}

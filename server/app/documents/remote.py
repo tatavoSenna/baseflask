@@ -180,6 +180,17 @@ class RemoteDocument:
         )
         return document_url
 
+    def download_docx_document(self, document):
+        document_url = self.s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.docx'
+            },
+            ExpiresIn=180,
+        )
+        return document_url
+
     def convert_docx_to_pdf_and_save(self, document, filled_docx_io):
         convertapi.api_secret = current_app.config["CONVERTAPI_SECRET_KEY"]
 

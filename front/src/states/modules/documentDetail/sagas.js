@@ -30,6 +30,9 @@ import {
 	downloadLink,
 	downloadLinkSuccess,
 	downloadLinkFailure,
+	getDocumentWordDownload,
+	getDocumentWordDownloadSuccess,
+	getDocumentWordDownloadFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -41,6 +44,7 @@ export default function* rootSaga() {
 	yield takeEvery(sentAssign, sentAssignSaga)
 	yield takeEvery(selectVersion, selectVersionSaga)
 	yield takeEvery(downloadLink, downloadLinkSaga)
+	yield takeEvery(getDocumentWordDownload, getDocumentWordDownloadSaga)
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {
@@ -218,5 +222,32 @@ function* downloadLinkSaga({ payload = {} }) {
 		yield put(downloadLinkSuccess())
 	} catch (error) {
 		yield put(downloadLinkFailure(error))
+	}
+}
+
+function* getDocumentWordDownloadSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Realizando download do documento...',
+		updateKey: 'downloadWord',
+	})
+	const { id } = payload
+	try {
+		const { data } = yield call(api.get, `documents/${id}/docx`)
+		const link = document.createElement('a')
+		link.href = data.download_url
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		successMessage({
+			content: 'Download realizado com sucesso.',
+			updateKey: 'downloadWord',
+		})
+		yield put(getDocumentWordDownloadSuccess())
+	} catch (error) {
+		errorMessage({
+			content: 'Download falhou, favor tente novamente.',
+			updateKey: 'downloadWord',
+		})
+		yield put(getDocumentWordDownloadFailure(error))
 	}
 }
