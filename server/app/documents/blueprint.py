@@ -58,7 +58,8 @@ from .controllers import (
     fill_signing_date_controller,
     delete_document_controller,
     get_pdf_download_url_controller,
-    convert_pdf_controller
+    convert_pdf_controller,
+    get_docx_download_url_controller
 )
 from app.docusign.controllers import (
     sign_document_controller,
@@ -153,6 +154,29 @@ def get_document_pdf(current_user, document_id):
 
     response = {
         "download_url": pdf_url
+    }
+    return jsonify(response)
+
+
+@documents_bp.route("/<int:document_id>/docx", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_document_docx(current_user, document_id):
+    if not document_id:
+        abort(400, "Missing document id")
+    try:
+        document = Document.query.get(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+
+    try:
+        docx_url = get_docx_download_url_controller(document)
+    except:
+        abort(
+            400, "Could not download document docx from S3")
+
+    response = {
+        "download_url": docx_url
     }
     return jsonify(response)
 

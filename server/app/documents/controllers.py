@@ -264,6 +264,11 @@ def get_pdf_download_url_controller(document):
     url = remote_document.download_pdf_document(document)
     return url
 
+def get_docx_download_url_controller(document):
+    remote_document = RemoteDocument()
+    url = remote_document.download_docx_document(document)
+    return url
+
 
 def fill_signing_date_controller(document, text):
     signing_date = json.dumps(date.today().strftime(

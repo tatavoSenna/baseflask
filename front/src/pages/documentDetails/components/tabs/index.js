@@ -14,6 +14,8 @@ const tailLayout = {
 }
 
 const Tabs = ({
+	textType,
+	downloadDocument,
 	signers,
 	versions,
 	infos,
@@ -32,8 +34,10 @@ const Tabs = ({
 			return info()
 		} else if (option === '2') {
 			return version()
-		} else {
+		} else if (option === '3') {
 			return assign()
+		} else {
+			return downloads()
 		}
 	}
 
@@ -175,6 +179,28 @@ const Tabs = ({
 		</div>
 	)
 
+	const downloads = () => (
+		<div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+					marginTop: 10,
+				}}>
+				<Form.Item {...tailLayout}>
+					<Button
+						key="download"
+						type="primary"
+						className={styles.button}
+						onClick={downloadDocument}
+						disabled={loadingSign}>
+						Download do documento word
+					</Button>
+				</Form.Item>
+			</div>
+		</div>
+	)
+
 	return (
 		<div
 			style={{
@@ -183,7 +209,7 @@ const Tabs = ({
 				padding: 24,
 				margin: 5,
 				minHeight: 500,
-				width: 350,
+				width: textType === '.docx' ? 500 : 350,
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
@@ -206,6 +232,11 @@ const Tabs = ({
 						Assinantes
 					</Menu.Item>
 				)}
+				{textType === '.docx' && (
+					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="4">
+						Downloads
+					</Menu.Item>
+				)}
 			</Menu>
 			<div
 				style={{
@@ -221,6 +252,8 @@ const Tabs = ({
 }
 
 Tabs.propTypes = {
+	textType: string,
+	downloadDocument: func,
 	signers: array,
 	versions: array,
 	infos: array,

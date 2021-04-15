@@ -202,6 +202,19 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		getDocumentWordDownload: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getDocumentWordDownloadSuccess: (state) =>
+			extend(state, {
+				loading: false,
+			}),
+		getDocumentWordDownloadFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -235,6 +248,9 @@ export const {
 	downloadLink,
 	downloadLinkSuccess,
 	downloadLinkFailure,
+	getDocumentWordDownload,
+	getDocumentWordDownloadSuccess,
+	getDocumentWordDownloadFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'
