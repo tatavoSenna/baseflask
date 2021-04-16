@@ -15,7 +15,8 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 			onChange={onChange}
 			hasFeedback
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -44,7 +45,7 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 CurrencyField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 	}).isRequired,
 	className: object,

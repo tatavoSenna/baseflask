@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, shape, object, func, boolean } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
 
 const EmailField = ({
@@ -21,7 +21,8 @@ const EmailField = ({
 			onChange={onChange}
 			hasFeedback
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					{ type, message: 'E-mail não é válido.' },
 					{ required: true, message: 'Este campo é obrigatório.' },
 				]
@@ -36,13 +37,13 @@ const EmailField = ({
 EmailField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 	}).isRequired,
 	inputValue: string,
 	className: object,
 	onChange: func,
-	first: boolean,
+	first: bool,
 }
 
 EmailField.defaultProps = {

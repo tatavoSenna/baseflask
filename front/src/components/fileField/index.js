@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { string, shape } from 'prop-types'
+import { string, shape, object } from 'prop-types'
 import { Form, Upload, Tooltip } from 'antd'
 import {
 	InboxOutlined,
@@ -110,7 +110,7 @@ const FileField = ({ pageFieldsData }) => {
 FileField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 	}).isRequired,
 }
 

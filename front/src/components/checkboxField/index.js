@@ -28,7 +28,7 @@ const CheckboxField = ({ pageFieldsData, className, onChange }) => {
 CheckboxField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
 	}).isRequired,

@@ -21,7 +21,7 @@ const SliderField = ({ pageFieldsData, className, onChange }) => {
 SliderField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
 	}).isRequired,

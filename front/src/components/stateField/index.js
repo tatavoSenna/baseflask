@@ -25,7 +25,8 @@ const StateField = ({ pageFieldsData, className, onChange }) => {
 			hasFeedback
 			className={className}
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					{ required: true, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -45,7 +46,7 @@ const StateField = ({ pageFieldsData, className, onChange }) => {
 StateField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 	}).isRequired,
 	className: object,

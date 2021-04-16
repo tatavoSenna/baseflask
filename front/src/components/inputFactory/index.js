@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { array } from 'prop-types'
+import React from 'react'
+import { array, number } from 'prop-types'
 import RadioField from '~/components/radioField'
 import CnpjField from '~/components/cnpjField'
 import CpfField from '~/components/cpfField'
@@ -17,77 +17,70 @@ import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 
+import { useDispatch } from 'react-redux'
+import { updateVisible } from '~/states/modules/question'
+
 import styles from './index.module.scss'
 
-function InputFactory({ data: pageFieldsData }) {
+function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
+	const dispatch = useDispatch()
 	const children = []
-	const hiddenInputList = []
-
-	pageFieldsData.map((field) => {
-		return hiddenInputList.push(!!field.condition)
-	})
-	const [hiddenInput, setHiddenInput] = useState([hiddenInputList])
 
 	function checkField(input, i) {
-		const targetIndex = pageFieldsData.findIndex((field) => {
-			// This 'if' is here so templates whose variables are not objects still work
-			if (typeof field === 'string') {
-				return field.variable === pageFieldsData[i].conditional
-			} else {
-				return field.variable.name === pageFieldsData[i].conditional
+		// This 'if' is here so templates whose variables are not objects still work
+		let changedName
+		if (typeof pageFieldsData[i].variable === 'string') {
+			changedName = pageFieldsData[i].variable
+		} else {
+			changedName = pageFieldsData[i].variable.name
+		}
+
+		pageFieldsData.forEach((field, fieldIndex) => {
+			if (field.condition && field.condition.variable === changedName) {
+				const { operator, value } = field.condition
+
+				let comparison
+				switch (operator) {
+					case '>':
+						comparison = input > value
+						break
+					case '>=':
+						comparison = input >= value
+						break
+					case '<':
+						comparison = input < value
+						break
+					case '<=':
+						comparison = input <= value
+						break
+					case '=':
+						// If value is an array, OR logic is applied
+						if (typeof value === 'object') {
+							value.forEach((item) => {
+								if (input === item) {
+									comparison = true
+								}
+							})
+						} else {
+							comparison = input === value
+						}
+						break
+					default:
+						comparison = false
+						break
+				}
+
+				if (comparison) {
+					dispatch(updateVisible({ value: true, pageIndex, fieldIndex }))
+				} else {
+					dispatch(updateVisible({ value: false, pageIndex, fieldIndex }))
+				}
 			}
 		})
-		const { operator, value } = pageFieldsData[targetIndex].condition
-		let comparison
-
-		switch (operator) {
-			case '>':
-				comparison = input > value
-				break
-			case '>=':
-				comparison = input >= value
-				break
-			case '<':
-				comparison = input < value
-				break
-			case '<=':
-				comparison = input <= value
-				break
-			case '=':
-				comparison = input === value
-				break
-			default:
-				break
-		}
-
-		if (comparison) {
-			const tmpHiddenList = []
-			hiddenInput[0].map((item, index) => {
-				if (index === targetIndex) {
-					tmpHiddenList.push(false)
-				} else {
-					tmpHiddenList.push(item)
-				}
-				return tmpHiddenList
-			})
-			setHiddenInput([tmpHiddenList])
-		} else {
-			const tmpHiddenList = []
-			hiddenInput[0].map((item, index) => {
-				if (index === targetIndex) {
-					tmpHiddenList.push(true)
-				} else {
-					tmpHiddenList.push(item)
-				}
-				return tmpHiddenList
-			})
-			setHiddenInput([tmpHiddenList])
-		}
 	}
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional } = pageFieldsData[i]
-		const isConditional = !!conditional
 		const first = i === 0
 
 		switch (type) {
@@ -96,9 +89,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<RadioField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 					/>
 				)
@@ -108,9 +101,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CnpjField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 						first={first}
 					/>
@@ -121,9 +114,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CpfField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 						first={first}
 					/>
@@ -134,9 +127,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<EmailField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 						first={first}
 					/>
@@ -147,9 +140,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CurrencyField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 					/>
 				)
@@ -159,9 +152,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<DropdownField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -171,9 +164,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<DateField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -183,9 +176,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<TimeField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -195,9 +188,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<StateField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -207,9 +200,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CheckboxField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -219,9 +212,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CnaeField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -231,9 +224,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<CityField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -243,9 +236,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<SliderField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -255,9 +248,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<BankField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.checked, i) : undefined
+							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
 					/>
 				)
@@ -268,7 +261,7 @@ function InputFactory({ data: pageFieldsData }) {
 					<FileField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 					/>
 				)
 				break
@@ -277,9 +270,9 @@ function InputFactory({ data: pageFieldsData }) {
 					<TextField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 						onChange={
-							isConditional ? (e) => checkField(e.target.value, i) : undefined
+							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
 						first={first}
 					/>
@@ -291,6 +284,8 @@ function InputFactory({ data: pageFieldsData }) {
 
 InputFactory.propTypes = {
 	data: array.isRequired,
+	visible: array,
+	pageIndex: number,
 }
 
 export default InputFactory

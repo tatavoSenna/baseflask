@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import FormFactory from '~/components/formFactory'
 
-import { listQuestion } from '~/states/modules/question'
+import { listQuestion, listVisible } from '~/states/modules/question'
 
 const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
 	<FormFactory
@@ -22,6 +22,12 @@ function AddContract() {
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { data: questions } = useSelector(({ question }) => question)
+
+	useEffect(() => {
+		if (Object.keys(questions).length > 0) {
+			dispatch(listVisible({ questions }))
+		}
+	}, [dispatch, questions])
 
 	useEffect(() => {
 		dispatch(listQuestion({ modelId: values.modelId, title: values.title }))
