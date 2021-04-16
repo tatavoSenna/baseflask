@@ -46,7 +46,7 @@ the remote user with local user's table
 @aws_auth.authentication_required
 def sync():
     remote_user = RemoteUser(request_headers=request.headers)
-    local_user = remote_user.create_or_get_local()
+    local_user = remote_user.create_local()
 
     return jsonify({"user": UserSerializer().dump(local_user)})
 
@@ -97,6 +97,7 @@ def create(logged_user):
         )
     except:
         return {}, 500
+
     new_user = User.query.filter_by(email=fields.get("email")).first()
     new_user.name = fields.get("name")
     db.session.add(new_user)
