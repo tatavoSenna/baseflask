@@ -271,7 +271,7 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 					<TextAreaField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={hiddenInput[0][i] ? styles.hidden : undefined}
+						className={visible[i] ? undefined : styles.hidden}
 					/>
 				)
 				break
