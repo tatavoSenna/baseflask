@@ -1,7 +1,7 @@
 import React from 'react'
 import { object, bool, number, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Form, Button, Typography, PageHeader } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
 import { createContractExternal } from '~/states/modules/externalContract'
@@ -35,6 +35,7 @@ const FormFactory = ({
 	if (state && state.values) {
 		values = state.values
 	}
+	const { visible } = useSelector(({ question }) => question)
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const history = useHistory()
@@ -78,7 +79,11 @@ const FormFactory = ({
 				hideRequiredMark
 				onFinish={onSubmit}>
 				{pageFieldsData && pageFieldsData.fields.length > 0 && (
-					<InputFactory data={pageFieldsData.fields} />
+					<InputFactory
+						data={pageFieldsData.fields}
+						visible={visible[currentPage]}
+						pageIndex={currentPage}
+					/>
 				)}
 				<div
 					style={{

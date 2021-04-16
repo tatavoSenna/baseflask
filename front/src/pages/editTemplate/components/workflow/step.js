@@ -26,7 +26,11 @@ const Step = ({ node, groups, users, index }) => {
 		users.map((user) => {
 			user.groups.map((group) => {
 				if (group.group_id === parseInt(value)) {
-					list.push(<Option key={user.key}>{user.email}</Option>)
+					list.push(
+						<Option key={user.key} value={user.id}>
+							{user.email}
+						</Option>
+					)
 				}
 				return list
 			})

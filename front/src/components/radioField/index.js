@@ -13,7 +13,8 @@ const RadioField = ({ pageFieldsData, className, onChange }) => {
 			className={className}
 			hasFeedback
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					{ required: true, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -21,8 +22,8 @@ const RadioField = ({ pageFieldsData, className, onChange }) => {
 			colon={false}>
 			<Radio.Group>
 				{options.map((option, index) => (
-					<Radio key={index} value={option} onChange={onChange}>
-						{option}
+					<Radio key={index} value={option.value} onChange={onChange}>
+						{option.label}
 					</Radio>
 				))}
 			</Radio.Group>
@@ -33,7 +34,7 @@ const RadioField = ({ pageFieldsData, className, onChange }) => {
 RadioField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
 	}).isRequired,

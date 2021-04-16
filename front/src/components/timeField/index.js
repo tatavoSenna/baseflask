@@ -5,17 +5,18 @@ import { validateTime } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 
 const TimeField = ({ pageFieldsData, className, onChange }) => {
-	const { value, variable, id } = pageFieldsData
+	const { label, variable, id } = pageFieldsData
 	return (
 		<Form.Item
 			key={`${variable}_${id}`}
 			name={variable}
-			label={value}
+			label={label}
 			className={className}
 			onChange={onChange}
 			hasFeedback
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -37,8 +38,8 @@ const TimeField = ({ pageFieldsData, className, onChange }) => {
 
 TimeField.propTypes = {
 	pageFieldsData: shape({
-		value: string.isRequired,
-		variable: string.isRequired,
+		label: string.isRequired,
+		variable: object.isRequired,
 	}).isRequired,
 	className: object,
 	onChange: func,

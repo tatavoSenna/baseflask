@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, shape, object, func, boolean } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form } from 'antd'
 import { validateCNPJ } from '../../utils'
 import MaskedInput from 'antd-mask-input'
@@ -17,7 +17,8 @@ const CnpjField = ({ pageFieldsData, className, onChange, first }) => {
 			onChange={onChange}
 			hasFeedback
 			rules={
-				className !== 'inputFactory_hidden__18I0s' && [
+				typeof className === 'string' &&
+				className.slice(0, 19) !== 'inputFactory_hidden' && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -40,12 +41,12 @@ const CnpjField = ({ pageFieldsData, className, onChange, first }) => {
 CnpjField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: string.isRequired,
+		variable: object.isRequired,
 		type: string.isRequired,
 	}).isRequired,
 	className: object,
 	onChange: func,
-	first: boolean,
+	first: bool,
 }
 
 CnpjField.defaultProps = {
