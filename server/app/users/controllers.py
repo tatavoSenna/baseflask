@@ -16,7 +16,7 @@ def create_user_controller(email, name, group_ids=None, company_id=None):
                 raise Exception("Group not found")
 
     remote_user = RemoteUser()
-    new_user = remote_user.create(email, name)
+    new_user = remote_user.create(email, name, company_id)
 
     if group_ids and groups:
         for group in groups.values():
