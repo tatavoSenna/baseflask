@@ -16,6 +16,7 @@ import SliderField from '~/components/sliderField'
 import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
+import TextAreaField from '~/components/textAreaField'
 
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
@@ -262,6 +263,15 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+					/>
+				)
+				break
+			case 'text_area':
+				children.push(
+					<TextAreaField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
 					/>
 				)
 				break

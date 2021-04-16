@@ -16,6 +16,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 	const fieldTypes = (
 		<Menu onClick={(value) => handleAddField(value.key)}>
 			<Menu.Item key="text">Texto</Menu.Item>
+			<Menu.Item key="text_area">Área de texto</Menu.Item>
 			<Menu.Item key="cpf">CPF</Menu.Item>
 			<Menu.Item key="cnpj">CNPJ</Menu.Item>
 			<Menu.Item key="email">Email</Menu.Item>
