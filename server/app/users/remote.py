@@ -46,8 +46,8 @@ class RemoteUser:
     """
     Create a user or update attributes on application database
     """
-    
-    def create_local(self, company_id):
+
+    def create_or_get_local(self):
         local_user = User.query.filter_by(sub=self.sub(), active=True).first()
         default_company = Company.query.filter_by(id="1").first()
         user_attributes = dict(
@@ -56,12 +56,9 @@ class RemoteUser:
 
         if local_user:
             local_user.email = self.email()
+
         else:
-            if not company_id:
-                if not default_company:
-                    company_id = None
-                else:
-                    company_id = default_company.id
+            company_id = default_company.id if default_company else None
             user_attributes.update(company_id=company_id)
             local_user = User(**user_attributes)
 
@@ -69,20 +66,11 @@ class RemoteUser:
         db.session.commit()
         return local_user
 
-    def get_local(self):
-        local_user = User.query.filter_by(sub=self.sub(), active=True).first()
-        local_user.email = self.email()
-        db.session.add(local_user)
-        db.session.commit()
-        return local_user
-    
-
-
     """
     Create a user using cognito's API and sync it with the application database
     """
 
-    def create(self, email, name, company_id):
+    def create(self, email, name):
         username = email.split("@")[0] + "_" + str(random.randint(1000, 9999))
         password = secrets.token_urlsafe(12) + "*" + str(random.randint(10, 99))
 
@@ -104,7 +92,7 @@ class RemoteUser:
             return dict(error="Username already exists")
 
         self.user = response.get("User")
-        local_user = self.create_local(company_id)
+        local_user = self.create_or_get_local()
 
         return local_user
 
