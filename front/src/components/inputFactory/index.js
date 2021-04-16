@@ -16,6 +16,7 @@ import SliderField from '~/components/sliderField'
 import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
+import TextAreaField from '~/components/textAreaField'
 
 import styles from './index.module.scss'
 
@@ -266,6 +267,15 @@ function InputFactory({ data: pageFieldsData }) {
 			case 'variable_file':
 				children.push(
 					<FileField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={hiddenInput[0][i] ? styles.hidden : undefined}
+					/>
+				)
+				break
+			case 'text_area':
+				children.push(
+					<TextAreaField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={hiddenInput[0][i] ? styles.hidden : undefined}
