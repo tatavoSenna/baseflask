@@ -32,9 +32,12 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 			}
 			colon={false}>
 			<InputNumber
+				min={0}
 				placeholder=""
 				step={0.1}
 				decimalSeparator=","
+				formatter={(value) => `R$ ${value}`}
+				parser={(value) => value.replace(/[A-Z]|[a-z]|[$ ]|,+/g, '')}
 				precision={2}
 				style={{ width: '100%' }}
 			/>

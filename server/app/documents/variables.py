@@ -3,6 +3,8 @@ from app.models.documents import DocumentTemplate
 import requests
 import json
 from flask import Markup
+from num2words import num2words
+from babel.numbers import format_currency
 
 def specify_variables(variables, document_template_id):
     variables_specification = DocumentTemplate.query.get(document_template_id).variables
@@ -38,6 +40,11 @@ def specify_variables(variables, document_template_id):
                     variables[variable] = Markup("</li><li>").join(variables[variable])
                 elif text_type == ".docx":
                     variables[variable] = "\a".join(variables[variable])
+        elif variables_specification[variable]["type"] == "currency":
+            num_variable = variables[variable]
+            variables[variable] = format_currency(num_variable, "BRL", locale='pt_BR')
+            if variables_specification[variable]["doc_display_style"] == "currency_extended":
+                variables[variable] = variables[variable] + " (" + num2words(num_variable,lang='pt_BR', to='currency') + ")"
         else:
             pass
  
