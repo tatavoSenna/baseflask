@@ -53,6 +53,10 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				newField.variable.type = 'list'
 				newField.variable.doc_display_style = 'commas | bullets'
 				break
+			case 'currency':
+				newField.variable.type = 'currency'
+				newField.variable.doc_display_style = 'plain | currency_extended'
+				break
 			case 'slider':
 				newField.options = ['min', 'max']
 				break
