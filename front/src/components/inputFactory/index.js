@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
 
 import styles from './index.module.scss'
+import './styles.css'
 
 function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 	const dispatch = useDispatch()
