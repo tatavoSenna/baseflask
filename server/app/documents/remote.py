@@ -2,8 +2,12 @@ import boto3
 import io
 import requests
 import convertapi
+import json
+import base64
+from io import BufferedReader
 
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
+from docx.shared import Mm
 
 from datetime import datetime
 from flask import current_app
@@ -16,7 +20,7 @@ class RemoteDocument:
 
     s3_client = boto3.client("s3")
 
-    def create(self, document, document_template, company_id, variables):
+    def create(self, document, document_template, company_id, variables, images, images_specs):
         if document_template.text_type == ".txt":
             text_template = self.download_text_from_template(document)
             filled_text = self.fill_text_with_variables(
@@ -27,13 +31,15 @@ class RemoteDocument:
             docx_io = self.download_docx_from_template(
                 document_template, company_id)
             filled_docx_io = self.fill_docx_with_variables(
-                docx_io, variables)
+                docx_io, variables, images, images_specs)
 
             copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
 
             self.convert_docx_to_pdf_and_save(document, filled_docx_io)
             self.upload_filled_docx_to_documents(
                 document, copy_docx_io, document_template.text_type)
+        if images != None:
+            self.upload_image(document, images, images_specs)
 
     def delete_document(self, document):
         s3_resource = boto3.resource("s3")
@@ -58,6 +64,19 @@ class RemoteDocument:
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             remote_path
         )
+
+    def upload_image(self, document, images, images_specs):
+        for index,content in enumerate(images_specs):  
+            remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{content["variable_name"]}.jpeg'
+            in_mem_file = io.BytesIO()
+            images[index].save(in_mem_file)
+            in_mem_file.seek(0)
+            self.s3_client.put_object(
+                Body=in_mem_file,
+                Bucket=current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                Key=remote_path,
+                ContentType='image/jpeg'
+            )
 
     def upload_filled_docx_to_documents(self, document, filled_text_io, text_type):
         remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}{text_type}'
@@ -124,11 +143,19 @@ class RemoteDocument:
 
         return filled_text
 
-    def fill_docx_with_variables(self, docx_io, variables):
+    def fill_docx_with_variables(self, docx_io, variables, images, images_specs):
 
         docx_template = DocxTemplate(docx_io)
+        
+        if images != None:
+            for index,content in enumerate(images_specs):
+                sd = docx_template.new_subdoc()
+                img_bytes = io.BytesIO()
+                images[index].save(img_bytes)
+                sd.add_picture(img_bytes,width=Mm(content["width"]), height=Mm(content["height"]))
+                variables[content["variable_name"]] = sd
         docx_template.render(variables)
-
+        
         filled_text_io = io.BytesIO()
         docx_template.save(filled_text_io)
         filled_text_io.seek(0)
@@ -201,7 +228,7 @@ class RemoteDocument:
             {'File': upload_io},
             from_format='docx')
 
-        response = requests.get(result.response['Files'][0]['Url'])
+        response = requests.get(result.response["Files"][0]["Url"])
 
         pdf_io = io.BytesIO(response.content)
 

@@ -34,11 +34,15 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, images, images_specs):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
+    if images != None:
+        for specs in images_specs:
+            variables[specs["variable_name"]] = specs["variable_name"]
+
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
                 "email": user_email,
@@ -65,7 +69,8 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     db.session.commit()
 
     remote_document = RemoteDocument()
-    remote_document.create(document, document_template, company_id, variables)
+    remote_document.create(document, document_template,
+                           company_id, variables, images, images_specs)
 
     return document
 
@@ -284,7 +289,7 @@ def fill_signing_date_controller(document, text):
             text, variable)
     elif document.text_type == ".docx":
         filled_text = remote_document.fill_docx_with_variables(
-            text, variable)
+            text, variable, None, None)
 
     return filled_text
 
