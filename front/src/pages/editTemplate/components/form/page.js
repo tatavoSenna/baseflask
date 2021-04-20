@@ -31,6 +31,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
 			<Menu.Item key="slider">Slider</Menu.Item>
 			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
+			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
 		</Menu>
 	)
@@ -68,6 +69,10 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'variable_file':
 				newField.variable.type = 'variable_file'
 				newField.variable.doc_display_style = 'plain'
+				break
+			case 'variable_image':
+				newField.variable.type = 'variable_image'
+				newField.variable.doc_display_style = 'image'
 				break
 			default:
 				newField.variable.type = 'string'
