@@ -216,15 +216,19 @@ def add_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
-    # check if content_type is json
-    if not request.is_json:
-        return jsonify({"message": "Accepts only content-type json."}), 400
-
-    content = request.json
+    # check if there are image files being passed
+    images = request.files.getlist("images", None)
+    if images != None:
+        content = request.form["json"]
+        content = json.loads(content)
+        images_specs = content.get("images_specs", None)
+    else:
+        content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
     title = content.get("title", None)
-
+    
+    
     if not document_template_id or not variables:
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
@@ -244,7 +248,9 @@ def create(current_user):
             variables,
             document_template_id,
             title,
-            current_user["name"]
+            current_user["name"],
+            images,
+            images_specs
         )
     except Exception as e:
         logging.exception(
