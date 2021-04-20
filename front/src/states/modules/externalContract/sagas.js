@@ -52,11 +52,22 @@ function* createContractExternalSaga() {
 		return { answer, id: data.id, token: data.token }
 	})
 
+	let dataImg = {}
+	let objectData = answer.data
+
+	for (var [key] of Object.entries(objectData)) {
+		if (key.includes('image_')) {
+			dataImg[key] = document
+				.getElementById(key)
+				.getElementsByTagName('input')[0].value
+		}
+	}
+
 	try {
 		yield call(api.post, '/external/create', {
 			document_template: id,
 			token,
-			variables: answer.data,
+			variables: { ...answer.data, ...dataImg },
 		})
 		yield put(createContractExternalSuccess())
 		successMessage({
