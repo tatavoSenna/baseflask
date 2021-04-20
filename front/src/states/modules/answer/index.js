@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	data: {},
 	error: null,
-	loading: false,
+	loadingAnswer: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -15,7 +15,10 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: extend(state.data, payload.data),
 			}),
-		answerRequest: (state) => state,
+		answerRequest: (state) =>
+			extend(state, {
+				loadingAnswer: true,
+			}),
 		answerSuccess: (state, { payload }) =>
 			extend(state, {
 				loadingAnswer: false,
