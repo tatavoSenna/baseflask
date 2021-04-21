@@ -29,18 +29,17 @@ function* answerSaga({ payload }) {
 		return { answer, modelId, title }
 	})
 
-	let dataImg = {}
-	let objectData = answer.data
-
-	for (var [key] of Object.entries(objectData)) {
-		if (key.includes('image_')) {
-			dataImg[key] = document
-				.getElementById(key)
-				.getElementsByTagName('input')[0].value
-		}
-	}
-
 	try {
+		let dataImg = {}
+		let objectData = answer.data
+
+		for (var [key] of Object.entries(objectData)) {
+			if (key.includes('image_')) {
+				dataImg[key] = document
+					.getElementById(key)
+					.getElementsByTagName('input')[0].value
+			}
+		}
 		const { data } = yield call(api.post, '/documents/', {
 			document_template: modelId,
 			title,

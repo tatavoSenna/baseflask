@@ -49,18 +49,17 @@ function AddContract() {
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
-			{loadingAnswer ? (
+			{loadingAnswer && (
 				<lottie-player
 					src="https://assets1.lottiefiles.com/private_files/lf30_4kmk2efh.json"
 					background="transparent"
 					speed="1"
-					styles="width: 300px; height: 300px;"
+					styles="width: 200px; height: 200px;"
 					loop
 					autoplay
 				/>
-			) : (
-				stepComponent
 			)}
+			{stepComponent}
 		</Layout>
 	)
 }
