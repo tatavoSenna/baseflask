@@ -5,13 +5,13 @@ import convertapi
 import json
 import base64
 from io import BufferedReader
+import tempfile
 
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
 
 from datetime import datetime
 from flask import current_app
-import base64
 
 from app import jinja_env
 
@@ -20,7 +20,7 @@ class RemoteDocument:
 
     s3_client = boto3.client("s3")
 
-    def create(self, document, document_template, company_id, variables, images, images_specs):
+    def create(self, document, document_template, company_id, variables):
         if document_template.text_type == ".txt":
             text_template = self.download_text_from_template(document)
             filled_text = self.fill_text_with_variables(
@@ -31,15 +31,13 @@ class RemoteDocument:
             docx_io = self.download_docx_from_template(
                 document_template, company_id)
             filled_docx_io = self.fill_docx_with_variables(
-                docx_io, variables, images, images_specs)
+                document, docx_io, variables)
 
             copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
 
             self.convert_docx_to_pdf_and_save(document, filled_docx_io)
             self.upload_filled_docx_to_documents(
                 document, copy_docx_io, document_template.text_type)
-        if images != None:
-            self.upload_image(document, images, images_specs)
 
     def delete_document(self, document):
         s3_resource = boto3.resource("s3")
@@ -65,18 +63,16 @@ class RemoteDocument:
             remote_path
         )
 
-    def upload_image(self, document, images, images_specs):
-        for index,content in enumerate(images_specs):  
-            remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{content["variable_name"]}.jpeg'
-            in_mem_file = io.BytesIO()
-            images[index].save(in_mem_file)
-            in_mem_file.seek(0)
-            self.s3_client.put_object(
-                Body=in_mem_file,
-                Bucket=current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-                Key=remote_path,
-                ContentType='image/jpeg'
-            )
+    def upload_image(self, document, b64image, image_name):
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{image_name}.jpg'
+        image_decode = base64.b64decode(b64image)
+        image_io = io.BytesIO(image_decode)
+        self.s3_client.upload_fileobj(
+            image_io,
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path,
+            ExtraArgs={'ContentType': "image/jpg"}
+        )
 
     def upload_filled_docx_to_documents(self, document, filled_text_io, text_type):
         remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}{text_type}'
@@ -143,19 +139,21 @@ class RemoteDocument:
 
         return filled_text
 
-    def fill_docx_with_variables(self, docx_io, variables, images, images_specs):
+    def fill_docx_with_variables(self, document, docx_io, variables):
 
         docx_template = DocxTemplate(docx_io)
-        
-        if images != None:
-            for index,content in enumerate(images_specs):
+
+        for key in list(variables):
+            if key.startswith("image_"):
                 sd = docx_template.new_subdoc()
-                img_bytes = io.BytesIO()
-                images[index].save(img_bytes)
-                sd.add_picture(img_bytes,width=Mm(content["width"]), height=Mm(content["height"]))
-                variables[content["variable_name"]] = sd
+                img_bytes = base64.decodebytes(
+                    variables[key].split("base64,")[1].encode('ascii'))
+                image = io.BytesIO(img_bytes)
+                sd.add_picture(image, width=Mm(50), height=Mm(50))
+                variables[str(key)[len("image_"):]] = sd
+                self.upload_image(document, variables[key].split("base64,")[1], str(key)[len("image_"):])
         docx_template.render(variables)
-        
+
         filled_text_io = io.BytesIO()
         docx_template.save(filled_text_io)
         filled_text_io.seek(0)
