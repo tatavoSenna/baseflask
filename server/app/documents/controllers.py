@@ -34,14 +34,11 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, images, images_specs):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
-    if images != None:
-        for specs in images_specs:
-            variables[specs["variable_name"]] = specs["variable_name"]
 
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
@@ -70,7 +67,7 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
 
     remote_document = RemoteDocument()
     remote_document.create(document, document_template,
-                           company_id, variables, images, images_specs)
+                           company_id, variables)
 
     return document
 
