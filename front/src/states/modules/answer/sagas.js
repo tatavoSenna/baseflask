@@ -28,13 +28,23 @@ function* answerSaga({ payload }) {
 		} = state
 		return { answer, modelId, title }
 	})
+
 	try {
+		let dataImg = {}
+		let objectData = answer.data
+
+		for (var [key] of Object.entries(objectData)) {
+			if (key.includes('image_')) {
+				dataImg[key] = document
+					.getElementById(key)
+					.getElementsByTagName('input')[0].value
+			}
+		}
 		const { data } = yield call(api.post, '/documents/', {
 			document_template: modelId,
 			title,
-			variables: answer.data,
+			variables: { ...answer.data, ...dataImg },
 		})
-
 		yield put(answerSuccess(data))
 		successMessage({
 			content: 'Documento criado com sucesso!',

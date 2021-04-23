@@ -1,6 +1,7 @@
 import React from 'react'
 import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
+import InfoField from '~/components/infoField'
 
 const EmailField = ({
 	pageFieldsData,
@@ -9,13 +10,13 @@ const EmailField = ({
 	onChange,
 	first,
 }) => {
-	const { label, variable, type, id } = pageFieldsData
+	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={label}
+			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
 			onChange={onChange}
@@ -39,6 +40,7 @@ EmailField.propTypes = {
 		label: string.isRequired,
 		variable: object.isRequired,
 		type: string.isRequired,
+		info: string,
 	}).isRequired,
 	inputValue: string,
 	className: object,

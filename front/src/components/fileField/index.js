@@ -10,11 +10,12 @@ import {
 } from '@ant-design/icons'
 import { fileUploadRequest } from '~/states/modules/fileField'
 import { useDispatch, useSelector } from 'react-redux'
+import InfoField from '~/components/infoField'
 
 const { Dragger } = Upload
 
 const FileField = ({ pageFieldsData }) => {
-	const { label, id, url } = pageFieldsData
+	const { label, id, url, info } = pageFieldsData
 	const dispatch = useDispatch()
 	const { loading, data } = useSelector(({ fileField }) => fileField)
 	const [empty, setEmpty] = useState(true)
@@ -24,7 +25,10 @@ const FileField = ({ pageFieldsData }) => {
 	}
 
 	return (
-		<Form.Item key={`fileField_${id}`} label={label} colon={false}>
+		<Form.Item
+			key={`fileField_${id}`}
+			label={<InfoField label={label} info={info} />}
+			colon={false}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Dragger
 					action={(file) => handleFileUpload(file)}
@@ -111,6 +115,7 @@ FileField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
 		variable: object.isRequired,
+		info: string,
 	}).isRequired,
 }
 

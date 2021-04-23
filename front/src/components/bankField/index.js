@@ -2,15 +2,16 @@ import React from 'react'
 import { string, shape, object, func } from 'prop-types'
 import { Form, Select } from 'antd'
 import bank from './bankName'
+import InfoField from '~/components/infoField'
 
 const BankField = ({ pageFieldsData, className, onChange }) => {
-	const { label, variable, type, id } = pageFieldsData
+	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={label}
+			label={<InfoField label={label} info={info} />}
 			hasFeedback
 			className={className}
 			rules={
@@ -37,6 +38,7 @@ BankField.propTypes = {
 		label: string.isRequired,
 		variable: object.isRequired,
 		type: string.isRequired,
+		info: string,
 	}).isRequired,
 	className: object,
 	onChange: func,

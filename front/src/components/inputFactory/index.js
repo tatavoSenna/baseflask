@@ -17,11 +17,13 @@ import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
+import ImageField from '~/components/imageField'
 
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
 
 import styles from './index.module.scss'
+import './styles.css'
 
 function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 	const dispatch = useDispatch()
@@ -269,6 +271,15 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 			case 'text_area':
 				children.push(
 					<TextAreaField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+					/>
+				)
+				break
+			case 'variable_image':
+				children.push(
+					<ImageField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}

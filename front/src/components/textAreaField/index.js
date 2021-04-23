@@ -1,6 +1,7 @@
 import React from 'react'
-import { string, shape, object, func, boolean } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
+import InfoField from '~/components/infoField'
 
 const TextAreaField = ({
 	pageFieldsData,
@@ -9,14 +10,14 @@ const TextAreaField = ({
 	onChange,
 	first,
 }) => {
-	const { label, variable, type, id } = pageFieldsData
+	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const { TextArea } = Input
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={isObj ? variable.name : variable}
-			label={label}
+			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
 			onChange={onChange}
@@ -28,7 +29,7 @@ const TextAreaField = ({
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<TextArea autoSize={true} placeholder="" />
+			<TextArea autoFocus={first} autoSize={true} placeholder="" />
 		</Form.Item>
 	)
 }
@@ -38,11 +39,12 @@ TextAreaField.propTypes = {
 		label: string.isRequired,
 		variable: string.isRequired,
 		type: string.isRequired,
+		info: string,
 	}).isRequired,
 	inputValue: string,
 	className: object,
 	onChange: func,
-	first: boolean,
+	first: bool,
 }
 
 TextAreaField.defaultProps = {
