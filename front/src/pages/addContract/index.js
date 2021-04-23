@@ -22,6 +22,7 @@ function AddContract() {
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 	const { data: questions } = useSelector(({ question }) => question)
+	const { loadingAnswer } = useSelector(({ answer }) => answer)
 
 	useEffect(() => {
 		if (Object.keys(questions).length > 0) {
@@ -46,7 +47,21 @@ function AddContract() {
 		setStepComponent(pageFormComponent)
 	}, [currentPage, questions])
 
-	return <Layout style={{ backgroundColor: '#fff' }}>{stepComponent}</Layout>
+	return (
+		<Layout style={{ backgroundColor: '#fff' }}>
+			{loadingAnswer && (
+				<lottie-player
+					src="https://assets1.lottiefiles.com/private_files/lf30_4kmk2efh.json"
+					background="transparent"
+					speed="1"
+					styles="width: 200px; height: 200px;"
+					loop
+					autoplay
+				/>
+			)}
+			{stepComponent}
+		</Layout>
+	)
 }
 
 export default AddContract

@@ -3,14 +3,15 @@ import { string, shape, func, object } from 'prop-types'
 import { Form } from 'antd'
 import { validateTime } from '../../utils'
 import MaskedInput from 'antd-mask-input'
+import InfoField from '~/components/infoField'
 
 const TimeField = ({ pageFieldsData, className, onChange }) => {
-	const { label, variable, id } = pageFieldsData
+	const { label, variable, id, info } = pageFieldsData
 	return (
 		<Form.Item
 			key={`${variable}_${id}`}
 			name={variable}
-			label={label}
+			label={<InfoField label={label} info={info} />}
 			className={className}
 			onChange={onChange}
 			hasFeedback
@@ -40,6 +41,7 @@ TimeField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
 		variable: object.isRequired,
+		info: string,
 	}).isRequired,
 	className: object,
 	onChange: func,

@@ -2,12 +2,16 @@ import boto3
 import io
 import requests
 import convertapi
+import json
+import base64
+from io import BufferedReader
+import tempfile
 
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
+from docx.shared import Mm
 
 from datetime import datetime
 from flask import current_app
-import base64
 
 from app import jinja_env
 
@@ -27,7 +31,7 @@ class RemoteDocument:
             docx_io = self.download_docx_from_template(
                 document_template, company_id)
             filled_docx_io = self.fill_docx_with_variables(
-                docx_io, variables)
+                document, docx_io, variables)
 
             copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
 
@@ -57,6 +61,17 @@ class RemoteDocument:
             filled_text_io,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             remote_path
+        )
+
+    def upload_image(self, document, b64image, image_name):
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{image_name}.jpg'
+        image_decode = base64.b64decode(b64image)
+        image_io = io.BytesIO(image_decode)
+        self.s3_client.upload_fileobj(
+            image_io,
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            remote_path,
+            ExtraArgs={'ContentType': "image/jpg"}
         )
 
     def upload_filled_docx_to_documents(self, document, filled_text_io, text_type):
@@ -124,9 +139,19 @@ class RemoteDocument:
 
         return filled_text
 
-    def fill_docx_with_variables(self, docx_io, variables):
+    def fill_docx_with_variables(self, document, docx_io, variables):
 
         docx_template = DocxTemplate(docx_io)
+
+        for key in list(variables):
+            if key.startswith("image_"):
+                sd = docx_template.new_subdoc()
+                img_bytes = base64.decodebytes(
+                    variables[key].split("base64,")[1].encode('ascii'))
+                image = io.BytesIO(img_bytes)
+                sd.add_picture(image, width=Mm(50), height=Mm(50))
+                variables[str(key)[len("image_"):]] = sd
+                self.upload_image(document, variables[key].split("base64,")[1], str(key)[len("image_"):])
         docx_template.render(variables)
 
         filled_text_io = io.BytesIO()
@@ -201,7 +226,7 @@ class RemoteDocument:
             {'File': upload_io},
             from_format='docx')
 
-        response = requests.get(result.response['Files'][0]['Url'])
+        response = requests.get(result.response["Files"][0]["Url"])
 
         pdf_io = io.BytesIO(response.content)
 
