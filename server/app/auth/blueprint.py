@@ -22,7 +22,7 @@ def sign_out():
 def callback():
     access_token = aws_auth.get_access_token(request.args)
     remote_user = RemoteUser(access_token=access_token)
-    local_user = remote_user.get_local()
+    local_user = remote_user.create_or_get_local()
 
     response = dict(user=UserSerializer().dump(local_user), access_token=access_token)
 
