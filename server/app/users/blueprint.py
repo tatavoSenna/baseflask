@@ -96,7 +96,6 @@ def create(logged_user):
             company_id=logged_user["company_id"]
         )
     except:
-        logging.exception("Could not create user")
         return {}, 500
     new_user = User.query.filter_by(email=fields.get("email")).first()
     new_user.name = fields.get("name")

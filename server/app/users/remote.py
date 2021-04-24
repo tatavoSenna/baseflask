@@ -47,7 +47,7 @@ class RemoteUser:
     Create a user or update attributes on application database
     """
 
-    def create_or_get_local(self, company_id=None):
+    def create_local(self, company_id):
         local_user = User.query.filter_by(sub=self.sub(), active=True).first()
         default_company = Company.query.filter_by(id="1").first()
         user_attributes = dict(
@@ -67,16 +67,23 @@ class RemoteUser:
 
         db.session.add(local_user)
         db.session.commit()
+        return local_user 
+
+    def get_local(self):
+        local_user = User.query.filter_by(sub=self.sub(), active=True).first()
+        local_user.email = self.email()
+        db.session.add(local_user)
+        db.session.commit()
         return local_user
+
 
     """
     Create a user using cognito's API and sync it with the application database
     """
 
-    def create(self, email, name, company_id=None):
+    def create(self, email, name, company_id):
         username = email.split("@")[0] + "_" + str(random.randint(1000, 9999))
-        password = secrets.token_urlsafe(
-            12) + "*" + str(random.randint(10, 99))
+        password = secrets.token_urlsafe(12) + "*" + str(random.randint(10, 99))
 
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
@@ -96,9 +103,10 @@ class RemoteUser:
             return dict(error="Username already exists")
 
         self.user = response.get("User")
-        local_user = self.create_or_get_local(company_id)
+        local_user = self.create_local(company_id)
 
         return local_user
+
 
     def __extract_user_attributes(self, attribute_name):
         user_attributes = self.user.get("UserAttributes", False) or self.user.get(
