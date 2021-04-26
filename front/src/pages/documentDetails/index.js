@@ -26,6 +26,7 @@ import {
 	selectVersion,
 	downloadLink,
 	getDocumentWordDownload,
+	changeVariables,
 } from '~/states/modules/documentDetail'
 
 const DocumentDetails = () => {
@@ -100,6 +101,10 @@ const DocumentDetails = () => {
 
 	const getDocumentWord = () => {
 		dispatch(getDocumentWordDownload({ id }))
+	}
+
+	const onSubmitChangeVariables = (values) => {
+		dispatch(changeVariables({ id, values }))
 	}
 
 	useEffect(() => {
@@ -188,6 +193,7 @@ const DocumentDetails = () => {
 						loadingSign={loadingSign}
 						handleVersion={handleVersion}
 						versionId={version_id}
+						onChangeVariables={onSubmitChangeVariables}
 					/>
 				</div>
 			)}

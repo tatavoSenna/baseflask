@@ -59,7 +59,8 @@ from .controllers import (
     delete_document_controller,
     get_pdf_download_url_controller,
     convert_pdf_controller,
-    get_docx_download_url_controller
+    get_docx_download_url_controller,
+    change_variables_controller
 )
 from app.docusign.controllers import (
     sign_document_controller,
@@ -216,7 +217,7 @@ def add_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
-    
+
     # check if content_type is json
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
@@ -522,3 +523,33 @@ def delete_document(current_user, document_id):
     }
 
     return jsonify(msg_JSON), 200
+
+
+@documents_bp.route("/<int:document_id>/modify", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def modify_document(current_user, document_id):
+    # check if content_type is json
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    content = request.json
+    variables = content.get("variables", None)
+    if not variables:
+        return jsonify({"message": "Didn't receive new variables to replace"}), 400
+
+    document = get_document_controller(document_id)
+
+    if not document:
+        abort(404, "Document not Found")
+    if document.text_type != ".docx":
+        abort(400, "Can only change variables of Word documents(.docx)")
+
+    try:
+        change_variables_controller(document, variables, current_user["email"])
+    except Exception as e:
+        logging.exception(
+            "Could not change document variables")
+        abort(400, "Could not change document variables")
+
+    return DocumentSerializer().dump(document)

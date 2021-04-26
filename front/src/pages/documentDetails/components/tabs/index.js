@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
+import { Form, Typography, Button, Spin, Menu, Divider, Input } from 'antd'
 import { array, bool, func, string } from 'prop-types'
 import { ContainerTabs } from './styles'
 import styles from './index.module.scss'
@@ -25,9 +25,12 @@ const Tabs = ({
 	sentAssign,
 	loadingSign,
 	versionId,
+	onChangeVariables,
 }) => {
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
+	const [isEdit, setIsEdit] = useState(false)
+	const [form] = Form.useForm()
 
 	const tab = (option) => {
 		if (option === '1') {
@@ -52,31 +55,110 @@ const Tabs = ({
 		)
 	}
 
-	const info = () =>
-		infos.map((item, index) => {
-			return (
-				<ContainerTabs key={index}>
-					<Title key={index} level={4} style={{ marginTop: 20, fontSize: 18 }}>
-						{item.title}
-					</Title>
-					{item.fields.map((item, index) => (
-						<div key={index}>
-							<Paragraph
-								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-								key={item.label + index}>
-								{item.label}:
-							</Paragraph>
-							<Paragraph
-								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
-								key={item.value + index}>
-								{item.value}
-							</Paragraph>
-						</div>
-					))}
-					{infos.length - 1 !== index && <Divider />}
-				</ContainerTabs>
-			)
-		})
+	const textView = (item) =>
+		item.fields.map((item, index) => (
+			<div key={index}>
+				<Paragraph
+					style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+					key={item.label + index}>
+					{item.label}:
+				</Paragraph>
+				<Paragraph
+					style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+					key={item.value + index}>
+					{item.value}
+				</Paragraph>
+			</div>
+		))
+
+	const inputView = (item) => (
+		<Form
+			id="infoForm"
+			form={form}
+			layout="horizontal"
+			onFinish={(values) => {
+				onChangeVariables(values)
+				setIsEdit(false)
+			}}>
+			{item.fields.map((item, index) => (
+				<Form.Item
+					key={item.variable}
+					name={item.variable}
+					label={item.label}
+					hasFeedback
+					rules={[
+						{
+							required: true,
+							message: 'Este campo é obrigatório.',
+						},
+					]}
+					colon={false}
+					initialValue={item.value}>
+					<Input disabled={!isEdit} />
+				</Form.Item>
+			))}
+		</Form>
+	)
+
+	const buttonsView = () => (
+		<div
+			style={{
+				display: 'flex',
+				justifyContent: 'center',
+				marginTop: 10,
+			}}>
+			<Form.Item {...tailLayout}>
+				{!isEdit && (
+					<Button
+						key="edit"
+						className={styles.button}
+						onClick={() => setIsEdit(true)}
+						disabled={loadingSign}>
+						Editar
+					</Button>
+				)}
+				{isEdit && (
+					<Button
+						key="cancel"
+						className={styles.button}
+						onClick={() => setIsEdit(false)}
+						disabled={loadingSign}>
+						Cancelar
+					</Button>
+				)}
+				{isEdit && (
+					<Button
+						key="save"
+						type="primary"
+						htmlType="submit"
+						form="infoForm"
+						disabled={loadingSign}>
+						Salvar
+					</Button>
+				)}
+			</Form.Item>
+		</div>
+	)
+
+	const info = () => (
+		<div>
+			{infos.map((item, index) => (
+				<div key={index}>
+					<ContainerTabs key={index}>
+						<Title
+							key={index}
+							level={4}
+							style={{ marginTop: 20, fontSize: 18 }}>
+							{item.title}
+						</Title>
+						{textType === '.docx' ? inputView(item) : textView(item)}
+						{infos.length - 1 !== index && <Divider />}
+					</ContainerTabs>
+				</div>
+			))}
+			{textType === '.docx' && buttonsView()}
+		</div>
+	)
 
 	const version = () => (
 		<Menu
@@ -263,6 +345,7 @@ Tabs.propTypes = {
 	sentAssign: func,
 	loadingSign: bool,
 	versionId: string,
+	onChangeVariables: func,
 }
 
 export default Tabs
