@@ -266,6 +266,7 @@ def get_pdf_download_url_controller(document):
     url = remote_document.download_pdf_document(document)
     return url
 
+
 def get_docx_download_url_controller(document):
     remote_document = RemoteDocument()
     url = remote_document.download_docx_document(document)
@@ -286,7 +287,7 @@ def fill_signing_date_controller(document, text):
             text, variable)
     elif document.text_type == ".docx":
         filled_text = remote_document.fill_docx_with_variables(
-            text, variable, None, None)
+            document, text, variable)
 
     return filled_text
 
@@ -299,3 +300,28 @@ def convert_pdf_controller(text):
     document_pdf = requests.post(
         current_app.config["HTMLTOPDF_API_URL"], data=formatted_text.encode('utf-8')).content
     return base64.b64decode(document_pdf)
+
+
+def change_variables_controller(document, new_variables, email):
+    document_template = DocumentTemplate.query.filter_by(
+        id=document.document_template_id).first()
+    current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
+    versions = document.versions
+    current_version = int(versions[0]["id"])
+    new_version = current_version + 1
+    version = {"description": "Changed document variables",
+               "email": email,
+               "created_at": current_date,
+               "id": str(new_version),
+               "comments": ""}
+
+    # need to make a copy to track changes to JSON, otherwise the changes are not updated
+    document.versions = copy.deepcopy(document.versions)
+    document.versions.insert(0, version)
+    document.variables = new_variables
+    db.session.add(document)
+    db.session.commit()
+    remote_document = RemoteDocument()
+    print(document.company_id)
+    remote_document.update_variables(document,document_template,document.company_id,new_variables)
+    
