@@ -195,15 +195,25 @@ class RemoteDocument:
         )
         return document_url
 
-    def download_pdf_document(self, document):
-        document_url = self.s3_client.generate_presigned_url(
-            "get_object",
-            Params={
-                "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-                "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
-            },
-            ExpiresIn=180,
-        )
+    def download_pdf_document(self, document, version_id):
+        if version_id is None:
+            document_url = self.s3_client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                    "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+                },
+                ExpiresIn=180,
+            )
+        else:
+            document_url = self.s3_client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                    "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.pdf'
+                },
+                ExpiresIn=180,
+            )
         return document_url
 
     def download_docx_document(self, document):
