@@ -309,7 +309,7 @@ def next_document_status(current_user, document_id):
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
-            document_id)
+            document_id, user)
     except Exception:
         logging.exception(
             "Could not send email after changing workflow status")
@@ -322,6 +322,10 @@ def next_document_status(current_user, document_id):
 @get_local_user
 def previous_document_status(current_user, document_id):
     try:
+        if current_user["name"] == None:
+            user = current_user["email"]
+        else:
+            user = current_user["name"]
         document, status = previous_status_controller(document_id)
         if not document:
             abort(404, "Document not Found")
@@ -333,7 +337,7 @@ def previous_document_status(current_user, document_id):
         abort(404, "Could not change document status")
     try:
         response = workflow_status_change_email_controller(
-            document_id)
+            document_id, user)
     except Exception:
         logging.exception(
             "Could not send email after changing workflow status")
