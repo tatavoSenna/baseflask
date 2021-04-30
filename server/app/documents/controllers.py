@@ -215,11 +215,11 @@ def document_creation_email_controller(title, company_id):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller('leon@lawing.com.br', email_list,
-                                     "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
+                                     "New Document created", None, 'd-50d8e7117d4640689d8bf638094f2037')
     return response
 
 
-def workflow_status_change_email_controller(document_id):
+def workflow_status_change_email_controller(document_id, name):
     document = get_document_controller(document_id)
     workflow = document.workflow
     node = workflow["current_node"]
@@ -236,19 +236,19 @@ def workflow_status_change_email_controller(document_id):
     if len(email_list) == 0:
         return
     response = send_email_controller('leon@lawing.com.br', email_list,
-                                     f'O Documento {title} mudou para o status {status}.', title, 'd-d869f27633274db3810abaa3b60f1833')
+                                     f'O Documento {title} mudou para o status {status}.', name, 'd-d869f27633274db3810abaa3b60f1833')
     return response
 
 
-def send_email_controller(sender_email, recipient_emails, email_subject, variable, template_id):
+def send_email_controller(sender_email, recipient_emails, email_subject, name, template_id):
     message = Mail(
         from_email=sender_email,
         to_emails=recipient_emails)
     # faz as substituições necessárias no template
-    message.dynamic_template_data = {
-        'subject': email_subject,
-        'variable': variable
-    }
+    if name is not None:
+        message.dynamic_template_data = {
+            'name': name
+        }
     message.template_id = template_id
     sg = SendGridAPIClient(current_app.config["SENDGRID_API_KEY"])
     response = sg.send(message)
@@ -323,5 +323,5 @@ def change_variables_controller(document, new_variables, email):
     db.session.commit()
     remote_document = RemoteDocument()
     print(document.company_id)
-    remote_document.update_variables(document,document_template,document.company_id,new_variables)
-    
+    remote_document.update_variables(
+        document, document_template, document.company_id, new_variables)
