@@ -261,9 +261,9 @@ def get_download_url_controller(document):
     return url
 
 
-def get_pdf_download_url_controller(document):
+def get_pdf_download_url_controller(document, version_id):
     remote_document = RemoteDocument()
-    url = remote_document.download_pdf_document(document)
+    url = remote_document.download_pdf_document(document, version_id)
     return url
 
 

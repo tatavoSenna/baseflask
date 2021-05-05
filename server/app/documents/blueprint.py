@@ -140,6 +140,7 @@ def get_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def get_document_pdf(current_user, document_id):
+    version_id = request.args.get('version', None)
     if not document_id:
         abort(400, "Missing document id")
     try:
@@ -148,7 +149,7 @@ def get_document_pdf(current_user, document_id):
         abort(404, "Document not Found")
 
     try:
-        pdf_url = get_pdf_download_url_controller(document)
+        pdf_url = get_pdf_download_url_controller(document, version_id)
     except:
         abort(
             400, "Could not download document pdf from S3")
