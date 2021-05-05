@@ -58,16 +58,55 @@ const Tabs = ({
 	const textView = (item) =>
 		item.fields.map((item, index) => (
 			<div key={index}>
-				<Paragraph
-					style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-					key={item.label + index}>
-					{item.label}:
-				</Paragraph>
-				<Paragraph
-					style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
-					key={item.value + index}>
-					{item.value}
-				</Paragraph>
+				{item.hasOwnProperty('subtitle') ? (
+					<>
+						<Title level={4} style={{ marginTop: 10, fontSize: 15 }}>
+							{item.subtitle}
+						</Title>
+						{item.items.map((item_list, index) => (
+							<>
+								{item_list.map((item, index) => (
+									<>
+										<Paragraph
+											style={{
+												color: '#000',
+												fontSize: 10,
+												marginBottom: 0,
+												marginLeft: '10px',
+											}}
+											key={item.label + index}>
+											{item.label}:
+										</Paragraph>
+										<Paragraph
+											style={{
+												color: '#646464',
+												fontSize: 14,
+												marginBottom: 14,
+												marginLeft: '10px',
+											}}
+											key={item.value + index}>
+											{item.value}
+										</Paragraph>
+									</>
+								))}
+								{item.items.length - 1 !== index && <Divider />}
+							</>
+						))}
+					</>
+				) : (
+					<>
+						<Paragraph
+							style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+							key={item.label + index}>
+							{item.label}:
+						</Paragraph>
+						<Paragraph
+							style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+							key={item.value + index}>
+							{item.value}
+						</Paragraph>
+					</>
+				)}
 			</div>
 		))
 

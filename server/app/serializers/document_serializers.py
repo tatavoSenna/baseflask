@@ -149,20 +149,58 @@ def generate_steps(obj_workflow, ordered_nodes):
 def map_variables_to_form(variables, form):
 
     filled_form = []
+    group_index = 0
     for group in form:
         filled_form.append({
             "title": group["title"],
             "fields": []
         })
+
+        question_index = 0
         for question in group['fields']:
-            # This 'if' is here so templates whose variables are not objects still work
-            if type(question['variable']) == str:
+
+            if question['type'] == 'structured_list':
+                variables_obj = {
+                    "subtitle": question['label'],
+                    "items": []
+                }
+                for item_variables in variables[f'structuredList_{group_index}_{question_index}']:
+                    item_list = []
+                    item_index = 0
+                    for variable_name, value in item_variables.items():
+                        for var_obj in question['structure']:
+                            if var_obj['variable']['name'] == variable_name:
+                                label = var_obj['label']
+
+                        item_list.append({
+                            "label": label,
+                            "variable": variable_name,
+                            "value": value
+                        })
+                        item_index += 1
+
+                    variables_obj['items'].append(item_list)
+
+                filled_form[-1]["fields"].append(variables_obj)
+
+                print(variables_obj)
+
+                # This 'if' is here so templates whose variables are not objects still work
+            elif type(question['variable']) == str:
                 if variables.get(question['variable']):
                     filled_form[-1]["fields"].append({
                         "label": question['label'],
                         "variable": question['variable'],
                         "value": variables[question['variable']]
                     })
+            elif type(question['variable']) == list:
+                for list_variable in question['variable']:
+                    if variables.get(list_variable['name']):
+                        filled_form[-1]["fields"].append({
+                            "label": question['label'],
+                            "variable": list_variable['name'],
+                            "value": variables[list_variable['name']]
+                        })
             else:
                 if variables.get(question['variable']['name']):
                     filled_form[-1]["fields"].append({
@@ -170,4 +208,9 @@ def map_variables_to_form(variables, form):
                         "variable": question['variable']['name'],
                         "value": variables[question['variable']['name']]
                     })
+
+            question_index += 1
+
+        group_index += 1
+
     return filled_form
