@@ -33,6 +33,8 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
+			<Menu.Item key="text_area">Área de texto</Menu.Item>
+			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
 		</Menu>
 	)
 

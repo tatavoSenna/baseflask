@@ -1,51 +1,117 @@
 from datetime import datetime
 from app.models.documents import DocumentTemplate
+from app import jinja_env
 import requests
 import json
 from flask import Markup
 from num2words import num2words
 from babel.numbers import format_currency
 
+
 def specify_variables(variables, document_template_id):
-    variables_specification = DocumentTemplate.query.get(document_template_id).variables
+    variables_specification = DocumentTemplate.query.get(
+        document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
 
-    if not variables_specification:
-        return variables
-    
-    for variable in variables:
-        if not variable in variables_specification:
-            continue
-        if variables_specification[variable]["type"] == "string":
-            if variables_specification[variable]["doc_display_style"] == "sentence_case":
-                variables[variable] = variables[variable].capitalize()
-            if variables_specification[variable]["doc_display_style"] == "uppercase":
-                variables[variable] = variables[variable].upper()
-            if variables_specification[variable]["doc_display_style"] == "lowercase":
-                variables[variable] = variables[variable].lower()
-        if variables_specification[variable]["type"] == "date":
+    def format_variable(specs, variable, variables, struct_name):
+        variable_type = specs["type"]
+        if variable_type == "string":
+            if specs["doc_display_style"] == "sentence_case":
+                return variables[variable].capitalize()
+
+            elif specs["doc_display_style"] == "uppercase":
+                return variables[variable].upper()
+
+            elif specs["doc_display_style"] == "lowercase":
+                return variables[variable].lower()
+
+            elif specs["doc_display_style"] == "plain":
+                return variables[variable]
+
+        elif variable_type == "date":
             date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
-            variables[variable] = date.strftime(variables_specification[variable]["doc_display_style"])
-        elif variables_specification[variable]["type"] == "database":
-            response = requests.get(f'https://n66nic57s2.execute-api.us-east-1.amazonaws.com/dev/extract/{variables[variable]}').json()
+            return date.strftime(
+                specs["doc_display_style"])
+
+        elif variable_type == "database":
+            response = requests.get(
+                f'https://n66nic57s2.execute-api.us-east-1.amazonaws.com/dev/extract/{variables[variable]}').json()
             variables = {**variables, **response}
-        elif variables_specification[variable]["type"] == "list":
-            if variables_specification[variable]["doc_display_style"] == "commas":
+            return True
+
+        elif variable_type == "list":
+            if specs["doc_display_style"] == "commas":
                 list_variable = variables[variable]
                 last_element = list_variable.pop()
                 list_variable[-1] = list_variable[-1] + " e " + last_element
-                variables[variable] = ", ".join(list_variable)
-            elif variables_specification[variable]["doc_display_style"] == "bullets":
+                return ", ".join(list_variable)
+
+            elif specs["doc_display_style"] == "bullets":
                 if text_type == ".txt":
-                    variables[variable] = Markup("</li><li>").join(variables[variable])
+                    return Markup(
+                        "</li><p>").join(variables[variable])
+
                 elif text_type == ".docx":
-                    variables[variable] = "\a".join(variables[variable])
-        elif variables_specification[variable]["type"] == "currency":
+                    return "\a".join(variables[variable])
+
+        elif variable_type == "currency":
             num_variable = variables[variable]
-            variables[variable] = format_currency(num_variable, "BRL", locale='pt_BR')
-            if variables_specification[variable]["doc_display_style"] == "currency_extended":
-                variables[variable] = variables[variable] + " (" + num2words(num_variable,lang='pt_BR', to='currency') + ")"
+            return format_currency(
+                num_variable, "BRL", locale='pt_BR')
+            if specs["doc_display_style"] == "currency_extended":
+                return variables[variable] + \
+                    " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
+
+        elif variable_type == "structured_list":
+            if specs["doc_display_style"] == "text":
+                rows_list = []
+                text_template = specs["extra_style_params"]["row_template"]
+                jinja_template = jinja_env.from_string(text_template)
+                for item in variables[struct_name]:
+                    filled_text = jinja_template.render(item)
+                    rows_list.append(filled_text)
+
+                return specs["extra_style_params"]["separator"].join(rows_list) + "."
+
+            elif specs["doc_display_style"] == "table":
+                table_list = []
+                table_title = specs["extra_style_params"]["title"]
+                i = 0
+                for item in variables[struct_name]:
+                    table_rows = [
+                        f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"]
+                    i += 1
+                    for lineSpec in specs["extra_style_params"]["lines"]:
+                        columns = []
+                        for info in lineSpec:
+                            for label, value in info.items():
+                                columns.append(
+                                    f"<td>{label}</td><td>{item[value]}</td>")
+                        table_rows.append('<tr>' + ''.join(columns) + '</tr>')
+
+                    table_list.append(''.join(table_rows))
+
+                return "<figure class='table'><table><tbody>" + "".join(table_list) + "</tbody></table></figure>"
+
+    if not variables_specification:
+        return variables
+
+    extra_variables = {}
+
+    for variable in variables:
+        if not variable in variables_specification:
+            continue
+
+        if variable[0:14] != 'structuredList':
+            formatted = format_variable(
+                variables_specification[variable], variable, variables, struct_name=None)
+            variables[variable] = formatted
+
         else:
-            pass
- 
+            for struct_variable in variables_specification[variable]:
+                formatted = format_variable(
+                    variables_specification[variable][struct_variable], struct_variable, variables, variable)
+                extra_variables[struct_variable] = formatted
+
+    variables.update(extra_variables)
     return variables

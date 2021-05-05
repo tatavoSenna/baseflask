@@ -1,5 +1,7 @@
 import React from 'react'
 import { array, number } from 'prop-types'
+import { useHistory } from 'react-router-dom'
+
 import RadioField from '~/components/radioField'
 import CnpjField from '~/components/cnpjField'
 import CpfField from '~/components/cpfField'
@@ -18,6 +20,7 @@ import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
 import ImageField from '~/components/imageField'
+import StructuredList from '~/components/structuredList'
 
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
@@ -26,6 +29,8 @@ import styles from './index.module.scss'
 import './styles.css'
 
 function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
+	const { values } = useHistory().location.state
+	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const children = []
 
@@ -281,6 +286,17 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 				children.push(
 					<ImageField
 						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+					/>
+				)
+				break
+			case 'structured_list':
+				children.push(
+					<StructuredList
+						key={i}
+						pageIndex={currentPage}
+						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
 					/>

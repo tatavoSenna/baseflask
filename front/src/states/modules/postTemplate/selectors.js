@@ -1,4 +1,5 @@
 import { extend } from 'lodash'
+import update from 'immutability-helper'
 import { errorMessage, successMessage } from '~/services/messager'
 
 export const selectEdit = (data, payload) => {
@@ -20,15 +21,13 @@ export const selectEdit = (data, payload) => {
 		partiesList.push(party)
 	}
 
-	let pagesList = []
+	const pagesList = []
 	payload.form.forEach((page) => {
-		const pageObj = {
-			fields: [],
-		}
+		const pageList = []
 		page.fields.forEach((field) => {
-			pageObj.fields.push(field.variable)
+			pageList.push(field.variable)
 		})
-		pagesList.push(pageObj)
+		pagesList.push(pageList)
 	})
 
 	return extend(data, {
@@ -292,50 +291,28 @@ export const selectParties = (signers, payload) => {
 }
 
 export const addVariable = (variables, payload) => {
-	return variables.map((page, index) => {
-		if (index === payload.pageIndex) {
-			return extend(page, {
-				fields: [...page.fields, payload.newField.variable],
-			})
-		}
-		return page
-	})
+	const newVariables = update(variables, { [payload.pageIndex]: { $push: [] } })
+	return newVariables
 }
 
 export const removeVariable = (variables, payload) => {
-	return variables.map((page, index) => {
-		if (index === payload.pageIndex) {
-			return extend(page, {
-				fields: page.fields.filter(
-					(field, index) => index !== payload.fieldIndex
-				),
-			})
-		}
-		return page
+	const newVariables = update(variables, {
+		[payload.pageIndex]: { $splice: [[payload.fieldIndex, 1]] },
 	})
+	return newVariables
 }
 
 export const selectVariable = (variables, payload) => {
 	if (payload.name === 'field') {
-		return variables.map((page, index) => {
-			if (index === payload.pageIndex) {
-				page.fields.map((field, index) => {
-					if (index === payload.fieldIndex) {
-						try {
-							const fieldJSON = JSON.parse(payload.value)
-							const variable = fieldJSON.variable
-							for (const key in variable) {
-								extend(field, {
-									[key]: variable[key],
-								})
-							}
-						} catch {}
-					}
-					return field
-				})
-			}
-			return page
+		const fieldJSON = JSON.parse(payload.value)
+		const variable =
+			fieldJSON.variable !== undefined
+				? fieldJSON.variable
+				: fieldJSON.variables
+		const newVariables = update(variables, {
+			[payload.pageIndex]: { [payload.fieldIndex]: { $set: variable } },
 		})
+		return newVariables
 	}
 	return variables
 }

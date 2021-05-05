@@ -1,23 +1,27 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
 
-const CurrencyField = ({ pageFieldsData, className, onChange }) => {
+const CurrencyField = ({ pageFieldsData, className, onChange, listIndex }) => {
 	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
+	const name = isObj ? variable.name : variable
+	const hidden =
+		typeof className === 'string'
+			? className.slice(0, 19) === 'inputFactory_hidden'
+			: false
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
-			name={isObj ? variable.name : variable}
+			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
 			onChange={onChange}
 			hasFeedback
 			rules={
-				typeof className === 'string' &&
-				className.slice(0, 19) !== 'inputFactory_hidden' && [
+				!hidden && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -55,6 +59,7 @@ CurrencyField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	listIndex: number,
 }
 
 CurrencyField.defaultProps = {

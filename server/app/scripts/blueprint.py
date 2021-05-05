@@ -6,9 +6,10 @@ import copy
 
 scripts_bp = Blueprint('scripts', __name__)
 
+
 @scripts_bp.cli.command('change-label')
 def change_label():
-    """Change 'value' for 'label' key on all fields on all documents and templatates."""
+    """Change 'value' for 'label' key on all fields on all documents and templates."""
     def swap_label(table):
         for item in db.session.query(table).all():
             item.form = copy.deepcopy(item.form)
@@ -25,6 +26,3 @@ def change_label():
 
     swap_label(Document)
     swap_label(DocumentTemplate)
-
-
-
