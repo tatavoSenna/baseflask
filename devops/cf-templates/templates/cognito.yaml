@@ -46,7 +46,7 @@ Resources:
     Type: "AWS::Cognito::UserPool"
     Properties:
       UserPoolName: !Sub ${AuthName}-user-pool
-      AliasAttributes: 
+      UsernameAttributes:
         - email
       AutoVerifiedAttributes:
         - email
@@ -54,6 +54,8 @@ Resources:
       # SmsConfiguration:
       #   ExternalId: !Sub ${AuthName}-external
       #   # SnsCallerArn: !GetAtt SNSRole.Arn
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
       Schema:
         - Name: name
           AttributeDataType: String
@@ -63,6 +65,14 @@ Resources:
           AttributeDataType: String
           Mutable: false
           Required: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireLowercase: false
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: false
+          TemporaryPasswordValidityDays: 7  
 
   # Creates a User Pool Client to be used by the identity pool
   UserPoolClient:

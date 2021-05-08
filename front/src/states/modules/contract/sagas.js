@@ -57,13 +57,13 @@ function* createLinkSaga({ payload = {} }) {
 			})
 		)
 		successMessage({
-			content: 'Contrato excluído com sucesso.',
+			content: 'Link criado com sucesso.',
 			updateKey: 'createLinkSaga',
 		})
 	} catch (error) {
 		yield put(createLinkFailure(error))
 		errorMessage({
-			content: 'Exclusão do contrato falhou.',
+			content: 'Criação do link falhou.',
 			updateKey: 'createLinkSaga',
 		})
 	}

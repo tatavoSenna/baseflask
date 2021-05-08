@@ -25,6 +25,9 @@ Parameters:
   AppDomainName:
     Type: String
 
+  ApiDomainName:
+    Type: String
+
 Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
@@ -184,7 +187,7 @@ Resources:
           phases:
             build:
               runtimespec:
-                - node:10.x
+                - node:12.x
               commands:
                 - cd front
                 - yarn install
@@ -198,17 +201,19 @@ Resources:
         Image: aws/codebuild/standard:4.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
+          - Name: NODE_ENV
+            Value: production
           - Name: REACT_APP_API_URL
             Value: !Join
-            - ''
-            - - 'https://api-'
-              - !Ref AppDomainName
+              - ''
+              - - 'https://'
+                - !Ref ApiDomainName
           - Name: REACT_APP_API_SIGN_IN_URL
             Value: !Join
-            - ''
-            - - 'https://api-'
-              - !Ref AppDomainName
-              - '/auth/sign_in'
+              - ''
+              - - 'https://'
+                - !Ref ApiDomainName
+                - '/auth/sign_in'
           - Name: REACT_APP_BASE_URL
             Value:  !Join
               - ''
@@ -221,9 +226,7 @@ Resources:
               - !Ref AppDomainName
               - '/docusign-token'
           - Name: REACT_APP_DOCUSIGN_OAUTH_URL
-            Value: https://account-d.docusign.com/oauth
-          - Name: REACT_APP_DOCUSIGN_INTEGRATION_KEY
-            Value: 403ee112-39e5-4fea-ab30-5b7b6cdd58be
+            Value: https://account.docusign.com/oauth
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
@@ -278,7 +281,6 @@ Resources:
                 Configuration:
                   BucketName: !Ref AppBucket
                   Extract: true
-                  CannedACL: public-read
                 InputArtifacts:
                   - Name: ReactAppBuild
                 RunOrder: 1
