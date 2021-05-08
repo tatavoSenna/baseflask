@@ -16,6 +16,9 @@ Parameters:
   VpcId:
     Type: String
 
+  ApiLBCertificate:
+    Type: String
+
 
 Conditions:
   EC2: !Equals [ !Ref LaunchType, "EC2" ]
@@ -73,7 +76,7 @@ Resources:
       Protocol: HTTPS
       SslPolicy: ELBSecurityPolicy-2016-08
       Certificates:
-        - CertificateArn: arn:aws:acm:us-east-1:833120502863:certificate/15bf796f-f638-40c3-b047-2b7ef047d904
+        - CertificateArn: !Ref ApiLBCertificate
       DefaultActions:
         - Type: forward
           Order: 1

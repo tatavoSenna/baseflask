@@ -1,17 +1,20 @@
 import random
 import secrets
+import logging
 
 from functools import wraps
 
 import boto3
 
-from flask import g, current_app
+from flask import g, current_app, abort
+from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
 
 from app import db
 from app.models.user import User
 from app.models.company import Company
 from app.serializers.user_serializers import UserSerializer
+
 
 
 class RemoteUser:
@@ -67,46 +70,51 @@ class RemoteUser:
 
         db.session.add(local_user)
         db.session.commit()
-        return local_user 
+        return local_user
 
     def get_local(self):
-        local_user = User.query.filter_by(sub=self.sub(), active=True).first()
+        try:
+            local_user = User.query.filter_by(
+                sub=self.sub(), active=True).one()
+        except NoResultFound:
+            logging.info(
+                f'User {self.email()} from cognito not present in database.\nCreating it on company 1.')
+            local_user = self.create_local(1)  # creates the user
         local_user.email = self.email()
         db.session.add(local_user)
         db.session.commit()
         return local_user
-
 
     """
     Create a user using cognito's API and sync it with the application database
     """
 
     def create(self, email, name, company_id):
-        username = email.split("@")[0] + "_" + str(random.randint(1000, 9999))
-        password = secrets.token_urlsafe(12) + "*" + str(random.randint(10, 99))
+        password = str(random.randint(100000, 999999))
 
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
-            Username=username,
+            Username=email,
             UserAttributes=[
                 {"Name": "email", "Value": email},
-            ],
-            ValidationData=[
-                {"Name": "name", "Value": name},
+                {"Name": "name", "Value": name}
             ],
             TemporaryPassword=password,
         )
 
         try:
             response = self.client.admin_create_user(**user_attributes)
-        except self.client.exceptions.UsernameExistsException as identifier:
-            return dict(error="Username already exists")
+        except self.client.exceptions.UsernameExistsException:
+            logging.info(f'User {email} already on cognito. Can´t create. Aborting')
+            abort(400, description = 'Usuário já cadastrado')
+        except self.client.exceptions.InvalidPasswordException:
+            logging.info(f'Can´t create User {email} already on cognito with the provided password')
+            abort(400, description='A senha fornecida não está de acordo com a noss politica.')
+
 
         self.user = response.get("User")
         local_user = self.create_local(company_id)
-
         return local_user
-
 
     def __extract_user_attributes(self, attribute_name):
         user_attributes = self.user.get("UserAttributes", False) or self.user.get(

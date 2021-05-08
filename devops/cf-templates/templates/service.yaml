@@ -33,6 +33,11 @@ Parameters:
       Description:
         The front end domain. The api needs this to build the callback url to the cognito hosted ui
 
+  ApiDomainName:
+      Type: String
+      Description:
+        The api domain. The api needs this to build the callback url to the cognito hosted ui
+
   CognitoUserPool:
     Type: String
     Description:
@@ -52,6 +57,9 @@ Parameters:
     Type: String
     Description:
       The user pool app client
+
+  DocumentsBucket:
+    Type: String
 
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
@@ -73,6 +81,29 @@ Resources:
               Service: ecs-tasks.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+            
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      Policies:
+        - PolicyName: accesstasks3
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: !Sub arn:aws:s3:::lawing-prod-documents/*
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -121,6 +152,7 @@ Resources:
       Cpu: 256
       NetworkMode: !If [ Fargate, "awsvpc", "bridge" ]
       ExecutionRoleArn: !Ref TaskExecutionRole
+      TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
         - Name: lawing-api
           Image: parafernalia/baseflask:0
@@ -147,33 +179,29 @@ Resources:
           - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
             Value: !Ref UserPoolClient
           - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
-            Value: !Ref UserPoolClientSecret
+            Value: '1ek747b8mflpo2gbf5743mqd49qp6vcffbkepuq3usr68kgo2bmr'
           - Name: AWS_COGNITO_REDIRECT_URL
             Value: !Join
             - ''
             - - 'https://'
-              - !Ref AppDomainName
+              - !Ref AppDomainName 
               - '/token'
-          - Name: AWS_S3_DOCUMENTS_BUCKET
-            Value: 'lawing-documents'
           - Name: SQLALCHEMY_TRACK_MODIFICATIONS
             Value: 'False'
           - Name: SECRET_KEY
             Value: '3456yrtyr65!2@'
           - Name: AWS_ACCESS_KEY_ID
-            Value: 'AKIAIRXAMWKHW6GMRH7A'
+            Value: 'AKIAU6PIQTWIPIES5PXE'
           - Name: SQLALCHEMY_DATABASE_URI
             Value: !Ref DatabaseConnectionString
           - Name: AWS_SECRET_ACCESS_KEY
-            Value: 'ziKkp6tjGpgTi7QYqKJbiuQnvNaUI+3Zz+HlDKPi'
+            Value: '11u36rqkurgn864ak71150bivv2jsjnjdkn0d27duemhsm8131ao'
           - Name: DOCUSIGN_OAUTH_URI
-            Value: https://account-d.docusign.com/oauth
-          - Name: DOCUSIGN_SECRET_KEY
-            Value: 520c8913-e2e5-4dc1-baef-3ee2d97877a1
-          - Name: DOCUSIGN_INTEGRATION_KEY
-            Value: 403ee112-39e5-4fea-ab30-5b7b6cdd58be
+            Value: https://account.docusign.com/oauth
+          - Name: DOCUSIGN_WEBHOOK_URL
+            Value: !Sub '${ApiDomainName}/docusign/signed'
           - Name: AWS_S3_DOCUMENTS_BUCKET
-            Value: lawing-documents-dev
+            Value: !Ref DocumentsBucket
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000

@@ -29,6 +29,7 @@ users_bp = Blueprint("users", __name__)
 groups_bp = Blueprint("groups", __name__)
 
 
+
 @users_bp.route("me", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
@@ -88,15 +89,12 @@ def create(logged_user):
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields")
 
-    try:
-        new_user = create_user_controller(
-            email=fields.get("email"),
-            name=fields.get("name"),
-            group_ids=fields.get("groups"),
-            company_id=logged_user["company_id"]
-        )
-    except:
-        return {}, 500
+    new_user = create_user_controller(
+        email=fields.get("email"),
+        name=fields.get("name"),
+        group_ids=fields.get("groups"),
+        company_id=logged_user["company_id"]
+    )
     new_user = User.query.filter_by(email=fields.get("email")).first()
     new_user.name = fields.get("name")
     db.session.add(new_user)
