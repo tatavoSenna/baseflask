@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCityField } from '~/states/modules/cityField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
 
-const CityField = ({ pageFieldsData, className, onChange }) => {
+const CityField = ({ pageFieldsData, className, onChange, listIndex }) => {
 	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
+	const name = isObj ? variable.name : variable
+	const hidden =
+		typeof className === 'string'
+			? className.slice(0, 19) === 'inputFactory_hidden'
+			: false
 	const dispatch = useDispatch()
 	const cityName = []
 	useEffect(() => {
@@ -21,15 +26,12 @@ const CityField = ({ pageFieldsData, className, onChange }) => {
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
-			name={isObj ? variable.name : variable}
+			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
 			hasFeedback
 			className={className}
 			rules={
-				typeof className === 'string' &&
-				className.slice(0, 19) !== 'inputFactory_hidden' && [
-					{ required: true, message: 'Este campo é obrigatório.' },
-				]
+				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
 			colon={false}>
@@ -53,6 +55,7 @@ CityField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	listIndex: number,
 }
 
 CityField.defaultProps = {

@@ -72,15 +72,31 @@ function* postTemplateSaga({ payload = {} }) {
 
 	const arrangedVariables = (variables) => {
 		const variablesObj = {}
-		variables.forEach((page) =>
-			page.fields.forEach((field) => {
-				const variable = {}
-				for (const key in field) {
-					if (key !== 'name') {
-						variable[key] = field[key]
+		variables.forEach((page, pageIndex) =>
+			page.forEach((field, fieldIndex) => {
+				if (Array.isArray(field)) {
+					const listVariable = {}
+					field.forEach((arrayField) => {
+						const newVar = {}
+						for (const key in arrayField) {
+							if (key !== 'name') {
+								newVar[key] = arrayField[key]
+							}
+						}
+						listVariable[arrayField.name] = newVar
+					})
+					variablesObj[
+						`structuredList_${pageIndex}_${fieldIndex}`
+					] = listVariable
+				} else {
+					const variable = {}
+					for (const key in field) {
+						if (key !== 'name') {
+							variable[key] = field[key]
+						}
 					}
+					variablesObj[field.name] = variable
 				}
-				variablesObj[field.name] = variable
 			})
 		)
 		return variablesObj

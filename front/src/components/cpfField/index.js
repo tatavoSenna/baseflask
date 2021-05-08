@@ -1,25 +1,35 @@
 import React from 'react'
-import { string, shape, object, func, bool } from 'prop-types'
+import { string, shape, object, func, bool, number } from 'prop-types'
 import { Form } from 'antd'
 import { validateCPF } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 import InfoField from '~/components/infoField'
 
-const CpfField = ({ pageFieldsData, className, onChange, first }) => {
+const CpfField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	first,
+	listIndex,
+}) => {
 	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
+	const name = isObj ? variable.name : variable
+	const hidden =
+		typeof className === 'string'
+			? className.slice(0, 19) === 'inputFactory_hidden'
+			: false
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
-			name={isObj ? variable.name : variable}
+			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
 			onChange={onChange}
 			hasFeedback
 			rules={
-				typeof className === 'string' &&
-				className.slice(0, 19) !== 'inputFactory_hidden' && [
+				!hidden && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -49,6 +59,7 @@ CpfField.propTypes = {
 	className: object,
 	onChange: func,
 	first: bool,
+	listIndex: number,
 }
 
 CpfField.defaultProps = {

@@ -41,7 +41,7 @@ const initialState = {
 		signers: {
 			parties: [],
 		},
-		variables: [{ fields: [] }],
+		variables: [[]],
 	},
 	error: null,
 	loading: false,
@@ -83,7 +83,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: extend(state.data, {
 					form: [...state.data.form, payload.newPage],
-					variables: [...state.data.variables, { fields: [] }],
+					variables: [...state.data.variables, []],
 				}),
 			}),
 		postTemplatePageRemove: (state, { payload }) =>

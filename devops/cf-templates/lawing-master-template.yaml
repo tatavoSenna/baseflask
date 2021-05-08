@@ -22,7 +22,12 @@ Parameters:
   AppDomainName:
     Type: String
     Description: >
-      The url to access the app. I will be included as an alternative domain name in Cloudfront Distribution.
+      The url to access lawing's app. I will be included as an alternative domain name in Cloudfront Distribution.
+
+  ApiDomainName:
+    Type: String
+    Description: >
+      The url to access the lawing's api. I will be included as an alternative domain name in Cloudfront Distribution.
 
   DBName:
     Description: The database name
@@ -71,9 +76,17 @@ Parameters:
     Description: >
       Token for the user specified above. (https://github.com/settings/tokens)
 
+  ApiLBCertificate:
+    Type: String
+    Description: The ARN of the certificate for the api load balance. It must be in the same region where this stack is being created.
+
+  AppCertificate:
+    Type: String
+    Description: The ARN of the certificate for the app Cloud Formation. It must be created in the N. Virginia Region.
+
   TemplateBucket:
     Type: String
-    Default: lawing-cloudformation-template
+    Default: lawing-templates
     Description: >
       The S3 bucket from which to fetch the templates used by this stack.
 
@@ -115,6 +128,13 @@ Metadata:
           default: Stack Configuration
         Parameters:
           - TemplateBucket
+      - Label:
+          default: Domains and certificates
+        Parameters:
+          - ApiLBCertificate
+          - AppCertificate
+          - AppDomainName
+          - APIDomainName
 
 Resources:
 
@@ -171,9 +191,10 @@ Resources:
         GitHubToken: !Ref GitHubToken
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
-        AppBucket: !GetAtt CloudFront.Outputs.AppBucket
+        AppBucket: !GetAtt CloudFront.Outputs.WebsiteBucket
         CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
         AppDomainName: !Ref AppDomainName
+        ApiDomainName: !Ref ApiDomainName
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
@@ -183,6 +204,7 @@ Resources:
         LaunchType: !Ref LaunchType
         Subnets: !GetAtt VPC.Outputs.Subnets
         VpcId: !GetAtt VPC.Outputs.VpcId
+        ApiLBCertificate: !Ref ApiLBCertificate
 
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -210,6 +232,8 @@ Resources:
         UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClient
         UserPoolClientSecret: !GetAtt UserPool.Outputs.UserPoolClientSecret
         AppDomainName: !Ref AppDomainName
+        ApiDomainName: !Ref ApiDomainName
+        DocumentsBucket:  !GetAtt DocumentBucket.Outputs.DocumentsBucket
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
@@ -217,3 +241,13 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cloudfront.yaml"
       Parameters:
         AppDomainName: !Ref AppDomainName
+        AppCertificate: !Ref AppCertificate
+        AppBucketName: !Sub 'lawing-${AWS::StackName}-app'
+
+  DocumentBucket:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/documents_s3.yaml"
+      Parameters:
+        DocumentsBucketName: !Sub '${AWS::StackName}-lawing-documents'
+

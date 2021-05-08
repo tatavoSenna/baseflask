@@ -21,7 +21,8 @@ from app.documents.controllers import(
     get_download_url_controller,
     fill_signing_date_controller,
     delete_document_controller,
-    get_pdf_download_url_controller
+    get_pdf_download_url_controller,
+    change_variables_controller
 )
 from app.serializers.document_serializers import (
     DocumentListSerializer
@@ -527,3 +528,53 @@ def test_delete_document(delete_document_mock, delete_signed_document_mock):
     delete_signed_document_mock.assert_called_once_with(
         ret_document
     )
+
+
+@ patch('app.documents.controllers.RemoteDocument.update_variables')
+def test_change_document_variables(update_variables_mock):
+    company = factories.CompanyFactory(id=17)
+    user = factories.UserFactory(
+        company=company, email="testemail@gmail.com"
+    )
+
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+                "changed_by": ""
+            },
+            "3485": {
+                "next_node": None,
+                "changed_by": ""
+            },
+            "5521": {
+                "next_node": "3485",
+                "changed_by": ""
+            }
+        },
+        "current_node": "544",
+        "created_by": ""
+    }
+
+    versions = [{"description": "Version 0",
+                 "email": "teste@gmail.com",
+                 "created_at": "2020-10-3 21: 00: 00",
+                 "id": "0"
+                 }]
+
+    document_template_docx = factories.DocumentTemplateFactory(
+        id=66, company=company,company_id=17, workflow=workflow, text_type=".docx"
+    )
+    variables = {"variable_teste": "aaa"}
+    document = factories.DocumentFactory(
+        id=333, company=company, document_template_id=66, user_id=user.id, variables=variables, versions=versions)
+
+    new_variables = {"variable_teste": "bbb"}
+    change_variables_controller(document, new_variables, "testemail@gmail.com")
+    update_variables_mock.assert_called_with(
+        document, document_template_docx, 17, new_variables
+    )
+
+    document = Document.query.filter_by(id=333).first()
+    assert document.variables == new_variables
+    assert document.versions[0]["id"] == '1'

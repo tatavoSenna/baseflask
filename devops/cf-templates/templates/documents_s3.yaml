@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates the bucket to hold lawing documents
+
+Parameters:
+  DocumentsBucketName:
+    Type: String
+
+Resources:
+  DocumentsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:  !Ref DocumentsBucketName
+
+Outputs:
+  DocumentsBucket:
+    Value: !Ref DocumentsBucket

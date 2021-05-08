@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_awscognito import AWSCognitoAuthentication
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
@@ -9,7 +9,6 @@ from config import init_dotenv
 from jinja2 import Environment, PackageLoader, select_autoescape
 import click
 
-
 db = SQLAlchemy()
 migrate = Migrate(compare_type=True,)
 ma = Marshmallow()
@@ -18,6 +17,9 @@ jinja_env = Environment(
     loader=PackageLoader('app', 'templates'),
     autoescape=select_autoescape(['html', 'xml'])
 )
+
+def bad_request(e):
+    return jsonify({'error': e.description}), 400
 
 
 def create_app():
@@ -33,6 +35,8 @@ def create_app():
     migrate.init_app(app)
     ma.init_app(app)
     aws_auth.init_app(app)
+
+    app.register_error_handler(400, bad_request)
 
     from .users import remote
 

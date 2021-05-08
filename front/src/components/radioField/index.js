@@ -1,23 +1,25 @@
 import React from 'react'
-import { string, shape, array, object, func } from 'prop-types'
+import { string, shape, array, object, func, number } from 'prop-types'
 import { Form, Radio } from 'antd'
 import InfoField from '~/components/infoField'
 
-const RadioField = ({ pageFieldsData, className, onChange }) => {
+const RadioField = ({ pageFieldsData, className, onChange, listIndex }) => {
 	const { label, variable, type, options, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
+	const name = isObj ? variable.name : variable
+	const hidden =
+		typeof className === 'string'
+			? className.slice(0, 19) === 'inputFactory_hidden'
+			: false
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
-			name={isObj ? variable.name : variable}
+			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			hasFeedback
 			rules={
-				typeof className === 'string' &&
-				className.slice(0, 19) !== 'inputFactory_hidden' && [
-					{ required: true, message: 'Este campo é obrigatório.' },
-				]
+				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
 			colon={false}>
@@ -42,6 +44,7 @@ RadioField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	listIndex: number,
 }
 
 RadioField.defaultProps = {

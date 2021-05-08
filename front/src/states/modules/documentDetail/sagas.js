@@ -33,6 +33,9 @@ import {
 	getDocumentWordDownload,
 	getDocumentWordDownloadSuccess,
 	getDocumentWordDownloadFailure,
+	changeVariables,
+	changeVariablesSuccess,
+	changeVariablesFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -45,6 +48,7 @@ export default function* rootSaga() {
 	yield takeEvery(selectVersion, selectVersionSaga)
 	yield takeEvery(downloadLink, downloadLinkSaga)
 	yield takeEvery(getDocumentWordDownload, getDocumentWordDownloadSaga)
+	yield takeEvery(changeVariables, changeVariablesSaga)
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {
@@ -194,21 +198,45 @@ function* newAssignSaga({ payload = {} }) {
 }
 
 function* previousStepSaga({ payload }) {
+	loadingMessage({
+		content: 'Mudando o status do documento. Por favor aguarde.',
+		updateKey: 'status',
+	})
 	const { id } = payload
 	try {
 		const response = yield call(api.get, `documents/${id}/previous`)
 		yield put(previousStepSuccess(response.data))
+		successMessage({
+			content: 'Alteração do status do documento realizada com sucesso.',
+			updateKey: 'status',
+		})
 	} catch (error) {
+		errorMessage({
+			content: 'Alteração do status do documento falhou.',
+			updateKey: 'status',
+		})
 		yield put(previousStepFailure(error))
 	}
 }
 
 function* nextStepSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Mudando o status do documento. Por favor aguarde.',
+		updateKey: 'status',
+	})
 	const { id } = payload
 	try {
 		const response = yield call(api.get, `documents/${id}/next`)
 		yield put(nextStepSuccess(response.data))
+		successMessage({
+			content: 'Alteração do status do documento realizada com sucesso.',
+			updateKey: 'status',
+		})
 	} catch (error) {
+		errorMessage({
+			content: 'Alteração do status do documento falhou.',
+			updateKey: 'status',
+		})
 		yield put(nextStepFailure(error))
 	}
 }
@@ -249,5 +277,32 @@ function* getDocumentWordDownloadSaga({ payload = {} }) {
 			updateKey: 'downloadWord',
 		})
 		yield put(getDocumentWordDownloadFailure(error))
+	}
+}
+
+function* changeVariablesSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Alterando váriaveis do documento...',
+		updateKey: 'variablesDocument',
+	})
+	const { id, values } = payload
+
+	try {
+		const { data } = yield call(api.post, `documents/${id}/modify`, {
+			variables: values,
+		})
+
+		const response = yield call(api.get, `/documents/${id}/pdf`)
+		successMessage({
+			content: 'Alteração realizada com sucesso.',
+			updateKey: 'variablesDocument',
+		})
+		yield put(changeVariablesSuccess({ ...data, ...response.data }))
+	} catch (error) {
+		errorMessage({
+			content: 'Alteração falhou, favor tente novamente.',
+			updateKey: 'variablesDocument',
+		})
+		yield put(changeVariablesFailure(error))
 	}
 }

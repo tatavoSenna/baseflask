@@ -1,5 +1,9 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { successMessage, loadingMessage } from '~/services/messager'
+import {
+	successMessage,
+	loadingMessage,
+	errorMessage,
+} from '~/services/messager'
 
 import api from '~/services/api'
 import {
@@ -42,7 +46,12 @@ function* createUserSaga() {
 			updateKey: 'createUser',
 		})
 		yield put(getUserList())
-	} catch {}
+	} catch (error) {
+		errorMessage({
+			content: error.response.data.error,
+			updateKey: 'createUser',
+		})
+	}
 	yield put(resetNewUser())
 }
 

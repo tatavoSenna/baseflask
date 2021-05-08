@@ -215,6 +215,25 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		changeVariables: (state) =>
+			extend(state, {
+				loading: true,
+				loadingSign: true,
+			}),
+		changeVariablesSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+				file: payload.download_url ? payload.download_url : '',
+				error: null,
+				loading: false,
+				loadingSign: false,
+			}),
+		changeVariablesFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+				loadingSign: false,
+			}),
 	},
 })
 
@@ -251,6 +270,9 @@ export const {
 	getDocumentWordDownload,
 	getDocumentWordDownloadSuccess,
 	getDocumentWordDownloadFailure,
+	changeVariables,
+	changeVariablesSuccess,
+	changeVariablesFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

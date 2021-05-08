@@ -151,7 +151,8 @@ class RemoteDocument:
                 image = io.BytesIO(img_bytes)
                 sd.add_picture(image, width=Mm(50), height=Mm(50))
                 variables[str(key)[len("image_"):]] = sd
-                self.upload_image(document, variables[key].split("base64,")[1], str(key)[len("image_"):])
+                self.upload_image(document, variables[key].split(
+                    "base64,")[1], str(key)[len("image_"):])
         docx_template.render(variables)
 
         filled_text_io = io.BytesIO()
@@ -194,15 +195,25 @@ class RemoteDocument:
         )
         return document_url
 
-    def download_pdf_document(self, document):
-        document_url = self.s3_client.generate_presigned_url(
-            "get_object",
-            Params={
-                "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
-                "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
-            },
-            ExpiresIn=180,
-        )
+    def download_pdf_document(self, document, version_id):
+        if version_id is None:
+            document_url = self.s3_client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                    "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+                },
+                ExpiresIn=180,
+            )
+        else:
+            document_url = self.s3_client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                    "Key": f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.pdf'
+                },
+                ExpiresIn=180,
+            )
         return document_url
 
     def download_docx_document(self, document):
@@ -238,3 +249,15 @@ class RemoteDocument:
             remote_path,
             ExtraArgs={'ContentType': "application/pdf"}
         )
+
+    def update_variables(self, document, document_template, company_id, variables):
+        docx_io = self.download_docx_from_template(
+            document_template, company_id)
+        filled_docx_io = self.fill_docx_with_variables(
+            document, docx_io, variables)
+
+        copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
+
+        self.convert_docx_to_pdf_and_save(document, filled_docx_io)
+        self.upload_filled_docx_to_documents(
+            document, copy_docx_io, document_template.text_type)

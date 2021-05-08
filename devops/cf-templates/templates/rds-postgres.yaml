@@ -1,10 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Metadata:
   License: Apache-2.0
-Description: 'AWS CloudFormation Sample Template RDS_with_DBParameterGroup: Sample
-  template showing how to create an Amazon RDS Database Instance with a DBParameterGroup.**WARNING**
-  This template creates an Amazon Relational Database Service database instance. You
-  will be billed for the AWS resources used if you create a stack from this template.'
+Description: 'Main Lawing Database'
 
 Parameters:
   DBName:
