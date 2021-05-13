@@ -21,6 +21,7 @@ import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
 import ImageField from '~/components/imageField'
 import StructuredList from '~/components/structuredList'
+import DetailedCheckbox from '~/components/detailedCheckbox'
 
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
@@ -279,6 +280,9 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						onChange={
+							conditional ? (e) => checkField(e.target.value, i) : undefined
+						}
 					/>
 				)
 				break
@@ -299,6 +303,20 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+					/>
+				)
+				break
+			case 'detailed_checkbox':
+				children.push(
+					<DetailedCheckbox
+						key={i}
+						pageIndex={currentPage}
+						fieldIndex={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+						onChange={
+							conditional ? (e) => checkField(e.target.value, i) : undefined
+						}
 					/>
 				)
 				break

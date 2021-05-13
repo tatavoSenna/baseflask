@@ -1,16 +1,17 @@
 import React from 'react'
-import { string, shape, array, object, func, number } from 'prop-types'
+import { string, shape, array, object, func } from 'prop-types'
 import { Form, Checkbox } from 'antd'
 import InfoField from '~/components/infoField'
 
-const CheckboxField = ({ pageFieldsData, className, onChange, listIndex }) => {
-	const { label, variable, type, options, id, info } = pageFieldsData
+const CheckboxField = ({ pageFieldsData, className, onChange }) => {
+	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const name = isObj ? variable.name : variable
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
 	return (
 		<Form.Item
-			key={`${isObj ? variable.name : variable}_${id}`}
-			name={listIndex !== undefined ? [listIndex, name] : name}
+			key={name}
+			name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			hasFeedback
@@ -37,7 +38,6 @@ CheckboxField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
-	listIndex: number,
 }
 
 CheckboxField.defaultProps = {

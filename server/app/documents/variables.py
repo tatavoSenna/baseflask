@@ -62,7 +62,7 @@ def specify_variables(variables, document_template_id):
                 return variables[variable] + \
                     " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
 
-        elif variable_type == "structured_list":
+        elif variable_type == "structured_list" or variable_type == "detailed_checkbox":
             if specs["doc_display_style"] == "text":
                 rows_list = []
                 text_template = specs["extra_style_params"]["row_template"]
@@ -71,7 +71,7 @@ def specify_variables(variables, document_template_id):
                     filled_text = jinja_template.render(item)
                     rows_list.append(filled_text)
 
-                return specs["extra_style_params"]["separator"].join(rows_list) + "."
+                return specs["extra_style_params"]["separator"].join(rows_list)
 
             elif specs["doc_display_style"] == "table":
                 table_list = []
@@ -102,16 +102,16 @@ def specify_variables(variables, document_template_id):
         if not variable in variables_specification:
             continue
 
-        if variable[0:14] != 'structuredList':
-            formatted = format_variable(
-                variables_specification[variable], variable, variables, struct_name=None)
-            variables[variable] = formatted
-
-        else:
+        if variable[0:14] == 'structuredList' or variable[0:16] == 'detailedCheckbox':
             for struct_variable in variables_specification[variable]:
                 formatted = format_variable(
                     variables_specification[variable][struct_variable], struct_variable, variables, variable)
                 extra_variables[struct_variable] = formatted
+
+        else:
+            formatted = format_variable(
+                variables_specification[variable], variable, variables, struct_name=None)
+            variables[variable] = formatted
 
     variables.update(extra_variables)
     return variables

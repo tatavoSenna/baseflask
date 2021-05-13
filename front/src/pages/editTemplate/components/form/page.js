@@ -35,6 +35,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="database">Base de dados</Menu.Item>
 			<Menu.Item key="text_area">Área de texto</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
+			<Menu.Item key="detailed_checkbox">Checkbox Detalhado</Menu.Item>
 		</Menu>
 	)
 
@@ -76,6 +77,34 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				newField.variable.type = 'variable_image'
 				newField.variable.doc_display_style = 'image'
 				break
+			case 'structured_list':
+				newField.variable.type = type
+				newField.variable.doc_display_style = 'text | table'
+				newField.structure = [
+					{
+						type: 'text',
+						label: '',
+						info: '',
+						variable: {
+							name: '',
+						},
+					},
+				]
+				break
+			case 'detailed_checkbox':
+				newField.variable.type = type
+				newField.variable.doc_display_style = 'text'
+				newField.structure = [
+					{
+						type: 'text',
+						label: '',
+						info: '',
+						variable: {
+							name: '',
+						},
+					},
+				]
+				break
 			default:
 				newField.variable.type = 'string'
 				newField.variable.doc_display_style =
@@ -83,7 +112,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 		}
 
-		const hasOptions = ['dropdown', 'radio', 'checkbox']
+		const hasOptions = ['dropdown', 'radio', 'checkbox', 'detailed_checkbox']
 		if (hasOptions.includes(type)) {
 			newField.options = [
 				{ label: '', value: '' },

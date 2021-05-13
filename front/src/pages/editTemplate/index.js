@@ -148,6 +148,7 @@ const EditTemplate = () => {
 		}
 	}, [dispatch, id])
 
+	// When editing an existing template, this if statement fills all fields with their respective values, fetched from the database.
 	if (edit) {
 		data.form.forEach((page, index) => {
 			form.setFieldsValue({

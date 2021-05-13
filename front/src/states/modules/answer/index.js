@@ -1,5 +1,6 @@
 import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
+import { selectAnswer } from './selectors'
 
 const initialState = {
 	data: {},
@@ -13,7 +14,7 @@ const { actions, reducer } = createSlice({
 	reducers: {
 		appendAnswer: (state, { payload }) =>
 			extend(state, {
-				data: extend(state.data, payload.data),
+				data: selectAnswer(state.data, payload.data),
 			}),
 		answerRequest: (state) =>
 			extend(state, {

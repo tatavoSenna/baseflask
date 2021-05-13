@@ -23,21 +23,16 @@ import TextAreaField from '~/components/textAreaField'
 const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 	return (
 		<Card key={fieldKey} style={{ marginBottom: '20px' }}>
-			{structure.map((pageFieldsData, i) => {
+			{structure.map((field, i) => {
+				const pageFieldsData = JSON.parse(JSON.stringify(field))
+				pageFieldsData['list'] = name
 				switch (pageFieldsData.type) {
 					case 'radio':
-						return (
-							<RadioField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <RadioField key={i} pageFieldsData={pageFieldsData} />
 					case 'cnpj':
 						return (
 							<CnpjField
 								key={i}
-								listIndex={name}
 								pageFieldsData={pageFieldsData}
 								first={i === 0}
 							/>
@@ -46,7 +41,6 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 						return (
 							<CpfField
 								key={i}
-								listIndex={name}
 								pageFieldsData={pageFieldsData}
 								first={i === 0}
 							/>
@@ -55,107 +49,39 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 						return (
 							<EmailField
 								key={i}
-								listIndex={name}
 								pageFieldsData={pageFieldsData}
 								first={i === 0}
 							/>
 						)
 					case 'currency':
-						return (
-							<CurrencyField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <CurrencyField key={i} pageFieldsData={pageFieldsData} />
 					case 'dropdown':
-						return (
-							<DropdownField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <DropdownField key={i} pageFieldsData={pageFieldsData} />
 					case 'date':
-						return (
-							<DateField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <DateField key={i} pageFieldsData={pageFieldsData} />
 					case 'time':
-						return (
-							<TimeField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <TimeField key={i} pageFieldsData={pageFieldsData} />
 					case 'state':
-						return (
-							<StateField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <StateField key={i} pageFieldsData={pageFieldsData} />
 					case 'checkbox':
-						return (
-							<CheckboxField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <CheckboxField key={i} pageFieldsData={pageFieldsData} />
 					case 'cnae':
-						return (
-							<CnaeField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <CnaeField key={i} pageFieldsData={pageFieldsData} />
 					case 'city':
 						return <CityField key={i} pageFieldsData={pageFieldsData} />
 					case 'slider':
-						return (
-							<SliderField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <SliderField key={i} pageFieldsData={pageFieldsData} />
 					case 'bank':
-						return (
-							<BankField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <BankField key={i} pageFieldsData={pageFieldsData} />
 
 					case 'variable_file':
-						return (
-							<FileField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <FileField key={i} pageFieldsData={pageFieldsData} />
 					case 'text_area':
-						return (
-							<TextAreaField
-								key={i}
-								listIndex={name}
-								pageFieldsData={pageFieldsData}
-							/>
-						)
+						return <TextAreaField key={i} pageFieldsData={pageFieldsData} />
 					default:
 						return (
 							<TextField
 								key={`${name}_${i}`}
-								listIndex={name}
 								pageFieldsData={pageFieldsData}
 								first={i === 0}
 							/>

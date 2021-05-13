@@ -1,20 +1,21 @@
 import React from 'react'
-import { string, shape, array, object, func, number } from 'prop-types'
+import { string, shape, array, object, func } from 'prop-types'
 import { Form, Select } from 'antd'
 import InfoField from '~/components/infoField'
 
-const DropdownField = ({ pageFieldsData, className, onChange, listIndex }) => {
-	const { label, variable, type, options, id, info } = pageFieldsData
+const DropdownField = ({ pageFieldsData, className, onChange }) => {
+	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const name = isObj ? variable.name : variable
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
 	const hidden =
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
 	return (
 		<Form.Item
-			key={`${isObj ? variable.name : variable}_${id}`}
-			name={listIndex !== undefined ? [listIndex, name] : name}
+			key={name}
+			name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			hasFeedback
 			className={className}
@@ -44,7 +45,6 @@ DropdownField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
-	listIndex: number,
 }
 
 DropdownField.defaultProps = {
