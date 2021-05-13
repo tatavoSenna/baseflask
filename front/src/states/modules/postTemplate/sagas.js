@@ -77,17 +77,25 @@ function* postTemplateSaga({ payload = {} }) {
 				if (Array.isArray(field)) {
 					const listVariable = {}
 					field.forEach((arrayField) => {
-						const newVar = {}
+						const variable = {}
 						for (const key in arrayField) {
 							if (key !== 'name') {
-								newVar[key] = arrayField[key]
+								variable[key] = arrayField[key]
 							}
 						}
-						listVariable[arrayField.name] = newVar
+						listVariable[arrayField.name] = variable
 					})
 					variablesObj[
 						`structuredList_${pageIndex}_${fieldIndex}`
 					] = listVariable
+				} else if (field.type === 'detailed_checkbox') {
+					const variable = { [field.name]: {} }
+					for (const key in field) {
+						if (key !== 'name') {
+							variable[field.name][key] = field[key]
+						}
+					}
+					variablesObj[`detailedCheckbox_${pageIndex}_${fieldIndex}`] = variable
 				} else {
 					const variable = {}
 					for (const key in field) {

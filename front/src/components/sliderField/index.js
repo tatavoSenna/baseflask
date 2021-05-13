@@ -1,16 +1,17 @@
 import React from 'react'
-import { string, shape, array, object, number } from 'prop-types'
+import { string, shape, array, object } from 'prop-types'
 import { Form, Slider } from 'antd'
 import InfoField from '~/components/infoField'
 
-const SliderField = ({ pageFieldsData, className, listIndex }) => {
-	const { label, variable, type, options, id, info } = pageFieldsData
+const SliderField = ({ pageFieldsData, className }) => {
+	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const name = isObj ? variable.name : variable
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
 	return (
 		<Form.Item
-			key={`${isObj ? variable.name : variable}_${id}`}
-			name={listIndex !== undefined ? [listIndex, name] : name}
+			key={name}
+			name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			type={type}
@@ -29,7 +30,6 @@ SliderField.propTypes = {
 		info: string,
 	}).isRequired,
 	className: object,
-	listIndex: number,
 }
 
 SliderField.defaultProps = {

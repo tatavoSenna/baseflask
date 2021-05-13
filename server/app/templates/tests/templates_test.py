@@ -3,7 +3,8 @@ from app.test import factories
 from app.templates.controllers import (
     create_template_controller,
     get_template_controller,
-    delete_template_controller
+    delete_template_controller,
+    get_document_upload_url
 )
 from unittest.mock import patch
 
@@ -39,4 +40,16 @@ def test_delete_template(delete_template_mock):
     assert get_template_controller(17, 77) == None
     delete_template_mock.assert_called_once_with(
         ret_template
+    )
+
+
+@ patch('app.templates.controllers.RemoteTemplate.download_file_template')
+def test_download_template_file(download_file_mock):
+    company = factories.CompanyFactory(id=47)
+    template = factories.DocumentTemplateFactory(id=97, company=company)
+
+    url = get_document_upload_url(template)
+
+    download_file_mock.assert_called_once_with(
+        template
     )

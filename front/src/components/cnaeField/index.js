@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func, number } from 'prop-types'
+import { string, shape, object, func } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCnaeField } from '~/states/modules/cnaeField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
 
-const CnaeField = ({ pageFieldsData, className, onChange, listIndex }) => {
-	const { label, variable, type, id, info } = pageFieldsData
+const CnaeField = ({ pageFieldsData, className, onChange }) => {
+	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const name = isObj ? variable.name : variable
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
 	const hidden =
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
@@ -27,8 +28,8 @@ const CnaeField = ({ pageFieldsData, className, onChange, listIndex }) => {
 
 	return (
 		<Form.Item
-			key={`${isObj ? variable.name : variable}_${id}`}
-			name={listIndex !== undefined ? [listIndex, name] : name}
+			key={name}
+			name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			hasFeedback
 			className={className}
@@ -57,7 +58,6 @@ CnaeField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
-	listIndex: number,
 }
 
 CnaeField.defaultProps = {

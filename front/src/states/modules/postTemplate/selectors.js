@@ -46,41 +46,26 @@ export const selectEdit = (data, payload) => {
 
 export const selectForm = (form, payload) => {
 	if (payload.name === 'title') {
-		return form.map((page, index) => {
-			if (index === payload.pageIndex) {
-				return extend(page, {
-					title: payload.value,
-				})
-			}
-			return page
+		const newForm = update(form, {
+			[payload.pageIndex]: { title: { $set: payload.value } },
 		})
+		return newForm
 	} else if (payload.name === 'field') {
-		return form.map((page, index) => {
-			if (index === payload.pageIndex) {
-				page.fields.map((field, index) => {
-					if (index === payload.fieldIndex) {
-						try {
-							const fieldJSON = JSON.parse(payload.value)
-							for (const key in fieldJSON) {
-								extend(field, {
-									[key]: fieldJSON[key],
-								})
-							}
-							successMessage({
-								content: 'Campo salvo com sucesso.',
-							})
-							return field
-						} catch {
-							errorMessage({
-								content: 'Não foi possível salvar o campo. Insira JSON válido.',
-							})
-						}
-					}
-					return field
-				})
-			}
-			return page
-		})
+		try {
+			const fieldJSON = JSON.parse(payload.value)
+			successMessage({
+				content: 'Campo salvo com sucesso.',
+			})
+			return update(form, {
+				[payload.pageIndex]: {
+					fields: { [payload.fieldIndex]: { $set: fieldJSON } },
+				},
+			})
+		} catch {
+			errorMessage({
+				content: 'Não foi possível salvar o campo. Insira JSON válido.',
+			})
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { string, shape, object, func, bool, number } from 'prop-types'
+import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
 import InfoField from '~/components/infoField'
 
@@ -9,19 +9,19 @@ const TextField = ({
 	className,
 	onChange,
 	first,
-	listIndex,
 }) => {
-	const { label, variable, type, id, info } = pageFieldsData
+	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const name = isObj ? variable.name : variable
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
 	const hidden =
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
 	return (
 		<Form.Item
-			key={`${isObj ? variable.name : variable}_${id}`}
-			name={listIndex !== undefined ? [listIndex, name] : name}
+			key={name}
+			name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
@@ -48,7 +48,6 @@ TextField.propTypes = {
 	className: object,
 	onChange: func,
 	first: bool,
-	listIndex: number,
 }
 
 TextField.defaultProps = {

@@ -83,3 +83,9 @@ def upload_file_to_template_controller(uploaded_file, filename, file_root, templ
     remote_template = RemoteTemplate()
     remote_template.upload_file_template(
         uploaded_file, filename, document_template.id, document_template.company_id)
+
+
+def get_document_upload_url(template):
+    remote_template = RemoteTemplate()
+    doc_url = remote_template.download_file_template(template)
+    return doc_url

@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import request, Blueprint, abort, jsonify, current_app
 from werkzeug.utils import secure_filename
@@ -17,6 +18,7 @@ from .controllers import (
     delete_template_controller,
     upload_file_to_template_controller,
     download_template_text_controller,
+    get_document_upload_url
 )
 
 
@@ -185,3 +187,25 @@ def upload_file_to_template(current_user, document_template_id):
             "message": "Successfully upload file to document template"
         }
     )
+
+
+@templates_bp.route("/<int:document_template_id>/getupload", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_upload(current_user, document_template_id):
+    template = get_template_controller(
+        current_user["company_id"], document_template_id)
+    if not template:
+        abort(404, "Template not Found")
+    if template.filename is None:
+        abort(400, "There is no document to download")
+    try:
+        doc_url = get_document_upload_url(template)
+    except Exception:
+        logging.exception(
+            "Could not get download url")
+        abort(400, "Could not get download url")
+    response = {
+        "download_url": doc_url
+    }
+    return jsonify(response)

@@ -49,3 +49,16 @@ class RemoteTemplate:
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             template_path
         )
+
+    def download_file_template(self, template):
+        remote_path = f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{template.id}/{template.filename}' \
+            + template.text_type
+        document_url = self.s3_client.generate_presigned_url(
+            "get_object",
+            Params={
+                "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+                "Key": remote_path
+            },
+            ExpiresIn=180,
+        )
+        return document_url

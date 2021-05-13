@@ -166,8 +166,8 @@ def map_variables_to_form(variables, form):
                 }
                 for item_variables in variables[f'structuredList_{group_index}_{question_index}']:
                     item_list = []
-                    item_index = 0
                     for variable_name, value in item_variables.items():
+
                         for var_obj in question['structure']:
                             if var_obj['variable']['name'] == variable_name:
                                 label = var_obj['label']
@@ -177,13 +177,35 @@ def map_variables_to_form(variables, form):
                             "variable": variable_name,
                             "value": value
                         })
-                        item_index += 1
 
                     variables_obj['items'].append(item_list)
 
                 filled_form[-1]["fields"].append(variables_obj)
 
-                print(variables_obj)
+            elif question['type'] == 'detailed_checkbox':
+                variables_obj = {
+                    "subtitle": question['label'],
+                    "items": []
+                }
+                for item_variables in variables[f'detailedCheckbox_{group_index}_{question_index}']:
+                    item_list = []
+                    for variable_name, value in item_variables.items():
+                        if variable_name == 'OPTION':
+                            label = 'Opção'
+                        else:
+                            for var_obj in question['structure']:
+                                if var_obj['variable']['name'] == variable_name:
+                                    label = var_obj['label']
+
+                        item_list.append({
+                            "label": label,
+                            "variable": variable_name,
+                            "value": value
+                        })
+
+                    variables_obj['items'].append(item_list)
+
+                filled_form[-1]["fields"].append(variables_obj)
 
                 # This 'if' is here so templates whose variables are not objects still work
             elif type(question['variable']) == str:
