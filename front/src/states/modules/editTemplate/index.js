@@ -51,7 +51,7 @@ const { actions, reducer } = createSlice({
 	name: 'post',
 	initialState,
 	reducers: {
-		postTemplateTitle: (state, { payload }) =>
+		editTemplateTitle: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					title: payload.title,
@@ -72,21 +72,21 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
-		postTemplateFormInfo: (state, { payload }) =>
+		editTemplateFormInfo: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: selectForm(state.data.form, payload),
 					variables: selectVariable(state.data.variables, payload),
 				}),
 			}),
-		postTemplatePageAdd: (state, { payload }) =>
+		editTemplatePageAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: [...state.data.form, payload.newPage],
 					variables: [...state.data.variables, []],
 				}),
 			}),
-		postTemplatePageRemove: (state, { payload }) =>
+		editTemplatePageRemove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: state.data.form.filter(
@@ -97,43 +97,43 @@ const { actions, reducer } = createSlice({
 					),
 				}),
 			}),
-		postTemplateFieldAdd: (state, { payload }) =>
+		editTemplateFieldAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: addField(state.data.form, payload),
 					variables: addVariable(state.data.variables, payload),
 				}),
 			}),
-		postTemplateFieldRemove: (state, { payload }) =>
+		editTemplateFieldRemove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					form: removeField(state.data.form, payload),
 					variables: removeVariable(state.data.variables, payload),
 				}),
 			}),
-		postTemplateStepInfo: (state, { payload }) =>
+		editTemplateStepInfo: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					workflow: selectStep(state.data.workflow, payload),
 				}),
 			}),
-		postTemplateStepAdd: (state, { payload }) =>
+		editTemplateStepAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					workflow: addStep(state.data.workflow, payload),
 				}),
 			}),
-		postTemplateStepRemove: (state, { payload }) =>
+		editTemplateStepRemove: (state, { payload }) =>
 			extend(state, {
 				workflow: removeStep(state.data.workflow, payload),
 			}),
-		postTemplateSignersInfo: (state, { payload }) =>
+		editTemplateSignersInfo: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					signers: selectParties(state.data.signers, payload),
 				}),
 			}),
-		postTemplateSignerAdd: (state, { payload }) =>
+		editTemplateSignerAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -148,7 +148,7 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
-		postTemplateSignerRemove: (state, { payload }) =>
+		editTemplateSignerRemove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -165,7 +165,7 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
-		postTemplatePartyAdd: (state, { payload }) =>
+		editTemplatePartyAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -173,7 +173,7 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
-		postTemplatePartyRemove: (state, { payload }) =>
+		editTemplatePartyRemove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					signers: extend(state.data.signers, {
@@ -183,25 +183,25 @@ const { actions, reducer } = createSlice({
 					}),
 				}),
 			}),
-		postTemplateMove: (state, { payload }) =>
+		editTemplateMove: (state, { payload }) =>
 			extend(state, {
 				data: move(state.data, payload),
 			}),
-		postTemplateText: (state, { payload }) =>
+		editTemplateText: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
 					text: payload.value,
 				}),
 			}),
-		postTemplateRequest: (state) =>
+		editTemplateRequest: (state) =>
 			extend(state, {
 				loading: true,
 			}),
-		postTemplateSuccess: (state) =>
+		editTemplateSuccess: (state) =>
 			extend(state, {
 				loading: false,
 			}),
-		postTemplateFailure: (state, { payload }) =>
+		editTemplateFailure: (state, { payload }) =>
 			extend(state, {
 				loading: false,
 				error: payload.error,
@@ -210,32 +210,32 @@ const { actions, reducer } = createSlice({
 })
 
 export const {
-	postTemplateTitle,
+	editTemplateTitle,
 	resetTemplateState,
 	getTemplateDetail,
 	getTemplateDetailSuccess,
 	getTemplateDetailFailure,
-	postTemplateFormInfo,
-	postTemplatePageAdd,
-	postTemplatePageRemove,
-	postTemplateFieldAdd,
-	postTemplateFieldRemove,
-	postTemplateStepInfo,
-	postTemplateStepAdd,
-	postTemplateStepRemove,
-	postTemplateSignersInfo,
-	postTemplateSignerAdd,
-	postTemplateSignerRemove,
-	postTemplatePartyAdd,
-	postTemplatePartyRemove,
-	postTemplateSignersAppend,
-	postTemplateText,
-	postTemplateRequest,
-	postTemplateSuccess,
-	postTemplateFailure,
-	postTemplateMove,
+	editTemplateFormInfo,
+	editTemplatePageAdd,
+	editTemplatePageRemove,
+	editTemplateFieldAdd,
+	editTemplateFieldRemove,
+	editTemplateStepInfo,
+	editTemplateStepAdd,
+	editTemplateStepRemove,
+	editTemplateSignersInfo,
+	editTemplateSignerAdd,
+	editTemplateSignerRemove,
+	editTemplatePartyAdd,
+	editTemplatePartyRemove,
+	editTemplateSignersAppend,
+	editTemplateText,
+	editTemplateRequest,
+	editTemplateSuccess,
+	editTemplateFailure,
+	editTemplateMove,
 } = actions
 
-export { default as postTemplateSaga } from './sagas'
+export { default as editTemplateSaga } from './sagas'
 
 export default reducer

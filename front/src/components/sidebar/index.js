@@ -139,7 +139,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							key="/"
 							onClick={() => handleGoTo('/')}
 							icon={<FolderOpenOutlined />}>
-							Contratos
+							Documentos
 						</Menu.Item>
 						<Menu.Item
 							key="users"

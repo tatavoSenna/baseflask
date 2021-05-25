@@ -4,7 +4,7 @@ import { string, object, func, array, bool } from 'prop-types'
 import Editor from './editor'
 import Uploader from '~/components/uploadFile'
 import { Switch, Typography } from 'antd'
-import { postTemplateText } from '~/states/modules/postTemplate'
+import { editTemplateText } from '~/states/modules/editTemplate'
 
 const { Title } = Typography
 
@@ -24,7 +24,7 @@ const Text = ({
 		if (e.target) {
 			value = e.target.value
 		}
-		dispatch(postTemplateText({ value }))
+		dispatch(editTemplateText({ value }))
 	}
 
 	return (

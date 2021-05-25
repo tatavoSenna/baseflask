@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux'
 import { object, array, number } from 'prop-types'
 import { Form, Input, Select } from 'antd'
 import {
-	postTemplateStepInfo,
-	postTemplateStepRemove,
-	postTemplateMove,
-} from '~/states/modules/postTemplate'
+	editTemplateStepInfo,
+	editTemplateStepRemove,
+	editTemplateMove,
+} from '~/states/modules/editTemplate'
 import DragDropCard from '~/components/dragDropCard'
 import Delete from '~/components/deleteConfirm'
 
@@ -45,26 +45,26 @@ const Step = ({ node, groups, users, index }) => {
 	const updateStepInfo = (e, index, name) => {
 		if (name === 'title') {
 			const value = e.target.value
-			dispatch(postTemplateStepInfo({ value, index, name }))
+			dispatch(editTemplateStepInfo({ value, index, name }))
 		} else if (name === 'responsible_group') {
 			let value = e
 			setUsersChildren(listUsers(value))
-			dispatch(postTemplateStepInfo({ value, index, name }))
+			dispatch(editTemplateStepInfo({ value, index, name }))
 			dispatch(
-				postTemplateStepInfo({ value: '', index, name: 'responsible_users' })
+				editTemplateStepInfo({ value: '', index, name: 'responsible_users' })
 			)
 		} else {
 			const value = e
-			dispatch(postTemplateStepInfo({ value, index, name }))
+			dispatch(editTemplateStepInfo({ value, index, name }))
 		}
 	}
 
 	const handleRemoveStep = () => {
-		dispatch(postTemplateStepRemove({ index }))
+		dispatch(editTemplateStepRemove({ index }))
 	}
 
 	return (
-		<DragDropCard index={index} move={postTemplateMove} name={'workflow'}>
+		<DragDropCard index={index} move={editTemplateMove} name={'workflow'}>
 			<div
 				style={{
 					display: 'flex',

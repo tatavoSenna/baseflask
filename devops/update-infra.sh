@@ -9,12 +9,16 @@ aws cloudformation update-stack \
         ParameterKey=DBUser,UsePreviousValue=true \
         ParameterKey=DBPassword,UsePreviousValue=true \
         ParameterKey=DBName,ParameterValue=lawing \
-        ParameterKey=GitHubToken,ParameterValue=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 \
+        ParameterKey=GitHubToken,UsePreviousValue=true \
         ParameterKey=AppDomainName,UsePreviousValue=true \
         ParameterKey=ApiDomainName,UsePreviousValue=true \
         ParameterKey=TemplateBucket,UsePreviousValue=true \
         ParameterKey=GitHubBranch,ParameterValue=master \
         ParameterKey=ApiLBCertificate,UsePreviousValue=true \
         ParameterKey=AppCertificate,UsePreviousValue=true \
+        ParameterKey=FlaskSecretKey,UsePreviousValue=true \
+        ParameterKey=CognitoAppClientSecret,UsePreviousValue=true \
+        ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
+        ParameterKey=SendGridApiKey,ParameterValue=UsePreviousValue=true \
     --profile \
         lawing-prod

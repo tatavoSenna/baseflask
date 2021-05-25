@@ -3,6 +3,7 @@ import { array, func, number } from 'prop-types'
 import { Card, Badge, Divider } from 'antd'
 import Delete from '~/components/deleteConfirm'
 import RadioField from '~/components/radioField'
+import NumberField from '~/components/numberField'
 import CnpjField from '~/components/cnpjField'
 import CpfField from '~/components/cpfField'
 import EmailField from '~/components/emailField'
@@ -48,6 +49,14 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 					case 'email':
 						return (
 							<EmailField
+								key={i}
+								pageFieldsData={pageFieldsData}
+								first={i === 0}
+							/>
+						)
+					case 'number':
+						return (
+							<NumberField
 								key={i}
 								pageFieldsData={pageFieldsData}
 								first={i === 0}

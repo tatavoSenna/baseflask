@@ -115,7 +115,7 @@ const DocumentDetails = () => {
 		<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
 			<PageHeader>
 				<BreadCrumb
-					parent="Contratos"
+					parent="Documentos"
 					current={`${Object.keys(data).length > 0 ? data.title : 'Detalhe'}`}
 				/>
 			</PageHeader>

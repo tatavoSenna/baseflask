@@ -13,14 +13,14 @@ import {
 	getTemplateDetail,
 	getTemplateDetailSuccess,
 	getTemplateDetailFailure,
-	postTemplateRequest,
-	postTemplateSuccess,
-	postTemplateFailure,
+	editTemplateRequest,
+	editTemplateSuccess,
+	editTemplateFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(getTemplateDetail, getTemplateDetailSaga)
-	yield takeEvery(postTemplateRequest, postTemplateSaga)
+	yield takeEvery(editTemplateRequest, editTemplateSaga)
 }
 
 function* getTemplateDetailSaga({ payload = {} }) {
@@ -47,13 +47,13 @@ function* getTemplateDetailSaga({ payload = {} }) {
 	}
 }
 
-function* postTemplateSaga({ payload = {} }) {
-	loadingMessage({ content: 'Enviando template...', updateKey: 'postTemplate' })
+function* editTemplateSaga({ payload = {} }) {
+	loadingMessage({ content: 'Enviando template...', updateKey: 'editTemplate' })
 
 	const { id, files, history } = payload
 	const data = yield select((state) => {
-		const { postTemplate } = state
-		return postTemplate.data
+		const { editTemplate } = state
+		return editTemplate.data
 	})
 
 	const toObject = (arr) => {
@@ -70,43 +70,58 @@ function* postTemplateSaga({ payload = {} }) {
 		return signersArray
 	}
 
+	// The 'name' property becomes the key of the object
+	const extractName = (object) => {
+		const variable = {}
+		for (const key in object) {
+			if (key !== 'name') {
+				variable[key] = object[key]
+			}
+		}
+		return variable
+	}
+
+	const structuredVariable = (variable) => {
+		const structVarObj = {
+			structure: {},
+			main: {},
+		}
+		if (Array.isArray(variable.structure)) {
+			variable.structure.forEach((field) => {
+				structVarObj.structure[field.name] = extractName(field)
+			})
+		} else {
+			structVarObj.structure[variable.structure.name] = extractName(
+				variable.structure
+			)
+		}
+
+		if (Array.isArray(variable.main)) {
+			variable.main.forEach((field) => {
+				structVarObj.main[field.name] = extractName(field)
+			})
+		} else {
+			structVarObj.main[variable.main.name] = extractName(variable.main)
+		}
+		return structVarObj
+	}
+
 	const arrangedVariables = (variables) => {
 		const variablesObj = {}
-		variables.forEach((page, pageIndex) =>
+		variables.forEach((page, pageIndex) => {
 			page.forEach((field, fieldIndex) => {
-				if (Array.isArray(field)) {
-					const listVariable = {}
-					field.forEach((arrayField) => {
-						const variable = {}
-						for (const key in arrayField) {
-							if (key !== 'name') {
-								variable[key] = arrayField[key]
-							}
-						}
-						listVariable[arrayField.name] = variable
-					})
+				if (field.structure && field.main) {
+					const type = Array.isArray(field.main)
+						? field.main[0].type
+						: field.main.type
 					variablesObj[
-						`structuredList_${pageIndex}_${fieldIndex}`
-					] = listVariable
-				} else if (field.type === 'detailed_checkbox') {
-					const variable = { [field.name]: {} }
-					for (const key in field) {
-						if (key !== 'name') {
-							variable[field.name][key] = field[key]
-						}
-					}
-					variablesObj[`detailedCheckbox_${pageIndex}_${fieldIndex}`] = variable
+						`${type}_${pageIndex}_${fieldIndex}`
+					] = structuredVariable(field)
 				} else {
-					const variable = {}
-					for (const key in field) {
-						if (key !== 'name') {
-							variable[key] = field[key]
-						}
-					}
-					variablesObj[field.name] = variable
+					variablesObj[field.name] = extractName(field)
 				}
 			})
-		)
+		})
 		return variablesObj
 	}
 
@@ -136,17 +151,17 @@ function* postTemplateSaga({ payload = {} }) {
 				yield call(api.post, `/templates/${response.data.id}/upload`, formData)
 			}
 
-			yield put(postTemplateSuccess())
+			yield put(editTemplateSuccess())
 			successMessage({
 				content: 'Template criado com sucesso!',
-				updateKey: 'postTemplate',
+				updateKey: 'editTemplate',
 			})
 			history.push('/templates')
 		} catch (error) {
-			yield put(postTemplateFailure(error))
+			yield put(editTemplateFailure(error))
 			errorMessage({
 				content: 'A criação do template falhou',
-				updateKey: 'postTemplate',
+				updateKey: 'editTemplate',
 			})
 		}
 	} else {
@@ -169,17 +184,17 @@ function* postTemplateSaga({ payload = {} }) {
 				yield call(api.post, `/templates/${id}/upload`, formData)
 			}
 
-			yield put(postTemplateSuccess(patch))
+			yield put(editTemplateSuccess(patch))
 			successMessage({
 				content: 'Template atualizado com sucesso!',
-				updateKey: 'postTemplate',
+				updateKey: 'editTemplate',
 			})
 			history.push('/templates')
 		} catch (error) {
-			yield put(postTemplateFailure(error))
+			yield put(editTemplateFailure(error))
 			errorMessage({
 				content: 'A atualização do template falhou',
-				updateKey: 'postTemplate',
+				updateKey: 'editTemplate',
 			})
 		}
 	}

@@ -5,9 +5,9 @@ import { Menu, Empty } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 import {
-	postTemplatePageAdd,
-	postTemplatePageRemove,
-} from '~/states/modules/postTemplate'
+	editTemplatePageAdd,
+	editTemplatePageRemove,
+} from '~/states/modules/editTemplate'
 
 import Page from './page'
 
@@ -21,7 +21,7 @@ const TemplateForm = ({ data }) => {
 				title: '',
 				fields: [],
 			}
-			dispatch(postTemplatePageAdd({ newPage }))
+			dispatch(editTemplatePageAdd({ newPage }))
 			setCurrent(`${data.length}`)
 		} else {
 			setCurrent(`${e.key}`)
@@ -29,7 +29,7 @@ const TemplateForm = ({ data }) => {
 	}
 
 	const handleRemovePage = (pageIndex) => {
-		dispatch(postTemplatePageRemove({ pageIndex }))
+		dispatch(editTemplatePageRemove({ pageIndex }))
 
 		if (pageIndex === 0) {
 			setCurrent(`${pageIndex}`)

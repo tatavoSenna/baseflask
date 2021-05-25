@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { object } from 'prop-types'
 import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { postTemplateStepAdd } from '~/states/modules/postTemplate'
+import { editTemplateStepAdd } from '~/states/modules/editTemplate'
 import { getGroupList } from '~/states/modules/groups'
 import { getUserList } from '~/states/modules/users'
 
@@ -31,7 +31,7 @@ const Workflow = ({ data }) => {
 			changed_by: '',
 		}
 
-		dispatch(postTemplateStepAdd({ newStep, count }))
+		dispatch(editTemplateStepAdd({ newStep, count }))
 	}
 
 	return (

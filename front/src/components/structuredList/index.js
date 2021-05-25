@@ -24,7 +24,7 @@ const StructuredList = ({
 			type={type}
 			colon={false}>
 			<Card>
-				<Form.List name={`structuredList_${pageIndex}_${fieldIndex}`}>
+				<Form.List name={`structured_list_${pageIndex}_${fieldIndex}`}>
 					{(fields, { add, remove }) => {
 						return (
 							<>

@@ -4,7 +4,7 @@ import InfoField from '~/components/infoField'
 import InputFactory from '../inputFactory'
 import { Card, Form, Checkbox, Row } from 'antd'
 
-const DetailedCheckbox = ({
+const StructuredCheckbox = ({
 	pageFieldsData,
 	className,
 	onChange,
@@ -13,7 +13,7 @@ const DetailedCheckbox = ({
 }) => {
 	const { label, variable, structure, options, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const listName = `detailedCheckbox_${pageIndex}_${fieldIndex}`
+	const listName = `structured_checkbox_${pageIndex}_${fieldIndex}`
 	const name = isObj ? variable.name : variable
 	const [visible, setVisible] = useState(Array(options.length).fill(false))
 	const updateVisible = (value, index) => {
@@ -67,7 +67,7 @@ const DetailedCheckbox = ({
 	)
 }
 
-DetailedCheckbox.propTypes = {
+StructuredCheckbox.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
 		variable: object.isRequired,
@@ -81,9 +81,9 @@ DetailedCheckbox.propTypes = {
 	listIndex: number,
 }
 
-DetailedCheckbox.defaultProps = {
+StructuredCheckbox.defaultProps = {
 	className: {},
 	onChange: () => null,
 }
 
-export default DetailedCheckbox
+export default StructuredCheckbox

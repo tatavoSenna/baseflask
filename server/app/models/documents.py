@@ -29,6 +29,7 @@ class DocumentTemplate(db.Model):
     text_type = db.Column(db.String(255), unique=False, nullable=True)
     variables = db.Column(JSONB, unique=False, nullable=True)
     filename = db.Column(db.String(255), unique=False, nullable=True)
+    published = db.Column(db.Boolean, default=False, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="templates")

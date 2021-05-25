@@ -1,9 +1,26 @@
 import React from 'react'
-import { Button, Space } from 'antd'
+import { Button, Space, Switch } from 'antd'
 
 import Delete from '~/components/deleteConfirm'
 
-export const getColumns = (handleToGo, handleDeleteTemplate) => [
+export const getColumns = (
+	handleToGo,
+	handlePublishTemplate,
+	handleDeleteTemplate
+) => [
+	{
+		title: 'Publicado',
+		dataIndex: 'published',
+		key: 'published',
+		render: (published, row) => {
+			return (
+				<Switch
+					checked={published}
+					onChange={() => handlePublishTemplate(row, !published)}
+				/>
+			)
+		},
+	},
 	{
 		title: 'Descrição',
 		dataIndex: 'name',
@@ -28,7 +45,7 @@ export const getColumns = (handleToGo, handleDeleteTemplate) => [
 		title: '',
 		dataIndex: 'action',
 		key: 'action',
-		render: (text, row) => (
+		render: (row) => (
 			<Space size="middle">
 				<Delete
 					title="Deseja excluir essa template?"

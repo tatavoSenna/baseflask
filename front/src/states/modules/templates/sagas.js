@@ -10,6 +10,9 @@ import {
 	listTemplate,
 	listTemplateSuccess,
 	listTemplateFailure,
+	publishTemplate,
+	publishTemplateSuccess,
+	publishTemplateFailure,
 	deleteTemplate,
 	deleteTemplateSuccess,
 	deleteTemplateFailure,
@@ -17,6 +20,7 @@ import {
 
 export default function* rootSaga() {
 	yield takeEvery(listTemplate, fetchTemplates)
+	yield takeEvery(publishTemplate, publishTemplateSaga)
 	yield takeEvery(deleteTemplate, deleteTemplateSaga)
 }
 
@@ -31,6 +35,35 @@ function* fetchTemplates({ payload = {} }) {
 		yield put(listTemplateSuccess(data))
 	} catch (error) {
 		yield put(listTemplateFailure(error))
+	}
+}
+
+function* publishTemplateSaga({ payload = {} }) {
+	const { id, status } = payload
+	const message = status
+		? ['Publicando', 'publicado', 'Publicação']
+		: ['Despublicando', 'despublicado', 'Despublicação']
+
+	loadingMessage({
+		content: `${message[0]} template...`,
+		updateKey: 'publishTemplateSaga',
+	})
+
+	try {
+		const { data } = yield call(api.patch, `/templates/${id}/publish`, {
+			status: status,
+		})
+		yield put(publishTemplateSuccess(data))
+		successMessage({
+			content: `Template ${message[1]} com sucesso.`,
+			updateKey: 'publishTemplateSaga',
+		})
+	} catch (error) {
+		yield put(publishTemplateFailure(error))
+		errorMessage({
+			content: `${message[2]} do template falhou.`,
+			updateKey: 'publishTemplateSaga',
+		})
 	}
 }
 

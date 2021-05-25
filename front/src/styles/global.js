@@ -5,7 +5,6 @@ import colors from './colors'
 import fonts from './fonts'
 
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 
 	#root {
 		height: 100%;
@@ -40,9 +39,6 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
-  tr.ant-table-row.ant-table-row-level-0 {
-      cursor: pointer;
-  }
 `
 
 export default GlobalStyle

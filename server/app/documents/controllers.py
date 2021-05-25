@@ -20,8 +20,7 @@ from unittest.mock import MagicMock
 def get_document_template_list_controller(company_id):
 
     document_templates = DocumentTemplate.query.filter_by(
-        company_id=company_id
-    ).all()
+        company_id=company_id).filter_by(published=True).all()
     return document_templates
 
 

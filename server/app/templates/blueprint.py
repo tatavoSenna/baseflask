@@ -18,7 +18,8 @@ from .controllers import (
     delete_template_controller,
     upload_file_to_template_controller,
     download_template_text_controller,
-    get_document_upload_url
+    get_document_upload_url,
+    template_status_controller
 )
 
 
@@ -196,7 +197,7 @@ def get_upload(current_user, document_template_id):
     template = get_template_controller(
         current_user["company_id"], document_template_id)
     if not template:
-        abort(404, "Template not Found")
+        abort(404, "Template not found")
     if template.filename is None:
         abort(400, "There is no document to download")
     try:
@@ -209,3 +210,24 @@ def get_upload(current_user, document_template_id):
         "download_url": doc_url
     }
     return jsonify(response)
+
+
+@templates_bp.route("/<int:document_template_id>/publish", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def set_published(current_user, document_template_id):
+    template = get_template_controller(
+        current_user["company_id"], document_template_id)
+    if not request.is_json:
+        return abort(404, "Accepts only content-type json.")
+    if not template:
+        abort(404, "Template not found")
+
+    status = request.json.get("status", None)
+    company_id = current_user["company_id"]
+    user_id = current_user["id"]
+
+    template_id = template_status_controller(
+        company_id, user_id, template.id, status)
+
+    return jsonify({"id": template_id, "status": status})
