@@ -71,7 +71,7 @@ function* createLinkSaga({ payload = {} }) {
 
 function* deleteContractSaga({ payload = {} }) {
 	loadingMessage({
-		content: 'Excluindo contrato...',
+		content: 'Excluindo documento...',
 		updateKey: 'deleteContractSaga',
 	})
 	const { id, pages } = payload
@@ -84,13 +84,13 @@ function* deleteContractSaga({ payload = {} }) {
 		)
 		yield put(deleteContractSuccess(data))
 		successMessage({
-			content: 'Contrato excluído com sucesso.',
+			content: 'Documento excluído com sucesso.',
 			updateKey: 'deleteContractSaga',
 		})
 	} catch (error) {
 		yield put(deleteContractFailure(error))
 		errorMessage({
-			content: 'Exclusão do contrato falhou.',
+			content: 'Exclusão do documento falhou.',
 			updateKey: 'deleteContractSaga',
 		})
 	}

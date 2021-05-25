@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux'
 import { object, func, number } from 'prop-types'
 import { Form, Input, InputNumber, Badge, Divider } from 'antd'
 import {
-	postTemplateSignersInfo,
-	postTemplateSignerRemove,
-	postTemplateMove,
-} from '~/states/modules/postTemplate'
+	editTemplateSignersInfo,
+	editTemplateSignerRemove,
+	editTemplateMove,
+} from '~/states/modules/editTemplate'
 import DragDropCard from '~/components/dragDropCard'
 import Delete from '~/components/deleteConfirm'
 
@@ -16,16 +16,16 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 
 	// Had to  create this function for the offset values because onChange with updateSignerInfo was not working properly with inputNumber arrows
 	const updateAnchorOffset = (value, partyIndex, signerIndex, name) => {
-		dispatch(postTemplateSignersInfo({ value, partyIndex, signerIndex, name }))
+		dispatch(editTemplateSignersInfo({ value, partyIndex, signerIndex, name }))
 	}
 
 	const handleRemoveSigner = () => {
-		dispatch(postTemplateSignerRemove({ partyIndex, signerIndex }))
+		dispatch(editTemplateSignerRemove({ partyIndex, signerIndex }))
 	}
 
 	return (
 		<DragDropCard
-			move={postTemplateMove}
+			move={editTemplateMove}
 			name="signers"
 			index={signerIndex}
 			listIndex={partyIndex}>

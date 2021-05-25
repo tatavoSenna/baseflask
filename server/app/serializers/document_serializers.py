@@ -32,6 +32,7 @@ class DocumentTemplateListSerializer(ma.SQLAlchemyAutoSchema):
             "signers",
             "company",
             "documents",
+            "variables",
         )
         model = DocumentTemplate
         include_fk = True
@@ -164,7 +165,7 @@ def map_variables_to_form(variables, form):
                     "subtitle": question['label'],
                     "items": []
                 }
-                for item_variables in variables[f'structuredList_{group_index}_{question_index}']:
+                for item_variables in variables[f'structured_list_{group_index}_{question_index}']:
                     item_list = []
                     for variable_name, value in item_variables.items():
 
@@ -182,12 +183,12 @@ def map_variables_to_form(variables, form):
 
                 filled_form[-1]["fields"].append(variables_obj)
 
-            elif question['type'] == 'detailed_checkbox':
+            elif question['type'] == 'structured_checkbox':
                 variables_obj = {
                     "subtitle": question['label'],
                     "items": []
                 }
-                for item_variables in variables[f'detailedCheckbox_{group_index}_{question_index}']:
+                for item_variables in variables[f'structured_checkbox_{group_index}_{question_index}']:
                     item_list = []
                     for variable_name, value in item_variables.items():
                         if variable_name == 'OPTION':

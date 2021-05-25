@@ -89,3 +89,15 @@ def get_document_upload_url(template):
     remote_template = RemoteTemplate()
     doc_url = remote_template.download_file_template(template)
     return doc_url
+
+
+def template_status_controller(company_id, user_id, template_id, status):
+    template = DocumentTemplate.query.filter_by(id=template_id).first()
+
+    if template.company_id != company_id:
+        raise Exception('Invalid company')
+
+    template.published = status
+    db.session.commit()
+
+    return template.id

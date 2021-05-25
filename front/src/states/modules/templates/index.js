@@ -1,7 +1,7 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { selectAllTemplates } from './selectors'
+import { selectAllTemplates, updatePublished } from './selectors'
 
 const initialState = {
 	data: [],
@@ -39,6 +39,21 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		publishTemplate: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		publishTemplateSuccess: (state, { payload }) =>
+			extend(state, {
+				data: updatePublished(state.data, payload),
+				loading: false,
+				error: null,
+			}),
+		publishTemplateFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		deleteTemplate: (state) =>
 			extend(state, {
 				loading: true,
@@ -71,6 +86,9 @@ export const {
 	listTemplate,
 	listTemplateSuccess,
 	listTemplateFailure,
+	publishTemplate,
+	publishTemplateSuccess,
+	publishTemplateFailure,
 	deleteTemplate,
 	deleteTemplateSuccess,
 	deleteTemplateFailure,

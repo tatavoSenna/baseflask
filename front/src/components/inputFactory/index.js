@@ -15,13 +15,14 @@ import CnaeField from '~/components/cnaeField'
 import CityField from '~/components/cityField'
 import CheckboxField from '~/components/checkboxField'
 import SliderField from '~/components/sliderField'
+import NumberField from '~/components/numberField'
 import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
 import ImageField from '~/components/imageField'
 import StructuredList from '~/components/structuredList'
-import DetailedCheckbox from '~/components/detailedCheckbox'
+import StructuredCheckbox from '~/components/structuredCheckbox'
 
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
@@ -252,6 +253,18 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 					/>
 				)
 				break
+			case 'number':
+				children.push(
+					<NumberField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+						onChange={
+							conditional ? (e) => checkField(e.target.value, i) : undefined
+						}
+					/>
+				)
+				break
 			case 'bank':
 				children.push(
 					<BankField
@@ -306,9 +319,9 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 					/>
 				)
 				break
-			case 'detailed_checkbox':
+			case 'structured_checkbox':
 				children.push(
-					<DetailedCheckbox
+					<StructuredCheckbox
 						key={i}
 						pageIndex={currentPage}
 						fieldIndex={i}

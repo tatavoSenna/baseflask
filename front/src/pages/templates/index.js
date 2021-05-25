@@ -8,13 +8,14 @@ import TemplateModal from './components/modal'
 import { getColumns } from './columns'
 import {
 	listTemplate,
+	publishTemplate,
 	deleteTemplate,
 	setShowModal,
 } from '../../states/modules/templates'
 import {
 	resetTemplateState,
-	postTemplateTitle,
-} from '../../states/modules/postTemplate'
+	editTemplateTitle,
+} from '../../states/modules/editTemplate'
 
 const Templates = () => {
 	const dispatch = useDispatch()
@@ -26,7 +27,7 @@ const Templates = () => {
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))
 		dispatch(resetTemplateState())
-		dispatch(postTemplateTitle({ title }))
+		dispatch(editTemplateTitle({ title }))
 		return history.push({
 			pathname: `/templates/new/`,
 			state: { id: 'new' },
@@ -45,6 +46,10 @@ const Templates = () => {
 
 	const handleShowModal = () => {
 		dispatch(setShowModal(true))
+	}
+
+	const handlePublishTemplate = (template, status) => {
+		dispatch(publishTemplate({ id: template.id, status: status }))
 	}
 
 	const handleDeleteTemplate = (template) =>
@@ -72,7 +77,11 @@ const Templates = () => {
 					showModal={showModal}
 				/>
 				<DataTable
-					columns={getColumns(handleToGo, handleDeleteTemplate)}
+					columns={getColumns(
+						handleToGo,
+						handlePublishTemplate,
+						handleDeleteTemplate
+					)}
 					dataSource={templates}
 					pages={pages}
 					onChangePageNumber={getTemplates}

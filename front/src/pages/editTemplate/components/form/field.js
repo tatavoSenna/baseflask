@@ -3,9 +3,9 @@ import { useDispatch } from 'react-redux'
 import { object, func, number } from 'prop-types'
 import { Form } from 'antd'
 import {
-	postTemplateFieldRemove,
-	postTemplateMove,
-} from '~/states/modules/postTemplate'
+	editTemplateFieldRemove,
+	editTemplateMove,
+} from '~/states/modules/editTemplate'
 import Delete from '~/components/deleteConfirm'
 import DragDropCard from '~/components/dragDropCard'
 import JSONInput from 'react-json-editor-ajrm'
@@ -15,12 +15,12 @@ const Field = ({ data, pageIndex, fieldIndex, updateFormInfo }) => {
 	const dispatch = useDispatch()
 
 	const handleRemoveField = () => {
-		dispatch(postTemplateFieldRemove({ pageIndex, fieldIndex }))
+		dispatch(editTemplateFieldRemove({ pageIndex, fieldIndex }))
 	}
 
 	return (
 		<DragDropCard
-			move={postTemplateMove}
+			move={editTemplateMove}
 			name="form"
 			index={fieldIndex}
 			listIndex={pageIndex}

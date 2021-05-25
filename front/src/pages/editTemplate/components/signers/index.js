@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { object, func } from 'prop-types'
 import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { postTemplatePartyAdd } from '~/states/modules/postTemplate'
+import { editTemplatePartyAdd } from '~/states/modules/editTemplate'
 
 import Party from './components/party'
 
@@ -50,7 +50,7 @@ const Signers = ({ data, setInputsFilled, inputsFilled }) => {
 			],
 		}
 
-		dispatch(postTemplatePartyAdd({ newParty }))
+		dispatch(editTemplatePartyAdd({ newParty }))
 	}
 
 	return (

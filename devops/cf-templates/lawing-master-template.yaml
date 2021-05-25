@@ -90,6 +90,25 @@ Parameters:
     Description: >
       The S3 bucket from which to fetch the templates used by this stack.
 
+  FlaskSecretKey:
+    Type: String
+    NoEcho: true
+    Description: The Flask Secret.
+
+  CognitoAppClientSecret:
+    Type: String
+    NoEcho: true
+    Description: The Cognito app client secret. Leave this Blanck when creating The stack. Then come back and update it with the secret.
+
+  ConvertApiSecretKey:
+    NoEcho: true
+    Description: The Convert api scret key.
+    Type: String
+
+  SendGridApiKey:
+    Type: String
+    NoEcho: true
+    Description: The Send Grid api secret key.
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -234,6 +253,10 @@ Resources:
         AppDomainName: !Ref AppDomainName
         ApiDomainName: !Ref ApiDomainName
         DocumentsBucket:  !GetAtt DocumentBucket.Outputs.DocumentsBucket
+        CognitoAppClientSecret: !Ref CognitoAppClientSecret
+        FlaskSecretKey: !Ref FlaskSecretKey
+        ConvertApiSecretKey: !Ref ConvertApiSecretKey
+        SendGridApiKey: !Ref SendGridApiKey
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

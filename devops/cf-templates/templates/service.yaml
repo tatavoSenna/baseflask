@@ -61,6 +61,18 @@ Parameters:
   DocumentsBucket:
     Type: String
 
+  CognitoAppClientSecret:
+    Type: String
+    
+  FlaskSecretKey:
+    Type: String
+
+  ConvertApiSecretKey:
+    Type: String
+
+  SendGridApiKey:
+    Type: String
+
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
 
@@ -98,12 +110,19 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Resource: !Sub arn:aws:s3:::lawing-prod-documents/*
+              - Resource: 
+                  - !Sub arn:aws:s3:::${DocumentsBucket}/*
+                  - !Sub arn:aws:s3:::${DocumentsBucket}
                 Effect: Allow
                 Action:
                   - s3:GetObject
                   - s3:PutObject
-                  - s3:GetObjectVersion
+                  - s3:DeleteObject
+                  - s3:ListBucket
+              - Resource: !Sub arn:aws:cognito-idp:sa-east-1:386235651823:userpool/${CognitoUserPool}
+                Effect: Allow
+                Action:
+                  - cognito-idp:*
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -155,7 +174,7 @@ Resources:
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
         - Name: lawing-api
-          Image: parafernalia/baseflask:0
+          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:8b2aff1a
           Essential: true
           LogConfiguration:
             LogDriver: awslogs
@@ -164,8 +183,6 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
           Environment:
-          - Name: AWS_DEFAULT_REGION
-            Value: 'us-east-1'
           - Name: AWS_COGNITO_DOMAIN
             Value: !Join
             - ''
@@ -179,7 +196,7 @@ Resources:
           - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
             Value: !Ref UserPoolClient
           - Name: AWS_COGNITO_USER_POOL_CLIENT_SECRET
-            Value: '1ek747b8mflpo2gbf5743mqd49qp6vcffbkepuq3usr68kgo2bmr'
+            Value: !Ref CognitoAppClientSecret
           - Name: AWS_COGNITO_REDIRECT_URL
             Value: !Join
             - ''
@@ -189,19 +206,19 @@ Resources:
           - Name: SQLALCHEMY_TRACK_MODIFICATIONS
             Value: 'False'
           - Name: SECRET_KEY
-            Value: '3456yrtyr65!2@'
-          - Name: AWS_ACCESS_KEY_ID
-            Value: 'AKIAU6PIQTWIPIES5PXE'
+            Value: !Ref FlaskSecretKey
           - Name: SQLALCHEMY_DATABASE_URI
             Value: !Ref DatabaseConnectionString
-          - Name: AWS_SECRET_ACCESS_KEY
-            Value: '11u36rqkurgn864ak71150bivv2jsjnjdkn0d27duemhsm8131ao'
           - Name: DOCUSIGN_OAUTH_URI
             Value: https://account.docusign.com/oauth
           - Name: DOCUSIGN_WEBHOOK_URL
             Value: !Sub '${ApiDomainName}/docusign/signed'
           - Name: AWS_S3_DOCUMENTS_BUCKET
             Value: !Ref DocumentsBucket
+          - Name: CONVERTAPI_SECRET_KEY
+            Value: !Ref ConvertApiSecretKey
+          - Name: SENDGRID_API_KEY
+            Value: !Ref SendGridApiKey
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000

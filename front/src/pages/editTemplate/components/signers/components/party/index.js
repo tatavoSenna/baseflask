@@ -4,10 +4,10 @@ import { array, number, string } from 'prop-types'
 import { Card, Form, Input, Button, Empty } from 'antd'
 import { UserAddOutlined } from '@ant-design/icons'
 import {
-	postTemplateSignersInfo,
-	postTemplateSignerAdd,
-	postTemplatePartyRemove,
-} from '~/states/modules/postTemplate'
+	editTemplateSignersInfo,
+	editTemplateSignerAdd,
+	editTemplatePartyRemove,
+} from '~/states/modules/editTemplate'
 import Delete from '~/components/deleteConfirm'
 import Signer from '../signer'
 
@@ -43,15 +43,15 @@ const Party = ({ signers, partyIndex, title }) => {
 			signing_date: '',
 		}
 
-		dispatch(postTemplateSignerAdd({ newSigner, partyIndex }))
+		dispatch(editTemplateSignerAdd({ newSigner, partyIndex }))
 	}
 
 	const handleRemoveParty = () =>
-		dispatch(postTemplatePartyRemove({ partyIndex }))
+		dispatch(editTemplatePartyRemove({ partyIndex }))
 
 	const updateSignerInfo = (e, partyIndex, signerIndex, name) => {
 		const value = e.target.value
-		dispatch(postTemplateSignersInfo({ value, partyIndex, signerIndex, name }))
+		dispatch(editTemplateSignersInfo({ value, partyIndex, signerIndex, name }))
 	}
 
 	return (

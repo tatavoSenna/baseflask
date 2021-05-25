@@ -290,10 +290,25 @@ export const removeVariable = (variables, payload) => {
 export const selectVariable = (variables, payload) => {
 	if (payload.name === 'field') {
 		const fieldJSON = JSON.parse(payload.value)
-		const variable =
-			fieldJSON.variable !== undefined
-				? fieldJSON.variable
-				: fieldJSON.variables
+		let variable = {}
+
+		if (fieldJSON.structure) {
+			let structure
+			if (Array.isArray(fieldJSON.structure)) {
+				structure = []
+				fieldJSON.structure.forEach((field) => {
+					structure.push(field.variable)
+				})
+			} else {
+				structure = fieldJSON.structure.variable
+			}
+			variable = {
+				structure: structure,
+				main: fieldJSON.variable,
+			}
+		} else {
+			variable = fieldJSON.variable
+		}
 		const newVariables = update(variables, {
 			[payload.pageIndex]: { [payload.fieldIndex]: { $set: variable } },
 		})

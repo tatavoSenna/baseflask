@@ -5,9 +5,9 @@ import { Card, Form, Input, Button, Dropdown, Menu, Empty } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import Delete from '~/components/deleteConfirm'
 import {
-	postTemplateFieldAdd,
-	postTemplateFormInfo,
-} from '~/states/modules/postTemplate'
+	editTemplateFieldAdd,
+	editTemplateFormInfo,
+} from '~/states/modules/editTemplate'
 import Field from './field'
 
 const Page = ({ pageIndex, data, handleRemovePage }) => {
@@ -17,6 +17,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 		<Menu onClick={(value) => handleAddField(value.key)}>
 			<Menu.Item key="text">Texto</Menu.Item>
 			<Menu.Item key="text_area">Área de texto</Menu.Item>
+			<Menu.Item key="number">Número</Menu.Item>
 			<Menu.Item key="cpf">CPF</Menu.Item>
 			<Menu.Item key="cnpj">CNPJ</Menu.Item>
 			<Menu.Item key="email">Email</Menu.Item>
@@ -35,7 +36,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="database">Base de dados</Menu.Item>
 			<Menu.Item key="text_area">Área de texto</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
-			<Menu.Item key="detailed_checkbox">Checkbox Detalhado</Menu.Item>
+			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
 		</Menu>
 	)
 
@@ -50,9 +51,17 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 		}
 
 		switch (type) {
+			case 'number':
+				newField.variable.type = 'number'
+				newField.variable.doc_display_style = 'plain | extended'
+				newField.decimals = ''
+				newField.min = ''
+				newField.max = ''
+				newField.step = ''
+				break
 			case 'date':
 				newField.variable.type = 'date'
-				newField.variable.doc_display_style = '%d%m%Y'
+				newField.variable.doc_display_style = '%d/%m/%Y'
 				break
 			case 'checkbox':
 				newField.variable.type = 'list'
@@ -80,6 +89,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'structured_list':
 				newField.variable.type = type
 				newField.variable.doc_display_style = 'text | table'
+				newField.variable.extra_style_params = {}
 				newField.structure = [
 					{
 						type: 'text',
@@ -87,13 +97,19 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 						info: '',
 						variable: {
 							name: '',
+							type: '',
+							doc_display_style: '',
 						},
 					},
 				]
 				break
-			case 'detailed_checkbox':
+			case 'structured_checkbox':
 				newField.variable.type = type
 				newField.variable.doc_display_style = 'text'
+				newField.variable.extra_style_params = {
+					row_template: '',
+					separator: '',
+				}
 				newField.structure = [
 					{
 						type: 'text',
@@ -101,6 +117,8 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 						info: '',
 						variable: {
 							name: '',
+							type: '',
+							doc_display_style: '',
 						},
 					},
 				]
@@ -112,7 +130,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 		}
 
-		const hasOptions = ['dropdown', 'radio', 'checkbox', 'detailed_checkbox']
+		const hasOptions = ['dropdown', 'radio', 'checkbox', 'structured_checkbox']
 		if (hasOptions.includes(type)) {
 			newField.options = [
 				{ label: '', value: '' },
@@ -121,11 +139,11 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			]
 		}
 
-		dispatch(postTemplateFieldAdd({ newField, pageIndex }))
+		dispatch(editTemplateFieldAdd({ newField, pageIndex }))
 	}
 
 	const updateFormInfo = (value, name, pageIndex, fieldIndex) => {
-		dispatch(postTemplateFormInfo({ value, name, pageIndex, fieldIndex }))
+		dispatch(editTemplateFormInfo({ value, name, pageIndex, fieldIndex }))
 	}
 
 	return (

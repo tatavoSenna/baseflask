@@ -3,8 +3,8 @@ import { extend } from 'lodash'
 export const selectAnswer = (data, payload) => {
 	const answers = {}
 	Object.entries(payload).forEach((answer) => {
-		//This rearranges the detailedCheckbox variables, where all detail variables from a selected option are grouped on an object
-		if (answer[0].slice(0, 16) === 'detailedCheckbox') {
+		//This rearranges the Structured Checkbox variables, where all detail variables from a selected option are grouped on an object
+		if (answer[0].slice(0, 16) === 'structured_checkbox') {
 			const items = []
 			Object.entries(answer[1]).forEach((variable) => {
 				if (Array.isArray(variable[1])) {

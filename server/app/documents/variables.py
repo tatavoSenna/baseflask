@@ -28,10 +28,16 @@ def specify_variables(variables, document_template_id):
             elif specs["doc_display_style"] == "plain":
                 return variables[variable]
 
+        elif variable_type == "number":
+            if specs["doc_display_style"] == "extended":
+                return num2words(variables[variable], lang="pt_BR")
+
+            elif specs["doc_display_style"] == "plain":
+                return variables[variable]
+
         elif variable_type == "date":
             date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
-            return date.strftime(
-                specs["doc_display_style"])
+            return date.strftime(specs["doc_display_style"])
 
         elif variable_type == "database":
             response = requests.get(
@@ -56,13 +62,13 @@ def specify_variables(variables, document_template_id):
 
         elif variable_type == "currency":
             num_variable = variables[variable]
+            if specs["doc_display_style"] == "currency_extended":
+                return str(variables[variable]) + \
+                    " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
             return format_currency(
                 num_variable, "BRL", locale='pt_BR')
-            if specs["doc_display_style"] == "currency_extended":
-                return variables[variable] + \
-                    " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
 
-        elif variable_type == "structured_list" or variable_type == "detailed_checkbox":
+        elif variable_type[0:11] == "structured_":
             if specs["doc_display_style"] == "text":
                 rows_list = []
                 text_template = specs["extra_style_params"]["row_template"]
@@ -102,11 +108,18 @@ def specify_variables(variables, document_template_id):
         if not variable in variables_specification:
             continue
 
-        if variable[0:14] == 'structuredList' or variable[0:16] == 'detailedCheckbox':
-            for struct_variable in variables_specification[variable]:
+        if variable[0:11] == 'structured_':
+
+            for index, item in enumerate(variables[variable]):
+                for variable_name, specs in variables_specification[variable]['structure'].items():
+                    formatted = format_variable(
+                        specs, variable_name, item, struct_name=None)
+                    variables[variable][index][variable_name] = formatted
+
+            for variable_name, specs in variables_specification[variable]['main'].items():
                 formatted = format_variable(
-                    variables_specification[variable][struct_variable], struct_variable, variables, variable)
-                extra_variables[struct_variable] = formatted
+                    specs, variable_name, variables, variable)
+                extra_variables[variable_name] = formatted
 
         else:
             formatted = format_variable(

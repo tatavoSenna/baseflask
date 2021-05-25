@@ -10,8 +10,8 @@ import {
 } from '@ant-design/icons'
 import {
 	getTemplateDetail,
-	postTemplateRequest,
-} from '~/states/modules/postTemplate'
+	editTemplateRequest,
+} from '~/states/modules/editTemplate'
 
 import BreadCrumb from '~/components/breadCrumb'
 import TemplateForm from './components/form'
@@ -22,7 +22,7 @@ import Text from './components/text'
 import styles from './index.module.scss'
 
 const EditTemplate = () => {
-	const { data, loading } = useSelector(({ postTemplate }) => postTemplate)
+	const { data, loading } = useSelector(({ editTemplate }) => editTemplate)
 	const { id } = useHistory().location.state
 	const history = useHistory()
 	const edit = Number.isInteger(id)
@@ -94,7 +94,7 @@ const EditTemplate = () => {
 	const onSubmit = () => {
 		const isValid = validate()
 		if (isValid) {
-			dispatch(postTemplateRequest({ id, files, history }))
+			dispatch(editTemplateRequest({ id, files, history }))
 		}
 	}
 

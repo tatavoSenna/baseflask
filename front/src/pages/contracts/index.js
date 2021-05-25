@@ -77,7 +77,7 @@ const Contracts = () => {
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
-				<BreadCrumb parent="Contratos" current="Lista" />
+				<BreadCrumb parent="Documentos" current="Lista" />
 			</PageHeader>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				{models.length > 0 && (
@@ -103,7 +103,7 @@ const Contracts = () => {
 					onClickButton={handleShowModal}
 					textButton="Novo Documento"
 					placeholderSearch="Buscar Documento"
-					placeholderNoData={!loading ? 'Nenhum contrato encontrado' : ''}
+					placeholderNoData={!loading ? 'Nenhum documento encontrado' : ''}
 					loading={loading}
 				/>
 			</Layout>
