@@ -61,7 +61,7 @@ def specify_variables(variables, document_template_id):
                     return "\a".join(variables[variable])
 
         elif variable_type == "currency":
-            num_variable = float(variables[variable])
+            num_variable = variables[variable]
             if specs["doc_display_style"] == "currency_extended":
                 return format_currency(num_variable, "BRL", locale='pt_BR') + \
                     " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
