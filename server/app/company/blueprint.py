@@ -6,7 +6,9 @@ from sqlalchemy.sql.expression import false
 from app import aws_auth, db
 from app.users.remote import get_local_user
 from app.models.company import Company
+from app.models.user import User
 from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer
+from app.serializers.user_serializers import UserSerializer
 
 from .controllers import (
     save_company_keys_controller,
@@ -140,3 +142,23 @@ def create_company(logged_user):
     db.session.add(new_company)
     db.session.commit() 
     return jsonify({"company": CompanySerializer().dump(new_company)})
+
+    
+@company_bp.route("/join", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def change_company(logged_user):
+    if not logged_user['is_admin']:
+        return {}, 403
+    
+    user = User.query.filter_by(id=logged_user["id"]).first()
+
+    content = request.json
+    new_id = content.get("new_id", None)
+   
+    user.company_id = new_id
+
+    db.session.add(user)
+    db.session.commit() 
+
+    return jsonify({"user": UserSerializer().dump(user)})
