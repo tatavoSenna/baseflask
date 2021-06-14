@@ -110,7 +110,12 @@ function* editTemplateSaga({ payload = {} }) {
 		const variablesObj = {}
 		variables.forEach((page, pageIndex) => {
 			page.forEach((field, fieldIndex) => {
-				if (field.structure && field.main) {
+				if (field.type === 'template') {
+					const type = field.type
+					variablesObj[`${type}_${pageIndex}_${fieldIndex}`] = {
+						[field.name]: extractName(field),
+					}
+				} else if (field.structure && field.main) {
 					const type = Array.isArray(field.main)
 						? field.main[0].type
 						: field.main.type

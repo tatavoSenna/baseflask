@@ -214,7 +214,7 @@ def document_creation_email_controller(title, company_id):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller('leon@lawing.com.br', email_list,
-                                     "New Document created", None, 'd-50d8e7117d4640689d8bf638094f2037')
+                                     "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
     return response
 
 
@@ -229,9 +229,10 @@ def workflow_status_change_email_controller(document_id, name):
 
     # for each user id, add respective user email to email list
     for user_id in users_IDS:
-        email = User.query.filter_by(id=user_id).first().email
-        if email not in email_list:
-            email_list.append(email)
+        if isinstance(user_id, int):
+            email = User.query.filter_by(id=user_id).first().email
+            if email not in email_list:
+                email_list.append(email)
     if len(email_list) == 0:
         return
     response = send_email_controller('leon@lawing.com.br', email_list,

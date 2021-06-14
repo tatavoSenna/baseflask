@@ -63,10 +63,17 @@ def specify_variables(variables, document_template_id):
         elif variable_type == "currency":
             num_variable = variables[variable]
             if specs["doc_display_style"] == "currency_extended":
-                return str(variables[variable]) + \
+                return format_currency(num_variable, "BRL", locale='pt_BR') + \
                     " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
             return format_currency(
                 num_variable, "BRL", locale='pt_BR')
+
+        elif variable_type == "template":
+            items = variables[struct_name]
+            text_template = specs["doc_display_style"]
+            jinja_template = jinja_env.from_string(text_template)
+            filled_text = jinja_template.render(items)
+            return filled_text
 
         elif variable_type[0:11] == "structured_":
             if specs["doc_display_style"] == "text":
@@ -117,6 +124,12 @@ def specify_variables(variables, document_template_id):
                     variables[variable][index][variable_name] = formatted
 
             for variable_name, specs in variables_specification[variable]['main'].items():
+                formatted = format_variable(
+                    specs, variable_name, variables, variable)
+                extra_variables[variable_name] = formatted
+
+        elif variable[0:8] == 'template':
+            for variable_name, specs in variables_specification[variable].items():
                 formatted = format_variable(
                     specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted

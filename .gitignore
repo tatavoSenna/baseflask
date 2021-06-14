@@ -117,3 +117,4 @@ temp/
 
 .env$
 .vscode/settings.json
+.vs/

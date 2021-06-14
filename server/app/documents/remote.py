@@ -3,17 +3,25 @@ import io
 import requests
 import convertapi
 import json
+import docx
 import base64
 from io import BufferedReader
 import tempfile
 
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
+from bs4 import BeautifulSoup
 
 from datetime import datetime
 from flask import current_app
 
 from app import jinja_env
+
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    p._p = p._element = None
 
 
 class RemoteDocument:
@@ -33,9 +41,18 @@ class RemoteDocument:
             filled_docx_io = self.fill_docx_with_variables(
                 document, docx_io, variables)
 
-            copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
+            doc = docx.Document(filled_docx_io)
+            for para in doc.paragraphs:
+                if para.text == "" or len(para.text) < 2:
+                    soup = BeautifulSoup(para._p.xml, 'xml')
+                    if len(soup.find_all('w:numId')) > 0:
+                        delete_paragraph(para)
+            fileobj = io.BytesIO()
+            doc.save(fileobj)
+            fileobj.seek(0)
+            copy_docx_io = io.BytesIO(fileobj.getvalue())
 
-            self.convert_docx_to_pdf_and_save(document, filled_docx_io)
+            self.convert_docx_to_pdf_and_save(document, fileobj)
             self.upload_filled_docx_to_documents(
                 document, copy_docx_io, document_template.text_type)
 

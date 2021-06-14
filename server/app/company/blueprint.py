@@ -1,9 +1,12 @@
+from os import abort
+from sqlalchemy import desc
 from flask import request, Blueprint, jsonify, current_app
+from sqlalchemy.sql.expression import false
 
 from app import aws_auth, db
 from app.users.remote import get_local_user
 from app.models.company import Company
-from app.serializers.company_serializers import CompanySerializer
+from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer
 
 from .controllers import (
     save_company_keys_controller,
@@ -80,3 +83,30 @@ def download_logo_url(logged_user):
     url = get_download_url_controller(company_id)
 
     return jsonify({"url": url})
+
+@company_bp.route("/")
+@aws_auth.authentication_required
+@get_local_user
+def get_company_list(logged_user):
+    if not logged_user['is_admin']:
+        return {}, 403
+
+    try:
+        page = int(request.args.get("page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get("per_page", current_app.config['PER_PAGE_DEFAULT']))
+    except:
+        abort(400, "invalid parameters")
+
+    paginated_query = (
+        Company.query.order_by(Company.name)
+        .paginate(page=page, per_page=per_page)
+    )
+
+    return jsonify(
+        {
+            "page": paginated_query.page,
+            "per_page": paginated_query.per_page,
+            "total": paginated_query.total,
+            "items": CompanyListSerializer(many=True).dump(paginated_query.items),
+        }
+    )
