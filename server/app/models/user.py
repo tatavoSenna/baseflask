@@ -6,6 +6,7 @@ class User(db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
+    is_admin = db.Column(db.Boolean, nullable=True, default=False)
     sub = db.Column(db.String(128), unique=True, nullable=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), unique=False, nullable=True)

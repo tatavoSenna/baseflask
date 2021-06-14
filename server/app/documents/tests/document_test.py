@@ -302,7 +302,7 @@ def test_email_change_document_workflow_status(status_change_email_mock):
     participant4 = factories.ParticipatesOnFactory(group=group2, user=user3)
 
     workflow_status_change_email_controller(
-        document_id)
+        document_id, title)
 
     status_change_email_mock.assert_called_once_with(
         'leon@lawing.com.br', email_list, f'O Documento {title} mudou para o status {status}.', title, 'd-d869f27633274db3810abaa3b60f1833'
@@ -480,10 +480,10 @@ def test_download_pdf_document(download_pdf_mock):
     document_id = 77
     document = factories.DocumentFactory(id=document_id)
 
-    url = get_pdf_download_url_controller(document)
+    url = get_pdf_download_url_controller(document, 0)
 
     download_pdf_mock.assert_called_once_with(
-        document
+        document, 0
     )
 
 

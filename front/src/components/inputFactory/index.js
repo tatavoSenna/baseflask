@@ -21,6 +21,7 @@ import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
 import ImageField from '~/components/imageField'
+import PersonField from '~/components/personField'
 import StructuredList from '~/components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
 
@@ -303,6 +304,17 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 				children.push(
 					<ImageField
 						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+					/>
+				)
+				break
+			case 'person':
+				children.push(
+					<PersonField
+						key={i}
+						pageIndex={currentPage}
+						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
 					/>

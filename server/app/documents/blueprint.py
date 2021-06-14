@@ -378,7 +378,6 @@ def request_signatures(current_user):
     try:
         current_document = get_document_controller(document_id)
         version_id = get_document_version_controller(document_id)
-        current_document = get_document_controller(document_id)
         document_type = current_document.text_type
 
         if document_type == ".txt":
@@ -548,6 +547,13 @@ def modify_document(current_user, document_id):
         abort(404, "Document not Found")
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
+
+    try:
+        variables = specify_variables(variables, document.document_template_id)
+    except Exception as e:
+        logging.exception(e)
+        error_msg = "Variable specification is incorrect"
+        return jsonify({"message": error_msg}), 400
 
     try:
         change_variables_controller(document, variables, current_user["email"])
