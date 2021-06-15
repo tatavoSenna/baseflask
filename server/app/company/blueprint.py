@@ -88,6 +88,7 @@ def download_logo_url(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def get_company_list(logged_user):
+    
     if not logged_user['is_admin']:
         return {}, 403
 
@@ -110,3 +111,32 @@ def get_company_list(logged_user):
             "items": CompanyListSerializer(many=True).dump(paginated_query.items),
         }
     )
+
+
+
+@company_bp.route("/", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def create_company(logged_user):
+    if not logged_user['is_admin']:
+        return {}, 403
+
+    content = request.json
+    company_name = content.get("company_name", None)
+    if not company_name:
+        return jsonify({"message": "Didn't receive a new company name"}), 400
+   
+    company = Company.query.filter_by(name=company_name).first()
+
+    if company:
+        return jsonify({"message": "Company already exists"}), 400
+
+    company_attributes = dict(
+
+                name = company_name
+            )
+    new_company = Company(**company_attributes)
+
+    db.session.add(new_company)
+    db.session.commit() 
+    return jsonify({"company": CompanySerializer().dump(new_company)})
