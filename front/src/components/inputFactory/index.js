@@ -31,9 +31,15 @@ import { updateVisible } from '~/states/modules/question'
 import styles from './index.module.scss'
 import './styles.css'
 
-function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
+function InputFactory({
+	data: pageFieldsData,
+	visible,
+	pageIndex,
+	disabled,
+	initialValues,
+}) {
 	const { values } = useHistory().location.state
-	const currentPage = parseInt(values.current)
+	const currentPage = values !== undefined ? parseInt(values.current) : 0
 	const dispatch = useDispatch()
 	const children = []
 
@@ -101,6 +107,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -113,6 +121,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -126,6 +136,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -139,6 +151,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -152,6 +166,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -164,6 +180,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -176,6 +194,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -188,6 +208,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -200,6 +222,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -212,6 +236,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -224,6 +250,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -236,6 +264,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -248,6 +278,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -260,6 +292,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -272,6 +306,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
 						}
@@ -294,6 +330,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}
@@ -351,6 +389,8 @@ function InputFactory({ data: pageFieldsData, visible, pageIndex }) {
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
 						}

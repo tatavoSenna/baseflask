@@ -9,6 +9,7 @@ const NumberField = ({
 	className,
 	onChange,
 	first,
+	disabled,
 }) => {
 	const {
 		label,
@@ -51,6 +52,7 @@ const NumberField = ({
 				precision={decimals ? decimals : undefined}
 				step={step ? step : undefined}
 				decimalSeparator=","
+				disabled={disabled}
 			/>
 		</Form.Item>
 	)
@@ -67,6 +69,7 @@ NumberField.propTypes = {
 	className: object,
 	onChange: func,
 	first: bool,
+	disabled: bool,
 }
 
 NumberField.defaultProps = {

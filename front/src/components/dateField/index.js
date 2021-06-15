@@ -1,9 +1,16 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, DatePicker } from 'antd'
 import InfoField from '~/components/infoField'
+import moment from 'moment'
 
-const DateField = ({ pageFieldsData, className, onChange }) => {
+const DateField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -25,7 +32,12 @@ const DateField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}>
-			<DatePicker format={'DD-MM-YYYY'} placeholder={''} />
+			<DatePicker
+				format={'DD-MM-YYYY'}
+				placeholder={''}
+				disabled={disabled}
+				defaultValue={inputValue !== '' ? moment(inputValue) : moment()}
+			/>
 		</Form.Item>
 	)
 }
@@ -38,6 +50,8 @@ DateField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 export default DateField

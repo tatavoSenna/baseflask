@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, array, object, func } from 'prop-types'
+import { string, shape, array, object, func, bool } from 'prop-types'
 import { Form, Checkbox } from 'antd'
 import InfoField from '~/components/infoField'
 
-const CheckboxField = ({ pageFieldsData, className, onChange }) => {
+const CheckboxField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -16,8 +22,11 @@ const CheckboxField = ({ pageFieldsData, className, onChange }) => {
 			className={className}
 			hasFeedback
 			type={type}
-			colon={false}>
-			<Checkbox.Group>
+			colon={false}
+			initialValue={
+				!inputValue ? '' : Array.isArray(inputValue) ? inputValue : [inputValue]
+			}>
+			<Checkbox.Group disabled={disabled}>
 				{options.map((option, index) => (
 					<Checkbox key={index} value={option.value} onChange={onChange}>
 						{option.label}
@@ -38,6 +47,8 @@ CheckboxField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: array,
+	disabled: bool,
 }
 
 CheckboxField.defaultProps = {

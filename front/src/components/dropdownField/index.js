@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, array, object, func } from 'prop-types'
+import { string, shape, array, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import InfoField from '~/components/infoField'
 
-const DropdownField = ({ pageFieldsData, className, onChange }) => {
+const DropdownField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -23,8 +29,9 @@ const DropdownField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
-			colon={false}>
-			<Select>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<Select disabled={disabled}>
 				{options.map((option, index) => (
 					<Select.Option key={index} value={option.value} onChange={onChange}>
 						{option.label}
@@ -45,6 +52,8 @@ DropdownField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 DropdownField.defaultProps = {

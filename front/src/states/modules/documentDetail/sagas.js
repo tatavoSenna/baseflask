@@ -287,9 +287,32 @@ function* changeVariablesSaga({ payload = {} }) {
 	})
 	const { id, values } = payload
 
+	// This function nests the struct variables, since Form only supports single level nesting
+	const arrangeStructs = (values) => {
+		Object.keys(values).forEach((fieldName) => {
+			if (fieldName.slice(0, 10) === 'structured') {
+				let arranged = []
+				Object.keys(values[fieldName]).forEach((structVar) => {
+					if (parseInt(structVar.split('_').pop()) + 1 > arranged.length) {
+						arranged.push({})
+					}
+				})
+
+				Object.keys(values[fieldName]).forEach((structVar) => {
+					const nameSplit = structVar.split('_')
+					const index = parseInt(nameSplit.pop())
+					const name = nameSplit.join('_')
+					arranged[index][name] = values[fieldName][structVar]
+				})
+				values[fieldName] = arranged
+			}
+		})
+		return values
+	}
+
 	try {
 		const { data } = yield call(api.post, `documents/${id}/modify`, {
-			variables: values,
+			variables: arrangeStructs(values),
 		})
 
 		const response = yield call(api.get, `/documents/${id}/pdf`)
