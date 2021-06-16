@@ -45,7 +45,7 @@ export const getColumns = (
 		title: '',
 		dataIndex: 'action',
 		key: 'action',
-		render: (row) => (
+		render: (text, row) => (
 			<Space size="middle">
 				<Delete
 					title="Deseja excluir essa template?"
