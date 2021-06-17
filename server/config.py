@@ -32,6 +32,7 @@ class Config(object):
     AWS_S3_TEMPLATES_ROOT = "templates"
     AWS_S3_COMPANY_ROOT = "company"
     AWS_S3_SIGNED_DOCUMENTS_ROOT = "signed_documents"
+    SNS_NEWDOCUMENT_ARN = os.environ.get("SNS_NEWDOCUMENT_ARN")
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20
 
