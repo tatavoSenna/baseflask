@@ -49,6 +49,8 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
                 }]
     document_workflow = document_template.workflow
     document_workflow['created_by'] = username
+    current_node = document_workflow["current_node"]
+    step_name = document_workflow["nodes"][current_node]["title"]
     document = Document(
         user_id=user_id,
         company_id=company_id,
@@ -59,6 +61,7 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         versions=version,
         created_at=datetime.utcnow().isoformat(),
         title=title,
+        current_step=step_name,
         document_template_id=document_template_id,
         text_type=document_template.text_type,
     )
@@ -182,6 +185,7 @@ def next_status_controller(document_id, username):
     document.workflow["nodes"][workflow["current_node"]
                                ]["changed_by"] = username
     document.workflow["current_node"] = next_node
+    document.current_step = document.workflow["nodes"][next_node]["title"]
     db.session.add(document)
     db.session.commit()
     return document, 0
@@ -204,6 +208,7 @@ def previous_status_controller(document_id):
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.workflow = copy.deepcopy(document.workflow)
     document.workflow["current_node"] = previous_node
+    document.current_step = document.workflow["nodes"][previous_node]["title"]
     db.session.add(document)
     db.session.commit()
     return document, 0

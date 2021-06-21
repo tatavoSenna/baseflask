@@ -9,9 +9,9 @@ def test_retrieve_document_templates_list():
     company_2_id = 144
     company_1 = factories.CompanyFactory(id=company_1_id)
     company_2 = factories.CompanyFactory(id=company_2_id)
-    factories.DocumentTemplateFactory(company=company_1)
-    factories.DocumentTemplateFactory(company=company_1)
-    factories.DocumentTemplateFactory(company=company_2)
+    factories.DocumentTemplateFactory(company=company_1,published=True)
+    factories.DocumentTemplateFactory(company=company_1,published=True)
+    factories.DocumentTemplateFactory(company=company_2,published=True)
     retrieved_list= get_document_template_list_controller(company_1_id)
     assert len(retrieved_list) == 2
     

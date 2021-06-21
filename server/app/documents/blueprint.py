@@ -3,6 +3,7 @@ import io
 import logging
 import base64
 import json
+import jinja2
 
 import boto3
 import pdfrw
@@ -249,10 +250,30 @@ def create(current_user):
             current_user["name"],
             variables
         )
+    except jinja2.TemplateSyntaxError as e:
+        if current_user["is_admin"] == True:
+            error_JSON = {
+                "error": "There is a problem with template syntax",
+                "message": e.message
+            }
+            return jsonify(error_JSON), 500
+        else:
+            error_JSON = {
+                "error": "There is a problem with template syntax"
+            }
+            logging.exception(e)
+            return jsonify(error_JSON), 500
     except Exception as e:
-        logging.exception(
-            "Could not create document")
-        abort(400, "Could not create document")
+        if current_user["is_admin"] == True:
+            error_JSON = {
+                "Message": "Could not create document",
+                "Exception": str(e)
+            }
+            return jsonify(error_JSON), 400
+        else:
+            logging.exception(
+                "Could not create document")
+            abort(400, "Could not create document")
     try:
         response = document_creation_email_controller(
             title, current_user["company_id"])

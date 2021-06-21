@@ -158,15 +158,18 @@ def test_create_document(create_remote_document_mock):
         "nodes": {
             "544": {
                 "next_node": "5521",
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step1"
             },
             "3485": {
                 "next_node": None,
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step3"
             },
             "5521": {
                 "next_node": "3485",
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step2"
             }
         },
         "current_node": "544",
@@ -198,7 +201,8 @@ def test_create_document(create_remote_document_mock):
         variables,
         document_template_txt.id,
         title,
-        'Joao'
+        'Joao',
+        variables
     )
 
     create_remote_document_mock.assert_called_with(
@@ -212,7 +216,8 @@ def test_create_document(create_remote_document_mock):
         variables,
         document_template_docx.id,
         title,
-        'Joao'
+        'Joao',
+        variables
     )
 
     create_remote_document_mock.assert_called_with(
@@ -378,15 +383,18 @@ def test_change_document_status_next():
         "nodes": {
             "544": {
                 "next_node": "5521",
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step1"
             },
             "3485": {
                 "next_node": None,
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step3"
             },
             "5521": {
                 "next_node": "3485",
-                "changed_by": ""
+                "changed_by": "",
+                "title": "step2"
             }
         },
         "current_node": "5521"
@@ -417,6 +425,7 @@ def test_change_document_status_next():
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "3485"
     assert retrieved_document.workflow['nodes']['5521']['changed_by'] == "joao"
+    assert retrieved_document.current_step == "step3"
 
 
 def test_change_document_status_previous():
@@ -426,12 +435,18 @@ def test_change_document_status_previous():
         "nodes": {
             "544": {
                 "next_node": "5521",
+                "changed_by": "",
+                "title": "step1"
             },
             "3485": {
                 "next_node": None,
+                "changed_by": "",
+                "title": "step3"
             },
             "5521": {
                 "next_node": "3485",
+                "changed_by": "",
+                "title": "step2"
             }
         },
         "current_node": "5521"
@@ -461,6 +476,7 @@ def test_change_document_status_previous():
     retrieved_document, status = previous_status_controller(document.id)
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "544"
+    assert retrieved_document.current_step == "step1"
 
 
 @ patch('app.documents.controllers.RemoteDocument.download_signed_document')
@@ -563,18 +579,19 @@ def test_change_document_variables(update_variables_mock):
                  }]
 
     document_template_docx = factories.DocumentTemplateFactory(
-        id=66, company=company,company_id=17, workflow=workflow, text_type=".docx"
+        id=66, company=company, company_id=17, workflow=workflow, text_type=".docx"
     )
     variables = {"variable_teste": "aaa"}
     document = factories.DocumentFactory(
         id=333, company=company, document_template_id=66, user_id=user.id, variables=variables, versions=versions)
 
     new_variables = {"variable_teste": "bbb"}
-    change_variables_controller(document, new_variables, "testemail@gmail.com")
+    change_variables_controller(
+        document, new_variables, "testemail@gmail.com", variables)
     update_variables_mock.assert_called_with(
         document, document_template_docx, 17, new_variables
     )
 
     document = Document.query.filter_by(id=333).first()
-    assert document.variables == new_variables
+    assert document.variables == variables
     assert document.versions[0]["id"] == '1'
