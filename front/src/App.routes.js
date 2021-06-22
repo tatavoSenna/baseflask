@@ -15,6 +15,7 @@ import DocumentDetails from './pages/documentDetails'
 import Integrations from './pages/integrations'
 import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
+import Companies from './pages/companies'
 
 import Wrapper from '~/components/wrapper'
 
@@ -32,6 +33,7 @@ export const ROUTES = {
 	integrations: '/integrations',
 	externalContract: '/documentcreate/:token',
 	settings: '/settings',
+	companies: '/companies',
 }
 
 function Routes() {
@@ -94,6 +96,12 @@ function Routes() {
 						exact
 						path={ROUTES.settings}
 						component={Settings}
+						isPrivate
+					/>
+					<AdminRoute
+						exact
+						path={ROUTES.companies}
+						component={Companies}
 						isPrivate
 					/>
 				</Wrapper>

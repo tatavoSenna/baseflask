@@ -28,6 +28,7 @@ import stateField, { stateFieldSaga } from './modules/stateField'
 import cnaeField, { cnaeFieldSaga } from './modules/cnaeField'
 import cityField, { cityFieldSaga } from './modules/cityField'
 import fileField, { fileFieldSaga } from './modules/fileField'
+import companies, { companiesSaga } from './modules/companies'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -55,6 +56,7 @@ const reducers = combineReducers({
 	cnaeField,
 	cityField,
 	fileField,
+	companies,
 })
 
 const store = configureStore({
@@ -84,6 +86,7 @@ const rootSaga = function* () {
 		cnaeFieldSaga(),
 		cityFieldSaga(),
 		fileFieldSaga(),
+		companiesSaga(),
 	])
 }
 

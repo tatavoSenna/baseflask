@@ -7,10 +7,16 @@ import DropdownField from '~/components/dropdownField'
 import StateField from '~/components/stateField'
 import CityField from '~/components/cityField'
 
-const NaturalPerson = ({ fields, name }) => {
+const NaturalPerson = ({ fields, name, disabled }) => {
 	const children = []
 	fields.forEach((field, i) => {
-		switch (field) {
+		let fieldType
+		if (typeof field === 'string') {
+			fieldType = field
+		} else {
+			fieldType = field.field_type
+		}
+		switch (fieldType) {
 			case 'name':
 				children.push(
 					<TextField
@@ -26,6 +32,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -44,6 +52,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -68,6 +78,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -86,6 +98,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -105,6 +119,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -123,6 +139,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -141,6 +159,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -159,6 +179,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -177,6 +199,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -195,6 +219,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -213,6 +239,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -231,6 +259,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -249,6 +279,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -267,6 +299,8 @@ const NaturalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break

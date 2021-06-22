@@ -35,6 +35,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
 			<Menu.Item key="text_area">Área de texto</Menu.Item>
+			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
 			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
 		</Menu>
@@ -85,6 +86,11 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'variable_image':
 				newField.variable.type = 'variable_image'
 				newField.variable.doc_display_style = 'image'
+				break
+			case 'person':
+				newField.variable.type = 'template'
+				newField.fields = []
+				newField.person_type = ''
 				break
 			case 'structured_list':
 				newField.variable.type = type

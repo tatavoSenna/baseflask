@@ -3,6 +3,7 @@ import io
 import logging
 import base64
 import json
+import jinja2
 
 import boto3
 import pdfrw
@@ -230,8 +231,9 @@ def create(current_user):
         error_msg = "Value is missing. Needs questions and document model id"
         return jsonify({"message": error_msg}), 400
 
+    spec_variables = variables.copy()
     try:
-        variables = specify_variables(variables, document_template_id)
+        specify_variables(spec_variables, document_template_id)
     except Exception as e:
         logging.exception(e)
         error_msg = "Variable specification is incorrect"
@@ -242,15 +244,36 @@ def create(current_user):
             current_user["id"],
             current_user["email"],
             current_user["company_id"],
-            variables,
+            spec_variables,
             document_template_id,
             title,
             current_user["name"],
+            variables
         )
+    except jinja2.TemplateSyntaxError as e:
+        if current_user["is_admin"] == True:
+            error_JSON = {
+                "error": "There is a problem with template syntax",
+                "message": e.message
+            }
+            return jsonify(error_JSON), 500
+        else:
+            error_JSON = {
+                "error": "There is a problem with template syntax"
+            }
+            logging.exception(e)
+            return jsonify(error_JSON), 500
     except Exception as e:
-        logging.exception(
-            "Could not create document")
-        abort(400, "Could not create document")
+        if current_user["is_admin"] == True:
+            error_JSON = {
+                "Message": "Could not create document",
+                "Exception": str(e)
+            }
+            return jsonify(error_JSON), 400
+        else:
+            logging.exception(
+                "Could not create document")
+            abort(400, "Could not create document")
     try:
         response = document_creation_email_controller(
             title, current_user["company_id"])
@@ -548,15 +571,17 @@ def modify_document(current_user, document_id):
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
 
+    spec_variables = variables.copy()
     try:
-        variables = specify_variables(variables, document.document_template_id)
+        specify_variables(spec_variables, document.document_template_id)
     except Exception as e:
         logging.exception(e)
         error_msg = "Variable specification is incorrect"
         return jsonify({"message": error_msg}), 400
 
     try:
-        change_variables_controller(document, variables, current_user["email"])
+        change_variables_controller(
+            document, spec_variables, current_user["email"], variables)
     except Exception as e:
         logging.exception(
             "Could not change document variables")

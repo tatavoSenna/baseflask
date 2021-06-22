@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, number, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
 
-const CurrencyField = ({ pageFieldsData, className, onChange }) => {
+const CurrencyField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -36,7 +42,8 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 					}),
 				]
 			}
-			colon={false}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
 			<InputNumber
 				min={0}
 				placeholder=""
@@ -46,6 +53,7 @@ const CurrencyField = ({ pageFieldsData, className, onChange }) => {
 				parser={(value) => value.replace(/[A-Z]|[a-z]|[$ ]|,+/g, '')}
 				precision={2}
 				style={{ width: '100%' }}
+				disabled={disabled}
 			/>
 		</Form.Item>
 	)
@@ -60,6 +68,8 @@ CurrencyField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: number,
+	disabled: bool,
 }
 
 CurrencyField.defaultProps = {

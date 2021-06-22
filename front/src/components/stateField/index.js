@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getStateField } from '~/states/modules/stateField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
 
-const StateField = ({ pageFieldsData, className, onChange }) => {
+const StateField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -35,8 +41,9 @@ const StateField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
-			colon={false}>
-			<Select showSearch={true}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<Select showSearch={true} disabled={disabled}>
 				{stateName.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}
@@ -56,6 +63,8 @@ StateField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 StateField.defaultProps = {

@@ -9,6 +9,7 @@ import {
 	LayoutOutlined,
 	DeploymentUnitOutlined,
 	SettingOutlined,
+	IdcardOutlined,
 } from '@ant-design/icons'
 import { getUserList } from '~/states/modules/users'
 import { getSettings } from '~/states/modules/settings'
@@ -30,6 +31,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		dispatch(getSettings())
 	}, [dispatch])
 
+	const { loggedUser } = useSelector(({ session }) => session)
+
 	function handleGoTo(path) {
 		if (!isWeb) {
 			handleCollapsed()
@@ -37,7 +40,36 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		return history.push(path)
 	}
 
+	function adminSideBar() {
+		if (!loggedUser.is_admin) {
+			return null
+		}
+		return (
+			<Menu.Item
+				key="empresas"
+				icon={<IdcardOutlined />}
+				onClick={() => handleGoTo('/companies')}>
+				<Tooltip className={styles.tooltip}>Empresas</Tooltip>
+			</Menu.Item>
+		)
+	}
+
+	function adminSideBarNotWeb() {
+		if (!loggedUser.is_admin) {
+			return null
+		}
+		return (
+			<Menu.Item
+				key="empresas"
+				icon={<IdcardOutlined />}
+				onClick={() => handleGoTo('/companies')}>
+				Empresas
+			</Menu.Item>
+		)
+	}
+
 	const { Sider } = Layout
+
 	return (
 		<>
 			{isWeb ? (
@@ -113,6 +145,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/settings')}>
 							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
 						</Menu.Item>
+
+						{adminSideBar()}
 					</Menu>
 				</Sider>
 			) : (
@@ -165,6 +199,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/settings')}>
 							Configurações
 						</Menu.Item>
+						{adminSideBarNotWeb()}
 					</Menu>
 				</Sider>
 			)}

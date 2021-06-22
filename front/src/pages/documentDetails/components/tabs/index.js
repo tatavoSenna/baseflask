@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
-import { Form, Typography, Button, Spin, Menu, Divider, Input } from 'antd'
+import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
 import { array, bool, func, string } from 'prop-types'
+import InputFactory from '~/components/inputFactory'
+import StructuredList from './components/structuredList'
+import PersonField from './components/personField'
 import { ContainerTabs } from './styles'
 import styles from './index.module.scss'
 import * as moment from 'moment'
@@ -119,23 +122,24 @@ const Tabs = ({
 				onChangeVariables(values)
 				setIsEdit(false)
 			}}>
-			{item.fields.map((item, index) => (
-				<Form.Item
-					key={item.variable}
-					name={item.variable}
-					label={item.label}
-					hasFeedback
-					rules={[
-						{
-							required: true,
-							message: 'Este campo é obrigatório.',
-						},
-					]}
-					colon={false}
-					initialValue={item.value}>
-					<Input disabled={!isEdit} />
-				</Form.Item>
-			))}
+			{item.fields.map((item, index) => {
+				switch (item.type) {
+					case 'structured_list':
+						return <StructuredList item={item} disabled={!isEdit} />
+					case 'person':
+						return <PersonField item={item} disabled={!isEdit} />
+					default:
+						return (
+							<InputFactory
+								key={index}
+								data={[item]}
+								visible={[true]}
+								disabled={!isEdit}
+								initialValues={[item.value]}
+							/>
+						)
+				}
+			})}
 		</Form>
 	)
 
