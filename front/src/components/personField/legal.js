@@ -6,10 +6,16 @@ import TextField from '~/components/textField'
 import StateField from '~/components/stateField'
 import CityField from '~/components/cityField'
 
-const LegalPerson = ({ fields, name }) => {
+const LegalPerson = ({ fields, name, disabled }) => {
 	const children = []
 	fields.forEach((field, i) => {
-		switch (field) {
+		let fieldType
+		if (typeof field === 'string') {
+			fieldType = field
+		} else {
+			fieldType = field.field_type
+		}
+		switch (fieldType) {
 			case 'name':
 				children.push(
 					<TextField
@@ -25,6 +31,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -43,6 +51,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -61,6 +71,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -79,6 +91,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -97,6 +111,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -115,6 +131,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -133,6 +151,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -151,6 +171,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -169,6 +191,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -187,6 +211,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -205,6 +231,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break
@@ -223,6 +251,8 @@ const LegalPerson = ({ fields, name }) => {
 								doc_display_style: 'plain',
 							},
 						}}
+						inputValue={field.value === undefined ? '' : field.value}
+						disabled={disabled}
 					/>
 				)
 				break

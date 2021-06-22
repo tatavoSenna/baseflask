@@ -1,11 +1,18 @@
 import React from 'react'
-import { string, shape, func, object, number } from 'prop-types'
+import { string, shape, func, object, number, bool } from 'prop-types'
 import { Form } from 'antd'
 import { validateTime } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 import InfoField from '~/components/infoField'
 
-const TimeField = ({ pageFieldsData, className, onChange, listIndex }) => {
+const TimeField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	listIndex,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const name = isObj ? variable.name : variable
@@ -37,8 +44,14 @@ const TimeField = ({ pageFieldsData, className, onChange, listIndex }) => {
 					}),
 				]
 			}
-			colon={false}>
-			<MaskedInput mask="11:11" placeholder="" style={{ width: '39.2%' }} />
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<MaskedInput
+				mask="11:11"
+				placeholder=""
+				style={{ width: '39.2%' }}
+				disabled={disabled}
+			/>
 		</Form.Item>
 	)
 }
@@ -52,6 +65,8 @@ TimeField.propTypes = {
 	className: object,
 	onChange: func,
 	listIndex: number,
+	inputValue: string,
+	disabled: bool,
 }
 
 TimeField.defaultProps = {

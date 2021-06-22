@@ -9,6 +9,7 @@ const TextAreaField = ({
 	className,
 	onChange,
 	first,
+	disabled,
 }) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
@@ -33,7 +34,12 @@ const TextAreaField = ({
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<TextArea autoFocus={first} autoSize={true} placeholder="" />
+			<TextArea
+				autoFocus={first}
+				autoSize={true}
+				placeholder=""
+				disabled={disabled}
+			/>
 		</Form.Item>
 	)
 }
@@ -49,6 +55,7 @@ TextAreaField.propTypes = {
 	className: object,
 	onChange: func,
 	first: bool,
+	disabled: bool,
 }
 
 TextAreaField.defaultProps = {

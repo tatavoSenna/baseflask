@@ -64,6 +64,7 @@ const { actions, reducer } = createSlice({
 					email: payload.email,
 					name: payload.name,
 					companyId: payload.company_id,
+					is_admin: payload.is_admin,
 				}),
 			}),
 	},

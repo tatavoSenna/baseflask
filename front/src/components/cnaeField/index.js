@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCnaeField } from '~/states/modules/cnaeField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
 
-const CnaeField = ({ pageFieldsData, className, onChange }) => {
+const CnaeField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -37,8 +43,9 @@ const CnaeField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
-			colon={false}>
-			<Select showSearch={true}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<Select showSearch={true} disabled={disabled}>
 				{cnaeDescription.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}
@@ -58,6 +65,8 @@ CnaeField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 CnaeField.defaultProps = {

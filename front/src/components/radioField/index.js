@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, array, object, func } from 'prop-types'
+import { string, shape, array, object, func, bool } from 'prop-types'
 import { Form, Radio } from 'antd'
 import InfoField from '~/components/infoField'
 
-const RadioField = ({ pageFieldsData, className, onChange }) => {
+const RadioField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -24,8 +30,9 @@ const RadioField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
-			colon={false}>
-			<Radio.Group>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<Radio.Group disabled={disabled}>
 				{options.map((option, index) => (
 					<Radio key={index} value={option.value} onChange={onChange}>
 						{option.label}
@@ -46,6 +53,8 @@ RadioField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 RadioField.defaultProps = {

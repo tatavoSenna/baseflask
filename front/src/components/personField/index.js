@@ -45,9 +45,8 @@ const PersonField = ({
 			colon={false}>
 			<Card>
 				{person_type === undefined && (
-					<Form.Item name={[objName, 'PERSON_TYPE']}>
+					<Form.Item name={[objName, 'PERSON_TYPE']} initialValue="Física">
 						<Radio.Group
-							defaultValue="Física"
 							onChange={(value) => setPerson(value.target.value)}
 							style={{ marginBottom: '24px' }}>
 							<Radio.Button value="Física">Física</Radio.Button>

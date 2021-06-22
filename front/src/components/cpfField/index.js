@@ -5,7 +5,14 @@ import { validateCPF } from '../../utils'
 import MaskedInput from 'antd-mask-input'
 import InfoField from '~/components/infoField'
 
-const CpfField = ({ pageFieldsData, className, onChange, first }) => {
+const CpfField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	first,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -38,8 +45,14 @@ const CpfField = ({ pageFieldsData, className, onChange, first }) => {
 					}),
 				]
 			}
-			colon={false}>
-			<MaskedInput autoFocus={first} mask="111.111.111-11" placeholder="" />
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<MaskedInput
+				autoFocus={first}
+				mask="111.111.111-11"
+				placeholder=""
+				disabled={disabled}
+			/>
 		</Form.Item>
 	)
 }
@@ -54,6 +67,8 @@ CpfField.propTypes = {
 	className: object,
 	onChange: func,
 	first: bool,
+	inputValue: string,
+	disabled: bool,
 }
 
 CpfField.defaultProps = {

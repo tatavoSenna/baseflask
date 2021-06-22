@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCityField } from '~/states/modules/cityField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
 
-const CityField = ({ pageFieldsData, className, onChange }) => {
+const CityField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -35,8 +41,9 @@ const CityField = ({ pageFieldsData, className, onChange }) => {
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			type={type}
-			colon={false}>
-			<Select showSearch={true}>
+			colon={false}
+			initialValue={!inputValue ? '' : inputValue}>
+			<Select showSearch={true} disabled={disabled}>
 				{cityName.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}
@@ -56,6 +63,8 @@ CityField.propTypes = {
 	}).isRequired,
 	className: object,
 	onChange: func,
+	inputValue: string,
+	disabled: bool,
 }
 
 CityField.defaultProps = {

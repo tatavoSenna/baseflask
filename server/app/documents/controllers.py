@@ -33,11 +33,12 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, received_variables):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
+    received_variables.update(current_date_dict)
 
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
@@ -48,16 +49,19 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
                 }]
     document_workflow = document_template.workflow
     document_workflow['created_by'] = username
+    current_node = document_workflow["current_node"]
+    step_name = document_workflow["nodes"][current_node]["title"]
     document = Document(
         user_id=user_id,
         company_id=company_id,
         form=document_template.form,
         workflow=document_workflow,
         signers=document_template.signers,
-        variables=variables,
+        variables=received_variables,
         versions=version,
         created_at=datetime.utcnow().isoformat(),
         title=title,
+        current_step=step_name,
         document_template_id=document_template_id,
         text_type=document_template.text_type,
     )
@@ -181,6 +185,7 @@ def next_status_controller(document_id, username):
     document.workflow["nodes"][workflow["current_node"]
                                ]["changed_by"] = username
     document.workflow["current_node"] = next_node
+    document.current_step = document.workflow["nodes"][next_node]["title"]
     db.session.add(document)
     db.session.commit()
     return document, 0
@@ -203,6 +208,7 @@ def previous_status_controller(document_id):
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.workflow = copy.deepcopy(document.workflow)
     document.workflow["current_node"] = previous_node
+    document.current_step = document.workflow["nodes"][previous_node]["title"]
     db.session.add(document)
     db.session.commit()
     return document, 0
@@ -302,7 +308,7 @@ def convert_pdf_controller(text):
     return base64.b64decode(document_pdf)
 
 
-def change_variables_controller(document, new_variables, email):
+def change_variables_controller(document, new_variables, email, variables):
     document_template = DocumentTemplate.query.filter_by(
         id=document.document_template_id).first()
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
@@ -318,7 +324,7 @@ def change_variables_controller(document, new_variables, email):
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
     document.versions = copy.deepcopy(document.versions)
     document.versions.insert(0, version)
-    document.variables = new_variables
+    document.variables = variables
     db.session.add(document)
     db.session.commit()
     remote_document = RemoteDocument()

@@ -9,7 +9,6 @@ class CompanySerializer(ma.SQLAlchemyAutoSchema):
         )
         model = Company
 
-
 class CompanyListSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Company
