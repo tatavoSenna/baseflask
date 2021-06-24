@@ -180,12 +180,14 @@ def map_variables_to_form(variables, form):
                             if var_obj['variable']['name'] == variable_name:
                                 label = var_obj['label']
                                 variable_type = var_obj['type']
+                                options = var_obj.get('options')
 
                         item_list.append({
                             "label": label,
                             "variable": variable_name,
                             "value": value,
-                            "type": variable_type
+                            "type": variable_type,
+                            "options": options
                         })
 
                     variables_obj['items'].append(item_list)
