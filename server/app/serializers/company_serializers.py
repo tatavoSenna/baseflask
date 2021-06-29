@@ -1,5 +1,5 @@
 from app import ma
-from app.models.company import Company
+from app.models.company import Company, Webhook
 
 
 class CompanySerializer(ma.SQLAlchemyAutoSchema):
@@ -18,3 +18,10 @@ class CompanyListSerializer(ma.SQLAlchemyAutoSchema):
             'docusign_integration_key',
             'docusign_secret_key',
         )
+
+class WebhookSerializer(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        exclude = (
+            "company_id",
+        )
+        model = Webhook
