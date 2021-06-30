@@ -7,13 +7,15 @@ from app import aws_auth, db
 from app.users.remote import get_local_user
 from app.models.company import Company
 from app.models.user import User
-from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer
 from app.serializers.user_serializers import UserSerializer
+from app.models.company import Company, Webhook
+from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer, WebhookSerializer
 
 from .controllers import (
     save_company_keys_controller,
     upload_logo_controller,
-    get_download_url_controller
+    get_download_url_controller,
+    create_webhook_controller
 )
 
 company_bp = Blueprint("company", __name__)
@@ -163,3 +165,49 @@ def change_company(logged_user):
     db.session.commit() 
 
     return jsonify({"user": UserSerializer().dump(user)})
+
+@company_bp.route("/webhook")
+@aws_auth.authentication_required
+@get_local_user
+def get_webhook_list(logged_user):
+    try:
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+    except:
+        abort(400, "invalid parameters")
+
+    paginated_query = (
+        Webhook.query.order_by(Webhook.webhook)
+        .paginate(page=page, per_page=per_page)
+    )
+
+    return jsonify(
+        {
+            "page": paginated_query.page,
+            "per_page": paginated_query.per_page,
+            "total": paginated_query.total,
+            "items": WebhookSerializer(many=True).dump(paginated_query.items),
+        }
+    )
+
+
+@company_bp.route("/webhook", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def create_webhook(logged_user):
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    company = Company.query.get(logged_user['company_id'])
+
+    content = request.json
+    url = content.get("url", None)
+
+    webhook = create_webhook_controller(company.id, url)
+    
+    return jsonify({"webhook": WebhookSerializer().dump(webhook)})
+
+
+

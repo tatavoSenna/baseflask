@@ -1,5 +1,5 @@
 from app import db
-from app.models.company import Company
+from app.models.company import Company, Webhook
 from .remote import RemoteCompany
 
 def save_company_keys_controller(company, docusign_integration_key, docusign_secret_key, docusign_account_id):
@@ -25,4 +25,11 @@ def get_download_url_controller(company_id):
     url = remote_company.download_logo_url(company_id)
 
     return url
+
+
+def create_webhook_controller(company_id, webhook):
+    webhook = Webhook(webhook=webhook, company_id=company_id)
+    db.session.add(webhook)
+    db.session.commit()
+    return webhook
 
