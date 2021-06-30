@@ -9,6 +9,7 @@ import {
 	setShowModal,
 	addCompany,
 	updateNewCompany,
+	changeUserCompany,
 } from '~/states/modules/companies'
 import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
@@ -19,11 +20,11 @@ function Companies() {
 		({ companies }) => companies
 	)
 
-	const { loggedUser } = useSelector(({ session }) => session)
+	const { company_id } = useSelector(({ session }) => session)
 
 	useEffect(() => {
 		dispatch(getCompanyList())
-	}, [dispatch, loggedUser])
+	}, [dispatch, company_id])
 
 	const getCompanies = ({ page, perPage, search }) =>
 		dispatch(getCompanyList({ page, perPage, search }))
@@ -50,7 +51,11 @@ function Companies() {
 		dispatch(updateNewCompany(form.getFieldsValue()))
 	}
 
-	const columns = getColumns()
+	const handleChangeUserCompany = (id) => {
+		dispatch(changeUserCompany({ id }))
+	}
+
+	const columns = getColumns(handleChangeUserCompany, company_id)
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
@@ -69,7 +74,7 @@ function Companies() {
 				<DataTable
 					dataSource={companyList}
 					columns={columns}
-					loading={loading || !loggedUser}
+					loading={loading}
 					pages={pages}
 					onChangePageNumber={getCompanies}
 					onSearch={handleSearch}

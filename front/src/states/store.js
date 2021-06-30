@@ -8,7 +8,6 @@ import { all } from 'redux-saga/effects'
 import { persistStore } from 'redux-persist'
 
 import persistReducers from './persistReducer'
-import session, { sessionSaga } from './modules/session'
 import contract, { contractSaga } from './modules/contract'
 import template, { templateSaga } from './modules/templates'
 import editTemplate, { editTemplateSaga } from './modules/editTemplate'
@@ -29,6 +28,7 @@ import cnaeField, { cnaeFieldSaga } from './modules/cnaeField'
 import cityField, { cityFieldSaga } from './modules/cityField'
 import fileField, { fileFieldSaga } from './modules/fileField'
 import companies, { companiesSaga } from './modules/companies'
+import session, { sessionSaga } from './modules//session'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -38,7 +38,6 @@ const middleware = [
 ]
 
 const reducers = combineReducers({
-	session,
 	contract,
 	template,
 	editTemplate,
@@ -57,6 +56,7 @@ const reducers = combineReducers({
 	cityField,
 	fileField,
 	companies,
+	session,
 })
 
 const store = configureStore({
@@ -68,7 +68,6 @@ const persistor = persistStore(store)
 
 const rootSaga = function* () {
 	yield all([
-		sessionSaga(),
 		contractSaga(),
 		templateSaga(),
 		editTemplateSaga(),
@@ -87,6 +86,7 @@ const rootSaga = function* () {
 		cityFieldSaga(),
 		fileFieldSaga(),
 		companiesSaga(),
+		sessionSaga(),
 	])
 }
 

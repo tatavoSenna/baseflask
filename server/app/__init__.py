@@ -48,10 +48,6 @@ def create_app():
 
     app.register_blueprint(docusign_bp, url_prefix="/docusign")
 
-    from .auth.blueprint import auth_bp
-
-    app.register_blueprint(auth_bp, url_prefix="/auth")
-
     from .users.blueprint import users_bp, groups_bp
 
     app.register_blueprint(users_bp, url_prefix="/users")

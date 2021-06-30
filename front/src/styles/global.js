@@ -10,6 +10,14 @@ const GlobalStyle = createGlobalStyle`
 		height: 100%;
 	}
 
+  :root {
+    --amplify-primary-color: rgb(24, 144, 255);
+    --amplify-primary-tint: #0;
+    --amplify-primary-shade: #0;
+
+    --amplify-font-family: 'Open Sans'
+  }
+
   html {
     font-size: 16px;
     -moz-osx-font-smoothing: grayscale;
