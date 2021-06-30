@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { func, bool } from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import {
+	UI_AUTH_CHANNEL,
+	AUTH_STATE_CHANGE_EVENT,
+	AuthState,
+} from '@aws-amplify/ui-components'
+import { Auth, Hub } from 'aws-amplify'
 import {
 	Layout,
 	Menu,
@@ -14,11 +18,8 @@ import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
 	DownOutlined,
-	/*BellOutlined,
-	MessageOutlined,*/
 } from '@ant-design/icons'
 
-import { logout } from '~/states/modules/session'
 import { classNames } from '~/utils'
 
 import styles from './index.module.scss'
@@ -26,19 +27,34 @@ import styles from './index.module.scss'
 const { Text } = Typography
 
 function Head({ handleCollapsed, isCollapsed, isWeb }) {
-	const history = useHistory()
-	const dispatch = useDispatch()
+	const [loggedUserName, setLoggedUserName] = useState('-')
 
-	const { loggedUser } = useSelector(({ session }) => session)
+	useEffect(() => {
+		let mounted = true
+		const getUserInfo = async () => {
+			const authUserInfo = await Auth.currentUserInfo()
+			if (mounted) {
+				setLoggedUserName(authUserInfo.attributes.name)
+			}
+		}
+		getUserInfo()
+		return () => (mounted = false)
+	}, [])
 
-	const handleLogout = () => {
-		dispatch(logout({ history }))
+	const handleLogout = async () => {
+		await Auth.signOut()
+		Hub.dispatch(UI_AUTH_CHANNEL, {
+			event: AUTH_STATE_CHANGE_EVENT,
+			message: AuthState.SignedOut,
+			data: null,
+		})
 	}
 
 	function getMenu() {
 		return (
 			<Menu style={{ zIndex: 1 }}>
 				<Menu.Item
+					key="docusign"
 					onClick={() => {
 						window.location.assign(
 							process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
@@ -50,7 +66,9 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 					}}>
 					Docusign connect
 				</Menu.Item>
-				<Menu.Item onClick={handleLogout}>Sair</Menu.Item>
+				<Menu.Item key="logout" onClick={handleLogout}>
+					Sair
+				</Menu.Item>
 			</Menu>
 		)
 	}
@@ -93,14 +111,10 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 							<Space size={10}>
 								<Avatar>
 									<Text style={{ color: '#333' }}>
-										{loggedUser && loggedUser.name
-											? loggedUser.name.substring(0, 1)
-											: ''}
+										{loggedUserName.substring(0, 1)}
 									</Text>
 								</Avatar>
-								<Text style={{ color: '#333' }}>
-									{loggedUser && loggedUser.name ? `${loggedUser.name}` : ''}
-								</Text>
+								<Text style={{ color: '#333' }}>{loggedUserName}</Text>
 								<DownOutlined />
 							</Space>
 						</Dropdown>

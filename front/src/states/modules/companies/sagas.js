@@ -11,11 +11,17 @@ import {
 	getCompanyListSuccess,
 	addCompany,
 	resetNewCompany,
+	changeUserCompany,
 } from '.'
+
+import { setCompanyId } from '~/states/modules/session'
+
+import { getSettings } from '~/states/modules/settings'
 
 export default function* rootSaga() {
 	yield takeEvery(getCompanyList, getCompanyListSaga)
 	yield takeEvery(addCompany, addCompanySaga)
+	yield takeEvery(changeUserCompany, changeUserCompanySaga)
 }
 
 function* getCompanyListSaga({ payload = {} }) {
@@ -41,7 +47,6 @@ function* addCompanySaga() {
 	createdCompany['company_name'] = newCompany.name
 	try {
 		yield call(api.post, '/company/', createdCompany)
-		console.log('newCompany:', newCompany.name)
 		successMessage({
 			content: 'Empresa adicionada com sucesso',
 			updateKey: 'addCompany',
@@ -54,4 +59,18 @@ function* addCompanySaga() {
 		})
 	}
 	yield put(resetNewCompany())
+}
+
+function* changeUserCompanySaga({ payload = {} }) {
+	const changedCompany = {}
+
+	changedCompany['new_id'] = payload.id
+
+	try {
+		const { data } = yield call(api.post, '/company/join', changedCompany)
+		yield put(setCompanyId(data))
+		yield put(getSettings())
+	} catch (error) {
+		// yield put(changeUserCompanyFailure())
+	}
 }

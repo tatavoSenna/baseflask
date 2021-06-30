@@ -28,6 +28,15 @@ Parameters:
   ApiDomainName:
     Type: String
 
+  UserPoolId:
+    Type: String
+  
+  UserPoolClientId:
+    Type: String
+
+  IdentityPoolId:
+    Type: String
+
 Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
@@ -208,12 +217,6 @@ Resources:
               - ''
               - - 'https://'
                 - !Ref ApiDomainName
-          - Name: REACT_APP_API_SIGN_IN_URL
-            Value: !Join
-              - ''
-              - - 'https://'
-                - !Ref ApiDomainName
-                - '/auth/sign_in'
           - Name: REACT_APP_BASE_URL
             Value:  !Join
               - ''
@@ -227,6 +230,14 @@ Resources:
               - '/docusign-token'
           - Name: REACT_APP_DOCUSIGN_OAUTH_URL
             Value: https://account.docusign.com/oauth
+          - Name: REACT_APP_AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: REACT_APP_AWS_USER_POOL
+            Value: !Ref UserPoolId
+          - Name: REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID
+            Value: !Ref UserPoolClientId
+          - Name: REACT_APP_AWS_IDENTITY_POOL_ID
+            Value: !Ref IdentityPoolId
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole

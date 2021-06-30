@@ -1,10 +1,17 @@
 import axios from 'axios'
-import { store } from 'states/store'
-import { logout } from '~/states/modules/session'
 import { errorMessage } from '~/services/messager'
+import { Auth } from 'aws-amplify'
 
 const api = axios.create({
 	baseURL: process.env.REACT_APP_API_URL,
+})
+
+api.interceptors.request.use(async (config) => {
+	const session = await Auth.currentSession()
+	const accessToken = session.getAccessToken()
+	const jwtToken = accessToken.getJwtToken()
+	config.headers['Authorization'] = `Bearer ${jwtToken}`
+	return config
 })
 
 api.interceptors.response.use(
@@ -18,9 +25,10 @@ api.interceptors.response.use(
 					'Não conseguimos contato com nossos servidores. O dispositivo está conectado?',
 			})
 		} else if (error.response.status === 401 || error.response.status === 403) {
-			store.dispatch(logout())
+			//store.dispatch(logout())
 
-			return Promise.reject(error)
+			// return Promise.reject(error)
+			return null
 		} else if (error.response.status === 400) {
 			return Promise.reject(error)
 		} else {

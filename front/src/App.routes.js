@@ -1,10 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
-import { store } from '~/states/store'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Hub } from 'aws-amplify'
 
-import AdminRoute from './services/AdminRoutes'
-
-import Token from './pages/token'
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
@@ -19,8 +16,10 @@ import Companies from './pages/companies'
 
 import Wrapper from '~/components/wrapper'
 
+import { getUserProfile } from '~/states/modules/session'
+import { store } from '~/states/store'
+
 export const ROUTES = {
-	token: '/token',
 	docusign: '/docusign-token',
 	home: '/',
 	contracts: '/contracts',
@@ -36,74 +35,41 @@ export const ROUTES = {
 	companies: '/companies',
 }
 
+Hub.listen('auth', (data) => {
+	switch (data.payload.event) {
+		case 'signIn':
+			store.dispatch(getUserProfile())
+			break
+	}
+})
+
 function Routes() {
-	const { signed } = store.getState().session
 	return (
 		<Router>
 			<Switch>
-				<AdminRoute
-					path={ROUTES.externalContract}
-					component={AddContractExternal}
-					isPrivate={signed}
-				/>
-				<AdminRoute path={ROUTES.token} component={Token} />
-				<AdminRoute path={ROUTES.docusign} component={Docusign} isPrivate />
+				ƒ
+				<Route path={ROUTES.externalContract} component={AddContractExternal} />
+				<Route path={ROUTES.docusign} component={Docusign} />
 				<Wrapper>
-					<AdminRoute
-						exact
-						path={ROUTES.form}
-						component={AddContract}
-						isPrivate
-					/>
-					<AdminRoute
-						exact
-						path={ROUTES.home}
-						component={Contracts}
-						isPrivate
-					/>
-					<AdminRoute exact path={ROUTES.users} component={Users} isPrivate />
-					<AdminRoute
-						exact
-						path={ROUTES.templates}
-						component={Templates}
-						isPrivate
-					/>
-					<AdminRoute
-						exact
-						path={ROUTES.newTemplate}
-						component={EditTemplate}
-						isPrivate
-					/>
-					<AdminRoute
-						exact
-						path={ROUTES.editTemplate}
-						component={EditTemplate}
-						isPrivate
-					/>
-					<AdminRoute
+					<Route exact path={ROUTES.form} component={AddContract} />
+					<Route exact path={ROUTES.home} component={Contracts} />
+					<Route exact path={ROUTES.users} component={Users} />
+					<Route exact path={ROUTES.templates} component={Templates} />
+					<Route exact path={ROUTES.newTemplate} component={EditTemplate} />
+					<Route exact path={ROUTES.editTemplate} component={EditTemplate} />
+					<Route
 						exact
 						path={ROUTES.documentDetails}
 						component={DocumentDetails}
-						isPrivate
 					/>
-					<AdminRoute
-						exact
-						path={ROUTES.integrations}
-						component={Integrations}
-						isPrivate
-					/>
-					<AdminRoute
-						exact
-						path={ROUTES.settings}
-						component={Settings}
-						isPrivate
-					/>
-					<AdminRoute
+					<Route
 						exact
 						path={ROUTES.companies}
 						component={Companies}
 						isPrivate
 					/>
+					<Route exact path={ROUTES.integrations} component={Integrations} />
+					<Route exact path={ROUTES.settings} component={Settings} />
 				</Wrapper>
 			</Switch>
 		</Router>

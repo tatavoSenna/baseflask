@@ -37,6 +37,7 @@ function* saveSettingsSaga({ payload }) {
 			content: 'Salvando dados...',
 			updateKey: 'saveSettings',
 		})
+
 		const response = yield call(api.post, `/company/upload`, payload)
 		successMessage({
 			content: 'Dados salvos com sucesso',

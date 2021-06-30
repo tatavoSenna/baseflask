@@ -31,7 +31,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		dispatch(getSettings())
 	}, [dispatch])
 
-	const { loggedUser } = useSelector(({ session }) => session)
+	const { is_admin } = useSelector(({ session }) => session)
 
 	function handleGoTo(path) {
 		if (!isWeb) {
@@ -41,7 +41,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	}
 
 	function adminSideBar() {
-		if (!loggedUser.is_admin) {
+		if (!is_admin) {
 			return null
 		}
 		return (
@@ -55,7 +55,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	}
 
 	function adminSideBarNotWeb() {
-		if (!loggedUser.is_admin) {
+		if (!is_admin) {
 			return null
 		}
 		return (

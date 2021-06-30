@@ -53,6 +53,12 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				showModal: payload,
 			}),
+		changeUserCompany: (state) => extend(state),
+		changeUserCompanySuccess: (state, { payload }) => {
+			console.log(payload)
+			extend(state, { company_id: parseInt(payload.user.company_id) })
+		},
+		changeUserCompanyFailure: (state) => extend(state),
 	},
 })
 
@@ -64,6 +70,7 @@ export const {
 	addCompany,
 	resetNewCompany,
 	setShowModal,
+	changeUserCompany,
 } = actions
 
 export { default as companiesSaga } from './sagas'

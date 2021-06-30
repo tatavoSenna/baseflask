@@ -21,10 +21,12 @@ const { actions, reducer } = createSlice({
 	name: 'contract',
 	initialState,
 	reducers: {
-		listContract: (state) =>
+		listContract: (state) => {
+			console.log('rodei')
 			extend(state, {
 				loading: true,
-			}),
+			})
+		},
 		listContractSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllContracts(payload.items),
