@@ -68,30 +68,49 @@ const Tabs = ({
 						</Title>
 						{item.items.map((item_list, index) => (
 							<>
-								{item_list.map((item, index) => (
+								{Array.isArray(item_list) ? (
+									item_list.map((item, index) => (
+										<>
+											<Paragraph
+												style={{
+													color: '#000',
+													fontSize: 10,
+													marginBottom: 0,
+													marginLeft: '10px',
+												}}
+												key={item.label + index}>
+												{item.label}:
+											</Paragraph>
+											<Paragraph
+												style={{
+													color: '#646464',
+													fontSize: 14,
+													marginBottom: 14,
+													marginLeft: '10px',
+												}}
+												key={item.value + index}>
+												{item.value}
+											</Paragraph>
+										</>
+									))
+								) : (
 									<>
 										<Paragraph
-											style={{
-												color: '#000',
-												fontSize: 10,
-												marginBottom: 0,
-												marginLeft: '10px',
-											}}
-											key={item.label + index}>
-											{item.label}:
+											style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+											key={item_list.label + index}>
+											{item_list.label}:
 										</Paragraph>
 										<Paragraph
 											style={{
 												color: '#646464',
-												fontSize: 14,
+												fontSize: 16,
 												marginBottom: 14,
-												marginLeft: '10px',
 											}}
-											key={item.value + index}>
-											{item.value}
+											key={item_list.value + index}>
+											{item_list.value}
 										</Paragraph>
 									</>
-								))}
+								)}
 								{item.items.length - 1 !== index && <Divider />}
 							</>
 						))}

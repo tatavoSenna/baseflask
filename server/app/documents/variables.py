@@ -68,9 +68,13 @@ def specify_variables(variables, document_template_id):
             return format_currency(
                 num_variable, "BRL", locale='pt_BR')
 
-        elif variable_type == "template":
+        elif variable_type == "person":
             items = variables[struct_name]
-            text_template = specs["doc_display_style"]
+            if items['PERSON_TYPE'] == 'Física':
+                person_type = 'natural'
+            elif items['PERSON_TYPE'] == 'Jurídica':
+                person_type = 'legal'
+            text_template = specs["doc_display_style"][person_type]
             jinja_template = jinja_env.from_string(text_template)
             filled_text = jinja_template.render(items)
             return filled_text
@@ -128,7 +132,7 @@ def specify_variables(variables, document_template_id):
                     specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
 
-        elif variable[0:8] == 'template':
+        elif variable[0:6] == 'person':
             for variable_name, specs in variables_specification[variable].items():
                 formatted = format_variable(
                     specs, variable_name, variables, variable)

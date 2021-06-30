@@ -29,7 +29,7 @@ const PersonField = ({
 		person_type,
 	} = pageFieldsData
 	const fixedPerson = person_type === 'legal' ? 'Jurídica' : 'Física'
-	const objName = `template_${pageIndex}_${fieldIndex}`
+	const objName = `person_${pageIndex}_${fieldIndex}`
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -43,9 +43,12 @@ const PersonField = ({
 			onChange={onChange}
 			hasFeedback
 			colon={false}>
-			<Card>
+			<Card bodyStyle={{ paddingBottom: 0 }}>
 				{person_type === undefined && (
-					<Form.Item name={[objName, 'PERSON_TYPE']} initialValue="Física">
+					<Form.Item
+						name={[objName, 'PERSON_TYPE']}
+						initialValue="Física"
+						style={{ marginBottom: 5 }}>
 						<Radio.Group
 							onChange={(value) => setPerson(value.target.value)}
 							style={{ marginBottom: '24px' }}>
