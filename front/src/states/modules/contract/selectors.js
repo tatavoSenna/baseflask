@@ -3,7 +3,7 @@
 import React from 'react'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
-import { Avatar, Typography } from 'antd'
+import { Typography } from 'antd'
 
 const { Text } = Typography
 
@@ -17,7 +17,6 @@ export const selectAllContracts = (payload) =>
 		clientId: contract.client_id,
 		author: (
 			<>
-				<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{' '}
 				<Text>{contract.user.name}</Text>
 			</>
 		),
