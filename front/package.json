@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@aws-amplify/ui-react": "^1.2.0",
 		"@ckeditor/ckeditor5-build-classic": "^23.0.0",
 		"@ckeditor/ckeditor5-build-decoupled-document": "^23.0.0",
 		"@ckeditor/ckeditor5-react": "^2.1.0",
@@ -12,6 +13,7 @@
 		"@testing-library/user-event": "^7.1.2",
 		"antd": "^4.2.2",
 		"antd-mask-input": "^0.1.13",
+		"aws-amplify": "^4.0.2",
 		"axios": "^0.19.2",
 		"babel-plugin-import": "^1.13.0",
 		"babel-plugin-root-import": "^6.5.0",

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout, PageHeader } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
+import { Auth } from 'aws-amplify'
 
 import UserModal from './components/modal'
 import GroupModal from './components/groupModal'
@@ -40,12 +41,24 @@ function Users() {
 		({ groups }) => groups
 	)
 
-	const { loggedUser } = useSelector(({ session }) => session)
+	const [loggedUsername, setLoggedUsername] = useState('-')
+
+	useEffect(() => {
+		let mounted = true
+		const getUserInfo = async () => {
+			const authUserInfo = await Auth.currentUserInfo()
+			if (mounted) {
+				setLoggedUsername(authUserInfo.username)
+			}
+		}
+		getUserInfo()
+		return () => (mounted = false)
+	}, [])
 
 	useEffect(() => {
 		dispatch(getGroupList())
 		dispatch(getUserList())
-	}, [dispatch, loggedUser])
+	}, [dispatch, loggedUsername])
 
 	const getUsers = ({ page, perPage, search }) =>
 		dispatch(getUserList({ page, perPage, search }))
@@ -112,8 +125,6 @@ function Users() {
 		dispatch(updateNewGroup(form.getFieldsValue()))
 	}
 
-	const columns = getColumns({ handleDelete, loggedUser, handleEdit })
-
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
@@ -145,8 +156,8 @@ function Users() {
 				/>
 				<DataTable
 					dataSource={userList}
-					columns={columns}
-					loading={loading || !loggedUser}
+					columns={getColumns({ handleDelete, loggedUsername, handleEdit })}
+					loading={loading}
 					pages={pages}
 					onChangePageNumber={getUsers}
 					onSearch={handleSearch}

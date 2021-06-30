@@ -4,7 +4,7 @@ import { EditOutlined } from '@ant-design/icons'
 
 import Delete from './components/Delete'
 
-export function getColumns({ handleDelete, loggedUser, handleEdit }) {
+export function getColumns({ handleDelete, loggedUsername, handleEdit }) {
 	return [
 		{
 			title: 'Nome',
@@ -39,7 +39,7 @@ export function getColumns({ handleDelete, loggedUser, handleEdit }) {
 						<Delete
 							username={record.username}
 							handleDelete={handleDelete}
-							disabled={loggedUser.username === record.username}
+							disabled={loggedUsername === record.username}
 						/>
 						<Tooltip title={'Editar'}>
 							<Button

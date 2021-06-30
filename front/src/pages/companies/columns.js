@@ -1,7 +1,8 @@
 import React from 'react'
-import { Space } from 'antd'
+import { Space, Tooltip, Button } from 'antd'
+import { UserSwitchOutlined } from '@ant-design/icons'
 
-export function getColumns() {
+export function getColumns(handleChangeUserCompany, currentCompanyId) {
 	return [
 		{
 			title: 'Nome',
@@ -13,7 +14,19 @@ export function getColumns() {
 			dataIndex: 'action',
 			key: 'action',
 			render: (text, record) => {
-				return <Space size="middle"></Space>
+				return (
+					<Space size="middle">
+						<Tooltip title={'Trocar de empresa'}>
+							<Button
+								disabled={currentCompanyId === parseInt(record.id)}
+								icon={<UserSwitchOutlined />}
+								onClick={() => {
+									handleChangeUserCompany(record.id)
+								}}
+							/>
+						</Tooltip>
+					</Space>
+				)
 			},
 		},
 	]

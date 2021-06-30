@@ -11,11 +11,6 @@ Parameters:
       SubDomain name sufix for the cognito ui. If you pass a domain like app.example.com
       a prefix will be added and the final domain would be auth-app.example.com
 
-  CognitoUserPoolDomain:
-    Type: String
-    Description:
-      The Cognito user pool domain, for the hosted ui.
-
 Resources:
   # Creates a role that allows Cognito to send SNS messages
   SNSRole:
@@ -79,7 +74,7 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: !Sub ${AuthName}-client
-      GenerateSecret: true
+      GenerateSecret: false
       UserPoolId: !Ref UserPool
       SupportedIdentityProviders:
         - COGNITO
@@ -90,21 +85,6 @@ Resources:
         - openid
         - aws.cognito.signin.user.admin
         - profile
-      CallbackURLs:
-        - !Join [ '', [ 'https://', !Ref AppDomainName, '/token' ]]
-
-  # Configures the hosted ui for cognito
-  UserPoolDomain:
-    Type: AWS::Cognito::UserPoolDomain
-    Properties:
-      Domain: !Join
-      - '-'
-      - - !Ref CognitoUserPoolDomain
-        - 'lawing'
-      # if you want to have a custon domain, edit de Domain above and add a CustomDomainConfig with the certificate that covers it.
-      # CustomDomainConfig:
-      # CertificateArn: arn:aws:acm:us-east-1:277246890921:certificate/8f225699-2983-4f47-9877-aea08d5fe614
-      UserPoolId: !Ref UserPool
 
 
   # Creates a federeated Identity pool
@@ -189,10 +169,10 @@ Resources:
         unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
 
 Outputs:
-  UserPool:
+  UserPoolId:
     Value: !Ref UserPool
-  UserPoolClient:
+  UserPoolClientId:
     Value: !Ref UserPoolClient
-  UserPoolClientSecret:
-    Value: !GetAtt UserPoolClient.ClientSecret
+  IdentityPoolId:
+    Value: !Ref IdentityPool
   
