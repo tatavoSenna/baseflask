@@ -48,12 +48,14 @@ class Document(db.Model):
     __tablename__ = "document"
 
     id = db.Column(db.Integer, primary_key=True)
+    is_folder = db.Column(db.Boolean, nullable=False, default=False, server_default = 'false')
+    parent_id = db.Column(db.Integer, db.ForeignKey("document.id"), unique = False, nullable = True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String(255), unique=False, nullable=True)
     company_id = db.Column(db.Integer, db.ForeignKey(
         "company.id"), nullable=False)
     document_template_id = db.Column(
-        db.Integer, db.ForeignKey("document_template.id"), nullable=False
+        db.Integer, db.ForeignKey("document_template.id"), nullable=True
     )
     created_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow())
@@ -72,6 +74,7 @@ class Document(db.Model):
     company = db.relationship("Company", back_populates="documents")
     user = db.relationship("User", back_populates="documents")
     template = db.relationship("DocumentTemplate", back_populates="documents")
+    parent = db.relationship("Document", remote_side = [id])
 
     # Has many
 
