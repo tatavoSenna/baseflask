@@ -2,83 +2,26 @@ import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	loading: false,
-	token: null,
-	error: null,
-	signed: false,
-	loggedUser: {
-		id: null,
-		username: '',
-		email: '',
-		name: '',
-		companyId: null,
-	},
+	is_admin: false,
 }
 
 const { actions, reducer } = createSlice({
-	name: 'session',
+	name: 'users',
 	initialState,
 	reducers: {
-		getJWToken: (state) =>
-			extend(state, {
-				loading: true,
-			}),
-		getJWTSuccess: (state, { payload }) =>
-			extend(state, {
-				token: payload.access_token,
-				signed: true,
-				loading: false,
-			}),
-		getJWTFailure: (state, { payload }) =>
-			extend(state, {
-				error: payload.error,
-				loading: false,
-			}),
-		logout: (state) =>
-			extend(state, {
-				loading: true,
-			}),
-		logoutSuccess: (state) =>
-			extend(state, {
-				token: null,
-				signed: false,
-				loading: false,
-				loggedUser: extend(state.loggedUser, {
-					id: null,
-					username: '',
-					email: '',
-					name: '',
-					companyId: null,
-				}),
-			}),
-		logoutFailure: (state) =>
-			extend(state, {
-				loading: false,
-			}),
-		getLoggedUser: (state) => state,
-		getLoggedUserSuccess: (state, { payload }) =>
-			extend(state, {
-				loggedUser: extend(state.loggedUser, {
-					id: payload.id,
-					username: payload.username,
-					email: payload.email,
-					name: payload.name,
-					companyId: payload.company_id,
-					is_admin: payload.is_admin,
-				}),
-			}),
+		getUserProfile: (state) => extend(state),
+		getUserProfileSuccess: (state, { payload }) => extend(state, payload),
+		getUserProfileFailure: (state) => extend(state),
+		setCompanyId: (state, { payload }) =>
+			extend(state, { company_id: payload.user.company_id }),
 	},
 })
 
 export const {
-	getJWToken,
-	getJWTSuccess,
-	getJWTFailure,
-	logout,
-	logoutFailure,
-	logoutSuccess,
-	getLoggedUser,
-	getLoggedUserSuccess,
+	getUserProfile,
+	getUserProfileSuccess,
+	getUserProfileFailure,
+	setCompanyId,
 } = actions
 
 export { default as sessionSaga } from './sagas'

@@ -92,6 +92,7 @@ def download_logo_url(logged_user):
 def get_company_list(logged_user):
     
     if not logged_user['is_admin']:
+        print(logged_user)
         return {}, 403
 
     try:

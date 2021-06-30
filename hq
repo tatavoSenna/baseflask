@@ -1,0 +1,5428 @@
+[33mcommit 8c8d405982aca635d2163bfb08153a878b8595f7[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/392[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun May 23 11:59:14 2021 -0300
+
+    Add amplify Auth UI to the app
+    
+    Remove old saga
+    
+    Adjust front and back to amplify auth
+    
+    adjust for new companies route
+    
+    Load Profile after login
+
+[33mcommit 8319e206ad827845acb51498bda2afd8c77c60c5[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Sat May 15 19:15:07 2021 +0000
+
+    LAW-104
+
+[33mcommit 4c784a4e8652235213f5138e77ffe0f4fa41fe74[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed May 12 20:05:30 2021 +0000
+
+    LAW-87
+
+[33mcommit 6e565c64ad370318a96c6a4e8da866b3a1d56430[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue May 11 20:52:32 2021 +0000
+
+    LAW-113
+
+[33mcommit ffe39f25360a8c2d9f01d350ac5296a9ae1df0d2[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Wed Jun 16 13:07:09 2021 -0300
+
+    hotfix template deletion
+
+[33mcommit a94c724f7203b7d5545c63a0578f56ea7e37e17d[m
+Author: Yuri Lemos <yurilemos98@hotmail.com>
+Date:   Tue Jun 15 20:08:41 2021 +0000
+
+    Feature/394
+
+[33mcommit fb4beb2478ac1059bac97bec23f0a352570c8bfa[m
+Merge: ed5f808 97f6ef1
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Jun 15 17:32:57 2021 +0000
+
+    Merge branch 'LAW-144' into 'dev'
+    
+    LAW-144
+    
+    See merge request lawing2/lawing_server!323
+
+[33mcommit 97f6ef162085bb000cd76690522cade9a689584b[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jun 15 17:32:56 2021 +0000
+
+    LAW-144
+
+[33mcommit ed5f8080090ff2f457307dd191d581022e6b4669[m[33m ([m[1;31morigin/LAW-147[m[33m, [m[1;32mLAW-147[m[33m)[m
+Merge: 0beb4fe b53d79e
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jun 8 18:51:50 2021 +0000
+
+    Merge branch 'feature/397' into 'dev'
+    
+    Feature/397
+    
+    See merge request lawing2/lawing_server!329
+
+[33mcommit b53d79e1beaeace2ebf8eb645b6c4fa0939f5d2d[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jun 8 18:51:50 2021 +0000
+
+    Feature/397
+
+[33mcommit 0beb4fe02089e02d442e5ec577c64c9d7227fc39[m
+Merge: a0dcc28 6932129
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Jun 7 20:51:54 2021 +0000
+
+    Merge branch 'feature/391' into 'dev'
+    
+    391 - Only lawing admin users can acess company list
+    
+    See merge request lawing2/lawing_server!300
+
+[33mcommit 6932129df9426f9d12c73d77b4d1f2f009e0dc50[m[33m ([m[1;31morigin/feature/391[m[33m, [m[1;32mfeature/391[m[33m)[m
+Author: AlOzorio <39777406+AlOzorio@users.noreply.github.com>
+Date:   Thu May 13 14:34:05 2021 -0300
+
+    Creates company list endpoint
+
+[33mcommit a0dcc2857f372228660dd606338ab2c481cfe784[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Jun 2 18:42:10 2021 +0000
+
+    LAW-127
+
+[33mcommit bb5f41b77d782f5802bbf0cfeaefe105441c6488[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jun 1 15:39:45 2021 +0000
+
+    Revert "Merge branch 'feature/393' into 'dev'"
+    
+    This reverts merge request !318
+
+[33mcommit 3a494dce6960f05dc345dbb1d80e31290eb1c42b[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri May 28 17:17:30 2021 -0300
+
+    fix
+
+[33mcommit c0727557e3f6c5e2c30c5e019a5d72f0842758bb[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu May 27 12:12:28 2021 -0300
+
+    Fixed Jinja blank spaces and Word list numbering order
+
+[33mcommit 641a907618b115ea75b7950ae80e9709123b06b4[m
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri May 28 01:45:59 2021 +0000
+
+    Update index.html and changed from heap.io to mixpanel
+
+[33mcommit 87bfd083ffd2285518c9139b15b758a87b9cb503[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu May 27 12:34:42 2021 -0300
+
+    Fixed currency issues
+
+[33mcommit 0c6688b5be93c0ad56fb4334afcf1035f110e967[m
+Merge: 8b2aff1 c196f05
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Tue May 25 19:53:38 2021 +0000
+
+    Merge branch 'dev' into 'master'
+    
+    Dev to master (#2)
+    
+    See merge request lawing2/lawing_server!313
+
+[33mcommit c196f05d385702a8b09da9e8a5779edca1565e19[m
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Tue May 25 19:53:38 2021 +0000
+
+    Dev to master (#2)
+
+[33mcommit 8b2aff1afb30471ec3e7bd2edc8348c118842b51[m
+Merge: 0832910 c64314c
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Thu May 13 17:29:27 2021 +0000
+
+    Merge branch 'dev' into 'master'
+    
+    Dev to master
+    
+    See merge request lawing2/lawing_server!297
+
+[33mcommit c64314c847ba7ba62db2fd16be687e91aba74764[m
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Thu May 13 17:29:27 2021 +0000
+
+    Dev to master
+
+[33mcommit 0832910dea0ac7b34eb2fd587433763ca747e7a0[m
+Merge: 9330111 cf43950
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat May 8 12:44:22 2021 -0300
+
+    Merge branch 'dev'
+
+[33mcommit cf4395089e3212521734fef463fb09ac5630c626[m
+Merge: f4315f2 bc7ddc0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat May 8 15:22:06 2021 +0000
+
+    Merge branch 'LAW-105' into 'dev'
+    
+    Enhance onboarding
+    
+    See merge request lawing2/lawing_server!283
+
+[33mcommit bc7ddc0483d7b1d7876af1fb7127d638e7715933[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat May 8 15:22:06 2021 +0000
+
+    Enhance onboarding
+
+[33mcommit f4315f2ec9563a6ab7a9111dd54c592c5386aaa1[m
+Merge: 6943b08 e4a8d10
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Wed May 5 13:59:22 2021 +0000
+
+    Merge branch 'leon-lawing-dev-patch-64942' into 'dev'
+    
+    Update index.html - Including heap (for user session replay) on demo.
+    
+    See merge request lawing2/lawing_server!290
+
+[33mcommit e4a8d106dc9071d1fb0838da63084eced3259dd9[m
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Wed May 5 13:58:50 2021 +0000
+
+    Update index.html - Including heap (for user session replay) on demo.
+
+[33mcommit 6943b089eee9a5744f302d240fcf234992b88e7d[m
+Merge: d4826bb 53beb9b
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed May 5 07:04:50 2021 +0000
+
+    Merge branch 'LAW-108' into 'dev'
+    
+    LAW-108
+    
+    See merge request lawing2/lawing_server!287
+
+[33mcommit d4826bb538630bb513fb8f6bb9174790e6d6a185[m
+Merge: 667e18c 11562bd
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed May 5 06:56:50 2021 +0000
+
+    Merge branch 'law-49' into 'dev'
+    
+    [Law-49]
+    
+    See merge request lawing2/lawing_server!289
+
+[33mcommit 667e18ce29ea3e1c4680069bedeb050b072e30a5[m
+Merge: 207bca2 25a6c74
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed May 5 03:40:40 2021 +0000
+
+    Merge branch 'LAW-60' into 'dev'
+    
+    LAW-60
+    
+    See merge request lawing2/lawing_server!286
+
+[33mcommit 25a6c74864cabdb0f4f4c4a9c079f43b866dd8b8[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed May 5 03:40:39 2021 +0000
+
+    LAW-60
+
+[33mcommit 11562bd71fccc0f38b9cacd9e45730991875a467[m[33m ([m[1;31morigin/law-49[m[33m)[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue May 4 08:36:26 2021 -0300
+
+    mensagem de alteração de status
+
+[33mcommit 207bca2b9954ac2c988c5ed4658b15f848470ae3[m
+Merge: 80a0ada 8209d15
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Apr 30 15:07:53 2021 +0000
+
+    Merge branch 'LAW-115' into 'dev'
+    
+    LAW-115
+    
+    See merge request lawing2/lawing_server!288
+
+[33mcommit 8209d15121cc3294c7eb5a2fdcaee2989dc09d4e[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Apr 30 12:07:17 2021 -0300
+
+    Included user name in sendgrid email for workflow step change
+
+[33mcommit 53beb9bee0bd5fc43c007658051d1ca2ae0f345b[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Apr 29 17:29:53 2021 -0300
+
+    Changed endpoint to allow version_id parameter
+
+[33mcommit 80a0ada1b417094c8b48329bfc39328f74db8462[m
+Merge: 4ba7a6a c71c8d4
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Apr 29 13:58:55 2021 +0000
+
+    Merge branch 'LAW-66' into 'dev'
+    
+    LAW-66
+    
+    See merge request lawing2/lawing_server!285
+
+[33mcommit c71c8d45866b24a014ecb9cfb83033cf3baf528c[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Apr 28 19:44:00 2021 -0300
+
+    changed tables to include timezone
+
+[33mcommit 4ba7a6a2dbd5e96095058cd9aa6403ace78d482f[m
+Merge: 5cb3037 888aabc
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Mon Apr 26 20:03:22 2021 +0000
+
+    Merge branch 'LAW-21' into 'dev'
+    
+    LAW-21
+    
+    See merge request lawing2/lawing_server!280
+
+[33mcommit 888aabc742e885fc3d77e277b8ced5b38d83e919[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Apr 26 20:03:22 2021 +0000
+
+    LAW-21
+
+[33mcommit 5cb3037ef07e0f9f516fb8fdd8dd2c0fe777dc92[m
+Merge: 89db67e ab51a70
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 24 14:38:37 2021 +0000
+
+    Merge branch 'revert-89db67ef' into 'dev'
+    
+    Revert "Merge branch 'cognito-fix' into 'dev'"
+    
+    See merge request lawing2/lawing_server!282
+
+[33mcommit ab51a700620162840cfa728190f842e5caab9f02[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 24 14:35:42 2021 +0000
+
+    Revert "Merge branch 'cognito-fix' into 'dev'"
+    
+    This reverts merge request !281
+
+[33mcommit 89db67efdf7a4da2a61380333f685b940421bba7[m
+Merge: f2edc6e 6e8687f
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Apr 23 16:56:31 2021 +0000
+
+    Merge branch 'cognito-fix' into 'dev'
+    
+    Cognito corrections
+    
+    See merge request lawing2/lawing_server!281
+
+[33mcommit 6e8687f2a34b27249b584d33cb085adddd39dc6a[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Apr 23 13:55:29 2021 -0300
+
+    Cognito corrections
+
+[33mcommit 9330111dbe67e4fff94eba619458831275974ef3[m
+Merge: 6a9ad20 931e76c
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Apr 23 11:40:31 2021 +0000
+
+    Merge branch 'dev' into 'master'
+    
+    Dev
+    
+    See merge request lawing2/lawing_server!279
+
+[33mcommit 931e76c7e157034c9381d77aa3dc650a26c07c3b[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Apr 23 11:40:30 2021 +0000
+
+    Dev
+
+[33mcommit f2edc6e33d9e633b02415161e19b01e5f935c243[m
+Merge: 82c4338 8be00d9
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 22 19:10:35 2021 +0000
+
+    Merge branch 'hotfix/translatescript' into 'dev'
+    
+    [Hotfix/translatescript]
+    
+    See merge request lawing2/lawing_server!278
+
+[33mcommit 8be00d93a86902a8504199a66488256c893087f5[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 22 19:10:34 2021 +0000
+
+    [Hotfix/translatescript]
+
+[33mcommit 82c4338dd1e6e43ffc800289097f60d9efb7ebc6[m
+Merge: 6a704b0 96714cd
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 22 18:42:46 2021 +0000
+
+    Merge branch 'hotfix/translate' into 'dev'
+    
+    [hotfix/translate]
+    
+    See merge request lawing2/lawing_server!277
+
+[33mcommit 96714cd155102990b40624c600b7ac8d30fbf4f6[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 22 18:42:46 2021 +0000
+
+    [hotfix/translate]
+
+[33mcommit 6a704b0bee3204aa369f51b0f75969cbfd35b672[m
+Merge: 0e0b05b b8d1254
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Thu Apr 22 17:27:11 2021 +0000
+
+    Merge branch 'feature/law99' into 'dev'
+    
+    [Feature/law99]
+    
+    See merge request lawing2/lawing_server!276
+
+[33mcommit b8d12542ab7b602fc383b0617b97e7e699f98f60[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 22 14:15:44 2021 -0300
+
+    implementação plugin de translate
+
+[33mcommit 0e0b05b03229b8df0c4c6e9ef822b667d1b3b571[m
+Merge: 5bc8664 139e503
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Apr 21 20:38:01 2021 +0000
+
+    Merge branch 'LAW-35' into 'dev'
+    
+    Hotfix include images on word
+    
+    See merge request lawing2/lawing_server!275
+
+[33mcommit 139e5037c033569b69479d7c7b95426e8cd55fa5[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Apr 21 17:35:03 2021 -0300
+
+    Hotfix include images on word
+
+[33mcommit 5bc86641095a2d116885a753edcd269609879241[m
+Merge: 701077d 377b952
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Apr 21 16:34:19 2021 +0000
+
+    Merge branch 'hotfix/sendImage' into 'dev'
+    
+    [Hotfix/sendImage]
+    
+    See merge request lawing2/lawing_server!274
+
+[33mcommit 377b952be2278585f9c3342e6fc1b0eb81ee7bbf[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Apr 21 13:27:55 2021 -0300
+
+    ajuste
+
+[33mcommit 701077d60febd51a028c0496b8211b0169d72876[m
+Merge: b437a32 1d9f009
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Tue Apr 20 22:45:55 2021 +0000
+
+    Merge branch 'feature/law67' into 'dev'
+    
+    [Feature/law67]
+    
+    See merge request lawing2/lawing_server!273
+
+[33mcommit b437a328b5d80078aa28e49eb19791115c4787d3[m
+Merge: 614cc78 8dee511
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Tue Apr 20 22:39:00 2021 +0000
+
+    Merge branch 'feature/law34' into 'dev'
+    
+    [Feature/law34]
+    
+    See merge request lawing2/lawing_server!272
+
+[33mcommit 614cc78577d967413fc2131e75eabf501f127cbb[m
+Merge: 0240c12 0030c8a
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Tue Apr 20 22:38:36 2021 +0000
+
+    Merge branch 'LAW-35' into 'dev'
+    
+    LAW-35
+    
+    See merge request lawing2/lawing_server!270
+
+[33mcommit 0030c8add9644d75770b0ed2d4c7a5986243c340[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Apr 20 22:38:36 2021 +0000
+
+    LAW-35
+
+[33mcommit 1d9f009cf57a422297c9051d94adb8e637657e79[m[33m ([m[1;31morigin/feature/law67[m[33m)[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Apr 20 19:25:54 2021 -0300
+
+    implementação da animação na criação de documento
+
+[33mcommit 8dee511bff99dade854d83b622388e6f3e76276d[m[33m ([m[1;31morigin/feature/law34[m[33m)[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Apr 20 18:03:51 2021 -0300
+
+    implementação field image no formulario
+
+[33mcommit 0240c12033ec20862dfca00bb0bd38ce872ac3e8[m
+Merge: 62ca2a8 9d3839f
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Apr 19 22:43:48 2021 +0000
+
+    Merge branch 'postgres_fix' into 'dev'
+    
+    Fixed deprecated postgres name
+    
+    See merge request lawing2/lawing_server!271
+
+[33mcommit 9d3839fc76fe56b2b248580a8ccbb18664d60751[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Apr 19 19:43:10 2021 -0300
+
+    Fixed deprecated postgres name
+
+[33mcommit 62ca2a82dfcd3a481cdbdaef1111a51ad557cd07[m
+Merge: 6a9ad20 43ae4b5
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Apr 19 05:02:21 2021 +0000
+
+    Merge branch 'feature/363' into 'dev'
+    
+    [Feature/363]
+    
+    See merge request lawing2/lawing_server!250
+
+[33mcommit 43ae4b58b5b779cd2fc158c170afb756352a0484[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Apr 19 05:02:21 2021 +0000
+
+    [Feature/363]
+
+[33mcommit 6a9ad208657245a900df695db9043200e7916f8c[m
+Merge: a519cdf 1b99a5e
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 18 00:34:00 2021 +0000
+
+    Merge branch 'LAW-73' into 'dev'
+    
+    fix build on aws
+    
+    See merge request lawing2/lawing_server!269
+
+[33mcommit 1b99a5e19909bfca514bcc3b09ea87af8a8b93b5[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 17 21:23:20 2021 -0300
+
+    fix build on aws
+
+[33mcommit a519cdf597080d4f4c8d94e49eedcd23f0ad4b61[m
+Merge: 0981a7b 72cc7c2
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 17 23:57:42 2021 +0000
+
+    Merge branch 'feature-287' into 'dev'
+    
+    feature-287 and 352
+    
+    See merge request lawing2/lawing_server!245
+
+[33mcommit 72cc7c27036c4e9189c5168484727f1b50f58e94[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Sat Apr 17 23:57:42 2021 +0000
+
+    feature-287 and 352
+
+[33mcommit 0981a7b757bf2ff2b913bb4ed827b637d74f8d50[m
+Merge: aa3a9cd e77b059
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri Apr 16 20:49:31 2021 +0000
+
+    Merge branch 'LAW/54' into 'dev'
+    
+    LAW/54
+    
+    See merge request lawing2/lawing_server!268
+
+[33mcommit e77b059e5dc350e87e1198fbff68b47b6bd40b42[m
+Author: tati99 <tatireimer99@gmail.com>
+Date:   Fri Apr 16 16:00:47 2021 -0300
+
+    first commit
+
+[33mcommit aa3a9cd221cc6197fc4c6124a20c3c2e6040cf0e[m
+Merge: 6e1d079 56a5012
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Apr 16 17:52:45 2021 +0000
+
+    Merge branch 'LAW-69' into 'dev'
+    
+    LAW-69
+    
+    See merge request lawing2/lawing_server!267
+
+[33mcommit 56a501211aaa70fc7db3d7edbb5998b4170a2524[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Fri Apr 16 14:49:33 2021 -0300
+
+    first commit
+
+[33mcommit 6e1d07981cf67efdf0f597fdeaec9af9985c8725[m
+Merge: a499d91 d2610c8
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Fri Apr 16 17:10:36 2021 +0000
+
+    Merge branch 'revert-a499d91c' into 'dev'
+    
+    Revert "Merge branch 'LAW-54' into 'dev'"
+    
+    See merge request lawing2/lawing_server!264
+
+[33mcommit d2610c8e08c7e044911ce737ef0dcb88bc8ac299[m
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri Apr 16 17:01:56 2021 +0000
+
+    Revert "Merge branch 'LAW-54' into 'dev'"
+    
+    This reverts merge request !263
+
+[33mcommit a499d91cf74e1d7b6c7c346f957cbc7838ce4434[m
+Merge: 789d32b aa90da9
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri Apr 16 16:40:49 2021 +0000
+
+    Merge branch 'LAW-54' into 'dev'
+    
+    LAW-54
+    
+    See merge request lawing2/lawing_server!263
+
+[33mcommit aa90da9925359403f897c670159903b612f27bd9[m
+Author: tati99 <tatireimer99@gmail.com>
+Date:   Fri Apr 16 13:15:59 2021 -0300
+
+    Users now are added in their specific companies
+
+[33mcommit 789d32b862cf5758804d9f5d3acbf70c80008ee4[m[33m ([m[1;31morigin/LAW-48[m[33m)[m
+Merge: 8193e7d e4a69dc
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri Apr 16 12:31:58 2021 +0000
+
+    Merge branch 'LAW-31' into 'dev'
+    
+    LAW-31
+    
+    See merge request lawing2/lawing_server!257
+
+[33mcommit e4a69dc7003530c2b5aff13c9485bbf90622cd44[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Apr 16 12:31:58 2021 +0000
+
+    LAW-31
+
+[33mcommit 8193e7d489438b9af4845fb0e920c348615fa35f[m
+Merge: 7aaaf61 ca43a91
+Author: Leon Hatori <leon@lawing.com.br>
+Date:   Fri Apr 16 12:26:43 2021 +0000
+
+    Merge branch 'LAW-61' into 'dev'
+    
+    LAW-61
+    
+    See merge request lawing2/lawing_server!261
+
+[33mcommit ca43a913995531fee413371c7ace0efc9045f36e[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Apr 16 12:26:43 2021 +0000
+
+    LAW-61
+
+[33mcommit 7aaaf613a85ac782dad037ed46f2586ca019ebd6[m
+Merge: 0b1e8f5 dfe8dd6
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Thu Apr 15 21:30:50 2021 +0000
+
+    Merge branch 'feature/law52' into 'dev'
+    
+    [Feature/law52]
+    
+    See merge request lawing2/lawing_server!260
+
+[33mcommit dfe8dd62da04a3e6c36af64f2eaa4bec7ef3c6e0[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 15 21:30:50 2021 +0000
+
+    [Feature/law52]
+
+[33mcommit 0b1e8f5702758a3112223382c2446010c2fcfc10[m
+Merge: 8579950 66bb378
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Apr 15 00:39:39 2021 +0000
+
+    Merge branch 'feature/law43' into 'dev'
+    
+    [Feature/law43]
+    
+    See merge request lawing2/lawing_server!255
+
+[33mcommit 8579950c0155a96f2021f73a82b3c1e8826d059b[m
+Merge: 88f26f2 ad5209f
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Apr 14 14:57:34 2021 +0000
+
+    Merge branch 'feature/345' into 'dev'
+    
+    Feature/345
+    
+    See merge request lawing2/lawing_server!256
+
+[33mcommit ad5209fe6cc2e8a5656716e871b9a714fcf89abb[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Apr 14 14:57:34 2021 +0000
+
+    Feature/345
+
+[33mcommit 88f26f2af01dcccbcd93bb6245cc18cfdc2fe7ed[m
+Merge: fa28581 9bb0907
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Apr 13 17:26:19 2021 +0000
+
+    Merge branch 'feature/382' into 'dev'
+    
+    feature/382
+    
+    See merge request lawing2/lawing_server!249
+
+[33mcommit fa28581de6dbf71bb17de24865015a436a9526b1[m
+Merge: 4a79463 236eae1
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Apr 13 02:13:07 2021 +0000
+
+    Merge branch 'feature/378' into 'dev'
+    
+    feature/378
+    
+    See merge request lawing2/lawing_server!247
+
+[33mcommit 236eae1ee85c864857438e0a38b202cd46538e12[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Apr 13 02:13:07 2021 +0000
+
+    feature/378
+
+[33mcommit 66bb378db071021371f6af65f8971d8ce6620f51[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Apr 12 20:05:53 2021 -0300
+
+    ajuste da mensagem de criação do documento
+
+[33mcommit 4a794638a742ec1d78bbdc9b5ad97dfdbca17fc8[m
+Merge: 08b4f8a 05a12a0
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Apr 12 14:44:17 2021 +0000
+
+    Merge branch 'feature/368' into 'dev'
+    
+    [Feature/368]
+    
+    See merge request lawing2/lawing_server!254
+
+[33mcommit 05a12a02e4f7ad7e122b057eb0b7d947b9993370[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Apr 12 14:44:17 2021 +0000
+
+    [Feature/368]
+
+[33mcommit 08b4f8a1c7ba0c6218a59809dba611604e1ba112[m
+Merge: 91300e7 6bfbd5c
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Apr 9 15:01:49 2021 +0000
+
+    Merge branch 'feature/353' into 'dev'
+    
+    Feature/353
+    
+    See merge request lawing2/lawing_server!251
+
+[33mcommit 91300e7b4e02063606c2c6238c30d31af78a7e6e[m
+Merge: c76d2eb ed308e9
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 8 22:18:38 2021 +0000
+
+    Merge branch 'feature-380' into 'dev'
+    
+    feature-380
+    
+    See merge request lawing2/lawing_server!253
+
+[33mcommit ed308e93b5aaaf9f82bbccc4394367b58b324cad[m
+Author: tati99 <tatireimer99@gmail.com>
+Date:   Thu Apr 8 14:06:10 2021 -0300
+
+    feature-380
+
+[33mcommit c76d2eb551ba9249131c974a7441228e4ce144a8[m
+Merge: ca6e218 cfb77f6
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Thu Apr 8 15:35:17 2021 +0000
+
+    Merge branch 'feature/319' into 'dev'
+    
+    Feature/319
+    
+    See merge request lawing2/lawing_server!233
+
+[33mcommit cfb77f6a53ce991142177b1635154fc02e97d502[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Apr 8 15:35:17 2021 +0000
+
+    Feature/319
+
+[33mcommit ca6e2188eda1c2962f430c0dec3103ac422b41bd[m
+Merge: cb48e8a 115cc9d
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 8 14:44:03 2021 +0000
+
+    Merge branch 'feature/360' into 'dev'
+    
+    feature/360
+    
+    See merge request lawing2/lawing_server!252
+
+[33mcommit 115cc9d45a84eeb1978e983606737c91214751f8[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Apr 8 14:44:03 2021 +0000
+
+    feature/360
+
+[33mcommit cb48e8afdeb1e498594a4d7bac3fb94eac095b1f[m
+Merge: 3f6c950 4cdc214
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 8 11:17:01 2021 +0000
+
+    Merge branch 'feature/289' into 'dev'
+    
+    feature/289
+    
+    See merge request lawing2/lawing_server!234
+
+[33mcommit 4cdc2148b0d181e5e38b762f97f22d7a56a4282c[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Apr 8 11:17:00 2021 +0000
+
+    feature/289
+
+[33mcommit 3f6c9501ac9e56a9b568027ed630d79a6d2c3154[m
+Merge: 82bba06 7ec6745
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 8 11:09:47 2021 +0000
+
+    Merge branch 'feature/332' into 'dev'
+    
+    [Feature/332]
+    
+    See merge request lawing2/lawing_server!246
+
+[33mcommit 82bba06083e0b00d18e7e74c0e2b206075426a47[m
+Merge: f664f2f a176d5e
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Apr 6 23:14:42 2021 +0000
+
+    Merge branch 'feature/340' into 'dev'
+    
+    [Feature/340]
+    
+    See merge request lawing2/lawing_server!239
+
+[33mcommit f664f2f7239a8a9f6a1aaa7ac67b3b014e05c5eb[m
+Merge: 4b7e1c3 7817740
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Apr 6 23:14:23 2021 +0000
+
+    Merge branch 'feature/351' into 'dev'
+    
+    [Feature/351]
+    
+    See merge request lawing2/lawing_server!243
+
+[33mcommit 9bb0907cc8eb13be19b3b8b36aa4e2476c1b599c[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Apr 6 19:44:40 2021 -0300
+
+    first commit
+
+[33mcommit 7ec67457103590dbd3a716ad9002e67b8677bb22[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Apr 6 13:43:14 2021 -0300
+
+    ajuste layout form
+
+[33mcommit 4b7e1c3de10f12947ea932570a947c7826b1174b[m
+Merge: e3976d0 7a3ac98
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Apr 6 14:50:10 2021 +0000
+
+    Merge branch 'feature/325' into 'dev'
+    
+    feature/325
+    
+    See merge request lawing2/lawing_server!237
+
+[33mcommit 7a3ac980485527db19f0d79a908c1fdd415d59b8[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Apr 6 14:50:09 2021 +0000
+
+    feature/325
+
+[33mcommit e3976d01f5130d7e59de4b47d28a0fe68425f4e0[m
+Merge: 29e9430 f8c37c5
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Apr 6 11:39:13 2021 +0000
+
+    Merge branch 'feature/326' into 'dev'
+    
+    Feature/326
+    
+    See merge request lawing2/lawing_server!244
+
+[33mcommit f8c37c5918abe148cdc061d79660d427bd213e3f[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Apr 6 11:39:13 2021 +0000
+
+    Feature/326
+
+[33mcommit 29e9430af7c3b6af101e1f802eff59f36bbf5c51[m
+Merge: 1c6863b c34c75b
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Sat Apr 3 19:42:24 2021 +0000
+
+    Merge branch 'feature/330' into 'dev'
+    
+    [feature/330]
+    
+    See merge request lawing2/lawing_server!240
+
+[33mcommit 1c6863bc72ab52cf101b9e0db3771435fe77aea6[m
+Merge: 0c28717 feef374
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Sat Apr 3 19:06:10 2021 +0000
+
+    Merge branch 'feature/335' into 'dev'
+    
+    [Feature/335]
+    
+    See merge request lawing2/lawing_server!241
+
+[33mcommit 0c28717ce8483f653c2cb2e2d5863f7d1f88d876[m
+Merge: a067ee0 1d5fdbb
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Sat Apr 3 19:02:23 2021 +0000
+
+    Merge branch 'feature/354' into 'dev'
+    
+    [Feature/354]
+    
+    See merge request lawing2/lawing_server!242
+
+[33mcommit 1d5fdbbd1fe8bac60b62dca9feb2f2053af6d053[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Sat Apr 3 19:02:23 2021 +0000
+
+    [Feature/354]
+
+[33mcommit a067ee09528fc48612867d4eaaf8d354d0d9ce38[m
+Merge: bf456c4 c68d806
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Sat Apr 3 18:42:13 2021 +0000
+
+    Merge branch 'feature-336' into 'dev'
+    
+    feature-336
+    
+    See merge request lawing2/lawing_server!238
+
+[33mcommit 78177404954eef78f49f2bba7298f7f93decf4b4[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 1 11:58:25 2021 -0300
+
+    Loading must be removed when api call fails
+
+[33mcommit feef3744c721e4f64e431492f326471d4a824ae2[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 1 10:47:50 2021 -0300
+
+    loading waiting finish submitting
+
+[33mcommit c34c75b98458acc8df28ab4f61ff20119b9b7fc3[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Apr 1 10:27:03 2021 -0300
+
+    block edit old versions
+
+[33mcommit a176d5e567f18a34cbff5010d2af90d5a0b36454[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 31 13:50:55 2021 -0300
+
+    implementação do copiar do word
+
+[33mcommit c68d8061881440d594fb7d2ea3ae04f4bf3a1c02[m
+Author: tati99 <tatireimer99@gmail.com>
+Date:   Wed Mar 31 12:53:57 2021 -0300
+
+    Added : to assign tab
+
+[33mcommit bf456c48107e90c8d78b19eff37e80a9502c71fe[m
+Merge: a603c33 6203533
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 31 14:55:28 2021 +0000
+
+    Merge branch 'feature/356' into 'dev'
+    
+    feature/356
+    
+    See merge request lawing2/lawing_server!231
+
+[33mcommit a603c334dad715c4729e4381e698e331705865eb[m
+Merge: c7d0adb 6312509
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 31 14:54:34 2021 +0000
+
+    Merge branch 'feature/347' into 'dev'
+    
+    feature/347
+    
+    See merge request lawing2/lawing_server!235
+
+[33mcommit c7d0adb80e636c31d418331d9293375c8a045cb7[m
+Merge: 4f2c576 4a6af57
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 31 14:47:58 2021 +0000
+
+    Merge branch 'feature/361' into 'dev'
+    
+    feature/361
+    
+    See merge request lawing2/lawing_server!236
+
+[33mcommit 4f2c576b5facbbf12ce3c5f3695d9f3d397b6d94[m
+Merge: 530060a 57567f6
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 31 14:38:31 2021 +0000
+
+    Merge branch 'feature/341' into 'dev'
+    
+    feature/341
+    
+    See merge request lawing2/lawing_server!229
+
+[33mcommit 57567f6e177310921e5f75fad835fc5863f175e7[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Mar 31 14:38:30 2021 +0000
+
+    feature/341
+
+[33mcommit 530060a017f9a0f5deb26d8acb18f95e63f21f0e[m
+Merge: 9391541 4023cfc
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 31 14:29:42 2021 +0000
+
+    Merge branch 'feature/314' into 'dev'
+    
+    Feature/314 - Variable list
+    
+    See merge request lawing2/lawing_server!228
+
+[33mcommit 4023cfc0eebd5bb2f3fc25ad0fbf5c03a2699b9d[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Wed Mar 31 14:29:42 2021 +0000
+
+    Feature/314 - Variable list
+
+[33mcommit 93915414c41cd13b07230c6d81d0d4096032fffd[m
+Merge: a6257f6 ea7d753
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 31 13:51:17 2021 +0000
+
+    Merge branch 'feature/350' into 'dev'
+    
+    feature/350
+    
+    See merge request lawing2/lawing_server!232
+
+[33mcommit 4a6af57fcb43d5be4bdaedb7e40c0d7a8242bc0c[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Mar 30 23:17:25 2021 -0300
+
+    first commit
+
+[33mcommit 6312509f4f84937b6978fffbad3ffa51be6eec95[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Mar 30 19:16:57 2021 -0300
+
+    first commit
+
+[33mcommit ea7d7534d51a21f51137f5377a8b684004d558cf[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Mar 30 15:42:46 2021 -0300
+
+    first commit
+
+[33mcommit 62035330708138b3aa1aac39bf17ccb2fa21a34e[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Mar 30 13:34:34 2021 -0300
+
+    first commit
+
+[33mcommit a6257f6e634ca989e795c64d493fbaf50d912122[m
+Merge: f2066f8 061f804
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 30 15:49:14 2021 +0000
+
+    Merge branch 'feature/349' into 'dev'
+    
+    feature/349
+    
+    See merge request lawing2/lawing_server!230
+
+[33mcommit 6bfbd5c9af23beb50eb1d65d5a161f00b82359d6[m
+Author: Rodrigo Barcia <rodrigolb99@gmail.com>
+Date:   Tue Mar 30 12:40:25 2021 -0300
+
+    Saved the .txt template inside a folder like .docx
+
+[33mcommit f2066f86330927a80fb83e556be0ca5963b2f5b1[m
+Merge: 005eba7 09ba310
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 30 14:19:24 2021 +0000
+
+    Merge branch 'feature/328' into 'dev'
+    
+    feature/328 - Delete docx template
+    
+    See merge request lawing2/lawing_server!222
+
+[33mcommit 061f804b9dfd778c773241978f15951871bfc153[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Mar 30 11:19:12 2021 -0300
+
+    first commit
+
+[33mcommit 005eba7073160c454b42eb4a966ab83586b93e3e[m
+Merge: 0f46520 0a16356
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 30 11:04:11 2021 +0000
+
+    Merge branch 'feature/333' into 'dev'
+    
+    feature/333
+    
+    See merge request lawing2/lawing_server!227
+
+[33mcommit 0f46520b6b8bbee6831f3dbdf71e0e8df681d291[m
+Merge: 399e36a 305e316
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Mar 29 13:39:12 2021 +0000
+
+    Merge branch 'feature/290' into 'dev'
+    
+    feature/290
+    
+    See merge request lawing2/lawing_server!226
+
+[33mcommit 305e316a2d90a850d5b38d12d8ad786614a3019a[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Mar 29 13:39:12 2021 +0000
+
+    feature/290
+
+[33mcommit 0a163568041fefd94d9eee19b2ca438746c3b9f4[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Sun Mar 28 21:52:43 2021 -0300
+
+    first commit
+
+[33mcommit 399e36a7edd4025568cbe8a2dde30684ea522217[m
+Merge: ecb555d 1dbed6b
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Mar 27 17:37:58 2021 +0000
+
+    Merge branch 'feature-315' into 'dev'
+    
+    feature-315
+    
+    See merge request lawing2/lawing_server!224
+
+[33mcommit ecb555dead4fa5bec37b1ec54e80fddce63f087c[m
+Merge: 62fe733 27dc3f0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Mar 27 15:46:33 2021 +0000
+
+    Merge branch 'feature/308' into 'dev'
+    
+    Feature/308
+    
+    See merge request lawing2/lawing_server!219
+
+[33mcommit 27dc3f0b07d319d97efbcc54808770308e78bb71[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Sat Mar 27 15:46:33 2021 +0000
+
+    Feature/308
+
+[33mcommit 62fe7332ca499745d48d7d119b029cbbd5386ed6[m
+Merge: 8c2d282 a3488c0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 26 20:48:16 2021 +0000
+
+    Merge branch 'feature/327' into 'dev'
+    
+    Feature/327
+    
+    See merge request lawing2/lawing_server!220
+
+[33mcommit a3488c08732822e2b68700ba836de35633be3f24[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Mar 26 20:48:16 2021 +0000
+
+    Feature/327
+
+[33mcommit 8c2d282258571a8a3e6f56c19f754eb25993f750[m
+Merge: d80735c a4e9e2b
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 26 20:11:47 2021 +0000
+
+    Merge branch 'feature/301' into 'dev'
+    
+    [feature/301]
+    
+    See merge request lawing2/lawing_server!225
+
+[33mcommit d80735ca322a38cc3450722976646d594b9fcf09[m
+Merge: 38bc9bf 474ebc2
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 26 19:38:47 2021 +0000
+
+    Merge branch 'feature/307' into 'dev'
+    
+    [feature/307]
+    
+    See merge request lawing2/lawing_server!223
+
+[33mcommit a4e9e2b13d47f935330097a1fdcb4f2a66cbc830[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 26 14:17:34 2021 -0300
+
+    implementação de imagens no ckeditor
+
+[33mcommit 1dbed6b5f96b4cd56185d74e1dd2816d5a88a1a0[m
+Author: tati99 <tatireimer99@gmail.com>
+Date:   Fri Mar 26 12:38:03 2021 -0300
+
+    feature-315
+
+[33mcommit 474ebc2c6b445e435feab5ed11a06e75f58ed85e[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 26 11:53:18 2021 -0300
+
+    ajuste box de comentario
+
+[33mcommit 09ba310f22ae9d7d82c1f4d73d6b7d0c27bd14ea[m
+Author: Rodrigo Barcia <rodrigolb99@gmail.com>
+Date:   Thu Mar 25 18:54:11 2021 -0300
+
+    Adjusted funcionality to delete docx template
+
+[33mcommit 38bc9bf0d8ca1072333d24327d303b72c9d5c71f[m
+Merge: 039c2a7 3524cce
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 24 21:50:38 2021 +0000
+
+    Merge branch 'feature/304' into 'dev'
+    
+    feature/304
+    
+    See merge request lawing2/lawing_server!217
+
+[33mcommit 3524cce56bd16a4bb82b159f5d482f0045b17982[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Mar 24 21:50:36 2021 +0000
+
+    feature/304
+
+[33mcommit 039c2a77e3cca6c71aeb47f5532fffffbc4522ab[m
+Merge: a84a72e 9472337
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 24 21:02:57 2021 +0000
+
+    Merge branch 'feature/322' into 'dev'
+    
+    feature/322
+    
+    See merge request lawing2/lawing_server!218
+
+[33mcommit 94723378a1a37bee7d18c4d36278c5600390c968[m
+Author: Rodrigo Barcia <rodrigolb99@gmail.com>
+Date:   Wed Mar 24 17:17:17 2021 -0300
+
+    Set PDF's content-type to application/pdf on upload to S3
+
+[33mcommit a84a72e4ddffb73892b31b45dfd73c4d6f2e85f2[m
+Merge: db3da38 a4cec43
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 24 19:43:37 2021 +0000
+
+    Merge branch 'feature-300' into 'dev'
+    
+    feature-300
+    
+    See merge request lawing2/lawing_server!214
+
+[33mcommit a4cec43e90e8a0d1c85311b50b5d81bc1f027e62[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 24 19:43:37 2021 +0000
+
+    feature-300
+
+[33mcommit db3da38ef9fe12d33e527e5d30273f9a9ce3aac3[m
+Merge: 6693392 360fb31
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 24 19:23:29 2021 +0000
+
+    Merge branch 'feature-270' into 'dev'
+    
+    feature-270 e 277
+    
+    See merge request lawing2/lawing_server!199
+
+[33mcommit 360fb31d2f45dde7ab8823dfe9cb8c81e4e995b2[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 24 19:23:29 2021 +0000
+
+    feature-270 e 277
+
+[33mcommit 66933920cc0ee589bb76b3af6b439e98f9920624[m
+Merge: a77e9a4 4d5a7f6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 23 00:53:43 2021 +0000
+
+    Merge branch 'feature/262' into 'dev'
+    
+    Feature/262
+    
+    See merge request lawing2/lawing_server!213
+
+[33mcommit 4d5a7f64ed0541e89042dc700cfcb99929791467[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Mar 23 00:53:42 2021 +0000
+
+    Feature/262
+
+[33mcommit a77e9a4b404f0357afece2a90c8771b726666c78[m
+Merge: 51db015 3bcaf27
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 19 13:43:26 2021 +0000
+
+    Merge branch 'feature/293' into 'dev'
+    
+    feature/293
+    
+    See merge request lawing2/lawing_server!210
+
+[33mcommit 51db015dabdd1f72ba28c6b22c6270cd5f2266dd[m
+Merge: 28cceb9 207c1b8
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Mar 17 17:54:56 2021 +0000
+
+    Merge branch 'feature/206' into 'dev'
+    
+    feature-206
+    
+    See merge request lawing2/lawing_server!212
+
+[33mcommit 207c1b8d62ccb7f79084929ee4e484c5a0af2ae0[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Mar 17 14:52:29 2021 -0300
+
+    fixed problems with oauth
+
+[33mcommit 28cceb9ae330511da389e320145be1ab38e3b254[m
+Merge: cba8808 7f0ec53
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Mar 16 19:00:09 2021 +0000
+
+    Merge branch 'feature/250' into 'dev'
+    
+    Feature/250
+    
+    See merge request lawing2/lawing_server!194
+
+[33mcommit 7f0ec536d296e00649092c41f2a840c84b8c5787[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Tue Mar 16 19:00:09 2021 +0000
+
+    Feature/250
+
+[33mcommit cba8808119a1cf6b92c601fc83ff0c5ba9e3b49f[m
+Merge: d617cb5 aa9cf8f
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Mar 16 18:09:17 2021 +0000
+
+    Merge branch 'feature/299' into 'dev'
+    
+    feature/299
+    
+    See merge request lawing2/lawing_server!211
+
+[33mcommit aa9cf8f766d2e8e7d428aeb2534d5f55627b76f8[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Mar 16 15:08:39 2021 -0300
+
+    Fixed
+
+[33mcommit d617cb51ba80d7caaa38d0c87051731ee6fed4ab[m
+Merge: 6ac2070 8799ea5
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Mar 15 18:21:10 2021 +0000
+
+    Merge branch 'feature/251' into 'dev'
+    
+    Feature/251
+    
+    See merge request lawing2/lawing_server!202
+
+[33mcommit 8799ea58f34e38375a077a692af5c1c70b67caaf[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Mon Mar 15 18:21:10 2021 +0000
+
+    Feature/251
+
+[33mcommit 6ac20705fd2938f6d285d7ca82aef5d9f87fcd5c[m
+Merge: 8526b60 2c69f96
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Mar 15 15:50:25 2021 +0000
+
+    Merge branch 'feature/256' into 'dev'
+    
+    Feature/256
+    
+    See merge request lawing2/lawing_server!200
+
+[33mcommit 2c69f96917d0d8c7ee32b9b788abc6964261eeb3[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Mar 15 15:50:25 2021 +0000
+
+    Feature/256
+
+[33mcommit 3bcaf27621a1297242c126560d906f37bf68160a[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Fri Mar 12 14:24:30 2021 -0300
+
+    first commit
+
+[33mcommit 8526b60a4bdadfcc959dfd6a74f975965748cce4[m
+Merge: f606a9f 3b51782
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 12 16:29:23 2021 +0000
+
+    Merge branch 'feature/279' into 'dev'
+    
+    [feature/279]
+    
+    See merge request lawing2/lawing_server!201
+
+[33mcommit f606a9f330965195facbac97108270d4b3d1a698[m
+Merge: 44f65a6 913d408
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Mar 12 16:01:06 2021 +0000
+
+    Merge branch 'feature/292' into 'dev'
+    
+    feature/292 - fixed wrong migration order
+    
+    See merge request lawing2/lawing_server!208
+
+[33mcommit 913d4081b584335fa68f2c35982235b71de4b2a6[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Mar 12 13:00:39 2021 -0300
+
+    fixed wrong migration order
+
+[33mcommit 44f65a60df898be2d60ed6e2bdcaeec3b11f3294[m
+Merge: b49b05d 5712d13
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Mar 12 15:30:55 2021 +0000
+
+    Merge branch 'feature/255' into 'dev'
+    
+    [Feature/255]
+    
+    See merge request lawing2/lawing_server!195
+
+[33mcommit 5712d1341e45905aae99e0d127b60132a9e479c4[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 12 15:30:55 2021 +0000
+
+    [Feature/255]
+
+[33mcommit b49b05dffbfbf99f9a447c7315b60d2fc71400e6[m
+Merge: 16f72e1 7574637
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 12 15:13:08 2021 +0000
+
+    Merge branch 'feature/247' into 'dev'
+    
+    Feature/247
+    
+    See merge request lawing2/lawing_server!206
+
+[33mcommit 7574637704179554b0d073c27360a8c4173f2173[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Mar 12 15:13:08 2021 +0000
+
+    Feature/247
+
+[33mcommit 16f72e17193434faa918bb41bd6ba9694e044dc0[m
+Merge: 3c254be 0140ad4
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Mar 12 05:26:55 2021 +0000
+
+    Merge branch 'feature-281' into 'dev'
+    
+    feature-281
+    
+    See merge request lawing2/lawing_server!207
+
+[33mcommit 0140ad4b32ead7e6621a6273da5bea7f7dbab255[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Mar 12 05:26:55 2021 +0000
+
+    feature-281
+
+[33mcommit 3c254be87e94a48101a4751becbfc8598639f04d[m
+Merge: e36227d cf0f548
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Mar 12 04:42:29 2021 +0000
+
+    Merge branch 'feature/276' into 'dev'
+    
+    Feature/276
+    
+    See merge request lawing2/lawing_server!204
+
+[33mcommit cf0f5484a996dd187146920fc97254494fcce4e5[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Mar 12 04:42:29 2021 +0000
+
+    Feature/276
+
+[33mcommit e36227db4896fdf7ed23d4e274d143021d84c979[m
+Merge: e6dc662 374fcd3
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Mar 11 20:09:45 2021 +0000
+
+    Merge branch 'feature/268' into 'dev'
+    
+    Feature/268
+    
+    See merge request lawing2/lawing_server!203
+
+[33mcommit 374fcd3adfb8ff295d5ee4020f1d93938de30484[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Thu Mar 11 20:09:45 2021 +0000
+
+    Feature/268
+
+[33mcommit e6dc66237e745aed4f2b0fe88125343f2c7786f1[m
+Merge: c56d1cc 6813ce7
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Mar 11 12:50:58 2021 +0000
+
+    Merge branch 'feature/283' into 'dev'
+    
+    Feature/283
+    
+    See merge request lawing2/lawing_server!205
+
+[33mcommit 6813ce7ab91ab99131998be11ce04fa20d7ed7bd[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Mar 11 12:50:58 2021 +0000
+
+    Feature/283
+
+[33mcommit c56d1cc55d24c7a951fccc21e1c3a7c8af25eb53[m
+Merge: fc45cc9 31f0d5a
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 10 15:52:42 2021 +0000
+
+    Merge branch 'feature/280' into 'dev'
+    
+    feature/280
+    
+    See merge request lawing2/lawing_server!198
+
+[33mcommit 3b51782a493dfa1bba9444e2a7d4a20853869312[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 10 12:51:08 2021 -0300
+
+    ajuste de build
+
+[33mcommit fc45cc931f32fa44c91b88f8f3ba3b212ba02da7[m
+Merge: b7ebf3a 71b5dc7
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Mar 10 14:58:12 2021 +0000
+
+    Merge branch 'feature/267' into 'dev'
+    
+    [Feature/267]
+    
+    See merge request lawing2/lawing_server!197
+
+[33mcommit 71b5dc75e5db64d466fadbc69577bc9102088379[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Mar 10 14:58:12 2021 +0000
+
+    [Feature/267]
+
+[33mcommit b7ebf3ad9ee86fcd68f204f15acbe49c45318848[m
+Merge: ed280a9 8e397d4
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Mar 10 14:52:41 2021 +0000
+
+    Merge branch 'feature-241' into 'dev'
+    
+    feature-241
+    
+    See merge request lawing2/lawing_server!191
+
+[33mcommit 8e397d41844846bab5e69964f14d6a1444f10240[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 10 14:52:40 2021 +0000
+
+    feature-241
+
+[33mcommit 31f0d5a2f4a34d1257c1e3a5adc60f5851a659a0[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Mar 8 18:49:27 2021 -0300
+
+    changed return for external document creation endpoint
+
+[33mcommit ed280a9e842b985f7a364ecf6cd3e7bd3548824c[m
+Merge: 998c4ab 14c7c9b
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Mar 5 17:24:14 2021 +0000
+
+    Merge branch 'feature-263' into 'dev'
+    
+    feature-263
+    
+    See merge request lawing2/lawing_server!192
+
+[33mcommit 998c4ab5426b9dfda339f7c248caac31d3265eff[m
+Merge: e45d904 ab69ece
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 5 00:46:38 2021 +0000
+
+    Merge branch 'feature/199' into 'dev'
+    
+    [Feature/199]
+    
+    See merge request lawing2/lawing_server!167
+
+[33mcommit ab69ece36d08a34b8807b839693acaf24dfc0413[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 5 00:46:37 2021 +0000
+
+    [Feature/199]
+
+[33mcommit e45d9041922dc7d741b45f6221dacf2f85975139[m
+Merge: 74129ff 9f41f3a
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Mar 5 00:44:03 2021 +0000
+
+    Merge branch 'feature/245' into 'dev'
+    
+    [feature/245]
+    
+    See merge request lawing2/lawing_server!182
+
+[33mcommit 9f41f3ac9c91ce077efebe6e89dc41d347ef32b4[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Mar 5 00:44:02 2021 +0000
+
+    [feature/245]
+
+[33mcommit 74129ff0a731532af6a2ff1f833f450dd6fb5915[m
+Merge: 5071c1b 7d630c1
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 3 20:38:10 2021 +0000
+
+    Merge branch 'feature/271' into 'dev'
+    
+    feature/271
+    
+    See merge request lawing2/lawing_server!193
+
+[33mcommit 7d630c18cf4bac2c72b85e30b19eb241954fb936[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Mar 3 17:03:43 2021 -0300
+
+    applied changes to endpoints and tests + fixed minor errors
+
+[33mcommit 14c7c9b98a2babc38b72d63db1fbd7eb5173d10c[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Wed Mar 3 14:24:28 2021 -0300
+
+    Commented out message and notification icons
+
+[33mcommit 5071c1ba96c82f6f2482ee3aa7428b8a0cbd9a97[m
+Merge: 81291c9 3bded0d
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Mar 3 17:08:56 2021 +0000
+
+    Merge branch 'feature/248' into 'dev'
+    
+    Feature/248
+    
+    See merge request lawing2/lawing_server!190
+
+[33mcommit 81291c937189974973f43ca292affae268690292[m
+Merge: 3f904d3 13c50a0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 3 08:30:48 2021 +0000
+
+    Merge branch 'feature/244' into 'dev'
+    
+    Feature/244
+    
+    See merge request lawing2/lawing_server!189
+
+[33mcommit 13c50a09b6096388e426c653396458d91b400243[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Wed Mar 3 08:30:48 2021 +0000
+
+    Feature/244
+
+[33mcommit 3f904d377ff1b1370cfce070bf228e0a84c94006[m
+Merge: 1d68b7c 8c358ea
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Mar 1 14:13:47 2021 +0000
+
+    Merge branch 'feature/240' into 'dev'
+    
+    Feature/240
+    
+    See merge request lawing2/lawing_server!184
+
+[33mcommit 8c358eacb8ef3b2dd1bf4a8d296d9060583f5f63[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Mar 1 14:13:47 2021 +0000
+
+    Feature/240
+
+[33mcommit 1d68b7c02a00c88159a9c1f8641a39af1eac7243[m
+Merge: bb0915c e700245
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Feb 28 03:30:36 2021 +0000
+
+    Merge branch 'feature/238' into 'dev'
+    
+    Feature/238
+    
+    See merge request lawing2/lawing_server!181
+
+[33mcommit e70024522f969dfe8a9345a4c9f0e5558e3039ff[m
+Author: Rodrigo Lema <rodrigo.lema@parafernalia.net.br>
+Date:   Sun Feb 28 03:30:36 2021 +0000
+
+    Feature/238
+
+[33mcommit bb0915cf9a9f7f98a3850fc4ca6026b70c79f584[m
+Merge: 0a54c0e 6d1c499
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 26 20:48:25 2021 +0000
+
+    Merge branch 'feature/243' into 'dev'
+    
+    [Feature/243]
+    
+    See merge request lawing2/lawing_server!188
+
+[33mcommit 6d1c4995d22e0bb431343b28c60e7862c4436c42[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Feb 26 20:48:25 2021 +0000
+
+    [Feature/243]
+
+[33mcommit 3bded0d5297420a0d33587eb9fc096db5e32a25b[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Feb 26 16:13:07 2021 -0300
+
+    created feature and tests
+
+[33mcommit 0a54c0ec48d38b0246be0b361efb4e7054842e8d[m
+Merge: 953f07e 83bfaaa
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Feb 24 20:23:06 2021 +0000
+
+    Merge branch 'feature/254' into 'dev'
+    
+    feature 254 - fixed delete document endpoint
+    
+    See merge request lawing2/lawing_server!187
+
+[33mcommit 83bfaaa0ca3ba4a734baed5241b2775812f03eef[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Feb 24 15:07:27 2021 -0300
+
+    Fixed endpoint
+
+[33mcommit 953f07e1f1d43efb8fd9926c7df7ee1ebc7d2c57[m
+Merge: fb83ad8 ef1afa3
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Feb 23 21:15:32 2021 +0000
+
+    Merge branch 'feature/249' into 'dev'
+    
+    feature/249 fixed demo errors
+    
+    See merge request lawing2/lawing_server!186
+
+[33mcommit ef1afa312d8e07f3f341d305f726a3c624950229[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Feb 23 18:14:45 2021 -0300
+
+    fixed next endpoint
+
+[33mcommit fb83ad8f086cac9bd9bb80ee13146e30e286af2f[m
+Merge: dc4a4d3 e890ebd
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Feb 23 19:21:27 2021 +0000
+
+    Merge branch 'feature/205' into 'dev'
+    
+    feature/205
+    
+    See merge request lawing2/lawing_server!179
+
+[33mcommit e890ebd93fd667fc99c3bdb631237e4f43e17063[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Feb 23 19:21:27 2021 +0000
+
+    feature/205
+
+[33mcommit dc4a4d3f410ec572cc412a5787a5206f29b522e9[m
+Merge: 90573c1 3706b05
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Feb 23 11:08:36 2021 +0000
+
+    Merge branch 'feature-246' into 'dev'
+    
+    feature-246
+    
+    See merge request lawing2/lawing_server!183
+
+[33mcommit 90573c1f1b7ac90324a6f5b626e8da06543abee0[m
+Merge: 3b8eeed 1a30af1
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Feb 22 20:05:14 2021 +0000
+
+    Merge branch 'feature-218' into 'dev'
+    
+    feature-218
+    
+    See merge request lawing2/lawing_server!180
+
+[33mcommit 3b8eeed295a6655f824a9fa66a73e5c45215b082[m
+Merge: d50e67b 49b5561
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Feb 22 17:57:08 2021 +0000
+
+    Merge branch 'feature/212' into 'dev'
+    
+    [Feature/212]
+    
+    See merge request lawing2/lawing_server!170
+
+[33mcommit 49b55619ff82765a0c32ff72816affe43acb1b03[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Feb 22 17:57:08 2021 +0000
+
+    [Feature/212]
+
+[33mcommit 3706b05061c596dd13f512838f0c534c664bd285[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Mon Feb 22 12:55:49 2021 -0300
+
+    Changed abort to json message in documents/sign
+
+[33mcommit d50e67b5d362b14655a0d097ab8a72a84afc47a7[m
+Merge: 6219861 0e8e168
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Feb 20 11:42:56 2021 +0000
+
+    Merge branch 'feature/198' into 'dev'
+    
+    Feature/198
+    
+    See merge request lawing2/lawing_server!178
+
+[33mcommit 0e8e168dc93f0364740282f469e85a49fbc00f64[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Sat Feb 20 11:42:56 2021 +0000
+
+    Feature/198
+
+[33mcommit 6219861d0c9539b8525c8a9387c44c8203c66e7a[m
+Merge: 312afdc 7179316
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Feb 18 17:24:56 2021 +0000
+
+    Merge branch 'feature/235' into 'dev'
+    
+    Feature/235
+    
+    See merge request lawing2/lawing_server!177
+
+[33mcommit 7179316a6bb55a133827cf8d6eb8efd7c99a6b9d[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Feb 18 17:24:56 2021 +0000
+
+    Feature/235
+
+[33mcommit 312afdc698caa04fce24264fe74c2bd4c50c2723[m
+Merge: 79bf8eb ef9cc30
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Feb 18 17:05:30 2021 +0000
+
+    Merge branch 'feature/233' into 'dev'
+    
+    feature/233
+    
+    See merge request lawing2/lawing_server!176
+
+[33mcommit 1a30af1b48aacb47d879dbfdd6a39e00d477fe4d[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Thu Feb 18 14:03:25 2021 -0300
+
+    upload logo to s3 and put the object url into the logo_url field
+
+[33mcommit 79bf8eb8828bbece742071b5e40275b94d1db241[m
+Merge: 9ad77a5 c87c71a
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Feb 12 16:02:51 2021 +0000
+
+    Merge branch 'feature/203' into 'dev'
+    
+    Feature/203
+    
+    See merge request lawing2/lawing_server!172
+
+[33mcommit c87c71af69b4f62f386551ee1c069b1c5338225a[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Feb 12 16:02:50 2021 +0000
+
+    Feature/203
+
+[33mcommit 9ad77a5d04b43d73f159241255eebcd86f1b2f1e[m
+Merge: d75fc0c 3908743
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 12 14:41:33 2021 +0000
+
+    Merge branch 'feature/234' into 'dev'
+    
+    feature/234
+    
+    See merge request lawing2/lawing_server!175
+
+[33mcommit d75fc0c301e9765dd5559a67deb72677539b088d[m
+Merge: cd2f018 5f6fa33
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 12 14:18:38 2021 +0000
+
+    Merge branch 'feature-232' into 'dev'
+    
+    Form page title | feature-232
+    
+    See merge request lawing2/lawing_server!171
+
+[33mcommit 5f6fa33df26636d8c8fb071e71406c27f289e3eb[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Feb 12 14:18:37 2021 +0000
+
+    Form page title | feature-232
+
+[33mcommit cd2f018e15e04a11aa7f4204463461fc4fb5bff5[m
+Merge: f29c8a4 7554310
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Feb 12 13:19:47 2021 +0000
+
+    Merge branch 'feature/230' into 'dev'
+    
+    Feature/230
+    
+    See merge request lawing2/lawing_server!174
+
+[33mcommit 75543100a648063b161ebff097c0ab9c70ccc120[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 12 13:19:47 2021 +0000
+
+    Feature/230
+
+[33mcommit ef9cc304431cd0fdedf8dcd18ee6e72d39fa4cc3[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Fri Feb 12 00:38:45 2021 -0300
+
+    Try-catch working for error 400
+
+[33mcommit 39087436a0e867ea09d1b187e04ec9b3a06e3b8e[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Feb 11 15:24:07 2021 -0300
+
+    added metabase container
+
+[33mcommit f29c8a42195c501457178579469c7a18101e51da[m
+Merge: 6e94a7b f8bac72
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Feb 10 17:18:37 2021 +0000
+
+    Merge branch 'feature/217' into 'dev'
+    
+    Feature/217
+    
+    See merge request lawing2/lawing_server!166
+
+[33mcommit f8bac72de7c42f238d001d8d42a46e81726d68f1[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Feb 10 17:18:37 2021 +0000
+
+    Feature/217
+
+[33mcommit 6e94a7b86f0c685d1934c74a8b82714f834aa9e7[m
+Merge: 51b4548 926afd6
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Feb 5 19:41:58 2021 +0000
+
+    Merge branch 'feature/189' into 'dev'
+    
+    Feature/189
+    
+    See merge request lawing2/lawing_server!151
+
+[33mcommit 926afd6b5d93b4626ee829aacded3348619aa5c3[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 5 19:41:58 2021 +0000
+
+    Feature/189
+
+[33mcommit 51b4548c788decf80862b001e106063d7cbc4593[m
+Merge: f2e14d4 9b118c3
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Feb 5 18:33:18 2021 +0000
+
+    Merge branch 'feature-221' into 'dev'
+    
+    Include page indication for forms that have more than one page | feature-221
+    
+    See merge request lawing2/lawing_server!168
+
+[33mcommit 9b118c3596931e3c6a82db6f38b5f5898849abf1[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Fri Feb 5 18:33:18 2021 +0000
+
+    Include page indication for forms that have more than one page | feature-221
+
+[33mcommit f2e14d40098f05dd267e9b3dd9dd07477844b52f[m
+Merge: 0e55990 6d5d6b8
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Feb 2 15:59:36 2021 +0000
+
+    Merge branch 'feature/214' into 'dev'
+    
+    Feature/214
+    
+    See merge request lawing2/lawing_server!165
+
+[33mcommit 6d5d6b8359db87e76c4c79d8a635d8305a3fed6d[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Feb 2 15:59:36 2021 +0000
+
+    Feature/214
+
+[33mcommit 0e559903547422bed0164a4d8bc01128663c3759[m
+Merge: e62234d 2e41490
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Feb 2 15:22:48 2021 +0000
+
+    Merge branch 'feature-224' into 'dev'
+    
+    Correct some frontend issues | feature-224
+    
+    See merge request lawing2/lawing_server!163
+
+[33mcommit 2e41490e171d7156a3df00303ee96a3bc0cf0dbb[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Feb 2 15:22:47 2021 +0000
+
+    Correct some frontend issues | feature-224
+
+[33mcommit e62234dbf97b3fe8e02c697afeae97ba7d59da13[m
+Merge: 7604e9a fa19104
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Feb 1 20:40:44 2021 +0000
+
+    Merge branch 'feature-209' into 'dev'
+    
+    Change create template endpoint to receive template text and save it on S3 | feature-209
+    
+    See merge request lawing2/lawing_server!161
+
+[33mcommit fa1910450a9be1d0a489027d42395a53461fb61f[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Feb 1 20:40:44 2021 +0000
+
+    Change create template endpoint to receive template text and save it on S3 | feature-209
+
+[33mcommit 7604e9ab294de2c31c11ca79a6887af07d799680[m
+Merge: 9879c46 f949d8f
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Feb 1 19:28:14 2021 +0000
+
+    Merge branch 'feature/191' into 'dev'
+    
+    Feature/191
+    
+    See merge request lawing2/lawing_server!164
+
+[33mcommit f949d8f8f8ac26ef6bdf7d60edc36d57c7b7a83b[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Feb 1 19:28:14 2021 +0000
+
+    Feature/191
+
+[33mcommit 9879c46b6229402f21323173a7ad1cbd6180f7f7[m
+Merge: 76833b7 9c9176b
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Feb 1 16:25:49 2021 +0000
+
+    Merge branch 'feature/227' into 'dev'
+    
+    Feature/227
+    
+    See merge request lawing2/lawing_server!162
+
+[33mcommit 9c9176b34bbf91ff32cbde49fbf45456fd743211[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Feb 1 16:25:49 2021 +0000
+
+    Feature/227
+
+[33mcommit 76833b7587da128a171db4dbb4ca64d4cd2fa2c7[m
+Merge: ef09113 3262130
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Feb 1 16:15:08 2021 +0000
+
+    Merge branch 'feature/215' into 'dev'
+    
+    Feature/215
+    
+    See merge request lawing2/lawing_server!155
+
+[33mcommit ef09113b96234189675fa57a0048a92f3fc17acd[m
+Merge: ec06602 fc7d387
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Jan 28 17:46:42 2021 +0000
+
+    Merge branch 'feature-222-2' into 'dev'
+    
+    Change name to Lawing
+    
+    See merge request lawing2/lawing_server!160
+
+[33mcommit fc7d3878b3406a8749b42d10644247ddc6caa79f[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Thu Jan 28 14:45:56 2021 -0300
+
+    Change name to Lawing
+
+[33mcommit ec066024330da3b8afb4a5727fe25f4c78cd972a[m
+Merge: a6acf64 92210cc
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Jan 28 17:36:31 2021 +0000
+
+    Merge branch 'feature/222' into 'dev'
+    
+    Change favicon and include app name on dev2 | feature/222
+    
+    See merge request lawing2/lawing_server!159
+
+[33mcommit 92210ccab71efdd63a4820cf92a961f816eb589e[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Jan 28 17:36:31 2021 +0000
+
+    Change favicon and include app name on dev2 | feature/222
+
+[33mcommit a6acf6469f8c07f7a1a0b4f2279f1696f749d17e[m
+Merge: 0864bc6 929ec7c
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Jan 27 22:56:14 2021 +0000
+
+    Merge branch 'feature/201' into 'dev'
+    
+    feature/201
+    
+    See merge request lawing2/lawing_server!146
+
+[33mcommit 0864bc6b8b55b2662c86c7c13e68063c57839f91[m
+Merge: 19fa6bc 29fc2a8
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Jan 27 19:05:45 2021 +0000
+
+    Merge branch 'feature/216' into 'dev'
+    
+    Feature/216
+    
+    See merge request lawing2/lawing_server!156
+
+[33mcommit 19fa6bc00807ea2a66c93da05f391234ce839682[m
+Merge: 6ad5ad5 7258350
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Jan 27 18:01:48 2021 +0000
+
+    Merge branch 'feature-210' into 'dev'
+    
+    Change database to allow creation of documents with the same name | feature-210
+    
+    See merge request lawing2/lawing_server!157
+
+[33mcommit 6ad5ad53809f85db47e3a33146b7415fdc97fc77[m
+Merge: d6a1be7 fe60a7d
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Jan 26 20:31:04 2021 +0000
+
+    Merge branch 'feature/208' into 'dev'
+    
+    Feature/208
+    
+    See merge request lawing2/lawing_server!153
+
+[33mcommit fe60a7d4ca2a5145c08570726fcb1b864f351af8[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jan 26 20:31:03 2021 +0000
+
+    Feature/208
+
+[33mcommit 725835029442c929a9a908146395479f8a16d0e7[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Tue Jan 26 12:59:59 2021 -0300
+
+    Change database to allow creation of documents with the same name | feature-210
+
+[33mcommit 29fc2a87862814b32b639abbb1f2602f61c34ba7[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 25 17:17:29 2021 -0300
+
+    Add user name to db when creating new user
+
+[33mcommit 3262130a850598992dee6763bfd5cd0515f51d19[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 25 17:02:12 2021 -0300
+
+    Added color field in each workflow node and returning it to front
+
+[33mcommit d6a1be79eeaf8e72b125fac13db57ff15698f0c5[m
+Merge: 953ec8d ca70909
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 25 18:18:40 2021 +0000
+
+    Merge branch '000' into 'dev'
+    
+    Fix cognito problems
+    
+    See merge request lawing2/lawing_server!154
+
+[33mcommit ca709093d299716c3beab6a9ce53d7a5be3d1cc6[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 25 15:17:48 2021 -0300
+
+    Fix cognito problems
+
+[33mcommit 953ec8d8c58c0ae6425fd256239328a7502ef9ff[m
+Merge: 8122907 99ed048
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Jan 22 14:53:09 2021 +0000
+
+    Merge branch 'feature/184' into 'dev'
+    
+    [Feature/184]
+    
+    See merge request lawing2/lawing_server!150
+
+[33mcommit 99ed0487ea6658862ac563f1d686e3df4af39b0c[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Jan 22 14:53:09 2021 +0000
+
+    [Feature/184]
+
+[33mcommit 8122907a7c3af8c59ccc659294105895b06030ec[m
+Merge: 4e2ecc8 d72f458
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jan 21 18:41:00 2021 +0000
+
+    Merge branch 'feature/207' into 'dev'
+    
+    Adjust Code Pipeline IAM Role to allow access to python image
+    
+    See merge request lawing2/lawing_server!152
+
+[33mcommit d72f4587a55bc68deaeedc72448dbc32eecd30c7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jan 20 14:27:23 2021 -0300
+
+    Adjust Code Pipeline IAM Role to allow access to python image
+
+[33mcommit 4e2ecc801b27ad6328d9fc71616e7fb8105ff57c[m
+Merge: 0b7be0a bb0e949
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Jan 19 17:27:04 2021 +0000
+
+    Merge branch 'feature/173' into 'dev'
+    
+    feature/173
+    
+    See merge request lawing2/lawing_server!147
+
+[33mcommit bb0e94969c4967f9307c6f44b86dfaf2e8e789b7[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jan 19 17:27:04 2021 +0000
+
+    feature/173
+
+[33mcommit 0b7be0a04e9ea720d09ed8a6daf0e09ef35ff258[m
+Merge: 57a02da 758d5bf
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Jan 19 16:31:22 2021 +0000
+
+    Merge branch 'feature/181' into 'dev'
+    
+    Add Date Field Type
+    
+    See merge request lawing2/lawing_server!137
+
+[33mcommit 758d5bf4d2fd2a66487892eabb4d51338e3e6d63[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Jan 19 16:31:22 2021 +0000
+
+    Add Date Field Type
+
+[33mcommit 57a02dae7501d3771d523e9457d871d683d5a5b4[m
+Merge: 317d2b4 2404935
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Jan 19 14:32:10 2021 +0000
+
+    Merge branch 'feature/180' into 'dev'
+    
+    Feature/180
+    
+    See merge request lawing2/lawing_server!148
+
+[33mcommit 2404935470ffa8fc2a09883ea6ef0b72baac203d[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Jan 19 14:32:10 2021 +0000
+
+    Feature/180
+
+[33mcommit 317d2b407f602f2bc1d9859e0f7805deb3b8a993[m
+Merge: 32215f5 f2006e3
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Jan 19 14:19:35 2021 +0000
+
+    Merge branch 'feature/171' into 'dev'
+    
+    feature/171
+    
+    See merge request lawing2/lawing_server!138
+
+[33mcommit f2006e3fcf6c738be7f5d7a6ba1fcb5b94ea1a87[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Jan 19 14:19:35 2021 +0000
+
+    feature/171
+
+[33mcommit 32215f57e53f11ab00f581e64a34406a59282955[m
+Merge: d2ffa18 cee1456
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Jan 18 21:09:30 2021 +0000
+
+    Merge branch 'feature/202' into 'dev'
+    
+    feature/202
+    
+    See merge request lawing2/lawing_server!149
+
+[33mcommit cee14563c384a129854144dff2c878077a44b634[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 18 21:09:30 2021 +0000
+
+    feature/202
+
+[33mcommit d2ffa1879136a522345566c9874cb1b70fe79e0c[m
+Merge: 2e4365f f699213
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Jan 18 19:28:30 2021 +0000
+
+    Merge branch 'feature/124' into 'dev'
+    
+    Feature/124
+    
+    See merge request lawing2/lawing_server!134
+
+[33mcommit f699213ab00ce8312fd88935aa06df0008218d54[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Jan 18 19:28:30 2021 +0000
+
+    Feature/124
+
+[33mcommit 2e4365fec78b7467019ce0697f7d278bdfbf801a[m
+Merge: c153859 dcb4866
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Jan 18 14:01:56 2021 +0000
+
+    Merge branch 'feature/151' into 'dev'
+    
+    Server communication error handling
+    
+    See merge request lawing2/lawing_server!125
+
+[33mcommit dcb48666b76345f70a95a80a9cf19998e5d105a4[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Mon Jan 18 14:01:56 2021 +0000
+
+    Server communication error handling
+
+[33mcommit c153859b03b2a522b4643f4fd2fcad006d1d9adb[m
+Merge: db89264 0257be9
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Jan 13 13:33:17 2021 +0000
+
+    Merge branch 'feature/193' into 'dev'
+    
+    Feature/193
+    
+    See merge request lawing2/lawing_server!144
+
+[33mcommit 0257be9ad7fcb029628399ebc6466adb0b964168[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Jan 13 13:33:17 2021 +0000
+
+    Feature/193
+
+[33mcommit 929ec7c31a423a63d647a1618015ee1373be582f[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Jan 12 16:55:30 2021 -0300
+
+    Added hotjar code to html head
+
+[33mcommit db89264d89ee61bbfe27df7161e007e65626f257[m
+Merge: 520f664 cd5c9fa
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 11 21:16:35 2021 +0000
+
+    Merge branch 'feature-188' into 'dev'
+    
+    Template creation endpoint | feature-188
+    
+    See merge request lawing2/lawing_server!145
+
+[33mcommit 520f6645ee138fc1ebdf3887ea691039e67b6849[m
+Merge: f24e7c4 866b017
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Jan 11 18:12:40 2021 +0000
+
+    Merge branch 'feature/143' into 'dev'
+    
+    feature/143
+    
+    See merge request lawing2/lawing_server!143
+
+[33mcommit cd5c9fa0f84a7f689a4b1457433b5a59d8197838[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Mon Jan 11 13:27:57 2021 -0300
+
+    Template creation endpoint | feature-188
+
+[33mcommit 866b017546339a56cd04d61b6075ddc45b51b5d1[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Jan 8 12:00:33 2021 -0300
+
+    Adjust timezone storage and display on front
+
+[33mcommit f24e7c41c61b372f0d8df1f59fdeab731625e209[m
+Merge: 20841a4 7615bd9
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Thu Jan 7 23:34:21 2021 +0000
+
+    Merge branch 'feature/190' into 'dev'
+    
+    feature/190
+    
+    See merge request lawing2/lawing_server!142
+
+[33mcommit 20841a40d053a441995be2937f39f5133798cc92[m
+Merge: 8f21931 59402b3
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Jan 6 12:16:02 2021 +0000
+
+    Merge branch 'feature/182' into 'dev'
+    
+    Add dropdown field type
+    
+    See merge request lawing2/lawing_server!135
+
+[33mcommit 59402b3a2b646f04c70affb43b1354f90429dd09[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Wed Jan 6 12:16:02 2021 +0000
+
+    Add dropdown field type
+
+[33mcommit 7615bd9a48567bdd195618d7bdf7854c8b67f13d[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Jan 5 16:45:33 2021 -0300
+
+    Save and download signed documents from S3
+
+[33mcommit 8f219316b4cd5b96853689e7b50b88cd3cc98bb7[m
+Merge: 20cd1da ce4bf98
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Jan 4 22:33:54 2021 +0000
+
+    Merge branch 'feature-186' into 'dev'
+    
+    Create backend for text comment
+    
+    See merge request lawing2/lawing_server!141
+
+[33mcommit ce4bf9851bc6b5d0f324f8d63c4f26b7e6f060c8[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Mon Jan 4 22:33:54 2021 +0000
+
+    Create backend for text comment
+
+[33mcommit 20cd1da55074b1558051084289b58642cca403c3[m
+Merge: 179d314 37f8e52
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jan 2 02:34:04 2021 +0000
+
+    Merge branch 'features/196' into 'dev'
+    
+    Features/196
+    
+    See merge request lawing2/lawing_server!140
+
+[33mcommit 37f8e521dd25915b9f6bf9321d30e968a5d12941[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Jan 1 23:32:51 2021 -0300
+
+    fix dockerfile typo
+
+[33mcommit 179d314faa803d2f9ecd8d147b79110738a8945b[m
+Merge: d13712c 5f9ac4b
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jan 2 01:03:57 2021 +0000
+
+    Merge branch 'features/196' into 'dev'
+    
+    Pull python image from private repo
+    
+    See merge request lawing2/lawing_server!139
+
+[33mcommit 5f9ac4bf3d1383cbea0348679847bb26bfc29b2b[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Jan 1 22:00:00 2021 -0300
+
+    Pull python image from private repo
+
+[33mcommit d13712c2bc396ebed8652870e54d295efcae0db2[m
+Merge: 59637ca 48f72b5
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Dec 30 18:59:29 2020 +0000
+
+    Merge branch 'feature/185' into 'dev'
+    
+    Feature/185
+    
+    See merge request lawing2/lawing_server!133
+
+[33mcommit 48f72b51c42518bf74d34e0aa772e0133cab7997[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Dec 30 18:59:29 2020 +0000
+
+    Feature/185
+
+[33mcommit 59637ca5b494e89e858f37507678c8e66110f5b4[m
+Merge: 88e52ec 0306cd1
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Dec 30 17:23:46 2020 +0000
+
+    Merge branch 'feature-175' into 'dev'
+    
+    Prevent creation of 2 groups with the same name
+    
+    See merge request lawing2/lawing_server!128
+
+[33mcommit 0306cd1da9d68b5bcf37765a7571290d7f087646[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Wed Dec 30 17:23:46 2020 +0000
+
+    Prevent creation of 2 groups with the same name
+
+[33mcommit 88e52ec785c92e2f04e57622b8b50f1a4e352e6b[m
+Merge: 2b0ae52 00c5862
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Dec 29 22:50:57 2020 +0000
+
+    Merge branch 'feature/178' into 'dev'
+    
+    Show signer status on Document details page
+    
+    See merge request lawing2/lawing_server!136
+
+[33mcommit 00c586201e1fa92fc579d349bdff124b6d4be7c8[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Dec 29 22:50:57 2020 +0000
+
+    Revert "error handling server communication"
+    
+    This reverts commit 0a069a50a91fa2f60e7e1c63ad4861e09ba9d6ee.
+
+[33mcommit 2b0ae5227b6b2be83bb3172158a01fbd783dd7c6[m
+Merge: 951949a 0aed9c1
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Dec 29 17:41:16 2020 +0000
+
+    Merge branch 'feature/179' into 'dev'
+    
+    [feature/179]
+    
+    See merge request lawing2/lawing_server!132
+
+[33mcommit 951949a1da61cbb012908080af18edd00e55e0d9[m
+Merge: e00f0cc 1f15305
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Dec 29 15:21:51 2020 +0000
+
+    Merge branch 'feature/174' into 'dev'
+    
+    After document creation, send emails to all Users in current_user Company
+    
+    See merge request lawing2/lawing_server!130
+
+[33mcommit 1f1530567cab203f753b688a45849e27ac604f2a[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Dec 29 15:21:51 2020 +0000
+
+    After document creation, send emails to all Users in current_user Company
+
+[33mcommit e00f0ccdf4ae45be7b70985f99a31979f1365ba9[m
+Merge: 72ad918 2d618be
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Dec 29 14:31:21 2020 +0000
+
+    Merge branch 'feature-177' into 'dev'
+    
+    Order versions from newest to oldest
+    
+    See merge request lawing2/lawing_server!131
+
+[33mcommit 2d618be834f6e65aba73f3d873a0dcb46d0c5d8b[m
+Author: Tatiana Reimer Barata <tatireimer99@gmail.com>
+Date:   Tue Dec 29 14:31:21 2020 +0000
+
+    Order versions from newest to oldest
+
+[33mcommit 72ad9183c6ad929d84f4a48c6b2a0568a210561a[m
+Merge: d7fac41 444616c
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Dec 29 02:21:25 2020 +0000
+
+    Merge branch 'feature/176' into 'dev'
+    
+    [feature/176]
+    
+    See merge request lawing2/lawing_server!129
+
+[33mcommit 0aed9c1e22a6c704dc9f504b15095feb7d084806[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Dec 22 11:56:13 2020 -0300
+
+    implementação do modal para direcionar ao docusign
+
+[33mcommit 444616c4335ce8dbedd3ea071f510719bf0eb339[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Dec 22 10:30:05 2020 -0300
+
+    incluindo email na tab version
+
+[33mcommit d7fac41720324321d143f1cbee9225af80382f4c[m
+Merge: ca661dd 3dfa7c8
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Dec 20 18:10:30 2020 +0000
+
+    Merge branch 'feature/168' into 'dev'
+    
+    Get and Save all signers statuses on document 'signers' field
+    
+    See merge request lawing2/lawing_server!124
+
+[33mcommit 3dfa7c8c6e059eeac16c3f9d2af5921ba4e44f11[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Sun Dec 20 18:10:30 2020 +0000
+
+    Get and Save all signers statuses on document 'signers' field
+
+[33mcommit ca661dd2dad16e9c832727ad90379357e635d53f[m
+Merge: 516dc57 779e873
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Dec 20 17:21:38 2020 +0000
+
+    Merge branch 'feature/165' into 'dev'
+    
+    Treat fail on creating envelopes on docusign
+    
+    See merge request lawing2/lawing_server!123
+
+[33mcommit 779e873ded65a9e2ae469ae77ba01e4579553e06[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Sun Dec 20 17:21:38 2020 +0000
+
+    Treat fail on creating envelopes on docusign
+
+[33mcommit 516dc57e887779b338f90b12bbba50bee653be76[m
+Merge: 5e9e2e2 7730f46
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Dec 20 15:37:41 2020 +0000
+
+    Merge branch 'feature/157' into 'dev'
+    
+    [feature/157]
+    
+    See merge request lawing2/lawing_server!119
+
+[33mcommit 7730f4663430f882f0e5562b8a58e71dca0f6735[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Sun Dec 20 15:37:41 2020 +0000
+
+    [feature/157]
+
+[33mcommit 5e9e2e25aee614a310b62dfc3478dd060a5c4994[m
+Merge: 4fa53ce 0816839
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Dec 17 17:38:52 2020 +0000
+
+    Merge branch 'feature-172' into 'dev'
+    
+    Return version ID on /document/{doc_id}/text
+    
+    See merge request lawing2/lawing_server!127
+
+[33mcommit 0816839e479156674f23cc5984a89980bebd92ea[m
+Author: tati99 <33660799+tati99@users.noreply.github.com>
+Date:   Wed Dec 16 11:18:16 2020 -0300
+
+    Return version ID on /document/{doc_id}/text
+
+[33mcommit 4fa53ce4b68a1a4d1a3dea776e8a514484a39290[m[33m ([m[1;31morigin/172-return-version-id-on-document-doc_id-text[m[33m)[m
+Merge: 0a069a5 0d854bd
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Dec 16 09:15:55 2020 +0000
+
+    Merge branch 'feature/167' into 'dev'
+    
+    Get docusign api integration keys per company from database, instead of environment
+    
+    See merge request lawing2/lawing_server!121
+
+[33mcommit 0d854bd1a28ce7169c5f3c88984c30a3817e6508[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Dec 16 09:15:55 2020 +0000
+
+    Get docusign api integration keys per company from database, instead of environment
+
+[33mcommit 0a069a50a91fa2f60e7e1c63ad4861e09ba9d6ee[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Dec 15 23:35:52 2020 -0300
+
+    error handling server communication
+
+[33mcommit 9232ddbe792f88b549380f010ccba6d8c8e38589[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Wed Dec 2 13:05:46 2020 -0300
+
+    test pass
+
+[33mcommit a1fed6eca9140bf070c3192ee8e0233173cf3d2d[m
+Author: João Pedro Nascimento <jp.nascimento10@hotmail.com>
+Date:   Tue Dec 1 16:52:46 2020 -0300
+
+    first commit
+
+[33mcommit 874ce697c3d60028541552a12d12c18be2b28310[m
+Merge: 6fc6447 6e8ee87
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 15 17:45:24 2020 +0000
+
+    Merge branch 'feature/169' into 'dev'
+    
+    [feature/169]
+    
+    See merge request lawing2/lawing_server!120
+
+[33mcommit 6fc6447c1c6481b9503e0afa9d56df664911af0a[m
+Merge: 68080b0 88b07bd
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 15 13:19:13 2020 +0000
+
+    Merge branch 'feature/164' into 'dev'
+    
+    Enchanced save keys test
+    
+    See merge request lawing2/lawing_server!118
+
+[33mcommit 6e8ee87069096c8113bf39f44c193c93f66fcbf4[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Dec 14 11:17:36 2020 -0300
+
+    bloqueio do documento nas actions
+
+[33mcommit 68080b05f7ecd813690341cd0a52faa86dd4d124[m[33m ([m[1;31morigin/151-adicionar-tratamento-de-erro-para-falhas-na-comunicacao-com-o-servidor[m[33m)[m
+Merge: d7806ea 9f1011e
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Dec 10 21:35:49 2020 +0000
+
+    Merge branch 'feature/162' into 'dev'
+    
+    Create document 'signed' field to save when a Docusign envelope is completed
+    
+    See merge request lawing2/lawing_server!116
+
+[33mcommit 9f1011e1e0839d2f4a790805486a00cbf886b7bf[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Dec 10 21:35:48 2020 +0000
+
+    Create document 'signed' field to save when a Docusign envelope is completed
+
+[33mcommit d7806ea93dd173b1bf5defbaace82f916b04158d[m
+Merge: 1772b2d b2942e6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Dec 10 19:13:38 2020 +0000
+
+    Merge branch 'feature/163' into 'dev'
+    
+    Do not request signature twice
+    
+    See merge request lawing2/lawing_server!117
+
+[33mcommit 1772b2db1f3db03948d547d4dc560e9195f35d96[m
+Merge: 2e7cd4d 8a8dacf
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Dec 10 19:08:05 2020 +0000
+
+    Merge branch 'feature/156' into 'dev'
+    
+    Inserir texto em uma estrutura html antes de enviar para o docusign
+    
+    See merge request lawing2/lawing_server!115
+
+[33mcommit 8a8dacf1701e7e08e0e387d9415f759e99d2dfd9[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Dec 10 19:08:05 2020 +0000
+
+    Inserir texto em uma estrutura html antes de enviar para o docusign
+
+[33mcommit 88b07bd1ec7d307e9d6a6ca072469ac7c0b8723d[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Thu Dec 10 15:02:23 2020 -0300
+
+    enchanced save keys test
+
+[33mcommit b2942e665e5c1f5a099e52070cd229a7ac9239c6[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Dec 10 13:46:17 2020 -0300
+
+    Do not request signature twice
+
+[33mcommit 2e7cd4d8d697ffcf6eeef1f4b6b4900d59b5f3c1[m
+Merge: 03e111e 2a88c81
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Dec 10 15:59:42 2020 +0000
+
+    Merge branch 'feature/139' into 'dev'
+    
+    [Feature/139]
+    
+    See merge request lawing2/lawing_server!114
+
+[33mcommit 2a88c81a412bdafe214f35eefe66575bf5c3b089[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Dec 10 15:59:42 2020 +0000
+
+    [Feature/139]
+
+[33mcommit 03e111e47ddb6cfb267479f09994a681ea951177[m
+Merge: dc87679 91925a2
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Dec 9 20:57:06 2020 +0000
+
+    Merge branch 'feature/68' into 'dev'
+    
+    Track signatures on Docusign
+    
+    See merge request lawing2/lawing_server!112
+
+[33mcommit 91925a2944f5bd24e91c0f7205130cec5cf3a3bb[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Dec 9 20:57:06 2020 +0000
+
+    Changes to undo saving info in 'signers' label fields, correct migrations to DB and stop mascarating errors
+
+[33mcommit dc8767970296b3c2e30449eb814c9b8a11eaa4d1[m
+Merge: be0c0e2 f09fd20
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Dec 9 16:49:42 2020 +0000
+
+    Merge branch 'feature/150' into 'dev'
+    
+    [Feature/150]
+    
+    See merge request lawing2/lawing_server!113
+
+[33mcommit f09fd20adfe3b3d476caca5f58d09fbf049ec75d[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Dec 9 16:49:41 2020 +0000
+
+    [Feature/150]
+
+[33mcommit be0c0e2b23f78439ea5911d64854163d00592090[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Dec 7 22:08:04 2020 -0300
+
+    Fix base64 document
+
+[33mcommit a8de3a03aff8e71c7832ababeea2c5088a2a29bc[m
+Merge: fd4c417 2b75588
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 8 00:44:29 2020 +0000
+
+    Merge branch 'feature/161' into 'dev'
+    
+    GET endpoint to list company keys DocuSign
+    
+    See merge request lawing2/lawing_server!111
+
+[33mcommit 2b75588b07e52e13b9fedd55865a96f69636568e[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Tue Dec 8 00:44:29 2020 +0000
+
+    GET endpoint to list company keys DocuSign
+
+[33mcommit fd4c4170a5e59c874c43e175c489460be290077b[m
+Merge: 8309ffd c5276f6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 8 00:24:31 2020 +0000
+
+    Merge branch 'feature/159' into 'dev'
+    
+    Updated Signing endpoint to POST and created 'signed' field on Document Model
+    
+    See merge request lawing2/lawing_server!110
+
+[33mcommit c5276f6c2b2684073fb29dcc5ccd83e2e2f5758e[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Dec 8 00:24:31 2020 +0000
+
+    Updated Signing endpoint to POST and created 'signed' field on Document Model to save document signing status
+
+[33mcommit 8309ffd9e696be0f76a6853cc43885c20cb2943c[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 1 20:28:58 2020 -0300
+
+    Remove print
+
+[33mcommit 8f2ae2394caf59e90697f9412e645202304c7809[m
+Merge: 52622e1 d6013bc
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Dec 1 23:24:21 2020 +0000
+
+    Merge branch 'feature/122' into 'dev'
+    
+    Create endpoint to load and save signers data
+    
+    See merge request lawing2/lawing_server!107
+
+[33mcommit d6013bc295d573df00488748af1a16fca9bce018[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Dec 1 23:24:21 2020 +0000
+
+    Create endpoint to load and save signers data
+
+[33mcommit 52622e15e489c3f4ba830e4f29369f4e7002982d[m
+Merge: 09aa815 925588f
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Nov 27 09:30:02 2020 +0000
+
+    Merge branch 'feature/154' into 'dev'
+    
+    Add version number parameter on get text endpoint
+    
+    See merge request lawing2/lawing_server!109
+
+[33mcommit 925588f76ea34b6bbcc6cf931c71e7e5b90e52e0[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Nov 27 09:30:02 2020 +0000
+
+    Add version number parameter on get text endpoint
+
+[33mcommit 09aa815ea6f3f2821a27e73b35a77447705958cb[m
+Merge: fc3bbf5 446817d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Nov 27 09:06:56 2020 +0000
+
+    Merge branch 'feature/149' into 'dev'
+    
+    Feature/149
+    
+    See merge request lawing2/lawing_server!108
+
+[33mcommit 446817d2f8c2d04ed8f04af4da4d27ebc81d6467[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Nov 27 09:06:56 2020 +0000
+
+    Feature/149
+
+[33mcommit fc3bbf582c2d85a50900f529abf9c2843cdc750a[m
+Merge: c7e73a5 97405d1
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 26 16:47:30 2020 +0000
+
+    Merge branch 'feature/133' into 'dev'
+    
+    Create Signing request endpoint
+    
+    See merge request lawing2/lawing_server!106
+
+[33mcommit 97405d1c0eca85f12184eb8501b2c97fb4ee2d04[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Nov 26 16:47:30 2020 +0000
+
+    Implemented controller and test for signing endpoint to handle DocuSign connection and sign requests
+
+[33mcommit c7e73a5455688e0a236ee928f1fd7e6a3aa14ea4[m
+Merge: 929d1dd 8849464
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 26 01:38:15 2020 +0000
+
+    Merge branch 'feature/152' into 'dev'
+    
+    [feature/152]
+    
+    See merge request lawing2/lawing_server!105
+
+[33mcommit 929d1ddabce68abfd4505472336cb7578e3e45ee[m
+Merge: 5367337 756b3ef
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 26 01:33:36 2020 +0000
+
+    Merge branch 'feature/153' into 'dev'
+    
+    Changed document version to store  user email, not user id
+    
+    See merge request lawing2/lawing_server!103
+
+[33mcommit 88494643ac8674523d005b6578ebe950b080b16f[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Nov 23 11:02:36 2020 -0300
+
+    ajuste da tabela de documentos implementando status e email
+
+[33mcommit 756b3efeee2272a55095081baa17e922fca88f23[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Nov 20 14:32:44 2020 -0300
+
+    Changed document version to store  user email, not user id
+
+[33mcommit 53673374c61e91f8ac62c7ebfc19392de477aeaf[m
+Merge: 186af38 d9f0942
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Nov 20 10:07:38 2020 +0000
+
+    Merge branch 'feature/148' into 'dev'
+    
+    Add Docusign api keys to company database model
+    
+    See merge request lawing2/lawing_server!102
+
+[33mcommit d9f0942a3d989690f5f30204748c752e8967c631[m
+Author: João Pedro Nascimento <jpedronas@live.com>
+Date:   Fri Nov 20 10:07:38 2020 +0000
+
+    Add Docusign api keys to company database model
+
+[33mcommit 186af38058a38dec93d03f491e34f06b0a34c84f[m
+Merge: 4ec456b 3b8d8f6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 19 16:14:16 2020 +0000
+
+    Merge branch 'feature/137' into 'dev'
+    
+    [feature/137]
+    
+    See merge request lawing2/lawing_server!101
+
+[33mcommit 3b8d8f62b4a39d9a042ea56b22a269daac1f6aba[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Nov 19 16:14:15 2020 +0000
+
+    [feature/137]
+
+[33mcommit 4ec456b87798e44109d0b46e5c7e2c4e63d15e31[m
+Merge: 930b8e3 f1e3da6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 19 16:06:45 2020 +0000
+
+    Merge branch 'feature/146' into 'dev'
+    
+    [feature/146]
+    
+    See merge request lawing2/lawing_server!99
+
+[33mcommit f1e3da604a135bdd1a97c97016729c9ab995e23d[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Thu Nov 19 16:06:45 2020 +0000
+
+    [feature/146]
+
+[33mcommit 930b8e395b66e9782897a1ac4e1340d1f2278fea[m
+Merge: 7ef8ba9 15fc543
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Nov 19 04:19:28 2020 +0000
+
+    Merge branch 'feature/144' into 'dev'
+    
+    Display document status ( current step title ) on document list
+    
+    See merge request lawing2/lawing_server!98
+
+[33mcommit 15fc543203085a280169a1b521cacd1b84e0ec3a[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Thu Nov 19 04:19:28 2020 +0000
+
+    Display document status ( current step title ) on document list
+
+[33mcommit 7ef8ba9ffbe16cda7163637d9a72124dabe0c9de[m
+Merge: b138a9b 6f3180d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Nov 17 21:09:07 2020 +0000
+
+    Merge branch 'feature/136' into 'dev'
+    
+    Enhance version structure
+    
+    See merge request lawing2/lawing_server!97
+
+[33mcommit 6f3180dccbf8768d8c4ef7e7a305500fc17d1271[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Tue Nov 17 21:09:07 2020 +0000
+
+    Updated created_at to remove microseconds for clarity purpose and updated test case to test creation datetime
+
+[33mcommit b138a9b874ba21d4213a175d9339ddb50d57d5f1[m
+Merge: c25f18a a50c2f2
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Nov 17 11:15:26 2020 +0000
+
+    Merge branch 'feature/138' into 'dev'
+    
+    [feature/138]
+    
+    See merge request lawing2/lawing_server!100
+
+[33mcommit a50c2f230a13db174eb7d84cc96c4ad00fa222e4[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Nov 16 09:47:54 2020 -0300
+
+    implementação do next e previous dos steps na tela de detalhe do documento
+
+[33mcommit c25f18ad37bfac80b1d56292ea31a8e1549b2b84[m
+Merge: 0be14c9 8c3a2e0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 17:52:36 2020 +0000
+
+    Merge branch 'feature/125' into 'dev'
+    
+    Feature/125
+    
+    See merge request lawing2/lawing_server!94
+
+[33mcommit 8c3a2e0cb6bd7bcbc1dd7575d0e18640419d7508[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Nov 11 17:52:36 2020 +0000
+
+    Feature/125
+
+[33mcommit 0be14c9250571003063a9b86b02001dd1259b670[m
+Merge: 5e92084 ea760c4
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 17:12:19 2020 +0000
+
+    Merge branch 'feature/141' into 'dev'
+    
+    Save title when creating new document
+    
+    See merge request lawing2/lawing_server!96
+
+[33mcommit ea760c4d0d24c35f71bf1dd71a0b28955862800c[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Nov 11 17:12:19 2020 +0000
+
+    Save title when creating new document
+
+[33mcommit 5e920842537e160b6ef17dc476a12e236d4dfa8b[m
+Merge: d12e0e9 d648501
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 15:03:58 2020 +0000
+
+    Merge branch 'feature/142' into 'dev'
+    
+    Send user email on the document list
+    
+    See merge request lawing2/lawing_server!95
+
+[33mcommit d12e0e9df331b2cb5f2e611e337420eec83879ca[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 08:19:52 2020 -0300
+
+    HOTFIX --remove ipdb
+
+[33mcommit 33087d646b23625127efdef1d32303b2b7b2f08c[m
+Merge: 9c034e4 c09cff1
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 01:55:28 2020 +0000
+
+    Merge branch 'feature/135' into 'dev'
+    
+    Feature/135
+    
+    See merge request lawing2/lawing_server!92
+
+[33mcommit c09cff1b94d0ea83b918ee2911629ad5ede9a1a6[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Nov 4 17:01:43 2020 -0300
+
+    Create endpoint to transition document status
+    
+    Created tests for the endpoints
+    
+    Created controllers to handle document status changes and updated tests to test these controllers
+    
+    Updated code to Pep8 format
+
+[33mcommit 9c034e4e49342b05cc6ea3f8abe5250b5c41d1d2[m
+Merge: 43131d8 a29b90d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Nov 11 00:07:50 2020 +0000
+
+    Merge branch 'feature/140' into 'dev'
+    
+    Feature/140
+    
+    See merge request lawing2/lawing_server!93
+
+[33mcommit a29b90d79a94fafc05a935f4f98ffed448ba1c59[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Wed Nov 11 00:07:50 2020 +0000
+
+    Feature/140
+
+[33mcommit d6485011c59c050591360de2bf85c1f2089d63aa[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Nov 9 17:01:41 2020 -0300
+
+    Send user email on the document list
+
+[33mcommit 43131d80b51d283c71db3431cd2f925f92c9fc42[m
+Merge: ff2466d 1e5c95d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Nov 9 16:49:31 2020 +0000
+
+    Merge branch 'feature/131' into 'dev'
+    
+    [Feature/131]
+    
+    See merge request lawing2/lawing_server!91
+
+[33mcommit 1e5c95d3ab5d194b4c73f3b6340ad577cfce8f3e[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Mon Nov 9 16:49:30 2020 +0000
+
+    [Feature/131]
+
+[33mcommit ff2466d1dc9713adca7b3cad5e2a4ed7d9fe41fe[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Nov 3 20:15:26 2020 -0300
+
+    HOTFIX - small fix on DOCUMENT_ROOT
+
+[33mcommit e2d9093f132724e949d47fa433089447ef4d8b3e[m
+Merge: 870227d 0fb8620
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 20:42:26 2020 +0000
+
+    Merge branch 'feature/128' into 'dev'
+    
+    [feature/128]
+    
+    See merge request lawing2/lawing_server!90
+
+[33mcommit 0fb86202e66871ad137049b12ed7f1a3657ae4fa[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Oct 30 20:42:26 2020 +0000
+
+    [feature/128]
+
+[33mcommit 870227d333ba62277507fe78ae51b82e364582ba[m
+Merge: 2a1f099 b38ce2b
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 20:12:37 2020 +0000
+
+    Merge branch 'feature/121' into 'dev'
+    
+    Create document endpoint to load and save document text
+    
+    See merge request lawing2/lawing_server!87
+
+[33mcommit b38ce2b1f5dd8d85b2eaf22d8d152339e49d5367[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Oct 30 20:12:37 2020 +0000
+
+    Create document endpoint to load and save document text
+
+[33mcommit 2a1f099e45d66378dad8d8c0e157d98844ba16a6[m
+Merge: 35c87ba dd5a1ae
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 19:52:13 2020 +0000
+
+    Merge branch 'feature/127' into 'dev'
+    
+    [Feature/127]
+    
+    See merge request lawing2/lawing_server!88
+
+[33mcommit dd5a1ae1ab288116c0a6e2cacd46b0e6c925c828[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Oct 30 19:52:13 2020 +0000
+
+    [Feature/127]
+
+[33mcommit 35c87bae2f94307d38de1fc67d2f98e3b0fbdf85[m
+Merge: f2eb593 bf586d2
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 19:06:44 2020 +0000
+
+    Merge branch 'feature/132' into 'dev'
+    
+    Edit signers endpoint
+    
+    See merge request lawing2/lawing_server!89
+
+[33mcommit bf586d20ff7941afc9d07a8400ac55e5f615fac0[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 19:06:44 2020 +0000
+
+    Edit signers endpoint
+
+[33mcommit f2eb593b47e7462c8edc82eaa5dcf29a58f68e23[m
+Merge: b5d8f26 076bd64
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 17:36:50 2020 +0000
+
+    Merge branch 'feature/120' into 'dev'
+    
+    Integrate document creation to s3
+    
+    See merge request lawing2/lawing_server!86
+
+[33mcommit 076bd649896731ac03c9b52a3da836814be3ac88[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 30 17:36:50 2020 +0000
+
+    Integrate document creation to s3
+
+[33mcommit b5d8f265cb604dafca6e3d9912c10b72c71643c0[m
+Merge: 5397762 6901d23
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Oct 28 18:16:46 2020 +0000
+
+    Merge branch 'feature/98' into 'dev'
+    
+    [feature/98]
+    
+    See merge request lawing2/lawing_server!83
+
+[33mcommit 6901d236ad2ab06f936d175d84e9166f309c5cad[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Oct 28 18:16:46 2020 +0000
+
+    [feature/98]
+
+[33mcommit 539776288073bdc8aa5c56cbd0d127b691733533[m
+Merge: cb56a74 609f433
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Oct 28 17:58:47 2020 +0000
+
+    Merge branch 'feature/130' into 'dev'
+    
+    Add default version to document
+    
+    See merge request lawing2/lawing_server!85
+
+[33mcommit 609f433e0bad4ea8554f39b115cf8934fdf6c258[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Tue Oct 27 16:21:01 2020 -0300
+
+    Add default version to document
+
+[33mcommit cb56a7478a06d723b5179769aa2e1b4c2afd9fc9[m
+Merge: 4be336d 7ce2835
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Oct 26 23:16:54 2020 +0000
+
+    Merge branch 'feature/129' into 'dev'
+    
+    Remove all groups from user when patching with empty group list
+    
+    See merge request lawing2/lawing_server!84
+
+[33mcommit 7ce283584a2e0d860dfe656deaf1fb154c953b8f[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Mon Oct 26 23:16:54 2020 +0000
+
+    Remove all groups from user when patching with empty group list
+
+[33mcommit 4be336d6381a82860084ca2240524189c737a14c[m
+Merge: f1c4eb8 2f552c6
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Oct 26 22:56:01 2020 +0000
+
+    Merge branch 'feature/112' into 'dev'
+    
+    Change fields in Document Model
+    
+    See merge request lawing2/lawing_server!81
+
+[33mcommit 2f552c65bf2f8f6b3b47d624a7788fbdf1c8fd0f[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Mon Oct 26 22:56:01 2020 +0000
+
+    Change fields in Document Model
+
+[33mcommit f1c4eb8f6837b99153b256305d583ecde01cbaf0[m
+Merge: 4348a86 96f57bd
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 23 13:40:26 2020 +0000
+
+    Merge branch 'feature/118' into 'dev'
+    
+    Adjust Document template model and endpoints + tests
+    
+    See merge request lawing2/lawing_server!82
+
+[33mcommit 96f57bdaf83bc27b074639edfa1cf454baf2ee03[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Oct 23 13:40:26 2020 +0000
+
+    Adjust Document template model and endpoints + tests
+
+[33mcommit 4348a864357ae5909ae8ed2ca3f5b9b907f1570c[m
+Merge: d83b7d9 0ea2930
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Oct 21 20:15:53 2020 +0000
+
+    Merge branch 'feature/115' into 'dev'
+    
+    Create patch user groups endpoint
+    
+    See merge request lawing2/lawing_server!80
+
+[33mcommit 0ea29308bb937faa2b10a098ace7d35f292c4090[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Wed Oct 21 20:15:53 2020 +0000
+
+    Create patch user groups endpoint
+
+[33mcommit d83b7d9fa20e3cf193b401d648c9c66aa1e5fa4e[m
+Merge: 3c4455c ef9a8be
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Oct 21 17:33:25 2020 +0000
+
+    Merge branch 'feature/114' into 'dev'
+    
+    Add group to the user creation endpoint
+    
+    See merge request lawing2/lawing_server!73
+
+[33mcommit ef9a8be221e26fbcdf32882aa25bcef89d9f98fe[m
+Author: Ian Conde Collares <ian.collares@parafernalia.net.br>
+Date:   Wed Oct 21 17:33:25 2020 +0000
+
+    Add group to the user creation endpoint
+
+[33mcommit 3c4455c1e045e6c5ea2ecb33d478b90980a2ed6e[m
+Merge: 039d521 743b60a
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Oct 21 10:39:01 2020 +0000
+
+    Merge branch 'feature/116' into 'dev'
+    
+    Send groups on users request
+    
+    See merge request lawing2/lawing_server!79
+
+[33mcommit 743b60a46ee24563815ee919c704a8a1b029bf4a[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Wed Oct 21 10:39:01 2020 +0000
+
+    Send groups on users request
+
+[33mcommit 039d521e86d313492a65346c7a631b1572e71fe3[m
+Merge: 29e6bc5 37d5d06
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Mon Oct 19 21:24:12 2020 +0000
+
+    Merge branch 'feature/113' into 'dev'
+    
+    Rename the module document.helper.py to document.controllers.py
+    
+    See merge request lawing2/lawing_server!77
+
+[33mcommit 37d5d06045c8143b032f907ca44232941a69373e[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Mon Oct 19 21:24:12 2020 +0000
+
+    Rename the module document.helper.py to document.controllers.py
+
+[33mcommit 29e6bc5759ce13d4870dbc10c5dff54222c7c0bb[m
+Merge: c70351b aa786cc
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Mon Oct 19 21:12:10 2020 +0000
+
+    Merge branch 'feature/117' into 'dev'
+    
+    Mover função de helper para controller na API de users
+    
+    See merge request lawing2/lawing_server!78
+
+[33mcommit aa786cc19953d2c227bc144150fcf7e2470c0c01[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Oct 16 15:15:13 2020 -0300
+
+    Mover função de helper para controller na API de users
+
+[33mcommit c70351b49d24b1fa1273e8d4262f540f2b5be5e2[m
+Merge: 3e5a132 35e5d4e
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Fri Oct 16 13:33:29 2020 +0000
+
+    Merge branch 'feature/110' into 'dev'
+    
+    Add Document Detail Endpoint
+    
+    See merge request lawing2/lawing_server!71
+
+[33mcommit 35e5d4e388fc5786afe6f7e213cfb1c92907d4c1[m
+Author: Joao Cerqueira <joaovcerqueira@gmail.com>
+Date:   Fri Oct 16 13:33:29 2020 +0000
+
+    Add Document Detail Endpoint
+
+[33mcommit 3e5a132a3efa106b1e33c7ffcc3cfffd4291ac9e[m
+Merge: dc19e76 d2e0c36
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Oct 13 22:04:50 2020 +0000
+
+    Merge branch 'feature/107' into 'dev'
+    
+    [Feature/107] Create Document detail Page
+    
+    See merge request lawing2/lawing_server!72
+
+[33mcommit d2e0c368386b6902e8b269c3da32c8370797815c[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Tue Oct 13 22:04:50 2020 +0000
+
+    [Feature/107] Create Document detail Page
+
+[33mcommit dc19e76f8423466413d05e027df5f66ee30149b9[m
+Merge: 12b5484 273ac37
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Oct 9 20:19:43 2020 +0000
+
+    Merge branch 'feature/106' into 'dev'
+    
+    [Feature/106] Convert the Current Design of the Documents list to a table, instead of cards
+    
+    See merge request lawing2/lawing_server!62
+
+[33mcommit 273ac375f0f8ce22839ffad1d3a76dde5b1dd243[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Fri Oct 9 20:19:43 2020 +0000
+
+    [Feature/106] Convert the Current Design of the Documents list to a table, instead of cards
+
+[33mcommit 12b548440cbd490f387a2653a306911f431bc41f[m
+Merge: ae9d20e bc87b94
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Oct 6 21:40:56 2020 +0000
+
+    Merge branch 'feature/109' into 'dev'
+    
+    Disable delete for logged user
+    
+    See merge request lawing2/lawing_server!67
+
+[33mcommit bc87b942aaf3e5a51c5050d3c226cd22d3ecf646[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Tue Oct 6 21:40:56 2020 +0000
+
+    Disable delete for logged user
+
+[33mcommit ae9d20ed09c69647b1a37c254bbffb3105698963[m
+Merge: f71a788 2a56a54
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Tue Oct 6 17:30:12 2020 -0300
+
+    Merge branch 'feature/99' into dev
+
+[33mcommit f71a788c643567f3897c9f094b5de32dac1e42f3[m
+Merge: 7d37fad bc100ca
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Oct 5 22:45:10 2020 +0000
+
+    Merge branch 'feature/108' into 'dev'
+    
+    [Feature/108] User Cannot delete himself
+    
+    See merge request lawing2/lawing_server!63
+
+[33mcommit bc100ca75ea99f179281ed03698d3e03071f46a1[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Mon Oct 5 22:45:10 2020 +0000
+
+    [Feature/108] User Cannot delete himself
+
+[33mcommit 7d37fad7371fc1e2846ea46f76c49255831ff716[m
+Merge: 4c7b058 ba192aa
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Oct 5 22:31:59 2020 +0000
+
+    Merge branch 'feature/97' into 'dev'
+    
+    [Feature/97] Groups CRUD
+    
+    See merge request lawing2/lawing_server!61
+
+[33mcommit ba192aab0e4670f766256c7cd596c832044c0217[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Mon Oct 5 22:31:58 2020 +0000
+
+    [Feature/97] Groups CRUD
+
+[33mcommit 4c7b0587f838fdfd6e0ff5f41005766dc0b436bb[m
+Merge: e2fdc87 0887391
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Oct 5 19:46:47 2020 +0000
+
+    Merge branch 'feature/101' into 'dev'
+    
+    [Feature/101] Add message feedback on document creation
+    
+    See merge request lawing2/lawing_server!65
+
+[33mcommit 2a56a5462512fa057ef1d917bff05f974a379d6b[m[33m ([m[1;31morigin/feature/99[m[33m)[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 2 18:13:24 2020 -0300
+
+    Add Group Management API
+
+[33mcommit 0ca02f8175f4d3eb0a99bbfedda9c800fb32d92c[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 2 16:33:13 2020 -0300
+
+    Create ParticipatesOnFactory
+
+[33mcommit c1e8b33b38b74402163e8865073dec49c62b81a3[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 2 16:32:21 2020 -0300
+
+    Rename test fuction
+
+[33mcommit 6c9e08115fb270df5c6d4a32503e59464a5b3e65[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 2 13:42:03 2020 -0300
+
+    Ajust migrations and config
+
+[33mcommit 08873919b8bae0dd4c043b88b5be2e4b72f38e84[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Oct 2 08:31:34 2020 -0300
+
+    Add message feedback on document creation
+
+[33mcommit ec917a2a29f590efbc22a74b5a5a6c960bc72990[m[33m ([m[1;31morigin/feature/104[m[33m)[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 19:29:04 2020 -0300
+
+    Create page_default and per_page_default
+
+[33mcommit aaa9a82f49cfd3b26b062748dd3555385d5e9c40[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 19:01:05 2020 -0300
+
+    Do not show deleted users
+
+[33mcommit 7e3d2aadeef9e218c31d5abb1c45b10bbe72e39e[m
+Merge: 5be537c c92df7a
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 18:36:40 2020 -0300
+
+    Merge branch 'feature/97' of gitlab.com:lawing2/lawing_server into feature/97
+
+[33mcommit 5be537c458bdf09a272d212ecefe62e4c0f768ca[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 18:28:03 2020 -0300
+
+    Add pagination
+
+[33mcommit ca796913878ac13a8bb1cc158277cec81cb7c8e8[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 17:34:34 2020 -0300
+
+    Add tests
+
+[33mcommit 2f174d5521cab4814497b17855a4fdb543a825ea[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 13:28:50 2020 -0300
+
+    Variable Names and Error Handling
+
+[33mcommit 56bfef0ea13d1b7042dc0619e017fe88db530110[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 12:41:18 2020 -0300
+
+    Change relationship between users and groups
+
+[33mcommit 34b3e85bb443f50fc3016f5289fcd6d63407bc3e[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 19:23:33 2020 -0300
+
+    Add get one user group
+
+[33mcommit 782403626653b4566fb0fc1eb530ccb336b7020e[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 18:49:02 2020 -0300
+
+    Create Group CRUD
+
+[33mcommit 390512f32ba3fc5ffe25411930ed324d789f6300[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 17:28:21 2020 -0300
+
+    Create user group model
+
+[33mcommit c92df7a3f3786f0f91ca2de5ee47759452dfcd1c[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 13:28:50 2020 -0300
+
+    Variable Names and Error Handling
+
+[33mcommit 7430df7e94d81844860e78bcd24827198ee058c0[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Thu Oct 1 12:41:18 2020 -0300
+
+    Change relationship between users and groups
+
+[33mcommit e2fdc87f1679e81cfa64205f227d905f2d253534[m
+Merge: 0821c53 f0d80f0
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Oct 1 11:31:57 2020 +0000
+
+    Merge branch 'issue/92' into 'dev'
+    
+    Add search and pagination to users api
+    
+    See merge request lawing2/lawing_server!53
+
+[33mcommit f0d80f0b2da43c484fd6dcd6e557a37990136f0f[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Thu Oct 1 11:31:56 2020 +0000
+
+    Add search and pagination to users api
+
+[33mcommit 0821c53e0699a9e881937fdf5b80bb636cd8c98b[m
+Merge: 598f0c5 8dc3455
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Oct 1 11:25:23 2020 +0000
+
+    Merge branch 'issue/93' into 'dev'
+    
+    [Issue/93] user admin interface
+    
+    See merge request lawing2/lawing_server!55
+
+[33mcommit 8dc34552706aac94cbdd06385e19687029e8ab81[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Thu Oct 1 11:25:22 2020 +0000
+
+    [Issue/93] user admin interface
+
+[33mcommit 598f0c5b0ac021d4089052aee6cd8f52672bdf6f[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Oct 1 07:53:30 2020 -0300
+
+    Fix download filename
+
+[33mcommit b57853adb191e0901373399acb199e1de4a34226[m
+Merge: 95a3041 f169f85
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Oct 1 10:34:24 2020 +0000
+
+    Merge branch 'issue/79' into 'dev'
+    
+    Issue/79 - Increase token size
+    
+    See merge request lawing2/lawing_server!60
+
+[33mcommit f169f856bf9867778e11bb53b5322b57972fbea3[m
+Author: Cesar Frias <cagfrias@gmail.com>
+Date:   Thu Oct 1 10:34:24 2020 +0000
+
+    Issue/79 - Increase token size
+
+[33mcommit 95a3041f73191d6cd398affe37ac458d1c815fe3[m
+Merge: 0aa4651 5f47321
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Oct 1 10:18:19 2020 +0000
+
+    Merge branch 'issue/102' into 'dev'
+    
+    Removing gitlab CI
+    
+    See merge request lawing2/lawing_server!59
+
+[33mcommit 688ebc7fb3aa7c934150efb34c6f46caf5428bfc[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 19:23:33 2020 -0300
+
+    Add get one user group
+
+[33mcommit a638b0f19d6df1f925210a92c36f4f05891be984[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 18:49:02 2020 -0300
+
+    Create Group CRUD
+
+[33mcommit 84086d2aecfede88b87434f3e40aa002f71213b6[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 30 17:28:21 2020 -0300
+
+    Create user group model
+
+[33mcommit 5f4732111af975df5e25c377aaa7a36204054676[m
+Author: Cesar Frias <cagfrias@gmail.com>
+Date:   Wed Sep 30 14:20:24 2020 -0300
+
+    Removing gitlab CI
+
+[33mcommit 0aa4651248611e8f25fdeed79299b9487b9da48c[m
+Merge: 1404691 10ef265
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Sep 30 13:00:40 2020 +0000
+
+    Merge branch 'feature/46' into 'dev'
+    
+    Validações nos campos dinamicos
+    
+    See merge request lawing2/lawing_server!56
+
+[33mcommit 10ef2657ad402e1a4b3fdd0ba4ca3792b997e3c6[m
+Author: André Cordeiro <andrecordeiro.oliveira@hotmail.com>
+Date:   Wed Sep 30 13:00:40 2020 +0000
+
+    alteração dos campos dinamicos incluindo tipos: text, currency, email, cpf e cnpj. Removendo tipo: input
+
+[33mcommit 1404691fcea76f8bd42996756d7b9179836211ae[m
+Merge: 99deaf4 8256daa
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Sep 29 00:44:11 2020 +0000
+
+    Merge branch 'feature/90_documents_folder' into 'dev'
+    
+    Feature/90 documents folder
+    
+    See merge request lawing2/lawing_server!58
+
+[33mcommit 8256daac6584e46ef8b4f9ebaf92af1758a1b0a1[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Tue Sep 29 00:44:11 2020 +0000
+
+    Feature/90 documents folder
+
+[33mcommit 99deaf46d225a20d65fffda27243ce5b39c1125a[m
+Merge: d62eadd 110972c
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 28 22:39:19 2020 +0000
+
+    Merge branch 'issue/96' into 'dev'
+    
+    Fix logout and redirect
+    
+    See merge request lawing2/lawing_server!57
+
+[33mcommit 110972c0695bb372d5fb2f165e7a7f2afb524e8e[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Mon Sep 28 19:27:40 2020 -0300
+
+    Fix logout and redirect
+
+[33mcommit d62eaddf4089110f0e9abac37aad8ed92f765363[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 24 21:59:49 2020 -0300
+
+    Adjust production dockerfile
+
+[33mcommit 43182c23f14e5288e3d0fe213e1f1e37588113ed[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 24 15:43:04 2020 -0300
+
+    Adjust cloudformation for documents s3 env var
+
+[33mcommit f6920caa08bc0f096a3a5193f548c4519053c887[m
+Merge: 1a832f9 e3c6d90
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 24 18:22:18 2020 +0000
+
+    Merge branch 'feat/86' into 'dev'
+    
+    Feat/86
+    
+    See merge request lawing2/lawing_server!51
+
+[33mcommit e3c6d90f58b69aeab9f728785442803e6ba1e8be[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 24 18:22:18 2020 +0000
+
+    Feat/86
+
+[33mcommit 1a832f9ef4c0219ea6d729a244a9fb6a636b6012[m
+Merge: 3fbb398 08abcae
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Sep 22 12:31:47 2020 +0000
+
+    Merge branch 'issue/44' into 'dev'
+    
+    Sign Button
+    
+    See merge request lawing2/lawing_server!48
+
+[33mcommit 08abcae6f8cdeeadf8d61581a837fe97852cc683[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Tue Sep 22 12:31:47 2020 +0000
+
+    Sign Button
+
+[33mcommit 3fbb398d4d5f55503a874b17079e53d24c62f04d[m
+Merge: 0a53439 9b9bdbe
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 21 22:34:21 2020 +0000
+
+    Merge branch 'feature/89_s3_bucket' into 'dev'
+    
+    Move the S3 Bucket name to an environment variable #89
+    
+    See merge request lawing2/lawing_server!50
+
+[33mcommit 9b9bdbe6ab7a3784f29458b512440d52daf23def[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Mon Sep 21 19:31:07 2020 -0300
+
+    Move the S3 Bucket name to an environment variable #89
+
+[33mcommit 0a534399bf6ba464822c839ffbf6acffd91a9314[m
+Merge: 9c4bdfd 5ee0b15
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 21 22:21:29 2020 +0000
+
+    Merge branch 'issue/85' into 'dev'
+    
+    Feedback message system
+    
+    See merge request lawing2/lawing_server!47
+
+[33mcommit 5ee0b15422a2aa20abbf0eb26cb5f5b363a05efb[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Mon Sep 21 22:21:29 2020 +0000
+
+    Feedback message system
+
+[33mcommit 9c4bdfd3f5cee7949ec96bd0fdc65527b177a8c4[m
+Merge: 8c1c31b b0a779c
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 21 13:36:44 2020 +0000
+
+    Merge branch 'feat/86' into 'dev'
+    
+    DRAFT Remove endges from questions
+    
+    See merge request lawing2/lawing_server!49
+
+[33mcommit b0a779c479aa5f2096301c32c4c44a4447e68670[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 21 10:07:10 2020 -0300
+
+    Remove endges from questions
+
+[33mcommit 8c1c31b29bd8a6c7d3ac30cb43d66cf0095c3dd5[m
+Merge: dd833fc c4e515a
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Sep 20 00:06:33 2020 +0000
+
+    Merge branch 'feature/76_user_wrap' into 'dev'
+    
+    Feature/76 user wrap
+    
+    See merge request lawing2/lawing_server!44
+
+[33mcommit c4e515a988b0447ce8d826ed1c41d98c70f0f49a[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Sun Sep 20 00:06:33 2020 +0000
+
+    Feature/76 user wrap
+
+[33mcommit dd833fca84caaf2b076d93cef6416886c0538d11[m
+Merge: 9852b02 4d8e37d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 17 15:09:34 2020 +0000
+
+    Merge branch 'feat/41' into 'dev'
+    
+    Load questions when selecting templates
+    
+    See merge request lawing2/lawing_server!45
+
+[33mcommit 4d8e37dffab176daee3ea72b13e542164af03f4c[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 14 21:42:17 2020 -0300
+
+    load models
+
+[33mcommit 9852b025ca0e7a95087acf3a55b7feee6745c852[m
+Merge: f156219 6f8c63c
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 17 14:30:44 2020 +0000
+
+    Merge branch 'issue/87' into 'dev'
+    
+    Fix download button
+    
+    See merge request lawing2/lawing_server!46
+
+[33mcommit f1562191f1f944f8066dc1a737f84cd9de500a88[m
+Merge: b42cd0e 3d87186
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 17 14:06:50 2020 +0000
+
+    Merge branch 'feature/fixes' into 'dev'
+    
+    Fixes
+    
+    See merge request lawing2/lawing_server!41
+
+[33mcommit 6f8c63cd071b7f05103dd75f1168be1ecd3fb006[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 16 12:02:42 2020 -0300
+
+    Fix download button
+
+[33mcommit b42cd0ec87c4ea777869323768b49828c5f54794[m
+Merge: 70c540d d7fab9d
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Mon Sep 14 10:55:15 2020 +0000
+
+    Merge branch 'feature/58_tests' into 'dev'
+    
+    Feature/58 tests
+    
+    See merge request lawing2/lawing_server!33
+
+[33mcommit d7fab9dffaf02f6374f183835f260a112544b929[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 28 22:36:22 2020 -0300
+
+    Test environment setup
+
+[33mcommit d54c5bbe3a5c00f313e802c26bfaa9578750ec5f[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 28 19:25:44 2020 -0300
+
+    Improve dockerfile and remove app contexts
+
+[33mcommit 97d3f8876bb70f13e475d4e482794a39de84a1c7[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 27 23:39:37 2020 -0300
+
+    Add support to multiple dbs in compose
+
+[33mcommit a107baafef4df91440d418ad55f20eed7c5d941a[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 27 22:23:06 2020 -0300
+
+    Adjust blueprints
+
+[33mcommit eae68c50911d6f3b150c2cb1223ebb1de337195e[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 27 22:06:17 2020 -0300
+
+    Add test config
+
+[33mcommit e4b0dafafa180ea580e2bb8138e00f147d2a3958[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 27 22:05:41 2020 -0300
+
+    Fix module imports and remove circular dependencies
+
+[33mcommit 1eed53e29c8f0b7faa34afdc94671a049750f5e1[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 27 20:41:51 2020 -0300
+
+    Split dockerfile between dev and prod and use pipenv
+
+[33mcommit 70c540d842909de5b0b0f77ccad3f1afe7c02bf9[m
+Merge: 3a99666 c1aca5b
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Sep 11 04:03:15 2020 +0000
+
+    Merge branch 'bug/82' into 'dev'
+    
+    Associate new user to default company
+    
+    See merge request lawing2/lawing_server!42
+
+[33mcommit c1aca5bfced2a0bc9d674037099a27105cd700a8[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Sep 11 01:01:02 2020 -0300
+
+    Associate new user to default company
+
+[33mcommit 3a9966672fb6cc1480bf76b9f5e57dc92b3745c0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 23:44:16 2020 -0300
+
+    Fix document blueprint
+
+[33mcommit 6c2ac4124c0bdff309f7c8bca46b6a29ad1fc393[m
+Merge: 735fb7c edcf352
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Sep 11 02:41:47 2020 +0000
+
+    Merge branch 'bug/80' into 'dev'
+    
+    FIx bugs on cloudformation
+    
+    See merge request lawing2/lawing_server!40
+
+[33mcommit edcf352082690e68fa12e2e781b85c0aa7c63fd2[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Fri Sep 11 02:41:47 2020 +0000
+
+    FIx bugs on cloudformation
+
+[33mcommit 3d87186ef417159d3082aa7d7655e1847f43037c[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Thu Sep 10 15:16:25 2020 -0300
+
+    Fixes
+
+[33mcommit 735fb7ceba7e011a8319f5e2dac0cb0402d52429[m
+Merge: edbe568 ffe480a
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 17:18:55 2020 +0000
+
+    Merge branch 'issue/73' into 'dev'
+    
+    Enviar token de autenticação no docusign para o backend (Issue/73)
+    
+    See merge request lawing2/lawing_server!35
+
+[33mcommit ffe480aab4a91fce2c8e29109ade021a455ca4c6[m
+Author: Ian Conde Collares <ianx021@gmail.com>
+Date:   Thu Sep 10 17:18:55 2020 +0000
+
+    Enviar token de autenticação no docusign para o backend (Issue/73)
+
+[33mcommit edbe56822cecfa63df355721df84ef3a2b08e186[m
+Merge: 55b80c3 62e5fd7
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 17:05:18 2020 +0000
+
+    Merge branch 'issue/64' into 'dev'
+    
+    Add automatic logout on token expiration (Issue/64)
+    
+    See merge request lawing2/lawing_server!37
+
+[33mcommit 55b80c3ec43f4cbf124434c46cff2c6c3d900ac7[m
+Merge: 4edc115 024c74e
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 17:05:06 2020 +0000
+
+    Merge branch 'feature/husky-linter' into 'dev'
+    
+    Feature: husky and lint before commit
+    
+    See merge request lawing2/lawing_server!38
+
+[33mcommit 62e5fd7bb2df019ecaf090609fff9a94f4bb12ae[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 14:00:55 2020 -0300
+
+    Adjust mispeled react env var in logout
+
+[33mcommit 4edc115125c2987749bda1c22bc3b91e7e590793[m
+Merge: db40dc1 bf51d02
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Sep 10 13:37:13 2020 +0000
+
+    Merge branch 'feature/74' into 'dev'
+    
+    Feature/74
+    
+    See merge request lawing2/lawing_server!39
+
+[33mcommit 6b0f99bdde61d9444a2533ab700e8e247dbcead6[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Wed Sep 9 15:08:14 2020 -0300
+
+    Code formatting
+
+[33mcommit 024c74ef6f5af3a7ffb0b0a15e99820f15d3b1f0[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Wed Sep 9 12:18:48 2020 -0300
+
+    Feature: husky and lint before commit
+
+[33mcommit bf51d0293d79b8fc58ca71b719b443e2c0da6302[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Sep 8 10:27:21 2020 -0300
+
+    Adjust DNS support on VPC
+
+[33mcommit 8b35ca3c8be58c1477eda1ff132a2916064ef11c[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Sep 8 07:24:34 2020 -0300
+
+    Create dev environment
+
+[33mcommit 06d5853471ce7b61138ffe8e0e25c0624225b1b8[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Sep 4 18:43:35 2020 -0300
+
+    Add automatic logout on token expiration
+
+[33mcommit db40dc11f172f73ad09df09071a1e5ae6418f46f[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Sep 1 07:49:43 2020 -0300
+
+    Fix search component
+
+[33mcommit 2af0b584c88e8e1a2dbf10b18a3aa8d8487c4c73[m
+Merge: 4fdc698 1d18d58
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Aug 31 21:54:36 2020 -0300
+
+    Merge branch 'cognito' into dev
+
+[33mcommit 1d18d58846a11a47205f6538edb5019012218223[m[33m ([m[1;31morigin/cognito[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Aug 31 15:23:47 2020 -0300
+
+    Undo testing changes
+
+[33mcommit 37d254c89f5849532aabc4744d9bfc463f4d95d4[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Aug 31 14:01:17 2020 -0300
+
+    Adjust app client settings
+
+[33mcommit 06a107028e13355b53a1e00852c86896ce6e32a0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Aug 29 20:41:14 2020 -0300
+
+    Adjust cloudfront errorpage for spa
+
+[33mcommit 2ab866923fe4cefb44286fe051a4d0127676891a[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 28 16:15:15 2020 -0300
+
+    Adjust more cognito paramers on the api
+
+[33mcommit afc632b83e16c0e33d1c9e9dd2161fdd850a03be[m
+Merge: 7bb0c02 29647b5
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 28 15:15:49 2020 -0300
+
+    Merge branch 'cognito' of gitlab.com:lawing2/lawing_server into cognito
+
+[33mcommit 7bb0c025eec45ec52aa5677cc1101b35ccd25715[m[33m ([m[1;31morigin/features/70[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 28 15:11:40 2020 -0300
+
+    Add cognito parameters as env vars to the api container
+
+[33mcommit 115a8899cc6e00ab654c3bb291484fa0123df879[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 28 12:03:34 2020 -0300
+
+    Changes cognito and improves templates
+
+[33mcommit 29647b5193413fbf63f7e577d5ce864b3de304ed[m
+Merge: b672e99 ff50dc0
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Wed Aug 26 10:46:18 2020 +0000
+
+    Merge branch 'features/70' into 'cognito'
+    
+    Features/70
+    
+    See merge request lawing2/lawing_server!32
+
+[33mcommit ff50dc0a0ca9c0bd5c1d330467ee6c1f8292da89[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Aug 26 07:35:26 2020 -0300
+
+    Creates decorator to insert current user into api endpoints
+
+[33mcommit b672e995a65cec5b3361ac40a4bacd544d93f685[m
+Merge: 0f290af 3041a69
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Aug 25 10:15:28 2020 +0000
+
+    Merge branch 'feature/61_persist_user' into 'cognito'
+    
+    Feature/61 persist user
+    
+    See merge request lawing2/lawing_server!30
+
+[33mcommit 3041a696c20b8e2cef2db6d9ea4e3a0811576e23[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Tue Aug 25 10:15:28 2020 +0000
+
+    Feature/61 persist user
+
+[33mcommit 4fdc698083b0480c1cce0d7d327fffd47114cd74[m
+Merge: d40c5fa afcf387
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Aug 25 00:54:04 2020 +0000
+
+    Merge branch 'issue/36' into 'dev'
+    
+    Add search parameter option to list documents
+    
+    See merge request lawing2/lawing_server!22
+
+[33mcommit 0f290af3699c38e58fd64fa3ab5b99bf44fe19bf[m
+Merge: 9ce07c5 b493b7c
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Aug 25 00:53:00 2020 +0000
+
+    Merge branch 'features/63' into 'cognito'
+    
+    Features/63
+    
+    See merge request lawing2/lawing_server!29
+
+[33mcommit 9ce07c5150a8e357cfa86e50e1bcb565fe49aee5[m
+Merge: 12011c9 1464598
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 21 18:56:01 2020 +0000
+
+    Merge branch 'feature/59_env_file' into 'cognito'
+    
+    Create .env file
+    
+    See merge request lawing2/lawing_server!26
+
+[33mcommit b493b7c321a2a35bbfebb1e0035d7344e5c382bb[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 21 15:28:05 2020 -0300
+
+    Save token to store and restore on reload
+
+[33mcommit 12011c9b04cbcd68d85e88e75f8ee42b5e0b0612[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Aug 19 06:51:29 2020 -0300
+
+    Add react build variables to codebuild env
+
+[33mcommit 549757b28070d3c0bfeab3b8091ace28cb4af4db[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue Aug 18 18:48:18 2020 -0300
+
+    Wip
+
+[33mcommit aa4966eb4a9c600423f5ef5cbed83d8413a22a94[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue Aug 18 18:46:10 2020 -0300
+
+    Wip
+
+[33mcommit 6ca6dbdadf5662494aecf1fb89cfaf2b177bbbb0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Aug 21 11:17:25 2020 -0300
+
+    Adjust front to follow cognito oauth flow
+
+[33mcommit 930f6362d56ad5732c23df848bb41511f7a5eba4[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue Aug 18 18:48:18 2020 -0300
+
+    Wip
+
+[33mcommit ebeaa0af5fc24ed6b73204c6db43d0c60a778805[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue Aug 18 18:46:10 2020 -0300
+
+    Wip
+
+[33mcommit 146459839a4c43952b1cc1d5dd9bb25eaf2d01a4[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 20 21:23:02 2020 -0300
+
+    Add option to specify branch to be deployed with update-infra.sh
+
+[33mcommit 7c102f33abc9f3756576044f0d423a1bb9bcffec[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Thu Aug 20 21:22:21 2020 -0300
+
+    Cleanup dead code
+
+[33mcommit 5b34ac6694fb05bcd2ce4e52bbd9da47c28a0e70[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Tue Aug 18 20:37:09 2020 -0300
+
+    Add support to .env files and update docker-compose file version
+
+[33mcommit 7a48f39ac3f95c95296ccf80341c7b4a82f99155[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Tue Aug 18 20:36:20 2020 -0300
+
+    Fix long line
+
+[33mcommit 9c2b6ec0c0dc9f2600b5ea4a097220a7677b3bed[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Tue Aug 18 20:35:40 2020 -0300
+
+    Remove unused pipfile
+
+[33mcommit ebe2ace2f799a534825b5f0ef0cb44d1e7a90ed1[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Aug 18 12:22:26 2020 -0300
+
+    Adjust loadbalancer and cognito cf
+
+[33mcommit e4c0091ac71ec788494f206328f9499b17f40feb[m[33m ([m[1;31morigin/feature/51_auth_token[m[33m)[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Mon Aug 17 22:56:24 2020 -0300
+
+    Fix broken filemode on Header/index.js
+
+[33mcommit f917f65a2c27596a20553ab529284031c85f9130[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 20:24:17 2020 -0300
+
+    Organize app's folder structure
+
+[33mcommit cc562289d1b9bee77d9ab7ebf91aeec6a91a2a4c[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 13:40:25 2020 -0300
+
+    Adjust load balancer template
+
+[33mcommit 7f6781793c7d76c945b2b9e9463dd8d374dd572a[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 12:09:52 2020 -0300
+
+    Update branch name
+
+[33mcommit 1e3958a24e0f7929473553db2b5fe4530d4b637f[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 12:08:59 2020 -0300
+
+    Add support to cognito
+
+[33mcommit 0aef5528f0920a243e6950d84de617142e083424[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 12:08:13 2020 -0300
+
+    Rename main module to match with docker
+
+[33mcommit d91f38d9ac0b032a5889d0e1bf42b81d478d9502[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 10:40:35 2020 -0300
+
+    Fix import
+
+[33mcommit fb998441214c49a131722112f16b10687bca188c[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Fri Aug 14 10:39:59 2020 -0300
+
+    Adjust dockerfile and fix filemode on Header/index.js
+
+[33mcommit 39d2faa6152768613417610b11449c1623e8addd[m
+Merge: 0927eca e6bb908
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Aug 13 01:12:21 2020 +0000
+
+    Merge branch 'feature/50_fix_database_uri' into 'cognito'
+    
+    Fix database URI
+    
+    See merge request lawing2/lawing_server!23
+
+[33mcommit e6bb9088e3ca24a4a64fafc3e6999970c2ebf13f[m
+Author: Nicolas Baptista <nicolas@nbap.com.br>
+Date:   Wed Aug 12 19:57:06 2020 -0300
+
+    Fix database URI
+
+[33mcommit afcf3875f17e229b7776622d9de7fd2aa99c3431[m
+Author: Ian <ian.collares@parafernalia.net.br>
+Date:   Fri Aug 7 11:56:24 2020 -0300
+
+    Add search parameter option to documents
+
+[33mcommit 0927eca0eb4132dc4b46e7592c2f18f5719e0954[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Aug 2 11:31:27 2020 -0300
+
+    Remove authorization from loadbalancer
+
+[33mcommit 8ec08b6b08f01b7b008cdf72e234335576509526[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Aug 2 11:18:03 2020 -0300
+
+    adds cognito .env on front
+
+[33mcommit 858053d5cf3f0e3a3a21765a89933a1435278ccd[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jul 8 08:12:34 2020 -0300
+
+    Adjust cognito user pool
+
+[33mcommit 46bf68a0dc685b9ee7f17579a52eee2b8107b540[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jul 7 10:16:09 2020 -0300
+
+    Add put acl permissions to code pipeline
+
+[33mcommit eee916b8a5af575abcd0e318326cd87758e0a193[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Jul 5 21:09:10 2020 -0300
+
+    Cloudfront-ci
+
+[33mcommit d40c5fa731583f44c33996e1c0b196ae4af602c3[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jun 30 23:00:54 2020 -0300
+
+    Add publicread acl when loading front
+
+[33mcommit bcb9ebfa6847b4413b240a9da6ba2d81b0ec4d8e[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jun 30 21:39:31 2020 -0300
+
+    Better name for downloaded file
+
+[33mcommit e9fb383521a2590e1715241006f1a7cffc2b147f[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jun 30 21:01:36 2020 -0300
+
+    Remove unique naming from document title
+
+[33mcommit 68693389f98df35f93f14702ac366400d870bb86[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jun 30 17:11:24 2020 -0300
+
+    Adjust download file type
+
+[33mcommit 569162c4024661f6b9b65e8ed23d47cdf8a624a7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Jun 30 15:21:01 2020 -0300
+
+    Advancing cognito template
+
+[33mcommit 6ebb5cf47424b1da6480bcd71b2916c250fa2b8e[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Jun 22 20:13:11 2020 -0300
+
+    Initial cognito template
+
+[33mcommit 47e6eb2a1ba1043a98ced020115a72919b46e341[m[33m ([m[1;31morigin/front-antonio[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 18 15:49:51 2020 -0300
+
+    Adjust create endpoint
+
+[33mcommit a1be45a921494ee024222080557060978b683440[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 22:13:40 2020 -0300
+
+    Adjust gitlab ci
+
+[33mcommit e67ebd8bb3f1a0c1775586d7dece2895235d42fe[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 21:59:45 2020 -0300
+
+    Adjust document create endpoint url
+
+[33mcommit 5d4e40cf786fadec0ad54dde70d086e223ce37b7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 21:51:58 2020 -0300
+
+    Adjust loading of questions
+
+[33mcommit 2e55a707d9a703a3309328a869585d8af2256be5[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 21:39:40 2020 -0300
+
+    Adjust login endpoint location
+
+[33mcommit 508868e08ede6bebf2e9144decbfad9e9b8263d2[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 21:36:35 2020 -0300
+
+    Move decision trees jsons to new location
+
+[33mcommit ee4d69a0c6767e67e6c879aaf31845e1f395af0d[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Wed Jun 17 18:02:47 2020 -0300
+
+    Wip: form ui
+
+[33mcommit f4474c48e10461774be1b0793a24d2f0b8a96a47[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Wed Jun 17 17:01:19 2020 -0300
+
+    Fix: json
+
+[33mcommit 6a0cb98856d9bd38b963146cdadc9771e71224ff[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Sun Jun 14 14:14:01 2020 -0300
+
+    Fix: read me
+
+[33mcommit 36e4e7198c13a562e8d7fddb1dd092d356953770[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Sun Jun 14 14:13:17 2020 -0300
+
+    Fix: read me
+
+[33mcommit e74f3acfd80ad4b4fef1b0173d341ede7d1feb30[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Sun Jun 14 14:11:52 2020 -0300
+
+    Fix: docker file
+
+[33mcommit cf3afd982ff28f6cf17b1a0f976de2909144b202[m
+Author: Antonio Mesquita Júnior <antonio@parafernalia.net.br>
+Date:   Thu Jun 11 19:41:48 2020 +0000
+
+    Mercado livre form
+
+[33mcommit cedd1712375dd7fdcd7f21f4921171fcab2eb1b6[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue Jun 2 18:18:38 2020 -0300
+
+    Feat: request answer to backend
+
+[33mcommit fbd034d2c4bb9f10ed53db78fb31a970c2dde327[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Mon Jun 1 23:50:08 2020 -0300
+
+    fix
+
+[33mcommit a57859b82158b70e9119d46d2930e003f38d969e[m
+Author: Antonio Mesquita <antoniomesquita09@gmail.com>
+Date:   Thu May 28 19:51:14 2020 -0300
+
+    Fix: login redirect to /
+
+[33mcommit fc17bacfa5eaa6ee97ea005a11a17112d32a644e[m
+Author: Antonio Mesquita <antoniomesquita09@gmail.com>
+Date:   Thu May 28 19:43:01 2020 -0300
+
+    Feat: input and form factory cleaned up
+
+[33mcommit 71460283aa529924a150c84fbca0cbe958f38a05[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Thu May 28 18:49:04 2020 -0300
+
+    Wip
+
+[33mcommit b5c3325b5fbd3aeaa05dfb45f04086cf525da873[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Tue May 26 00:19:43 2020 -0300
+
+    Wip: new generic steps factory
+
+[33mcommit a752e2a4cc79f4ff4ba863343f9772b9472e6f26[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Sat May 23 14:42:28 2020 -0300
+
+    Wip: DAG for questions issue
+
+[33mcommit e3cd8bfa0007ba4cf46f21db8a8350723818de1a[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Thu May 21 18:04:36 2020 -0300
+
+    Fix: add contracts selector
+
+[33mcommit b4a8c1d6702da046725db34d418353e7ee2f3406[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Wed May 20 22:26:13 2020 -0300
+
+    Wip: add contract with collapse
+
+[33mcommit 766669833fb2817780ddc85b5235f195861435b2[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Wed May 20 20:54:11 2020 -0300
+
+    Feat: contracts list with cards
+
+[33mcommit fe56804ccd5e6cfd6c5b4757ee614ef3c5a79cdd[m
+Author: Antonio Mesquita Junior <antonio@parafernalia.net.br>
+Date:   Wed May 20 20:13:35 2020 -0300
+
+    Feat: new responsive layout
+
+[33mcommit 92143a1875f5b6ee3e18cd1e67344f4a3885fb49[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Wed May 20 11:27:23 2020 -0300
+
+    Fix: ci
+
+[33mcommit 343cbae97cfdef941bfd6af858ef6e17548a34b4[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Wed May 20 11:16:12 2020 -0300
+
+    Fix: layout improvements
+
+[33mcommit f6df6700168a2c1352e885d885f62b4d75ff8621[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue May 19 20:25:38 2020 -0300
+
+    Wip: factory tree
+
+[33mcommit 80c9913fc346ac3c5a3041350f84fe891f286328[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue May 19 19:04:47 2020 -0300
+
+    Fix: test
+
+[33mcommit e4893ce995a62af915cdb472e71f4d76cb773d50[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue May 19 18:59:55 2020 -0300
+
+    Fix: sidebar to the front
+
+[33mcommit 51b2f53c81abbb8417238e5604781a54ced8debb[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue May 19 18:50:50 2020 -0300
+
+    Feat: responsive layout
+
+[33mcommit 3b0b9e7639697a133b73f5103f7d32653bc7809c[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Tue May 19 16:36:02 2020 -0300
+
+    Feat: loading and redirect create contract
+
+[33mcommit 7cab1df14d4965e5700d608a808eb0f3ca9a434c[m
+Author: Antonio Mesquita <antonio@parafernalia.net.br>
+Date:   Mon May 18 22:37:49 2020 -0300
+
+    Wip: response 200 from create document
+
+[33mcommit fe8620b7d330498ebc41f4f5d533bd80c6762188[m
+Author: Antonio Mesquita Júnior <antonio@parafernalia.net.br>
+Date:   Mon May 18 20:33:22 2020 +0000
+
+    refactor to create react app babel
+
+[33mcommit 0bb260a537e3593268395616f1a9272724dff23b[m
+Merge: c4f8057 26a22f5
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 17 18:01:21 2020 -0300
+
+    Merge branch 'master' of https://gitlab.com/lawing2/lawing_server
+
+[33mcommit c4f805715412b8c5a17be633a296de64298453ef[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 13 22:53:18 2020 -0300
+
+    Rolling back pdf checkbox value
+
+[33mcommit e805a24f03279297e340791c08f682371a8c2bd6[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 13 21:37:22 2020 -0300
+
+    Adjust Mercado livre pdf signatures
+
+[33mcommit 26a22f53e87b1c48ca55efd9b1d872c0472180de[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 13 21:37:22 2020 -0300
+
+    Adjust Mercado livre pdf signatures
+
+[33mcommit c423f0bcc9689dbb5ab2d0d5c6b7eb4736e2703e[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 13 09:02:25 2020 -0300
+
+    Create aws docker login bash script
+
+[33mcommit aff4dc9caf6db983e271f37f4b6d651324c776d6[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 13 09:01:17 2020 -0300
+
+    Adjust pdfs path
+
+[33mcommit 44f5877c4b3b650d44ad2c0cb81a64b8dfca7e2c[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 22:55:02 2020 -0300
+
+    Add env variables to container
+
+[33mcommit e7f253614145b9dbaf7e203fe9dd3fd4f1f28589[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 22:29:29 2020 -0300
+
+    Adjust front deploy script
+
+[33mcommit 04d8e9fe49e432b1275f4b46a9f6a13aaad35fa0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 20:58:58 2020 -0300
+
+    adjusting infra
+
+[33mcommit a90d5ab41afd854dd564ce74f6c77f92e3f93899[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 14:49:09 2020 -0300
+
+    Adjust cloudfront for spa
+
+[33mcommit f98c875ea119cd65747bcce1da9465f179f45aa6[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 13:57:53 2020 -0300
+
+    Adjust docusign redirect url
+
+[33mcommit 263f21beefd8864d20e5dc21b2e243ca4ce598d7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 12:07:47 2020 -0300
+
+    Remove print
+
+[33mcommit 07d8082a3ffaa99c50c69c9a9afa693b30dc5b11[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 11:21:41 2020 -0300
+
+    Remove typo requirements.txt and some template
+
+[33mcommit 9893dcf565f1d36a29101c1669af83748aacbdd8[m
+Merge: 2d1d94c 9cc5433
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 11:04:10 2020 -0300
+
+    Merge branch 'master' of gitlab.com:lawing2/lawing_server
+
+[33mcommit 2d1d94c92374d784ac9037aacdc0b14f445849c3[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Jun 11 11:02:57 2020 -0300
+
+    Template mercado livre
+
+[33mcommit 9cc5433b6aa89a4d2a7a9f7a356197549d933856[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 10 19:47:52 2020 -0300
+
+    Adjust repository
+
+[33mcommit dbd34ed792cad85cf2e519378feb0daf8843faa2[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 10 19:33:41 2020 -0300
+
+    Adjust code deploy
+
+[33mcommit 037ab948286d61240f0c92782b443e2a27843ac4[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Jun 10 18:46:34 2020 -0300
+
+    Adjusting staging env and migrations
+
+[33mcommit 373b955ff786abacb9f017bc8dbae4e60be622b2[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Jun 8 08:44:06 2020 -0300
+
+    Wip - Add signers to Mercado Livre
+
+[33mcommit d38eeb1369f0f90cd724176cdc7ed3f99d84378b[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 6 21:36:01 2020 -0300
+
+    Move new template to new location
+
+[33mcommit f362cd0b103315c1dfca4367596e696ec793b99e[m
+Merge: efa3f2c 304e98e
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 6 20:56:06 2020 -0300
+
+    Merge branch 'ci'
+
+[33mcommit efa3f2cf53d04e53de6908df8f14bdadd5df22a9[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 6 20:36:48 2020 -0300
+
+    Add file type to document model
+
+[33mcommit 2e68131f4a22d17c2958c1a57b1c8233831459b5[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Jun 6 16:17:10 2020 -0300
+
+    Json mercadoLivre
+
+[33mcommit 304e98e6977a31adb140518a730076a033977e68[m[33m ([m[1;31morigin/ci[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue May 26 21:17:37 2020 -0300
+
+    Adjusting cloud formation templates
+
+[33mcommit 96252f5c2409dd959a6dfad3bfcdbcee2df125bb[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue May 26 14:19:29 2020 -0300
+
+    Ajust file permissions
+
+[33mcommit 594e5a4a00e4111ba0cada1e16311602f0ca84b0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue May 26 14:17:24 2020 -0300
+
+    Adjust cloud formation
+
+[33mcommit 10162ae4503213a597d57882f0a3fc6f802cf5cb[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 25 18:55:52 2020 -0300
+
+    Ajust front api urls
+
+[33mcommit a9e4abeeb7ba5bff6819e1947b2548ef03232fce[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 25 14:01:31 2020 -0300
+
+    Put deploy pipelane back on cloudformation
+
+[33mcommit b8460824f3b01b8a60dc64072da6073edb57eb5b[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 25 12:40:09 2020 -0300
+
+    Adjust endpoints to the restructured code
+
+[33mcommit b22f2728a8d3b8e3c6784b83daa98ed349dfad1e[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun May 24 16:54:56 2020 -0300
+
+    Adjust to run with gunicorn
+
+[33mcommit 437945d0fd227d624317d172616784d5b0e33faa[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri May 22 17:16:38 2020 -0300
+
+    Add cloudformation Templates for api
+
+[33mcommit 23db6fc147ec149daf48790d50e61a10fd0fda28[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed May 20 08:23:36 2020 -0300
+
+    Change strategy to build backend with kaniko
+
+[33mcommit 51874d4851bf5b10a7265b8385499161abe81856[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 18 20:57:43 2020 -0300
+
+    v0 ci
+
+[33mcommit 14c8de98b9771d81b0a86e24e5c4c4740d0ffbbc[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed May 13 19:01:54 2020 -0300
+
+    Update documents list after document creation and signing requests
+
+[33mcommit 8f7c432d93c2fe64a31f23a923c22a1d930921f0[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed May 13 15:17:45 2020 -0300
+
+    Disable buttons for documents waiting for signatures
+
+[33mcommit 203e091727b4c99ba71ee534e5ceed7431cf96a7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed May 13 13:40:24 2020 -0300
+
+    Decode envelope json field on serializer
+
+[33mcommit b989ef14c036c48c39e36b8e828d1281bc3d3502[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed May 13 10:45:25 2020 -0300
+
+    Save envelope data to document
+
+[33mcommit 22f6215de0b8c20dbf01a33b1bf46de0d790e169[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue May 12 18:43:23 2020 -0300
+
+    Style right menu
+
+[33mcommit c7bec2de9ab7dcb41b4d4b9b6538f6daec8da715[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 11 21:28:23 2020 -0300
+
+    Add docusign authorization version 0
+
+[33mcommit dbd01d57eb9ed7222ec197c35df8f81830bebdb0[m[33m ([m[1;31morigin/issues/13_document_title[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 11 15:13:41 2020 -0300
+
+    Adjust migrations
+
+[33mcommit f2b91161f4470902aa6c3dc85d5e2bfccaa3f619[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon May 11 14:07:12 2020 -0300
+
+    Add pagination
+
+[33mcommit c2f9f061cc2b7090f64054bdfd6bcae5d220edae[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun May 3 09:33:12 2020 -0300
+
+    Acrescenta botão de requerer assinaturas na list de documentos
+
+[33mcommit ee4016d811b0fc36605f7508fc55b5ede53b7222[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat May 2 16:27:48 2020 -0300
+
+    Add download and sign button to document list
+
+[33mcommit ec446d93dadce0538c9de4135f50e8762f7c164a[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Apr 27 22:35:31 2020 -0300
+
+    Adjust main list
+
+[33mcommit 7b19ac7ac0184650cb6926c1c80db5fe66fa6bf1[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 26 21:07:32 2020 -0300
+
+    Add button to cancel new document
+
+[33mcommit 60896c3378336bc802e38f5a13678512a3c3817f[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 26 16:15:40 2020 -0300
+
+    Add documents list endpoint
+
+[33mcommit f6ef4f050c6edf6833109d0b63556a9fbe65444d[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 26 14:34:34 2020 -0300
+
+    Create Download endpoint
+
+[33mcommit 94d16067eed4500a104de928a35ebb5d86440f3f[m
+Merge: 09d30b9 317d105
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 25 12:20:16 2020 -0300
+
+    Merge branch 'issues/13_document_title' of gitlab.com:lawing2/lawing_server into issues/13_document_title
+
+[33mcommit 317d1054491f55126f7d13b6f083be6ed85257cc[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 23 23:09:58 2020 -0300
+
+    Add title to the decision tree
+
+[33mcommit 09d30b9e1cb768eefc1ab88eff717ad3a94058c7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 23 23:09:58 2020 -0300
+
+    Add title to the decision tree
+
+[33mcommit 227b034a88c3321fb38274deee9c765c3f7b2a38[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 18 23:39:28 2020 -0300
+
+    Implement Saga new Document Flow version zero
+
+[33mcommit 20a11d3ec712101c214be66e608b06e93d609d5c[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 18 15:03:44 2020 -0300
+
+    Refactoring database entities names
+
+[33mcommit 8435678e3eca9b1bdb4200d28d459241bf115127[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Apr 17 23:19:40 2020 -0300
+
+    Change to Postgres
+
+[33mcommit 32e2df6747a12e644b5f7f05509766ff36ac4c26[m
+Merge: 0adee91 76e0d61
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 16 21:18:56 2020 +0000
+
+    Merge branch 'issue/10_2' into 'dev'
+    
+    Issue/10 Add Alembic migration to app
+    
+    See merge request lawing2/lawing_server!8
+
+[33mcommit 76e0d61a63376db1b785bf1aaf17fc266945dad8[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Thu Apr 16 21:18:56 2020 +0000
+
+    Issue/10 Add Alembic migration to app
+
+[33mcommit 0adee91452e188708e801042b68a8ac064f219e1[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 16 18:17:34 2020 -0300
+
+    Small adjustment on requirements.txt
+
+[33mcommit 687ce4b268afbb4f1e7c103af8305fd71143336b[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Mon Apr 6 00:15:30 2020 -0300
+
+    Get docusign token from env
+
+[33mcommit a2a9603f3ff67e34c7dd9956881bca9562eb43cf[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 22:54:28 2020 -0300
+
+    Checks if there are recipients
+
+[33mcommit 89a5f5fed533e1015091bf37683991162333f7f7[m
+Merge: 3912187 14775d7
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 23:39:47 2020 +0000
+
+    Merge branch 'feat/11' into 'dev'
+    
+    Feat/11
+    
+    See merge request lawing2/lawing_server!7
+
+[33mcommit 14775d75b75e085d657bb7e7dff7818607d8a882[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 20:31:39 2020 -0300
+
+    limpa pycache do git
+
+[33mcommit 4450e0aebdd2c3042441760c914f88bfd5390494[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 15:01:08 2020 -0300
+
+    Integrate mvp with docusign
+
+[33mcommit de9f5e26829b65dba6ef1fe83a9b35a1df8e57d1[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Thu Apr 2 19:48:14 2020 -0300
+
+    fix and feat: Fix db access, fix on create_log. Add manage.py and requirements.
+
+[33mcommit 395efa3560f6780707cfc4f6a5f3418eb9ea905d[m[33m ([m[1;31morigin/issue/10[m[33m)[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 20:21:16 2020 -0300
+
+    fix sqlalchemy setup
+
+[33mcommit 39121879991a7eba5ccd677adb6ccc14b4c93ba9[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sun Apr 5 20:12:42 2020 -0300
+
+    Remove __pycache__
+
+[33mcommit 59691851244b4c1521019c83df86668d15b17785[m
+Merge: 5080a5f 4b53bfa
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Sat Apr 4 23:22:40 2020 +0000
+
+    Merge branch 'feat/8' into 'dev'
+    
+    Feat/8 - Add loading on the create buttons
+    
+    See merge request lawing2/lawing_server!5
+
+[33mcommit 5080a5fd43cb0253b529a194c612c19bf70d76a7[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Apr 3 13:58:39 2020 -0300
+
+    Adjust front .envs permissions
+
+[33mcommit 4b53bfa0548a34a261633e8e936eace272d4a3ff[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Fri Apr 3 13:56:30 2020 -0300
+
+    Remove database... again
+
+[33mcommit 5456102fa32cef138f47bdc2a29649b2d48a335a[m
+Merge: 67c27c5 83ed0a5
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Fri Apr 3 10:40:17 2020 -0300
+
+    Resolve conflicts
+
+[33mcommit 67c27c543c26aba11c7de80c7f0d0e66780cdd16[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Fri Apr 3 10:37:06 2020 -0300
+
+    Text color of 'loading' mesage changed to white
+
+[33mcommit 83ed0a5ece8f0636a31cb06746a88d7cde56a7f2[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Thu Apr 2 22:28:05 2020 -0300
+
+    Remove database from repo
+
+[33mcommit 664fdd0f6a802521fe6e87b3cc7e9609ff8f305a[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Tue Mar 31 11:23:38 2020 -0300
+
+    Removed loading icon in recreate button
+
+[33mcommit 6224d812825870744b360320919194db64d23c22[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:40:40 2020 -0300
+
+    Logic to create loading button on recreate button;
+    Loading modal added when Button is clicked
+
+[33mcommit a67917a176cf23473925fde96b944f2da5d34ce2[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:35:33 2020 -0300
+
+    Font-awesome added on project
+
+[33mcommit a187cf8c424104b35ddf56f819ab5b385efde7af[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:35:01 2020 -0300
+
+    LoadingPane dependency added on project
+
+[33mcommit 54b4bd63d1936f709177ff48daf9be04aaf0abea[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:34:41 2020 -0300
+
+    gitignore added on project
+
+[33mcommit a2ca8e26746700f9caa9630c89cc5e5378670281[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:34:19 2020 -0300
+
+    SQL to create database added
+
+[33mcommit e43fdb922dd0aa940e0e10a2f7daad39ea049397[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Tue Mar 31 11:23:38 2020 -0300
+
+    Removed loading icon in recreate button
+
+[33mcommit b55637357588231d3afa440014b89f98bb8e81d2[m
+Merge: 5f6fc2d fe96413
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 31 08:25:38 2020 +0000
+
+    Merge branch 'feat/6' into 'dev'
+    
+    Configure front build from .env files
+    
+    See merge request lawing2/lawing_server!3
+
+[33mcommit 9fe4ca3821a5fab7240740268ce3741f333dcd7b[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:40:40 2020 -0300
+
+    Logic to create loading button on recreate button;
+    Loading modal added when Button is clicked
+
+[33mcommit 76f4d5ddcd02bd0589fe5569d99ad09d67e2c8b8[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:35:33 2020 -0300
+
+    Font-awesome added on project
+
+[33mcommit eaa9f144f752069af9dd3196edb4ddd2387b7efc[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:35:01 2020 -0300
+
+    LoadingPane dependency added on project
+
+[33mcommit fcbb504b790d7dd84c1850f9567b933e83be7878[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:34:41 2020 -0300
+
+    gitignore added on project
+
+[33mcommit 684536b7fab46559b9577687dba6f37bd80581fd[m
+Author: joaodjunior <joao.junior.11411@gmail.com>
+Date:   Mon Mar 30 15:34:19 2020 -0300
+
+    SQL to create database added
+
+[33mcommit 3d3ed6c3c365f8ca338e12de327ad688ec11d3e2[m[33m ([m[1;31morigin/issue/1[m[33m)[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Fri Mar 27 13:48:23 2020 -0300
+
+    Removed .gitignore.
+
+[33mcommit 8bc545addb469fb73d71a70e6ebdefffab5d1104[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Thu Mar 26 18:23:27 2020 -0300
+
+    feat: Removed dead code. Fixed db access and app init. Fixed querys.
+
+[33mcommit 8ea49c2951a81cbde5ec95bcb4942b84468c8af8[m
+Merge: d43203a 20c5bcc
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Wed Mar 25 18:02:02 2020 -0300
+
+    Merge branch 'issue/1' of gitlab.com:lawing2/lawing_server into issue/1
+
+[33mcommit d43203a5315aab198a507db7ea49da5a567b9949[m
+Merge: 24e2a78 5f6fc2d
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Wed Mar 25 17:54:44 2020 -0300
+
+    Fix merge problem.
+
+[33mcommit 24e2a7804a5daa90ce4bd971246d20b4133d54d6[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Wed Mar 25 16:40:59 2020 -0300
+
+    Create models folder. Transfer models from application.py to models folder.
+
+[33mcommit 1e532db73984444d465e9b6b7c8afb4829de607c[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Tue Mar 24 19:17:40 2020 -0300
+
+    Add SQLAlchemy, create Models, rewrite database calls w/ SQLAlchemy.
+
+[33mcommit 20c5bcc77d16b87089752b0c96bf9e96f0f2d15b[m
+Merge: 97a4317 9802826
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Wed Mar 25 16:40:59 2020 -0300
+
+    Create models folder. Transfer models from application.py to models folder.
+
+[33mcommit 9802826bb06cc110d54eeacaf3e328c2d0b68a7e[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 25 15:12:29 2020 -0300
+
+    Remove forgotten prints
+
+[33mcommit 7ba87a732c274bc9163620a8f3365dd8bb642c55[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Tue Mar 24 19:17:40 2020 -0300
+
+    Add SQLAlchemy, create Models, rewrite database calls w/ SQLAlchemy.
+
+[33mcommit fe96413d011444bc298535909f75951da7bd3be8[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 25 08:54:30 2020 -0300
+
+    Configure front build from .env files
+
+[33mcommit 5f6fc2defd0c91561e77bc3c05e43cf64eada5a5[m
+Merge: fb1998f dca3b8a
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Wed Mar 25 11:22:04 2020 +0000
+
+    Merge branch 'feat/1' into 'dev'
+    
+    Configure Flash through env vars
+    
+    See merge request lawing2/lawing_server!2
+
+[33mcommit dca3b8aee98614964514ac53a75dbd8198c0050f[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Mar 24 14:25:36 2020 -0300
+
+    Configure Flash through env vars
+
+[33mcommit 97a431792ed79de9c4f25a5104ae077425be1a7e[m
+Author: Gabriel Oliveira <gabriel.oliveira@parafernalia.net.br>
+Date:   Tue Mar 24 19:17:40 2020 -0300
+
+    Add SQLAlchemy, create Models, rewrite database calls w/ SQLAlchemy.
+
+[33mcommit fb1998f9a67dd531754f5e53d439769c573ad827[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Sat Mar 21 12:40:19 2020 -0300
+
+    Sets up docker-compose for development
+
+[33mcommit 0160298b745dfa674b35f58d857c3ecffeeda67b[m
+Author: tatavoSenna <luiz.senna@parafernalia.net.br>
+Date:   Tue Feb 18 15:41:01 2020 -0300
+
+    initial
+
+[33mcommit e873d5aa7dcd49a57f5c5bdb1e920aaacb57bf53[m
+Author: Luiz Senna <luiz.senna@parafernalia.net.br>
+Date:   Tue Feb 18 18:20:10 2020 +0000
+
+    Initial commit
