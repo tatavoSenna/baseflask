@@ -33,3 +33,7 @@ def create_webhook_controller(company_id, webhook):
     db.session.commit()
     return webhook
 
+def get_webhook_controller(webhook_id):
+    webhook = Webhook.query.filter_by(id=webhook_id).first()
+    return webhook
+

@@ -1,6 +1,6 @@
 from os import abort
 from sqlalchemy import desc
-from flask import request, Blueprint, jsonify, current_app
+from flask import request, Blueprint, jsonify, current_app, abort
 from sqlalchemy.sql.expression import false
 
 from app import aws_auth, db
@@ -15,7 +15,8 @@ from .controllers import (
     save_company_keys_controller,
     upload_logo_controller,
     get_download_url_controller,
-    create_webhook_controller
+    create_webhook_controller,
+    get_webhook_controller
 )
 
 company_bp = Blueprint("company", __name__)
@@ -208,6 +209,27 @@ def create_webhook(logged_user):
     webhook = create_webhook_controller(company.id, url)
     
     return jsonify({"webhook": WebhookSerializer().dump(webhook)})
+
+
+@company_bp.route("/webhook/<int:webhook_id>", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def delete_webhook(logged_user, webhook_id):
+    try:    
+        webhook = get_webhook_controller(webhook_id)
+        if not webhook:
+            abort(404, "Webhook not Found")
+    except Exception:
+        abort(404, "Webhook not Found")
+
+    db.session.delete(webhook)
+    db.session.commit()
+
+    msg_JSON = {
+        "message": "Webhook deleted"
+    }
+
+    return jsonify(msg_JSON), 200
 
 
 
