@@ -5,6 +5,8 @@ import base64
 import json
 import jinja2
 
+from sqlalchemy.sql.expression import null
+
 import boto3
 import pdfrw
 import ast
@@ -61,7 +63,8 @@ from .controllers import (
     get_pdf_download_url_controller,
     convert_pdf_controller,
     get_docx_download_url_controller,
-    change_variables_controller
+    change_variables_controller,
+    create_folder_controller
 )
 from app.docusign.controllers import (
     sign_document_controller,
@@ -96,15 +99,29 @@ def get_document_list(current_user):
         per_page = int(request.args.get(
             "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
+        folder_name = int(request.args.get("folder", 0))
     except:
         abort(400, "invalid parameters")
 
-    paginated_query = (
-        Document.query.filter_by(company_id=current_user["company_id"])
+    if folder_name == 0:
+        parent = None
+    else:
+        parent = folder_name
+
+    if search_param == "":
+        paginated_query = (
+        Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent)
         .filter(Document.title.ilike(f"%{search_param}%"))
         .order_by(desc(Document.created_at))
         .paginate(page=page, per_page=per_page)
-    )
+        ) 
+    else:
+        paginated_query = (
+            Document.query.filter_by(company_id=current_user["company_id"])
+            .filter(Document.title.ilike(f"%{search_param}%"))
+            .order_by(desc(Document.created_at))
+            .paginate(page=page, per_page=per_page)
+        )
 
     return jsonify(
         {
@@ -115,6 +132,24 @@ def get_document_list(current_user):
         }
     )
 
+@documents_bp.route("/move", methods = ["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def change_folder(current_user):
+    content = request.json
+    document_id = content.get("document_id", None)
+    destination_id = content.get("destination_id", None)
+
+    document = Document.query.filter_by(id = document_id).first()
+    document.parent_id = destination_id
+    db.session.commit()
+
+    return jsonify(
+        {
+            "moved_document": document_id,
+            "new_folder": destination_id
+        }
+    )
 
 @documents_bp.route("/<int:document_id>/text", methods=["GET"])
 @aws_auth.authentication_required
@@ -227,59 +262,82 @@ def create(current_user):
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
     title = content.get("title", None)
-    if not document_template_id or not variables:
-        error_msg = "Value is missing. Needs questions and document model id"
-        return jsonify({"message": error_msg}), 400
 
-    spec_variables = variables.copy()
-    try:
-        specify_variables(spec_variables, document_template_id)
-    except Exception as e:
-        logging.exception(e)
-        error_msg = "Variable specification is incorrect"
-        return jsonify({"message": error_msg}), 400
+    parent = content.get("parent", None)
+    is_folder = content.get("is_folder", None)
 
-    try:
-        document = create_document_controller(
+
+    if is_folder:
+    
+        document = create_folder_controller(
             current_user["id"],
             current_user["email"],
             current_user["company_id"],
-            spec_variables,
-            document_template_id,
             title,
             current_user["name"],
-            variables
+            parent,
+            is_folder
         )
-    except jinja2.TemplateSyntaxError as e:
-        if current_user["is_admin"] == True:
-            error_JSON = {
-                "error": "There is a problem with template syntax",
-                "message": e.message
-            }
-            return jsonify(error_JSON), 500
-        else:
-            error_JSON = {
-                "error": "There is a problem with template syntax"
-            }
+    else:
+        if not document_template_id or not variables:
+            error_msg = "Value is missing. Needs questions and document model id"
+            return jsonify({"message": error_msg}), 400
+
+        spec_variables = variables.copy()
+        try:
+            specify_variables(spec_variables, document_template_id)
+        except Exception as e:
             logging.exception(e)
-            return jsonify(error_JSON), 500
-    except Exception as e:
-        if current_user["is_admin"] == True:
-            error_JSON = {
-                "Message": "Could not create document",
-                "Exception": str(e)
-            }
-            return jsonify(error_JSON), 400
-        else:
+            error_msg = "Variable specification is incorrect"
+            return jsonify({"message": error_msg}), 400
+
+        try:
+            document = create_document_controller(
+                current_user["id"],
+                current_user["email"],
+                current_user["company_id"],
+                spec_variables,
+                document_template_id,
+                title,
+                current_user["name"],
+                variables,
+                parent,
+                is_folder
+            )
+        except jinja2.TemplateSyntaxError as e:
+            if current_user["is_admin"] == True:
+                error_JSON = {
+                    "error": "There is a problem with template syntax",
+                    "message": e.message
+                }
+                return jsonify(error_JSON), 500
+            else:
+                error_JSON = {
+                    "error": "There is a problem with template syntax"
+                }
+                logging.exception(e)
+                return jsonify(error_JSON), 500
+        except Exception as e:
+            if current_user["is_admin"] == True:
+                error_JSON = {
+                    "Message": "Could not create document",
+                    "Exception": str(e)
+                }
+                return jsonify(error_JSON), 400
+            else:
+                logging.exception(
+                    "Could not create document")
+                abort(400, "Could not create document")
+                
+        try:
+            response = document_creation_email_controller(
+                title, current_user["company_id"])
+        except Exception as e:
             logging.exception(
-                "Could not create document")
-            abort(400, "Could not create document")
-    try:
-        response = document_creation_email_controller(
-            title, current_user["company_id"])
-    except Exception as e:
-        logging.exception(
-            "Failed to send emails on document creation. One or more emails is bad formated or invalid")
+                "Failed to send emails on document creation. One or more emails is bad formated or invalid")
+
+
+
     return DocumentSerializer().dump(document)
 
 

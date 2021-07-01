@@ -33,7 +33,7 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, received_variables):
+def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, received_variables, parent_id, is_folder):
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
@@ -71,6 +71,22 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     remote_document = RemoteDocument()
     remote_document.create(document, document_template,
                            company_id, variables)
+
+    return document
+
+
+def create_folder_controller(user_id, user_email, company_id, title, username, parent_id, is_folder):
+   
+    document = Document(
+        user_id=user_id,
+        company_id=company_id,
+        created_at=datetime.utcnow().isoformat(),
+        title=title,
+        parent_id=parent_id,
+        is_folder=is_folder
+    )
+    db.session.add(document)
+    db.session.commit()
 
     return document
 
@@ -220,7 +236,7 @@ def document_creation_email_controller(title, company_id):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller('leon@lawing.com.br', email_list,
-                                     "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
+                                     "New Document created", title, 'd-83efa7b8d2fb4742a69dd9059324e148')
     return response
 
 

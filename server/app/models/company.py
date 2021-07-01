@@ -18,3 +18,14 @@ class Company(db.Model):
 
     def __repr__(self):
         return "<Company %r>" % self.name
+
+class Webhook(db.Model):
+    __tablename__ = "webhook"
+
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(
+        db.Integer, db.ForeignKey("company.id"), nullable=True)
+    webhook = db.Column(db.String(1500), unique=True, nullable=True)
+
+    def __repr__(self):
+        return "<Webhook %r>" % self.webhook
