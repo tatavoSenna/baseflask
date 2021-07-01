@@ -228,16 +228,22 @@ def map_variables_to_form(variables, form):
                     "subtitle": question['label'],
                     "items": [],
                     "type": question['type'],
-                    "struct_name": f'template_{group_index}_{question_index}',
-                    "person_type": variables[f'template_{group_index}_{question_index}']['PERSON_TYPE']
+                    "struct_name": f'person_{group_index}_{question_index}',
+                    "person_type": variables[f'person_{group_index}_{question_index}']['PERSON_TYPE']
                 }
 
-                for variable_name, value in variables[f'template_{group_index}_{question_index}'].items():
+                for variable_name, value in variables[f'person_{group_index}_{question_index}'].items():
 
                     if variable_name != 'PERSON_TYPE':
+                        if variable_name in ['CPF', 'CNPJ', 'RG', 'CEP']:
+                            label = variable_name
+                        else:
+                            label = variable_name.capitalize()
+
                         variables_obj['items'].append({
                             "field_type": variable_name.lower(),
-                            "value": value
+                            "value": value,
+                            "label": label
                         })
 
                 filled_form[-1]["fields"].append(variables_obj)
