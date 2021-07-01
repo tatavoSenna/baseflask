@@ -1,7 +1,7 @@
 """Add webhooks table
 
 Revision ID: 567fa1d7d826
-Revises: cdd5d228480a
+Revises: 473382a30175
 Create Date: 2021-06-29 11:34:25.845683
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '567fa1d7d826'
-down_revision = 'cdd5d228480a'
+down_revision = '473382a30175'
 branch_labels = None
 depends_on = None
 
