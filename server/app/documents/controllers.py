@@ -236,7 +236,7 @@ def document_creation_email_controller(title, company_id):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller('leon@lawing.com.br', email_list,
-                                     "New Document created", title, 'd-50d8e7117d4640689d8bf638094f2037')
+                                     "New Document created", title, 'd-83efa7b8d2fb4742a69dd9059324e148')
     return response
 
 

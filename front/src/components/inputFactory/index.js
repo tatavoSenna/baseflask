@@ -16,6 +16,7 @@ import CityField from '~/components/cityField'
 import CheckboxField from '~/components/checkboxField'
 import SliderField from '~/components/sliderField'
 import NumberField from '~/components/numberField'
+import PercentageField from '~/components/percentageField'
 import BankField from '~/components/bankField'
 import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
@@ -289,6 +290,20 @@ function InputFactory({
 			case 'number':
 				children.push(
 					<NumberField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={visible[i] ? undefined : styles.hidden}
+						inputValue={initialValues ? initialValues[i] : ''}
+						disabled={disabled}
+						onChange={
+							conditional ? (e) => checkField(e.target.value, i) : undefined
+						}
+					/>
+				)
+				break
+			case 'percentage':
+				children.push(
+					<PercentageField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}

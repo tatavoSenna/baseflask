@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import date
 from app.models.documents import DocumentTemplate
 from app import jinja_env
 import requests
@@ -6,6 +7,9 @@ import json
 from flask import Markup
 from num2words import num2words
 from babel.numbers import format_currency
+
+month_dictionary = {1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho',
+                    7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'}
 
 
 def specify_variables(variables, document_template_id):
@@ -35,9 +39,26 @@ def specify_variables(variables, document_template_id):
             elif specs["doc_display_style"] == "plain":
                 return variables[variable]
 
+        elif variable_type == "percentage":
+            if specs["doc_display_style"] == "extended":
+                return num2words(variables[variable], lang="pt_BR") + " porcento"
+            elif specs["doc_display_style"] == "plain":
+                return str(variables[variable]).replace(".", ",") + '%'
+
         elif variable_type == "date":
-            date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
-            return date.strftime(specs["doc_display_style"])
+            if specs["doc_display_style"] == "date_extended":
+                list = variables[variable][0:10].split("-", 2)
+                dia = list[2]
+                mes = month_dictionary.get(
+                    int(list[1].strip("0")))
+                ano = list[0]
+                if mes != None:
+                    return f'{dia} de {mes} de {ano}'
+                else:
+                    return datetime.strptime(variables[variable][0:10], '%d de %B de %Y')
+            else:
+                date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
+                return date.strftime(specs["doc_display_style"])
 
         elif variable_type == "database":
             response = requests.get(
