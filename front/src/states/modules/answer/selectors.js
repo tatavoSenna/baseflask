@@ -28,3 +28,16 @@ export const selectAnswer = (data, payload) => {
 	})
 	return extend(data, answers)
 }
+
+export const selectImages = (dataImg, payload) => {
+	for (var [key] of Object.entries(payload)) {
+		if (key.includes('image_')) {
+			const image = document
+				.getElementById(key)
+				.getElementsByTagName('input')[0].value
+
+			extend(dataImg, { [key]: image })
+		}
+	}
+	return dataImg
+}
