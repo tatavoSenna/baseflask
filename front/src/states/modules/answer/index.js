@@ -1,9 +1,10 @@
 import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
-import { selectAnswer } from './selectors'
+import { selectAnswer, selectImages } from './selectors'
 
 const initialState = {
 	data: {},
+	dataImg: {},
 	error: null,
 	loadingAnswer: false,
 }
@@ -15,6 +16,7 @@ const { actions, reducer } = createSlice({
 		appendAnswer: (state, { payload }) =>
 			extend(state, {
 				data: selectAnswer(state.data, payload.data),
+				dataImg: selectImages(state.dataImg, payload.data),
 			}),
 		answerRequest: (state) =>
 			extend(state, {
