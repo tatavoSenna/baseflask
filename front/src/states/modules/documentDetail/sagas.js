@@ -113,17 +113,28 @@ function* selectVersionSaga({ payload = {} }) {
 	const { id } = payload
 	const { documentDetail } = yield select()
 	try {
-		const response = yield call(
-			api.get,
-			`/documents/${documentDetail.data.id}/text?version=${id}`
-		)
+		let response
+		console.log(documentDetail.data.text_type)
+		if (documentDetail.data.text_type === '.docx') {
+			response = yield call(
+				api.get,
+				`/documents/${documentDetail.data.id}/pdf?version=${id}`
+			)
+		} else {
+			response = yield call(
+				api.get,
+				`/documents/${documentDetail.data.id}/text?version=${id}`
+			)
+		}
+		console.log(response)
 		successMessage({
 			content: 'Versão selecionada com sucesso.',
 			updateKey: 'selectVersion',
 		})
 		yield put(
 			selectVersionSuccess({
-				text: response.data.text,
+				text: response.data.text ? response.data.text : '',
+				file: response.data.download_url ? response.data.download_url : '',
 				comments: response.data.comments,
 				document: {
 					...documentDetail.data,
