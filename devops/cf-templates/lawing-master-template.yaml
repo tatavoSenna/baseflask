@@ -207,6 +207,7 @@ Resources:
         AppBucket: !GetAtt CloudFront.Outputs.WebsiteBucket
         CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
         AppDomainName: !Ref AppDomainName
+        ApiDomainName: !Ref ApiDomainName
         UserPoolId: !GetAtt UserPool.Outputs.UserPoolId
         UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
         IdentityPoolId: !GetAtt UserPool.Outputs.IdentityPoolId
@@ -244,9 +245,8 @@ Resources:
         Subnets: !GetAtt VPC.Outputs.Subnets
         DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
         CognitoUserPoolDomain: !Ref AWS::StackName
-        CognitoUserPool: !GetAtt UserPool.Outputs.UserPool
-        UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClient
-        UserPoolClientSecret: !GetAtt UserPool.Outputs.UserPoolClientSecret
+        CognitoUserPool: !GetAtt UserPool.Outputs.UserPoolId
+        UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
         AppDomainName: !Ref AppDomainName
         ApiDomainName: !Ref ApiDomainName
         DocumentsBucket:  !GetAtt DocumentBucket.Outputs.DocumentsBucket

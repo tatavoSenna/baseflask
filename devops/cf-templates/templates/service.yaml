@@ -51,26 +51,18 @@ Parameters:
   UserPoolClient:
     Type: String
     Description:
-      The user pool app client
-
-  UserPoolClientSecret:
-    Type: String
-    Description:
-      The user pool app client
+      The user pool app client  
 
   DocumentsBucket:
-    Type: String
-
-  CognitoAppClientSecret:
     Type: String
     
   FlaskSecretKey:
     Type: String
 
-  ConvertApiSecretKey:
+  SendGridApiKey:
     Type: String
 
-  SendGridApiKey:
+  ConvertApiSecretKey:
     Type: String
 
 Conditions:

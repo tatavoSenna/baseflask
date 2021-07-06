@@ -15,7 +15,6 @@ aws cloudformation create-stack \
         ParameterKey=ApiLBCertificate,ParameterValue= \
         ParameterKey=AppCertificate,ParameterValue= \
         ParameterKey=FlaskSecretKey,ParameterValue= \
-        ParameterKey=CognitoAppClientSecret,ParameterValue= \
     --capabilities CAPABILITY_IAM \
     --profile lawing
 

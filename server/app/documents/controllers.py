@@ -1,6 +1,7 @@
 import json
 import base64
 import io
+import boto3
 import requests
 from datetime import datetime
 from datetime import date
@@ -71,6 +72,18 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
     remote_document = RemoteDocument()
     remote_document.create(document, document_template,
                            company_id, variables)
+    if company_id == '11':
+        sns = boto3.client('sns')
+        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+        message = {"document": title,
+                   "company": company_id
+                   }
+
+        response = sns.publish(
+            TargetArn=topic_arn,
+            Message=json.dumps({'default': json.dumps(message)}),
+            MessageStructure='json'
+        )
 
     return document
 
