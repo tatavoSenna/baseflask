@@ -179,9 +179,11 @@ def get_document_pdf(current_user, document_id):
     version_id = request.args.get('version', None)
     if not document_id:
         abort(400, "Missing document id")
-    try:
-        document = Document.query.get(document_id)
-    except Exception:
+    if not version_id:
+        version_id = get_document_version_controller(document_id)
+
+    document = get_document_controller(document_id)
+    if not document:
         abort(404, "Document not Found")
 
     try:

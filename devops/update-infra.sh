@@ -17,7 +17,6 @@ aws cloudformation update-stack \
         ParameterKey=ApiLBCertificate,UsePreviousValue=true \
         ParameterKey=AppCertificate,UsePreviousValue=true \
         ParameterKey=FlaskSecretKey,UsePreviousValue=true \
-        ParameterKey=CognitoAppClientSecret,UsePreviousValue=true \
         ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
         ParameterKey=SendGridApiKey,ParameterValue=UsePreviousValue=true \
     --profile \
