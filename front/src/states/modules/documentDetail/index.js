@@ -99,6 +99,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: selectAllDocumentSelectVersion(payload),
 				text: payload.text,
+				file: payload.file,
 				comments: payload.comments ? payload.comments : [],
 				textUpdate: {
 					text: payload.text,
