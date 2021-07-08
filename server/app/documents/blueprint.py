@@ -320,16 +320,11 @@ def create(current_user):
                 logging.exception(e)
                 return jsonify(error_JSON), 500
         except Exception as e:
+            logging.exception("Could not create document")
+            error_JSON = {"Message": "Could not create document"}
             if current_user["is_admin"] == True:
-                error_JSON = {
-                    "Message": "Could not create document",
-                    "Exception": str(e)
-                }
-                return jsonify(error_JSON), 400
-            else:
-                logging.exception(
-                    "Could not create document")
-                abort(400, "Could not create document")
+                    error_JSON["Exception"] = str(e)
+            return jsonify(error_JSON), 400
                 
         try:
             response = document_creation_email_controller(
