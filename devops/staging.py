@@ -43,8 +43,7 @@ def merge_into_staging():
             print(f'Mergando {mr.title}')
             source_branch = mr.source_branch
             repo.git.merge(f'origin/{source_branch}')
-    print(repo.remotes.origin.url.lower())
-    # repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
+    repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
 
 
 merge_into_staging()
