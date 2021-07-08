@@ -34,13 +34,22 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, received_variables, parent_id, is_folder):
+def create_document_controller(user_id, user_email, company_id, variables, 
+                               document_template_id, title, username, received_variables,
+                               parent_id, is_folder):
+
     document_template = DocumentTemplate.query.get(document_template_id)
 
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
     received_variables.update(current_date_dict)
 
+    nome_contrato = received_variables.get("NOME_CONTRATO", None)
+    data_inicio_contrato = received_variables.get("DATA_INICIO_CONTRATO", None)
+    data_final_contrato = received_variables.get("DATA_FINAL_CONTRATO", None)
+    data_assinatura = received_variables.get("DATA_ASSINATURA", None)
+    valor_contrato = received_variables.get("VALOR_CONTRATO", None)
+                        
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
                 "email": user_email,
@@ -65,6 +74,11 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         current_step=step_name,
         document_template_id=document_template_id,
         text_type=document_template.text_type,
+        nome_contrato= nome_contrato,
+        data_inicio_contrato= data_inicio_contrato,
+        data_final_contrato= data_final_contrato,
+        data_assinatura= data_assinatura,
+        valor_contrato= valor_contrato
     )
     db.session.add(document)
     db.session.commit()
@@ -360,3 +374,10 @@ def change_variables_controller(document, new_variables, email, variables):
     print(document.company_id)
     remote_document.update_variables(
         document, document_template, document.company_id, new_variables)
+
+
+
+
+    
+
+    

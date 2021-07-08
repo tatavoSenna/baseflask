@@ -263,11 +263,13 @@ def create(current_user):
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
+   
+    
+
     title = content.get("title", None)
 
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
-
 
     if is_folder:
     
