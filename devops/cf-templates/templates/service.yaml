@@ -203,6 +203,8 @@ Resources:
             Value: !Ref ConvertApiSecretKey
           - Name: SENDGRID_API_KEY
             Value: !Ref SendGridApiKey
+          - Name: SNS_NEWDOCUMENT_ARN
+            Value: !ImportValue SNSNewDocumentARN
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000
@@ -213,4 +215,3 @@ Resources:
 Outputs:
   Service:
     Value: !If [ Fargate, !Ref FargateService, !Ref EC2Service ]
-
