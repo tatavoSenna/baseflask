@@ -22,7 +22,6 @@ const { actions, reducer } = createSlice({
 	initialState,
 	reducers: {
 		listContract: (state) => {
-			console.log('rodei')
 			extend(state, {
 				loading: true,
 			})
