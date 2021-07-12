@@ -248,6 +248,14 @@ def map_variables_to_form(variables, form):
 
                 filled_form[-1]["fields"].append(variables_obj)
 
+            elif question['type'] == 'variable_image':
+                filled_form[-1]["fields"].append({
+                    "label": question['label'],
+                    "variable": question['variable']['name'],
+                    "type": 'variable_image',
+                    "value": variables['image_' + question['variable']['name']]
+                })
+
                 # This 'if' is here so templates whose variables are not objects still work
             elif type(question['variable']) == str:
                 if variables.get(question['variable']):
