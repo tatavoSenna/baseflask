@@ -21,48 +21,25 @@ Parameters:
 
   SourceSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
+  
+  DBName:
+    Type: String
 
   Subnets:
     Type: List<AWS::EC2::Subnet::Id>
 
-  DatabaseConnectionString:
+
     Type: String
 
-  AppDomainName:
-      Type: String
-      Description:
-        The front end domain. The api needs this to build the callback url to the cognito hosted ui
 
-  ApiDomainName:
-      Type: String
-      Description:
-        The api domain. The api needs this to build the callback url to the cognito hosted ui
-
-  CognitoUserPool:
-    Type: String
-    Description:
-      The user pool the api will use for authentication
-
-  CognitoUserPoolDomain:
-    Type: String
-    Description:
-      The Cognito hosted ui domain basename. The api needs it to build the hosted ui domain.
-
-  UserPoolClient:
     Type: String
     Description:
       The user pool app client  
 
-  DocumentsBucket:
+
     Type: String
     
-  FlaskSecretKey:
-    Type: String
 
-  SendGridApiKey:
-    Type: String
-
-  ConvertApiSecretKey:
     Type: String
 
 Conditions:
@@ -98,23 +75,16 @@ Resources:
             Principal:
               Service: ecs-tasks.amazonaws.com
       Policies:
-        - PolicyName: accesstasks3
+        - PolicyName: metabasepolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Resource: 
-                  - !Sub arn:aws:s3:::${DocumentsBucket}/*
-                  - !Sub arn:aws:s3:::${DocumentsBucket}
+                  - !Sub 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:${DBName}'
                 Effect: Allow
                 Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:DeleteObject
-                  - s3:ListBucket
-              - Resource: !Sub arn:aws:cognito-idp:sa-east-1:386235651823:userpool/${CognitoUserPool}
-                Effect: Allow
-                Action:
-                  - cognito-idp:*
+                  - rds:DescribeDBInstances
+                  - rds:DescribeDBLogFiles
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -134,10 +104,10 @@ Resources:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - !Ref SourceSecurityGroup
-          Subnets: !Ref Subnets
+          Subnets: !Split [",", !Ref Subnets]
       LoadBalancers:
-        - ContainerName: lawing-api
-          ContainerPort: 5000
+        - ContainerName: metabase
+          ContainerPort: 3000
           TargetGroupArn: !Ref TargetGroup
 
   EC2Service:
@@ -149,14 +119,14 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       LaunchType: EC2
       LoadBalancers:
-        - ContainerName: lawing-api
-          ContainerPort: 5000
+        - ContainerName: metabase
+          ContainerPort: 3000
           TargetGroupArn: !Ref TargetGroup
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub ${AWS::StackName}-lawing-api
+      Family: !Sub ${AWS::StackName}-metabase
       RequiresCompatibilities:
         - !If [ Fargate, "FARGATE", "EC2" ]
       Memory: 512
@@ -165,8 +135,8 @@ Resources:
       ExecutionRoleArn: !Ref TaskExecutionRole
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
-        - Name: lawing-api
-          Image: 340326915472.dkr.ecr.us-east-1.amazonaws.com/dev3:3c3a167c
+        - Name: metabase
+          Image: metabase/metabase
           Essential: true
           LogConfiguration:
             LogDriver: awslogs
@@ -174,40 +144,9 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
-          Environment:
-          - Name: AWS_COGNITO_DOMAIN
-            Value: !Join
-            - ''
-            - - 'https://'
-              - !Ref CognitoUserPoolDomain
-              - '-lawing.auth.'
-              - !Ref AWS::Region
-              - '.amazoncognito.com'
-          - Name: AWS_COGNITO_USER_POOL_ID
-            Value: !Ref CognitoUserPool
-          - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
-            Value: !Ref UserPoolClient
-          - Name: SQLALCHEMY_TRACK_MODIFICATIONS
-            Value: 'False'
-          - Name: SECRET_KEY
-            Value: !Ref FlaskSecretKey
-          - Name: SQLALCHEMY_DATABASE_URI
-            Value: !Ref DatabaseConnectionString
-          - Name: DOCUSIGN_OAUTH_URI
-            Value: https://account.docusign.com/oauth
-          - Name: DOCUSIGN_WEBHOOK_URL
-            Value: !Sub '${ApiDomainName}/docusign/signed'
-          - Name: AWS_S3_DOCUMENTS_BUCKET
-            Value: !Ref DocumentsBucket
-          - Name: CONVERTAPI_SECRET_KEY
-            Value: !Ref ConvertApiSecretKey
-          - Name: SENDGRID_API_KEY
-            Value: !Ref SendGridApiKey
-          - Name: SNS_NEWDOCUMENT_ARN
-            Value: !ImportValue SNSNewDocumentARN
           PortMappings:
-            - ContainerPort: 5000
-              HostPort: 5000
+            - ContainerPort: 3000
+              HostPort: 3000
               Protocol: tcp
       Volumes:
         - Name: my-vol
@@ -215,3 +154,4 @@ Resources:
 Outputs:
   Service:
     Value: !If [ Fargate, !Ref FargateService, !Ref EC2Service ]
+
