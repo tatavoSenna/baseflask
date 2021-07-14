@@ -297,11 +297,15 @@ function* changeVariablesSaga({ payload = {} }) {
 		updateKey: 'variablesDocument',
 	})
 	const { id, values } = payload
+	const { documentDetail } = yield select()
+	const { imgObj } = documentDetail.data
 
 	// This function nests the struct variables, since Form only supports single level nesting
 	const arrangeStructs = (values) => {
 		Object.keys(values).forEach((fieldName) => {
-			if (fieldName.slice(0, 10) === 'structured') {
+			if ((values[fieldName] === undefined) | (values[fieldName] === '')) {
+				delete values[fieldName]
+			} else if (fieldName.slice(0, 10) === 'structured') {
 				let arranged = []
 				Object.keys(values[fieldName]).forEach((structVar) => {
 					if (parseInt(structVar.split('_').pop()) + 1 > arranged.length) {
@@ -321,9 +325,28 @@ function* changeVariablesSaga({ payload = {} }) {
 		return values
 	}
 
+	arrangeStructs(values)
+
 	try {
+		let dataImg = {}
+
+		for (var [key] of Object.entries(values)) {
+			if (key.includes('image_')) {
+				dataImg[key] = document
+					.getElementById(key)
+					.getElementsByTagName('input')[0].value
+			}
+		}
+
+		Object.keys(dataImg).forEach((key) => {
+			if (dataImg[key] === '') {
+				delete dataImg[key]
+				delete values[key]
+			}
+		})
+
 		const { data } = yield call(api.post, `documents/${id}/modify`, {
-			variables: arrangeStructs(values),
+			variables: { ...imgObj, ...values, ...dataImg },
 		})
 
 		const response = yield call(api.get, `/documents/${id}/pdf`)

@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, put, select, takeEvery } from 'redux-saga/effects'
 
 import {
 	errorMessage,
@@ -15,11 +15,23 @@ import {
 	getSettings,
 	getSettingsSuccess,
 	getSettingsFailure,
+	getWebhooks,
+	getWebhooksSuccess,
+	getWebhooksFailure,
+	saveWebhooks,
+	saveWebhooksSuccess,
+	saveWebhooksFailure,
+	deleteWebhooks,
+	deleteWebhooksSuccess,
+	deleteWebhooksFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(saveSettings, saveSettingsSaga)
 	yield takeEvery(getSettings, getSettingsSaga)
+	yield takeEvery(getWebhooks, getWebhooksSaga)
+	yield takeEvery(saveWebhooks, saveWebhooksSaga)
+	yield takeEvery(deleteWebhooks, deleteWebhooksSaga)
 }
 
 function* getSettingsSaga() {
@@ -50,5 +62,60 @@ function* saveSettingsSaga({ payload }) {
 			content: 'Problemas ao salvar dados',
 			updateKey: 'saveSettings',
 		})
+	}
+}
+
+function* getWebhooksSaga() {
+	try {
+		const { data } = yield call(api.get, `/company/webhook`)
+		yield put(getWebhooksSuccess(data))
+	} catch (error) {
+		yield put(getWebhooksFailure(error))
+	}
+}
+
+function* saveWebhooksSaga() {
+	const { settings } = yield select()
+	const { newWebhook = {} } = settings
+	try {
+		loadingMessage({
+			content: 'Salvando dados...',
+			updateKey: 'saveWebhooks',
+		})
+		const { data } = yield call(api.post, `/company/webhook`, newWebhook)
+		yield put(saveWebhooksSuccess(data))
+		yield put(getWebhooks())
+		successMessage({
+			content: 'Webhook salvo com sucesso',
+			updateKey: 'saveWebhooks',
+		})
+	} catch (error) {
+		yield put(saveWebhooksFailure(error))
+		errorMessage({
+			content: 'Problemas ao salvar webhook',
+			updateKey: 'saveWebhooks',
+		})
+	}
+}
+
+function* deleteWebhooksSaga({ payload }) {
+	loadingMessage({
+		content: 'Deletando usuário...',
+		updateKey: 'deleteWebhook',
+	})
+	try {
+		yield call(api.delete, `/company/webhook/${payload.id}`)
+		successMessage({
+			content: 'Webhook deletado com sucesso',
+			updateKey: 'deleteWebhook',
+		})
+		yield put(deleteWebhooksSuccess())
+		yield put(getWebhooks())
+	} catch {
+		errorMessage({
+			content: 'Problemas ao deletar webhook',
+			updateKey: 'deleteWebhook',
+		})
+		yield put(deleteWebhooksFailure(payload))
 	}
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
 import { array, bool, func, string } from 'prop-types'
 import InputFactory from '~/components/inputFactory'
+import ImageField from '~/components/imageField'
 import StructuredList from './components/structuredList'
 import PersonField from './components/personField'
 import { ContainerTabs } from './styles'
@@ -147,6 +148,8 @@ const Tabs = ({
 						return <StructuredList item={item} disabled={!isEdit} />
 					case 'person':
 						return <PersonField item={item} disabled={!isEdit} />
+					case 'variable_image':
+						return isEdit && <ImageField pageFieldsData={item} />
 					default:
 						return (
 							<InputFactory

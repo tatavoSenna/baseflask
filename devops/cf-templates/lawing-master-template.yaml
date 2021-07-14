@@ -270,3 +270,15 @@ Resources:
       Parameters:
         DocumentsBucketName: !Sub '${AWS::StackName}-lawing-documents'
 
+  Metabase:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/metabaseservice.yaml"
+      Parameters:
+        Cluster: !GetAtt Cluster.Outputs.ClusterName
+        LaunchType: !Ref LaunchType
+        TargetGroup: !GetAtt LoadBalancer.Outputs.MetabaseTargetGroup
+        SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
+        DBName: !Ref DBName
+        Subnets: !GetAtt VPC.Outputs.Subnets
+

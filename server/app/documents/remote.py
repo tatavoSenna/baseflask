@@ -161,7 +161,7 @@ class RemoteDocument:
         docx_template = DocxTemplate(docx_io)
 
         for key in list(variables):
-            if key.startswith("image_"):
+            if key.startswith("image_") and variables[key]:
                 sd = docx_template.new_subdoc()
                 img_bytes = base64.decodebytes(
                     variables[key].split("base64,")[1].encode('ascii'))

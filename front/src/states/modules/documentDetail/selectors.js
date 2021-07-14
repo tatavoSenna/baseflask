@@ -1,4 +1,12 @@
 export const selectAllDocumentDetail = (payload) => {
+	const imgObj = {}
+	payload.info.forEach((page) => {
+		page.fields.forEach((field) => {
+			if (field.type === 'variable_image') {
+				imgObj[`image_${field.variable}`] = field.value
+			}
+		})
+	})
 	return {
 		...payload,
 		workflow: {
@@ -16,6 +24,7 @@ export const selectAllDocumentDetail = (payload) => {
 			})
 			return signer
 		}),
+		imgObj: imgObj,
 	}
 }
 
