@@ -9,6 +9,7 @@ from datetime import date
 from app import db
 from app.constants import months
 from app.models.documents import Document, DocumentTemplate
+from app.models.company import Company, Webhook
 from app.models.user import User
 from .remote import RemoteDocument
 from sendgrid import SendGridAPIClient
@@ -34,12 +35,22 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables, document_template_id, title, username, received_variables, parent_id, is_folder):
-    document_template = DocumentTemplate.query.get(document_template_id)
+def create_document_controller(user_id, user_email, company_id, variables,
+                               document_template_id, title, username, received_variables,
+                               parent_id, is_folder):
 
+    document_template = DocumentTemplate.query.get(document_template_id)
+    document_company = Company.query.filter_by(id=company_id).first()
+    user_name = User.query.filter_by(id=user_id).first().name
     current_date_dict = get_current_date_dict()
     variables.update(current_date_dict)
     received_variables.update(current_date_dict)
+
+    nome_contrato = received_variables.get("NOME_CONTRATO", None)
+    data_inicio_contrato = received_variables.get("DATA_INICIO_CONTRATO", None)
+    data_final_contrato = received_variables.get("DATA_FINAL_CONTRATO", None)
+    data_assinatura = received_variables.get("DATA_ASSINATURA", None)
+    valor_contrato = received_variables.get("VALOR_CONTRATO", None)
 
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
@@ -65,6 +76,11 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
         current_step=step_name,
         document_template_id=document_template_id,
         text_type=document_template.text_type,
+        nome_contrato=nome_contrato,
+        data_inicio_contrato=data_inicio_contrato,
+        data_final_contrato=data_final_contrato,
+        data_assinatura=data_assinatura,
+        valor_contrato=valor_contrato
     )
     db.session.add(document)
     db.session.commit()
@@ -85,11 +101,38 @@ def create_document_controller(user_id, user_email, company_id, variables, docum
             MessageStructure='json'
         )
 
+    webhook_list = Webhook.query.filter_by(company_id=company_id).all()
+    for webhook in webhook_list:
+        sns = boto3.client('sns')
+        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+        message = {"document_title": title,
+                   "document_id": document.id,
+                   "document_template_name": document_template.name,
+                   "document_template_id": document_template_id,
+                   "company_name": document_company.name,
+                   "company_id": company_id,
+                   "user_id": user_id,
+                   "user_name": user_name,
+                   "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),   
+                   "valor_contrato": valor_contrato,
+                   "data_inicio_contrato": data_inicio_contrato,
+                   "data_final_contrato": data_final_contrato,
+                   "data_assinatura": data_assinatura,
+                   "nome_contrato": nome_contrato,
+                   "webhook_url": webhook.webhook
+                   }
+
+        response = sns.publish(
+            TargetArn=topic_arn,
+            Message=json.dumps({'default': json.dumps(message)}),
+            MessageStructure='json'
+        )
+
     return document
 
 
 def create_folder_controller(user_id, user_email, company_id, title, username, parent_id, is_folder):
-   
+
     document = Document(
         user_id=user_id,
         company_id=company_id,

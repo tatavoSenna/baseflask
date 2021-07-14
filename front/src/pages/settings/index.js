@@ -1,73 +1,48 @@
-import React from 'react'
-import {
-	Layout,
-	PageHeader,
-	Card,
-	Button,
-	Typography,
-	Upload,
-	Form,
-} from 'antd'
-import BreadCrumb from '~/components/breadCrumb'
-import { useDispatch } from 'react-redux'
-import { saveSettings } from '~/states/modules/settings'
-import { UploadOutlined } from '@ant-design/icons'
+import React, { useState } from 'react'
+import { Menu, PageHeader, Layout } from 'antd'
+import { FormOutlined, NodeIndexOutlined } from '@ant-design/icons'
 
-const { Title } = Typography
+import BreadCrumb from '~/components/breadCrumb'
+import CompanyConfiguration from './components/companyConfiguration'
+import Webhook from './components/webhook'
+
+import styles from './index.module.scss'
 
 const Settings = () => {
-	const dispatch = useDispatch()
-	let logo = ''
+	const [breadCrumpCurrent, setBC] = useState('Empresa')
+	const [current, setCurrent] = useState('companyConfiguration')
 
-	const saveSettingsLogo = () => {
-		if (logo) {
-			const file = logo.toString().substring(22)
-			dispatch(saveSettings({ img: file }))
+	const handleNav = (e) => {
+		setCurrent(e.key)
+		if (e.key === 'webhook') {
+			setBC('Webhook')
+		}
+		if (e.key === 'companyConfiguration') {
+			setBC('Empresa')
 		}
 	}
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
-				<BreadCrumb parent="Configurações" current={'Empresa'} />
+				<BreadCrumb parent="Configurações" current={breadCrumpCurrent} />
 			</PageHeader>
-			<Card
-				style={{
-					maxWidth: '800px',
-					width: '100%',
-					background: 'white',
-				}}>
-				<Title style={{ marginBottom: 30 }} level={4}>
-					{'Configurações da Empresa'}
-				</Title>
-				<Form>
-					<Form.Item label="Upload da logo: ">
-						<Upload
-							accept=".png, .jpg"
-							showUploadList={false}
-							multiple={false}
-							beforeUpload={(file) => {
-								const reader = new FileReader()
-								reader.readAsDataURL(file)
-								reader.onload = function (e) {
-									logo = e.target.result
-								}
-								return false
-							}}>
-							<Button icon={<UploadOutlined />}>Upload</Button>
-						</Upload>
-					</Form.Item>
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'flex-end',
-						}}>
-						<Button type="primary" htmlType="submit" onClick={saveSettingsLogo}>
-							Salvar
-						</Button>
-					</div>
-				</Form>
-			</Card>
+			<Menu
+				onClick={handleNav}
+				selectedKeys={[current]}
+				mode="horizontal"
+				style={{ display: 'flex' }}>
+				<Menu.Item key="companyConfiguration" icon={<FormOutlined />}>
+					Configurações da Empresa
+				</Menu.Item>
+				<Menu.Item key="webhook" icon={<NodeIndexOutlined />}>
+					Webhook
+				</Menu.Item>
+			</Menu>
+			<Layout className={styles.content}>
+				{current === 'companyConfiguration' && <CompanyConfiguration />}
+				{current === 'webhook' && <Webhook />}
+			</Layout>
 		</Layout>
 	)
 }

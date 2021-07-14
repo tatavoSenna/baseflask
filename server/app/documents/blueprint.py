@@ -5,8 +5,6 @@ import base64
 import json
 import jinja2
 
-from sqlalchemy.sql.expression import null
-
 import boto3
 import pdfrw
 import ast
@@ -100,6 +98,7 @@ def get_document_list(current_user):
             "per_page", current_app.config['PER_PAGE_DEFAULT']))
         search_param = str(request.args.get("search", ""))
         folder_name = int(request.args.get("folder", 0))
+        type = str(request.args.get("type", ""))
     except:
         abort(400, "invalid parameters")
 
@@ -107,14 +106,27 @@ def get_document_list(current_user):
         parent = None
     else:
         parent = folder_name
+    
+    if type == "folder":
+        folder = True
+    elif type == "file":
+        folder = False
 
     if search_param == "":
-        paginated_query = (
-        Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent)
-        .filter(Document.title.ilike(f"%{search_param}%"))
-        .order_by(desc(Document.created_at))
-        .paginate(page=page, per_page=per_page)
-        ) 
+        if type != "":
+            paginated_query = (
+            Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent, is_folder = folder)
+            .filter(Document.title.ilike(f"%{search_param}%"))
+            .order_by(desc(Document.created_at))
+            .paginate(page=page, per_page=per_page)
+            )
+        else:
+            paginated_query = (
+            Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent)
+            .filter(Document.title.ilike(f"%{search_param}%"))
+            .order_by(desc(Document.created_at))
+            .paginate(page=page, per_page=per_page)
+            )
     else:
         paginated_query = (
             Document.query.filter_by(company_id=current_user["company_id"])
@@ -263,11 +275,13 @@ def create(current_user):
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
+   
+    
+
     title = content.get("title", None)
 
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
-
 
     if is_folder:
     
@@ -320,16 +334,11 @@ def create(current_user):
                 logging.exception(e)
                 return jsonify(error_JSON), 500
         except Exception as e:
+            logging.exception("Could not create document")
+            error_JSON = {"Message": "Could not create document"}
             if current_user["is_admin"] == True:
-                error_JSON = {
-                    "Message": "Could not create document",
-                    "Exception": str(e)
-                }
-                return jsonify(error_JSON), 400
-            else:
-                logging.exception(
-                    "Could not create document")
-                abort(400, "Could not create document")
+                    error_JSON["Exception"] = str(e)
+            return jsonify(error_JSON), 400
                 
         try:
             response = document_creation_email_controller(

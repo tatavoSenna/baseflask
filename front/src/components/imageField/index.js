@@ -3,7 +3,7 @@ import { string, shape, object } from 'prop-types'
 import { Form, Upload, message, Modal, Input } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
-const ImageField = ({ pageFieldsData }) => {
+const ImageField = ({ pageFieldsData, className }) => {
 	const { label, variable, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const [fileList, setFileList] = useState('')
@@ -42,6 +42,7 @@ const ImageField = ({ pageFieldsData }) => {
 			key={`imageField_${isObj ? variable.name : variable}`}
 			name={`image_${isObj ? variable.name : variable}`}
 			label={<InfoField label={label} info={info} />}
+			className={className}
 			colon={false}
 			value={fileList.length > 0 ? fileList[0].url : ''}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
@@ -81,6 +82,7 @@ ImageField.propTypes = {
 		variable: object.isRequired,
 		info: string,
 	}).isRequired,
+	className: string,
 }
 
 export default ImageField

@@ -1,9 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-import {
-	successMessage,
-	loadingMessage,
-	errorMessage,
-} from '~/services/messager'
+// import {
+// 	successMessage,
+// 	loadingMessage,
+// 	errorMessage,
+// } from '~/services/messager'
 
 import api from '~/services/api'
 import { getUserProfile, getUserProfileSuccess, getUserProfileFailure } from '.'

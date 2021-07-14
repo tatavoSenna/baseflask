@@ -40,6 +40,8 @@ Hub.listen('auth', (data) => {
 		case 'signIn':
 			store.dispatch(getUserProfile())
 			break
+		default:
+			break
 	}
 })
 
