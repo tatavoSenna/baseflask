@@ -14,7 +14,7 @@ export default function* rootSaga() {
 }
 
 function* answerSaga({ payload }) {
-	const { history } = payload
+	const { history, visible } = payload
 
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
@@ -33,6 +33,7 @@ function* answerSaga({ payload }) {
 		const { data } = yield call(api.post, '/documents/', {
 			document_template: modelId,
 			title,
+			visible,
 			variables: { ...answer.data, ...answer.dataImg },
 		})
 		yield put(answerSuccess(data))

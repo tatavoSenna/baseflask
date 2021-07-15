@@ -148,11 +148,6 @@ def generate_steps(obj_workflow, ordered_nodes):
 
 
 def map_variables_to_form(variables, form):
-    print('\n')
-    print(form)
-    print('\n')
-    print(variables)
-    print('\n')
 
     filled_form = []
     group_index = 0
@@ -164,6 +159,9 @@ def map_variables_to_form(variables, form):
 
         question_index = 0
         for question in group['fields']:
+
+            if question['visible'] == False:
+                continue
 
             if question['type'] == 'structured_list':
                 variables_obj = {

@@ -106,7 +106,7 @@ def get_document_list(current_user):
         parent = None
     else:
         parent = folder_name
-    
+
     if type == "folder":
         folder = True
     elif type == "file":
@@ -115,17 +115,19 @@ def get_document_list(current_user):
     if search_param == "":
         if type != "":
             paginated_query = (
-            Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent, is_folder = folder)
-            .filter(Document.title.ilike(f"%{search_param}%"))
-            .order_by(desc(Document.created_at))
-            .paginate(page=page, per_page=per_page)
+                Document.query.filter_by(
+                    company_id=current_user["company_id"], parent_id=parent, is_folder=folder)
+                .filter(Document.title.ilike(f"%{search_param}%"))
+                .order_by(desc(Document.created_at))
+                .paginate(page=page, per_page=per_page)
             )
         else:
             paginated_query = (
-            Document.query.filter_by(company_id=current_user["company_id"], parent_id = parent)
-            .filter(Document.title.ilike(f"%{search_param}%"))
-            .order_by(desc(Document.created_at))
-            .paginate(page=page, per_page=per_page)
+                Document.query.filter_by(
+                    company_id=current_user["company_id"], parent_id=parent)
+                .filter(Document.title.ilike(f"%{search_param}%"))
+                .order_by(desc(Document.created_at))
+                .paginate(page=page, per_page=per_page)
             )
     else:
         paginated_query = (
@@ -144,7 +146,8 @@ def get_document_list(current_user):
         }
     )
 
-@documents_bp.route("/move", methods = ["POST"])
+
+@documents_bp.route("/move", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def change_folder(current_user):
@@ -152,7 +155,7 @@ def change_folder(current_user):
     document_id = content.get("document_id", None)
     destination_id = content.get("destination_id", None)
 
-    document = Document.query.filter_by(id = document_id).first()
+    document = Document.query.filter_by(id=document_id).first()
     document.parent_id = destination_id
     db.session.commit()
 
@@ -162,6 +165,7 @@ def change_folder(current_user):
             "new_folder": destination_id
         }
     )
+
 
 @documents_bp.route("/<int:document_id>/text", methods=["GET"])
 @aws_auth.authentication_required
@@ -275,16 +279,13 @@ def create(current_user):
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
-   
-    
-
     title = content.get("title", None)
-
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
+    visible = content.get("visible", None)
 
     if is_folder:
-    
+
         document = create_folder_controller(
             current_user["id"],
             current_user["email"],
@@ -292,7 +293,8 @@ def create(current_user):
             title,
             current_user["name"],
             parent,
-            is_folder
+            is_folder,
+            visible
         )
     else:
         if not document_template_id or not variables:
@@ -337,17 +339,15 @@ def create(current_user):
             logging.exception("Could not create document")
             error_JSON = {"Message": "Could not create document"}
             if current_user["is_admin"] == True:
-                    error_JSON["Exception"] = str(e)
+                error_JSON["Exception"] = str(e)
             return jsonify(error_JSON), 400
-                
+
         try:
             response = document_creation_email_controller(
                 title, current_user["company_id"])
         except Exception as e:
             logging.exception(
                 "Failed to send emails on document creation. One or more emails is bad formated or invalid")
-
-
 
     return DocumentSerializer().dump(document)
 
