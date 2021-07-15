@@ -51,7 +51,7 @@ const FormFactory = ({
 	}
 
 	const onSubmit = (data) => {
-		dispatch(appendAnswer({ data }))
+		dispatch(appendAnswer({ data, visible: visible[currentPage] }))
 		if (!isLastPage) {
 			const nextPage = currentPage + 1
 			return history.push({

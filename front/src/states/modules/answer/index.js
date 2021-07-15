@@ -15,8 +15,8 @@ const { actions, reducer } = createSlice({
 	reducers: {
 		appendAnswer: (state, { payload }) =>
 			extend(state, {
-				data: selectAnswer(state.data, payload.data),
-				dataImg: selectImages(state.dataImg, payload.data),
+				data: selectAnswer(state.data, payload),
+				dataImg: selectImages(state.dataImg, payload),
 			}),
 		answerRequest: (state) =>
 			extend(state, {
