@@ -321,6 +321,7 @@ def create(current_user):
                 is_folder
             )
         except jinja2.TemplateSyntaxError as e:
+            logging.exception(e)
             if current_user["is_admin"] == True:
                 error_JSON = {
                     "error": "There is a problem with template syntax",
@@ -331,7 +332,6 @@ def create(current_user):
                 error_JSON = {
                     "error": "There is a problem with template syntax"
                 }
-                logging.exception(e)
                 return jsonify(error_JSON), 500
         except Exception as e:
             logging.exception("Could not create document")
