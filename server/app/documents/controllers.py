@@ -37,7 +37,7 @@ def get_document_template_details_controller(company_id, template_id):
 
 def create_document_controller(user_id, user_email, company_id, variables,
                                document_template_id, title, username, received_variables,
-                               parent_id, is_folder):
+                               parent_id, is_folder, visible):
 
     document_template = DocumentTemplate.query.get(document_template_id)
     document_company = Company.query.filter_by(id=company_id).first()
@@ -63,10 +63,16 @@ def create_document_controller(user_id, user_email, company_id, variables,
     document_workflow['created_by'] = username
     current_node = document_workflow["current_node"]
     step_name = document_workflow["nodes"][current_node]["title"]
+
+    form_with_visible = document_template.form
+    for page_index, page in enumerate(form_with_visible):
+        for field_index, field in enumerate(page['fields']):
+            field['visible'] = visible[page_index][field_index]
+
     document = Document(
         user_id=user_id,
         company_id=company_id,
-        form=document_template.form,
+        form=form_with_visible,
         workflow=document_workflow,
         signers=document_template.signers,
         variables=received_variables,
@@ -101,7 +107,7 @@ def create_document_controller(user_id, user_email, company_id, variables,
                    "company_id": company_id,
                    "user_id": user_id,
                    "user_name": user_name,
-                   "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),   
+                   "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),
                    "valor_contrato": valor_contrato,
                    "data_inicio_contrato": data_inicio_contrato,
                    "data_final_contrato": data_final_contrato,

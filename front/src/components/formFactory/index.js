@@ -62,7 +62,7 @@ const FormFactory = ({
 		if (token) {
 			dispatch(createContractExternal())
 		} else {
-			dispatch(answerRequest({ history }))
+			dispatch(answerRequest({ history, visible }))
 		}
 	}
 
