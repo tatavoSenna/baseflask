@@ -293,8 +293,7 @@ def create(current_user):
             title,
             current_user["name"],
             parent,
-            is_folder,
-            visible
+            is_folder
         )
     else:
         if not document_template_id or not variables:
@@ -320,7 +319,8 @@ def create(current_user):
                 current_user["name"],
                 variables,
                 parent,
-                is_folder
+                is_folder,
+                visible
             )
         except jinja2.TemplateSyntaxError as e:
             logging.exception(e)
