@@ -98,7 +98,7 @@ const EditTemplate = () => {
 		}
 	}
 
-	// Each tab (except for signers, which is optional) has a useEffect dedicated to check if it is empty, thus determining their color
+	// Each tab (except for signers and workflow, which are optional) has a useEffect dedicated to check if it is empty, thus determining their color
 
 	// Form tab
 	useEffect(() => {
@@ -113,20 +113,6 @@ const EditTemplate = () => {
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data.form])
-
-	// Workflow tab
-	useEffect(() => {
-		setInputsFilled({
-			...inputsFilled,
-			workflow: (() => {
-				if (data.workflow.nodes.length > 0) {
-					return true
-				}
-				return false
-			})(),
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.workflow.nodes])
 
 	// Text tab
 	useEffect(() => {
@@ -239,7 +225,13 @@ const EditTemplate = () => {
 						hideRequiredMark
 						onFinish={onSubmit}>
 						{current === 'form' && <TemplateForm data={data.form} />}
-						{current === 'workflow' && <Workflow data={data.workflow} />}
+						{current === 'workflow' && (
+							<Workflow
+								data={data.workflow}
+								inputsFilled={inputsFilled}
+								setInputsFilled={setInputsFilled}
+							/>
+						)}
 						{current === 'text' && (
 							<Text
 								data={data.text}
