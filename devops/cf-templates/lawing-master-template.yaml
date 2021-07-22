@@ -55,6 +55,16 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: must contain only alphanumeric characters.
 
+  MetabaseDBName:
+    Description: The metabase database name
+    Default: metabase
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+      
   GitHubUser:
     Type: String
     Description: The repository owner.
@@ -279,6 +289,10 @@ Resources:
         LaunchType: !Ref LaunchType
         TargetGroup: !GetAtt LoadBalancer.Outputs.MetabaseTargetGroup
         SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
-        DBName: !Ref DBName
         Subnets: !GetAtt VPC.Outputs.Subnets
+        MBDBName: !Ref MetabaseDBName
+        MBDBHost: !GetAtt Database.Outputs.DatabaseAddress
+        MBDBUser: !Ref DBUser
+        MBDBPassword: !Ref DBPassword
+
 
