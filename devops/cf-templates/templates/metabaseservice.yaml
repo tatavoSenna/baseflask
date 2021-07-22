@@ -22,7 +22,16 @@ Parameters:
   SourceSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
   
-  DBName:
+  MBDBName:
+    Type: String
+  
+  MBDBHost:
+    Type: String
+
+  MBDBPassword:
+    Type: String
+  
+  MBDBUser:
     Type: String
 
   Subnets:
@@ -80,11 +89,10 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Resource: 
-                  - !Sub 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:${DBName}'
+                  - !Sub 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:${MBDBName}'
                 Effect: Allow
                 Action:
-                  - rds:DescribeDBInstances
-                  - rds:DescribeDBLogFiles
+                  - rds:*
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -117,6 +125,7 @@ Resources:
       Cluster: !Ref Cluster
       DesiredCount: !Ref DesiredCount
       TaskDefinition: !Ref TaskDefinition
+      HealthCheckGracePeriodSeconds: 3600
       LaunchType: EC2
       LoadBalancers:
         - ContainerName: metabase
@@ -144,6 +153,19 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
+          Environment:
+          - Name: MB_DB_DBNAME
+            Value: !Ref MBDBName
+          - Name: MB_DB_HOST
+            Value: !Ref MBDBHost
+          - Name: MB_DB_PASS
+            Value: !Ref MBDBPassword
+          - Name: MB_DB_USER
+            Value: !Ref MBDBUser
+          - Name: MB_DB_TYPE
+            Value: postgres
+          - Name: MB_DB_PORT
+            Value: 5432
           PortMappings:
             - ContainerPort: 3000
               HostPort: 3000

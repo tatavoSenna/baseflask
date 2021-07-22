@@ -60,3 +60,7 @@ Outputs:
   DatabaseURI:
     Description: Connection string for the database
     Value: !Join ['',['postgresql://', !Ref 'DBUser', ':', !Ref 'DBPassword', '@', !GetAtt [DB, Endpoint.Address], ':', !GetAtt [DB, Endpoint.Port], '/', !Ref 'DBName']]
+
+  DatabaseAddress:
+    Description: Endpoit address for the database
+    Value: !GetAtt [DB, Endpoint.Address]
