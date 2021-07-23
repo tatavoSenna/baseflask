@@ -69,6 +69,8 @@ def specify_variables(variables, document_template_id):
         elif variable_type == "list":
             if specs["doc_display_style"] == "commas":
                 list_variable = variables[variable]
+                if len(list_variable) < 2:
+                    return list_variable[0]
                 last_element = list_variable.pop()
                 list_variable[-1] = list_variable[-1] + " e " + last_element
                 return ", ".join(list_variable)
