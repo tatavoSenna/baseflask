@@ -70,7 +70,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 			case 'currency':
 				newField.variable.type = 'currency'
-				newField.variable.doc_display_style = 'plain | currency_extended'
+				newField.variable.doc_display_style = 'plain | extended'
 				break
 			case 'slider':
 				newField.options = ['min', 'max']

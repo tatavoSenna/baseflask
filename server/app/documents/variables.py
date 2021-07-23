@@ -46,7 +46,7 @@ def specify_variables(variables, document_template_id):
                 return str(variables[variable]).replace(".", ",") + '%'
 
         elif variable_type == "date":
-            if specs["doc_display_style"] == "date_extended":
+            if specs["doc_display_style"] == "extended":
                 list = variables[variable][0:10].split("-", 2)
                 dia = list[2]
                 mes = month_dictionary.get(
@@ -83,7 +83,7 @@ def specify_variables(variables, document_template_id):
 
         elif variable_type == "currency":
             num_variable = variables[variable]
-            if specs["doc_display_style"] == "currency_extended":
+            if specs["doc_display_style"] == "extended":
                 return format_currency(num_variable, "BRL", locale='pt_BR') + \
                     " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
             return format_currency(
