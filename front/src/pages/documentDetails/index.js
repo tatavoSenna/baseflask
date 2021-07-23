@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { Layout, PageHeader, Spin } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import Steps from '~/pages/documentDetails/components/steps'
 import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
 import PdfReader from '~/components/pdfFileReader'
@@ -144,42 +143,30 @@ const DocumentDetails = () => {
 						flexWrap: 'wrap',
 						paddingBottom: 50,
 					}}>
-					<div>
-						<Steps
-							current={data.workflow.current}
-							steps={data.workflow.steps}
-							onClickPrevious={getPreviousStep}
-							onClickNext={getNextStep}
-							onClickDownload={downloadDocument}
-							block={loadingSign || loading}
-							signed={data.signed}
+					{file ? (
+						<div
+							style={{
+								display: 'flex',
+								minHeight: '29.7cm',
+								minWidth: '21cm',
+							}}>
+							<PdfReader url={file} />
+						</div>
+					) : (
+						<Editor
+							text={text}
+							comments={comments}
+							onUpdateText={updateText}
+							block={
+								loadingSign ||
+								loading ||
+								data.sent ||
+								version_id !== data.versions[0].id
+							}
+							versionLoading={loadingVersion}
 						/>
-						{file ? (
-							<div
-								style={{
-									display: 'flex',
-									minHeight: '29.7cm',
-									minWidth: '21cm',
-								}}>
-								<PdfReader url={file} />
-							</div>
-						) : (
-							<Editor
-								text={text}
-								textUpdate={textUpdate}
-								comments={comments}
-								onClickUpdate={handleShowModal}
-								onUpdateText={updateText}
-								block={
-									loadingSign ||
-									loading ||
-									data.sent ||
-									version_id !== data.versions[0].id
-								}
-								versionLoading={loadingVersion}
-							/>
-						)}
-					</div>
+					)}
+
 					<Tabs
 						textType={data.text_type}
 						downloadDocument={getDocumentWord}
@@ -194,6 +181,23 @@ const DocumentDetails = () => {
 						handleVersion={handleVersion}
 						versionId={version_id}
 						onChangeVariables={onSubmitChangeVariables}
+						current={data.workflow.current}
+						steps={data.workflow.steps}
+						onClickPrevious={getPreviousStep}
+						onClickNext={getNextStep}
+						onClickDownload={downloadDocument}
+						block={loadingSign || loading}
+						signedWorkflow={data.signed}
+						text={text}
+						textUpdate={textUpdate}
+						onClickUpdate={handleShowModal}
+						blockVersion={
+							loadingSign ||
+							loading ||
+							data.sent ||
+							version_id !== data.versions[0].id
+						}
+						versionLoading={loadingVersion}
 					/>
 				</div>
 			)}

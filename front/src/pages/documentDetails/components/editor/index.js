@@ -2,20 +2,12 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import DecoupledDocumentEditor from 'ckeditor5-custom-build/build/ckeditor'
-import { string, func, bool, object, array } from 'prop-types'
+import { string, func, bool, array } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
-import { Form, Button, Spin } from 'antd'
+import { Spin } from 'antd'
 
-const Editor = ({
-	text,
-	textUpdate,
-	onClickUpdate,
-	onUpdateText,
-	block,
-	versionLoading,
-	comments,
-}) => {
+const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 	const { userList } = useSelector(({ users }) => users)
 	const { loggedUser } = useSelector(({ session }) => session)
 	class CommentsIntegration {
@@ -128,6 +120,8 @@ const Editor = ({
 		<div
 			style={{
 				margin: 5,
+				minWidth: 600,
+				width: '60%',
 			}}>
 			<div className={classNames(styles.documentEditor)}>
 				<div
@@ -179,32 +173,12 @@ const Editor = ({
 					</div>
 				</div>
 			</div>
-			{text !== textUpdate.text && !block && !versionLoading && (
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'flex-end',
-						paddingTop: 20,
-					}}>
-					<Form.Item>
-						<Button
-							type="primary"
-							htmlType="button"
-							onClick={() => onClickUpdate(textUpdate)}
-							disabled={block}>
-							Criar versão
-						</Button>
-					</Form.Item>
-				</div>
-			)}
 		</div>
 	)
 }
 
 Editor.propTypes = {
 	text: string,
-	textUpdate: object,
-	onClickUpdate: func,
 	onUpdateText: func,
 	block: bool,
 	versionLoading: bool,
