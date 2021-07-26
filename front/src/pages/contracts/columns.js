@@ -3,7 +3,7 @@ import { Tag, Button, Space } from 'antd'
 
 import Delete from '~/components/deleteConfirm'
 
-export const getColumns = (handleToGo, handleDeleteContract) => [
+export const getColumns = (handleToGo, handleDeleteContract, is_admin) => [
 	{
 		title: 'Descrição',
 		dataIndex: 'title',
@@ -83,10 +83,12 @@ export const getColumns = (handleToGo, handleDeleteContract) => [
 		key: 'action',
 		render: (text, row) => (
 			<Space size="middle">
-				<Delete
-					title="Deseja excluir esse documento?"
-					handle={() => handleDeleteContract(row)}
-				/>
+				{is_admin && (
+					<Delete
+						title="Deseja excluir esse documento?"
+						handle={() => handleDeleteContract(row)}
+					/>
+				)}
 			</Space>
 		),
 	},

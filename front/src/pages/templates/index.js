@@ -24,6 +24,8 @@ const Templates = () => {
 		({ template }) => template
 	)
 
+	const { is_admin } = useSelector(({ session }) => session)
+
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))
 		dispatch(resetTemplateState())
@@ -80,7 +82,8 @@ const Templates = () => {
 					columns={getColumns(
 						handleToGo,
 						handlePublishTemplate,
-						handleDeleteTemplate
+						handleDeleteTemplate,
+						is_admin
 					)}
 					dataSource={templates}
 					pages={pages}
