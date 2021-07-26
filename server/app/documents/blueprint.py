@@ -603,6 +603,8 @@ def void_envelope(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document(current_user, document_id):
+    if not current_user['is_admin']:
+        abort(403, "Only Admin Users can delete documents")
     try:
         document = get_document_controller(document_id)
     except Exception:
