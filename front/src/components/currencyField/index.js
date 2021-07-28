@@ -48,11 +48,14 @@ const CurrencyField = ({
 				min={0}
 				placeholder=""
 				step={0.1}
-				decimalSeparator=","
-				formatter={(value) => `R$ ${value}`}
-				parser={(value) => value.replace(/[A-Z]|[a-z]|[$ ]|,+/g, '')}
+				decimalSeparator="."
+				formatter={(value) =>
+					` R$${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+				}
+				//formatter={(value) => ` R$${value}`}
+				parser={(value) => value.replace(/[A-Z]|[a-z]|[$ ]|,/g, '')}
 				precision={2}
-				style={{ width: '100%' }}
+				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
 				disabled={disabled}
 			/>
 		</Form.Item>
