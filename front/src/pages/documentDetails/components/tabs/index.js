@@ -1,6 +1,26 @@
 import React, { useState } from 'react'
-import { Form, Typography, Button, Spin, Menu, Divider } from 'antd'
-import { array, bool, func, string } from 'prop-types'
+import {
+	Form,
+	Typography,
+	Button,
+	Spin,
+	Menu,
+	Divider,
+	Steps as StepsAntd,
+	Avatar,
+	Space,
+} from 'antd'
+import { UserOutlined } from '@ant-design/icons'
+import {
+	array,
+	bool,
+	func,
+	string,
+	object,
+	number,
+	arrayOf,
+	shape,
+} from 'prop-types'
 import InputFactory from '~/components/inputFactory'
 import ImageField from '~/components/imageField'
 import StructuredList from './components/structuredList'
@@ -16,6 +36,7 @@ const { Title, Text, Paragraph } = Typography
 const tailLayout = {
 	wrapperCol: { span: 24 },
 }
+const { Step } = StepsAntd
 
 const Tabs = ({
 	textType,
@@ -30,6 +51,18 @@ const Tabs = ({
 	loadingSign,
 	versionId,
 	onChangeVariables,
+	steps,
+	current,
+	onClickPrevious,
+	onClickNext,
+	onClickDownload,
+	block,
+	signedWorkflow,
+	text,
+	textUpdate,
+	onClickUpdate,
+	blockVersion,
+	versionLoading,
 }) => {
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
@@ -42,9 +75,9 @@ const Tabs = ({
 		} else if (option === '2') {
 			return version()
 		} else if (option === '3') {
-			return assign()
+			return workflow()
 		} else {
-			return downloads()
+			return assign()
 		}
 	}
 
@@ -221,47 +254,161 @@ const Tabs = ({
 					</ContainerTabs>
 				</div>
 			))}
-			{textType === '.docx' && buttonsView()}
+			{textType === '.docx' && buttonsView() && downloads()}
 		</div>
 	)
 
 	const version = () => (
-		<Menu
-			onClick={(item) => handleVersion(item.key)}
-			style={{ width: '100%', border: 'none' }}
-			selectedKeys={[versionId]}
-			mode="vertical">
-			{versions.map((item) => (
-				<Menu.Item style={{ height: 80 }} key={item.id}>
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							justifyContent: 'center',
-							height: 80,
-						}}>
-						<Text style={{ color: '#000', fontSize: 16, lineHeight: 2.5 }}>
-							{item.description}
-						</Text>
+		<div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+					paddingTop: 20,
+				}}>
+				<Form.Item>
+					<Button
+						type="primary"
+						htmlType="button"
+						onClick={() => onClickUpdate(textUpdate)}
+						disabled={
+							!(text !== textUpdate.text && !blockVersion && !versionLoading)
+						}>
+						Criar versão
+					</Button>
+				</Form.Item>
+			</div>
+
+			<Menu
+				onClick={(item) => handleVersion(item.key)}
+				style={{ width: '100%', border: 'none' }}
+				selectedKeys={[versionId]}
+				mode="vertical">
+				{versions.map((item) => (
+					<Menu.Item style={{ height: 80 }} key={item.id}>
 						<div
 							style={{
 								display: 'flex',
 								flexDirection: 'column',
+								justifyContent: 'center',
+								height: 80,
 							}}>
-							<Text style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
-								por{' '}
-								<Text style={{ color: '#000', fontSize: 12, lineHeight: 1.5 }}>
-									{item.email}
+							<Text style={{ color: '#000', fontSize: 16, lineHeight: 2.5 }}>
+								{item.description}
+							</Text>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+								}}>
+								<Text
+									style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
+									por{' '}
+									<Text
+										style={{ color: '#000', fontSize: 12, lineHeight: 1.5 }}>
+										{item.email}
+									</Text>
 								</Text>
-							</Text>
-							<Text style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
-								{moment(item.created_at).fromNow()}
-							</Text>
+								<Text
+									style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
+									{moment(item.created_at).fromNow()}
+								</Text>
+							</div>
 						</div>
+					</Menu.Item>
+				))}
+			</Menu>
+		</div>
+	)
+
+	const workflow = () => (
+		<div
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				padding: 24,
+				margin: 5,
+				minHeight: 200,
+				background: '#fff',
+				border: '1px solid #F0F0F0',
+			}}>
+			<Title level={3}>Evolução do Documento</Title>
+			<StepsAntd
+				style={{
+					marginTop: '5%',
+					marginBottom: '5%',
+				}}
+				progressDot
+				direction="vertical"
+				current={current}
+				labelPlacement="vertical">
+				{steps.map((item, index) => (
+					<Step
+						key={index}
+						title={item.title}
+						subTitle={item.subTitle}
+						description={item.description}
+					/>
+				))}
+			</StepsAntd>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					minHeight: 100,
+					background: '#fff',
+				}}>
+				{steps.map((item, index) => (
+					<div key={index} className="steps-content">
+						{index < current ? (
+							<Space size={8}>
+								<Avatar size={'large'} icon={<UserOutlined />} />
+								<Text>{item.changed_by}</Text>
+							</Space>
+						) : (
+							<div style={{ width: 180 }}></div>
+						)}
 					</div>
-				</Menu.Item>
-			))}
-		</Menu>
+				))}
+			</div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+				}}>
+				<Form.Item {...tailLayout}>
+					{current !== 0 && signedWorkflow !== true && (
+						<Button
+							type="default"
+							htmlType="button"
+							className={styles.button}
+							onClick={onClickPrevious}
+							disabled={block}>
+							Reprovar
+						</Button>
+					)}
+					{current !== steps.length - 1 && signedWorkflow !== true && (
+						<Button
+							type="primary"
+							htmlType="button"
+							onClick={onClickNext}
+							disabled={block}>
+							Aprovar
+						</Button>
+					)}
+					{signedWorkflow === true && (
+						<Button
+							type="primary"
+							htmlType="button"
+							className={styles.button}
+							onClick={onClickDownload}
+							disabled={block}>
+							Baixar Documento
+						</Button>
+					)}
+				</Form.Item>
+			</div>
+		</div>
 	)
 
 	const assign = () => (
@@ -356,7 +503,7 @@ const Tabs = ({
 				padding: 24,
 				margin: 5,
 				minHeight: 500,
-				width: textType === '.docx' ? 500 : 350,
+				width: textType === '.docx' ? '35%' : '35%',
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
@@ -367,24 +514,26 @@ const Tabs = ({
 					setValue(e.key)
 				}}
 				selectedKeys={[value]}
-				mode="horizontal">
+				mode="horizontal"
+				style={{
+					width: '100%',
+				}}>
 				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="1">
 					Info
 				</Menu.Item>
 				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="2">
 					Versões
 				</Menu.Item>
+				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
+					Workflow
+				</Menu.Item>
 				{signers.length > 0 && (
-					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
+					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="4">
 						Assinantes
 					</Menu.Item>
 				)}
-				{textType === '.docx' && (
-					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="4">
-						Downloads
-					</Menu.Item>
-				)}
 			</Menu>
+
 			<div
 				style={{
 					padding: 10,
@@ -411,6 +560,24 @@ Tabs.propTypes = {
 	loadingSign: bool,
 	versionId: string,
 	onChangeVariables: func,
+	text: string,
+	textUpdate: object,
+	onClickUpdate: func,
+	blockVersion: bool,
+	versionLoading: bool,
+	steps: arrayOf(
+		shape({
+			title: string.isRequired,
+			subTitle: string,
+			description: string,
+		})
+	).isRequired,
+	current: number.isRequired,
+	onClickPrevious: func.isRequired,
+	onClickNext: func.isRequired,
+	onClickDownload: func.isRequired,
+	block: bool,
+	signedWorkflow: bool,
 }
 
 export default Tabs
