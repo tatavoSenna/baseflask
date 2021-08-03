@@ -170,9 +170,9 @@ def map_variables_to_form(variables, form):
                     "type": question['type'],
                     "struct_name": f'structured_list_{group_index}_{question_index}'
                 }
-                for item_variables in variables[f'structured_list_{group_index}_{question_index}']:
+                for variable_item in variables[f'structured_list_{group_index}_{question_index}']:
                     item_list = []
-                    for variable_name, value in item_variables.items():
+                    for variable_name, value in variable_item.items():
 
                         for var_obj in question['structure']:
                             if var_obj['variable']['name'] == variable_name:
@@ -196,14 +196,28 @@ def map_variables_to_form(variables, form):
                 variables_obj = {
                     "subtitle": question['label'],
                     "items": [],
+                    "options": question['options'],
+                    "structure": question['structure'],
+                    "info": question.get('info'),
                     "type": question['type'],
-                    "struct_name": f'structured_checkbox_{group_index}_{question_index}'
+                    "variable": question['variable']['name']
                 }
-                for item_variables in variables[f'structured_checkbox_{group_index}_{question_index}']:
+
+                for variable_item in variables[f'structured_checkbox_{group_index}_{question_index}']:
                     item_list = []
-                    for variable_name, value in item_variables.items():
+
+                    for option in variables_obj['options']:
+                        if variable_item['OPTION'] == option['value']:
+                            option['checked'] = True
+                            option['struct_values'] = {}
+                            for variable_name, value in variable_item.items():
+                                if variable_name != 'OPTION':
+                                    option['struct_values'][variable_name] = value
+
+                    for variable_name, value in variable_item.items():
                         if variable_name == 'OPTION':
                             label = 'Opção'
+                            variable_type = 'text'
                         else:
                             for var_obj in question['structure']:
                                 if var_obj['variable']['name'] == variable_name:

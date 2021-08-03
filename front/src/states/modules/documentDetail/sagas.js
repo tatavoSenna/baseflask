@@ -320,6 +320,24 @@ function* changeVariablesSaga({ payload = {} }) {
 					arranged[index][name] = values[fieldName][structVar]
 				})
 				values[fieldName] = arranged
+			} else if (fieldName.slice(0, 19) === 'structured_checkbox') {
+				let arranged = []
+				Object.entries(values[fieldName]).forEach((variable) => {
+					if (Array.isArray(variable[1])) {
+						variable[1].forEach((option) => {
+							const optionObj = { OPTION: option }
+							Object.entries(values[fieldName]).forEach((optionDetail) => {
+								if (optionDetail[0].split('_').slice(-1)[0] === option) {
+									const newName = optionDetail[0].split('_')
+									newName.pop()
+									optionObj[newName.join('_')] = optionDetail[1]
+								}
+							})
+							arranged.push(optionObj)
+						})
+					}
+				})
+				values[fieldName] = arranged
 			}
 		})
 		return values
