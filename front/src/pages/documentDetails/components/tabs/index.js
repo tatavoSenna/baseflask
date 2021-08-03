@@ -24,7 +24,9 @@ import {
 import InputFactory from '~/components/inputFactory'
 import ImageField from '~/components/imageField'
 import StructuredList from './components/structuredList'
+import StructuredCheckbox from '~/components/structuredCheckbox'
 import PersonField from './components/personField'
+
 import { ContainerTabs } from './styles'
 import styles from './index.module.scss'
 import * as moment from 'moment'
@@ -166,7 +168,7 @@ const Tabs = ({
 			</div>
 		))
 
-	const inputView = (item) => (
+	const inputView = (item, pageIndex) => (
 		<Form
 			id="infoForm"
 			form={form}
@@ -175,10 +177,26 @@ const Tabs = ({
 				onChangeVariables(values)
 				setIsEdit(false)
 			}}>
-			{item.fields.map((item, index) => {
+			{item.fields.map((item, fieldIndex) => {
 				switch (item.type) {
 					case 'structured_list':
 						return <StructuredList item={item} disabled={!isEdit} />
+					case 'structured_checkbox':
+						return (
+							<>
+								<Title
+									level={4}
+									style={{ marginTop: 10, marginBottom: '20px', fontSize: 15 }}>
+									{item.subtitle}
+								</Title>
+								<StructuredCheckbox
+									pageFieldsData={item}
+									disabled={!isEdit}
+									pageIndex={pageIndex}
+									fieldIndex={fieldIndex}
+								/>
+							</>
+						)
 					case 'person':
 						return <PersonField item={item} disabled={!isEdit} />
 					case 'variable_image':
@@ -186,7 +204,7 @@ const Tabs = ({
 					default:
 						return (
 							<InputFactory
-								key={index}
+								key={fieldIndex}
 								data={[item]}
 								visible={[true]}
 								disabled={!isEdit}
@@ -249,7 +267,7 @@ const Tabs = ({
 							style={{ marginTop: 20, fontSize: 18 }}>
 							{item.title}
 						</Title>
-						{textType === '.docx' ? inputView(item) : textView(item)}
+						{textType === '.docx' ? inputView(item, index) : textView(item)}
 						{infos.length - 1 !== index && <Divider />}
 					</ContainerTabs>
 				</div>

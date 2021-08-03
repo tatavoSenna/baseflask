@@ -6,7 +6,7 @@ export const selectAnswer = (data, payload) => {
 	Object.entries(payload.data).forEach((answer) => {
 		if (payload.visible[index]) {
 			//This rearranges the Structured Checkbox variables, where all detail variables from a selected option are grouped on an object
-			if (answer[0].slice(0, 16) === 'structured_checkbox') {
+			if (answer[0].slice(0, 19) === 'structured_checkbox') {
 				const items = []
 				Object.entries(answer[1]).forEach((variable) => {
 					if (Array.isArray(variable[1])) {

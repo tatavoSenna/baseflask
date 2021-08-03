@@ -144,12 +144,14 @@ def specify_variables(variables, document_template_id):
 
         if variable[0:11] == 'structured_':
 
+            # This first loop formats the variables from the structure
             for index, item in enumerate(variables[variable]):
                 for variable_name, specs in variables_specification[variable]['structure'].items():
                     formatted = format_variable(
                         specs, variable_name, item, struct_name=None)
                     variables[variable][index][variable_name] = formatted
 
+            # The second loop formats the main variables
             for variable_name, specs in variables_specification[variable]['main'].items():
                 formatted = format_variable(
                     specs, variable_name, variables, variable)

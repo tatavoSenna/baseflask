@@ -4,6 +4,7 @@ import logging
 import base64
 import json
 import jinja2
+import copy
 
 import boto3
 import pdfrw
@@ -300,7 +301,7 @@ def create(current_user):
             error_msg = "Value is missing. Needs questions and document model id"
             return jsonify({"message": error_msg}), 400
 
-        spec_variables = variables.copy()
+        spec_variables = copy.deepcopy(variables)
         try:
             specify_variables(spec_variables, document_template_id)
         except Exception as e:
@@ -642,7 +643,7 @@ def modify_document(current_user, document_id):
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
 
-    spec_variables = variables.copy()
+    spec_variables = copy.deepcopy(variables)
     try:
         specify_variables(spec_variables, document.document_template_id)
     except Exception as e:
