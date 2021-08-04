@@ -62,7 +62,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 			case 'date':
 				newField.variable.type = 'date'
-				newField.variable.doc_display_style = '%d/%m/%Y'
+				newField.variable.doc_display_style = '%d/%m/%Y | extended'
 				break
 			case 'checkbox':
 				newField.variable.type = 'list'
