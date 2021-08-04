@@ -272,7 +272,8 @@ const Tabs = ({
 					</ContainerTabs>
 				</div>
 			))}
-			{textType === '.docx' && buttonsView() && downloads()}
+			{textType === '.docx' && buttonsView()}
+			{downloads()}
 		</div>
 	)
 
