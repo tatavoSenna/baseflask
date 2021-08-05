@@ -7,8 +7,10 @@ import docx
 import base64
 from io import BufferedReader
 import tempfile
+from docx.text.paragraph import Paragraph
+from docx.oxml.xmlchemy import OxmlElement
 
-from docxtpl import DocxTemplate, InlineImage
+from docxtpl import DocxTemplate, InlineImage, Document
 from docx.shared import Mm
 from bs4 import BeautifulSoup
 
@@ -23,6 +25,22 @@ def delete_paragraph(paragraph):
     p.getparent().remove(p)
     p._p = p._element = None
 
+def separate_string(filename):
+    doc = Document(filename)
+    for p in doc.paragraphs:
+        if '{{ INSERT_PARAGRAFO }}' in p.text:
+            inline = p.runs
+            # Loop added to work with runs (strings with same style)
+            for i in range(len(inline)):
+                if '{{ INSERT_PARAGRAFO }}' in inline[i].text:
+                    text = inline[i].text.split("{{ INSERT_PARAGRAFO }}")
+                    inline[i].text = text[0]
+                    inline[i].add_break()
+                    for j in range(len(text)):
+                        if j != 0:
+                            run = p.add_run(text[j])
+                            run.add_break()
+    doc.save(filename)
 
 class RemoteDocument:
 
@@ -41,18 +59,9 @@ class RemoteDocument:
             filled_docx_io = self.fill_docx_with_variables(
                 document, docx_io, variables)
 
-            doc = docx.Document(filled_docx_io)
-            for para in doc.paragraphs:
-                if para.text == "" or len(para.text) < 2:
-                    soup = BeautifulSoup(para._p.xml, 'xml')
-                    if len(soup.find_all('w:numId')) > 0:
-                        delete_paragraph(para)
-            fileobj = io.BytesIO()
-            doc.save(fileobj)
-            fileobj.seek(0)
-            copy_docx_io = io.BytesIO(fileobj.getvalue())
+            copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
 
-            self.convert_docx_to_pdf_and_save(document, fileobj)
+            self.convert_docx_to_pdf_and_save(document, filled_docx_io)
             self.upload_filled_docx_to_documents(
                 document, copy_docx_io, document_template.text_type)
 
@@ -176,7 +185,19 @@ class RemoteDocument:
         docx_template.save(filled_text_io)
         filled_text_io.seek(0)
 
-        return filled_text_io
+        separate_string(filled_text_io)
+        doc = docx.Document(filled_text_io)
+        for para in doc.paragraphs:
+            if para.text == "" or len(para.text) < 2:
+                soup = BeautifulSoup(para._p.xml, 'xml')
+                if len(soup.find_all('w:numId')) > 0:
+                    delete_paragraph(para)
+
+        fileobj = io.BytesIO()
+        doc.save(fileobj)
+        fileobj.seek(0)
+
+        return fileobj
 
     def get_template(self):
         template_file_io = io.BytesIO()
@@ -189,6 +210,7 @@ class RemoteDocument:
         template_file = template_file_io.getvalue()
 
         return template_file
+    
 
     def upload_signed_document(self, document, document_bytes):
         remote_path = f'{document.company_id}/{current_app.config["AWS_S3_SIGNED_DOCUMENTS_ROOT"]}/{document.id}/{document.title.replace(" ", "_")}.pdf'
