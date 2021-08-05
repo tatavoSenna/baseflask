@@ -4,6 +4,7 @@ import logging
 import base64
 import json
 import jinja2
+import copy
 
 import boto3
 import pdfrw
@@ -306,7 +307,7 @@ def create(current_user):
             error_msg = "Value is missing. Needs questions and document model id"
             return jsonify({"message": error_msg}), 400
 
-        spec_variables = variables.copy()
+        spec_variables = copy.deepcopy(variables)
         try:
             specify_variables(spec_variables, document_template_id)
         except Exception as e:
@@ -609,6 +610,8 @@ def void_envelope(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document(current_user, document_id):
+    if not current_user['is_admin']:
+        abort(403, "Only Admin Users can delete documents")
     try:
         document = get_document_controller(document_id)
     except Exception:
@@ -646,7 +649,7 @@ def modify_document(current_user, document_id):
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
 
-    spec_variables = variables.copy()
+    spec_variables = copy.deepcopy(variables)
     try:
         specify_variables(spec_variables, document.document_template_id)
     except Exception as e:

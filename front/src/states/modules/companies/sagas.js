@@ -9,9 +9,14 @@ import api from '~/services/api'
 import {
 	getCompanyList,
 	getCompanyListSuccess,
+	getCompanyListFailure,
 	addCompany,
+	addCompanySuccess,
+	addCompanyFailure,
 	resetNewCompany,
 	changeUserCompany,
+	changeUserCompanySuccess,
+	changeUserCompanyFailure,
 } from '.'
 
 import { setCompanyId } from '~/states/modules/session'
@@ -32,7 +37,7 @@ function* getCompanyListSaga({ payload = {} }) {
 		const { data } = yield call(api.get, url)
 		yield put(getCompanyListSuccess(data))
 	} catch (error) {
-		console.log(error)
+		yield put(getCompanyListFailure(error))
 	}
 }
 
@@ -51,26 +56,40 @@ function* addCompanySaga() {
 			content: 'Empresa adicionada com sucesso',
 			updateKey: 'addCompany',
 		})
+		yield put(addCompanySuccess())
 		yield put(getCompanyList())
 	} catch (error) {
 		errorMessage({
 			content: error.response.data.error,
 			updateKey: 'addCompany',
 		})
+		yield put(addCompanyFailure(error))
 	}
 	yield put(resetNewCompany())
 }
 
 function* changeUserCompanySaga({ payload = {} }) {
-	const changedCompany = {}
-
-	changedCompany['new_id'] = payload.id
+	loadingMessage({
+		content: 'Trocando o usuário de Empresa...',
+		updateKey: 'changeUserCompany',
+	})
 
 	try {
-		const { data } = yield call(api.post, '/company/join', changedCompany)
+		const { data } = yield call(api.post, '/company/join', {
+			new_id: payload.id,
+		})
+		successMessage({
+			content: 'Empresa do usuário trocada com sucesso',
+			updateKey: 'changeUserCompany',
+		})
 		yield put(setCompanyId(data))
+		yield put(changeUserCompanySuccess(data))
 		yield put(getSettings())
 	} catch (error) {
-		// yield put(changeUserCompanyFailure())
+		errorMessage({
+			content: error.response.data.error,
+			updateKey: 'changeUserCompany',
+		})
+		yield put(changeUserCompanyFailure(error))
 	}
 }

@@ -30,6 +30,8 @@ const Contracts = () => {
 
 	const { data: models } = useSelector(({ model }) => model)
 
+	const { is_admin } = useSelector(({ session }) => session)
+
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
 		return history.push({
@@ -95,7 +97,7 @@ const Contracts = () => {
 					link={link}
 				/>
 				<DataTable
-					columns={getColumns(handleToGo, handleDeleteContract)}
+					columns={getColumns(handleToGo, handleDeleteContract, is_admin)}
 					dataSource={contracts}
 					pages={pages}
 					onChangePageNumber={getContracts}

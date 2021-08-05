@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { object } from 'prop-types'
+import { object, func } from 'prop-types'
 import { Empty, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { editTemplateStepAdd } from '~/states/modules/editTemplate'
@@ -9,8 +9,14 @@ import { getUserList } from '~/states/modules/users'
 
 import Step from './step'
 
-const Workflow = ({ data }) => {
+const Workflow = ({ data, setInputsFilled, inputsFilled }) => {
 	const dispatch = useDispatch()
+
+	// Once workflow is rendered, it removes the red color on its tab
+	useEffect(() => {
+		setInputsFilled({ ...inputsFilled, workflow: true })
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	const { groupList } = useSelector(({ groups }) => groups)
 	const { userList } = useSelector(({ users }) => users)
@@ -66,4 +72,6 @@ export default Workflow
 
 Workflow.propTypes = {
 	data: object,
+	inputsFilled: object,
+	setInputsFilled: func,
 }

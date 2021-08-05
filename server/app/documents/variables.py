@@ -46,7 +46,7 @@ def specify_variables(variables, document_template_id):
                 return str(variables[variable]).replace(".", ",") + '%'
 
         elif variable_type == "date":
-            if specs["doc_display_style"] == "date_extended":
+            if specs["doc_display_style"] in ["date_extended", "extended"]:
                 list = variables[variable][0:10].split("-", 2)
                 dia = list[2]
                 mes = month_dictionary.get(
@@ -69,6 +69,8 @@ def specify_variables(variables, document_template_id):
         elif variable_type == "list":
             if specs["doc_display_style"] == "commas":
                 list_variable = variables[variable]
+                if len(list_variable) < 2:
+                    return list_variable[0]
                 last_element = list_variable.pop()
                 list_variable[-1] = list_variable[-1] + " e " + last_element
                 return ", ".join(list_variable)
@@ -83,7 +85,7 @@ def specify_variables(variables, document_template_id):
 
         elif variable_type == "currency":
             num_variable = variables[variable]
-            if specs["doc_display_style"] == "currency_extended":
+            if specs["doc_display_style"] in ["currency_extended", "extended"]:
                 return format_currency(num_variable, "BRL", locale='pt_BR') + \
                     " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
             return format_currency(
@@ -142,12 +144,14 @@ def specify_variables(variables, document_template_id):
 
         if variable[0:11] == 'structured_':
 
+            # This first loop formats the variables from the structure
             for index, item in enumerate(variables[variable]):
                 for variable_name, specs in variables_specification[variable]['structure'].items():
                     formatted = format_variable(
                         specs, variable_name, item, struct_name=None)
                     variables[variable][index][variable_name] = formatted
 
+            # The second loop formats the main variables
             for variable_name, specs in variables_specification[variable]['main'].items():
                 formatted = format_variable(
                     specs, variable_name, variables, variable)
