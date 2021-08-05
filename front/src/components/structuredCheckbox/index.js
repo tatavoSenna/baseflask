@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { string, object, func, shape, number } from 'prop-types'
+import { string, object, func, shape, number, bool } from 'prop-types'
 import InfoField from '~/components/infoField'
 import InputFactory from '../inputFactory'
 import { Card, Form, Checkbox, Row } from 'antd'
@@ -10,6 +10,7 @@ const StructuredCheckbox = ({
 	onChange,
 	pageIndex,
 	fieldIndex,
+	disabled,
 }) => {
 	const { label, variable, structure, options, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
@@ -21,6 +22,12 @@ const StructuredCheckbox = ({
 		newVisible[index] = value
 		setVisible(newVisible)
 	}
+	const selected = []
+	options.forEach((option) => {
+		if (option.checked === true) {
+			selected.push(option.value)
+		}
+	})
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
@@ -30,10 +37,12 @@ const StructuredCheckbox = ({
 			onChange={onChange}
 			hasFeedback
 			type={type}
+			initialValue={selected}
 			colon={false}>
 			<Checkbox.Group>
 				<Card>
 					{options.map((option, index) => {
+						// This next line allows you to manipulate the object
 						const pageFieldsData = JSON.parse(JSON.stringify(structure))
 						pageFieldsData.forEach((field) => {
 							field['id'] = option.value
@@ -46,6 +55,7 @@ const StructuredCheckbox = ({
 										key={index}
 										value={option.value}
 										style={{ marginTop: '10px', marginBottom: '10px' }}
+										disabled={disabled}
 										onChange={(value) =>
 											updateVisible(value.target.checked, index)
 										}>
@@ -56,6 +66,12 @@ const StructuredCheckbox = ({
 									<InputFactory
 										data={[field]}
 										visible={Array(visible[index])}
+										disabled={disabled}
+										initialValues={
+											option.checked
+												? [option['struct_values'][field.variable.name]]
+												: ''
+										}
 									/>
 								))}
 							</>
@@ -79,6 +95,7 @@ StructuredCheckbox.propTypes = {
 	pageIndex: number,
 	fieldIndex: number,
 	listIndex: number,
+	disabled: bool,
 }
 
 StructuredCheckbox.defaultProps = {

@@ -35,6 +35,12 @@ const { actions, reducer } = createSlice({
 				},
 			})
 		},
+		getCompanyListFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
+
 		updateNewCompany: (state, { payload }) => {
 			extend(state, {
 				newCompany: extend(state.newCompany, {
@@ -42,7 +48,21 @@ const { actions, reducer } = createSlice({
 				}),
 			})
 		},
-		addCompany: (state) => extend(state),
+		addCompany: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		addCompanySuccess: (state) => {
+			extend(state, {
+				loading: false,
+			})
+		},
+		addCompanyFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
+
 		resetNewCompany: (state) =>
 			extend(state, {
 				newCompany: extend(state.newCompany, {
@@ -53,12 +73,20 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				showModal: payload,
 			}),
-		changeUserCompany: (state) => extend(state),
+		changeUserCompany: (state) =>
+			extend(state, {
+				loading: true,
+			}),
 		changeUserCompanySuccess: (state, { payload }) => {
-			console.log(payload)
-			extend(state, { company_id: parseInt(payload.user.company_id) })
+			extend(state, {
+				loading: false,
+			})
 		},
-		changeUserCompanyFailure: (state) => extend(state),
+		changeUserCompanyFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -68,9 +96,13 @@ export const {
 	updateNewCompany,
 	getCompanyListFailure,
 	addCompany,
+	addCompanySuccess,
+	addCompanyFailure,
 	resetNewCompany,
 	setShowModal,
 	changeUserCompany,
+	changeUserCompanySuccess,
+	changeUserCompanyFailure,
 } = actions
 
 export { default as companiesSaga } from './sagas'

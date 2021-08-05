@@ -115,6 +115,11 @@ Resources:
                 Effect: Allow
                 Action:
                   - cognito-idp:*
+              - Resource: !ImportValue SNSNewDocumentARN
+                Effect: Allow
+                Action:
+                  - sns:Publish
+
 
   LogGroup:
     Type: AWS::Logs::LogGroup
