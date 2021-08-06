@@ -86,6 +86,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'variable_image':
 				newField.variable.type = 'variable_image'
 				newField.variable.doc_display_style = 'image'
+				newField.variable.width = 8.0
 				break
 			case 'person':
 				newField.variable.type = 'template'

@@ -11,8 +11,9 @@ from docx.text.paragraph import Paragraph
 from docx.oxml.xmlchemy import OxmlElement
 
 from docxtpl import DocxTemplate, InlineImage, Document
-from docx.shared import Mm
+from docx.shared import Cm
 from bs4 import BeautifulSoup
+from PIL import Image
 
 from datetime import datetime
 from flask import current_app
@@ -175,7 +176,14 @@ class RemoteDocument:
                 img_bytes = base64.decodebytes(
                     variables[key].split("base64,")[1].encode('ascii'))
                 image = io.BytesIO(img_bytes)
-                sd.add_picture(image, width=Mm(50), height=Mm(50))
+                image_obj = Image.open(io.BytesIO(img_bytes))
+                proportion = float(image_obj.size[1]/image_obj.size[0])
+                for field in document.form[0]['fields']:
+                    if field['variable']['name'] == key.strip("image_"):
+                        width_size = field['variable']['width']
+                        height_size = width_size * proportion
+                        sd.add_picture(image, width=Cm(width_size), height=Cm(height_size))
+                        break
                 variables[str(key)[len("image_"):]] = sd
                 self.upload_image(document, variables[key].split(
                     "base64,")[1], str(key)[len("image_"):])
