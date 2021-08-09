@@ -168,4 +168,8 @@ Outputs:
     Value: !Ref UserPoolClient
   IdentityPoolId:
     Value: !Ref IdentityPool
-  
+  UserPoolArn:
+    Value:
+      !GetAtt UserPool.Arn
+    Export:
+      Name: UserPoolArn-AuthAPI

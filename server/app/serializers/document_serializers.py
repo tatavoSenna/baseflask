@@ -163,6 +163,9 @@ def map_variables_to_form(variables, form):
             if question['visible'] == False:
                 continue
 
+            if question['type'] == 'separator':
+                continue
+
             if question['type'] == 'structured_list':
                 variables_obj = {
                     "subtitle": question['label'],

@@ -38,6 +38,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
 			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
+			<Menu.Item key="separator">Separador</Menu.Item>
 		</Menu>
 	)
 
@@ -86,6 +87,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			case 'variable_image':
 				newField.variable.type = 'variable_image'
 				newField.variable.doc_display_style = 'image'
+				newField.variable.width = 8.0
 				break
 			case 'person':
 				newField.variable.type = 'template'
@@ -128,6 +130,12 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 						},
 					},
 				]
+				break
+			case 'separator':
+				newField = {
+					type: 'separator',
+					title: '',
+				}
 				break
 			default:
 				newField.variable.type = 'string'

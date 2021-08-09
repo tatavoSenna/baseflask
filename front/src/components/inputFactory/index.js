@@ -26,6 +26,7 @@ import PersonField from '~/components/personField'
 import StructuredList from '~/components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
 
+import { Divider } from 'antd'
 import { useDispatch } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
 
@@ -397,6 +398,9 @@ function InputFactory({
 						}
 					/>
 				)
+				break
+			case 'separator':
+				children.push(<Divider>{pageFieldsData[i].title}</Divider>)
 				break
 			default:
 				children.push(
