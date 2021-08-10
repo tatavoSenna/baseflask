@@ -10,7 +10,8 @@ import tempfile
 from docx.text.paragraph import Paragraph
 from docx.oxml.xmlchemy import OxmlElement
 
-from docxtpl import DocxTemplate, InlineImage, Document
+from docxtpl import DocxTemplate, InlineImage
+from docx import Document
 from docx.shared import Cm
 from bs4 import BeautifulSoup
 from PIL import Image
@@ -168,25 +169,26 @@ class RemoteDocument:
 
     def fill_docx_with_variables(self, document, docx_io, variables):
 
-        docx_template = DocxTemplate(docx_io)
+        doc = Document(docx_io)
 
         for key in list(variables):
             if key.startswith("image_") and variables[key]:
-                sd = docx_template.new_subdoc()
                 img_bytes = base64.decodebytes(
                     variables[key].split("base64,")[1].encode('ascii'))
                 image = io.BytesIO(img_bytes)
                 image_obj = Image.open(io.BytesIO(img_bytes))
                 proportion = float(image_obj.size[1]/image_obj.size[0])
-                for field in document.form[0]['fields']:
-                    if field['variable']['name'] == key.strip("image_"):
-                        width_size = field['variable']['width']
-                        height_size = width_size * proportion
-                        sd.add_picture(image, width=Cm(width_size), height=Cm(height_size))
-                        break
-                variables[str(key)[len("image_"):]] = sd
-                self.upload_image(document, variables[key].split(
-                    "base64,")[1], str(key)[len("image_"):])
+                for para in doc.paragraphs:
+                    if key.split("image_")[1] in para.text:
+                        for field in document.form[0]['fields']:
+                            if field['variable']['name'] == key.strip("image_"):
+                                width_size = field['variable']['width']
+                                height_size = width_size * proportion
+                                r = para.add_run()
+                                r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
+                                break
+        doc.save(docx_io)
+        docx_template = DocxTemplate(docx_io)
         docx_template.render(variables)
 
         filled_text_io = io.BytesIO()
