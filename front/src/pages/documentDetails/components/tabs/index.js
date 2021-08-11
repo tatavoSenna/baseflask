@@ -273,7 +273,6 @@ const Tabs = ({
 				</div>
 			))}
 			{textType === '.docx' && buttonsView()}
-			{downloads()}
 		</div>
 	)
 
@@ -337,6 +336,7 @@ const Tabs = ({
 					</Menu.Item>
 				))}
 			</Menu>
+			{downloads()}
 		</div>
 	)
 
