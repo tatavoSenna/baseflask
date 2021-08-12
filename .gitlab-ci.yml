@@ -11,3 +11,4 @@ merge_into_staging:
     - python3 ./devops/staging.py
   only:
     - merge_requests
+    - dev
