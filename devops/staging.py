@@ -39,12 +39,14 @@ def merge_into_staging():
 
     mrs = lawing_project.mergerequests.list(state='opened')
     for mr in mrs:
-        if mr.draft == False:
+        print(f'Analisando {mr.title}')
+        print(mr.draft)
+        if not mr.draft:
             print(f'Mergando {mr.title}')
             source_branch = mr.source_branch
             repo.git.merge(f'origin/{source_branch}')
             
-    repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
+    # repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
 
     for mr in mrs:
         try:
