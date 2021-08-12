@@ -31,12 +31,13 @@ def create_template_controller(company_id, user_id, name, form, workflow, signer
     return document_template.id
 
 
-def edit_template_controller(company_id, user_id, template_id, form, workflow, signers, text, text_type, variables):
+def edit_template_controller(company_id, user_id, template_id, name, form, workflow, signers, text, text_type, variables):
     template = DocumentTemplate.query.filter_by(id=template_id).first()
 
     if template.company_id != company_id:
         raise Exception('Invalid company')
 
+    template.name = name
     template.form = form
     template.workflow = workflow
     template.text = text

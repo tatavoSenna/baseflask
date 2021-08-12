@@ -64,6 +64,7 @@ def edit_template(current_user, template_id):
         return jsonify({"message": "Accepts only content-type json."}), 400
 
     content = request.json
+    name = content.get("title", None)
     form = content.get("form", None)
     workflow = content.get("workflow", None)
     signers = content.get("signers", None)
@@ -74,7 +75,7 @@ def edit_template(current_user, template_id):
     user_id = current_user["id"]
 
     document_template_id = edit_template_controller(
-        company_id, user_id, template_id, form, workflow, signers, template_text, text_type, variables)
+        company_id, user_id, template_id, name, form, workflow, signers, template_text, text_type, variables)
 
     return jsonify({"id": document_template_id})
 
