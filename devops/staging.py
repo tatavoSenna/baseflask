@@ -39,12 +39,23 @@ def merge_into_staging():
 
     mrs = lawing_project.mergerequests.list(state='opened')
     for mr in mrs:
-        if 'demo' in mr.labels:
+        if mr.draft == False:
             print(f'Mergando {mr.title}')
             source_branch = mr.source_branch
             repo.git.merge(f'origin/{source_branch}')
-    repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
+            
+    # repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
 
+    for mr in mrs:
+        try:
+            if mr.draft:
+                mr.labels.remove("Deployed to Demo")
+            else:
+                mr.labels.append("Deployed to Demo")
+        except ValueError:
+            pass
+        mr.save()
 
+        
 merge_into_staging()
 
