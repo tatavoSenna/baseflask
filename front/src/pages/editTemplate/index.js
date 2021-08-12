@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Menu, Form, Button, PageHeader, Layout, Spin } from 'antd'
+import { Menu, Form, Button, PageHeader, Layout, Spin, Input } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
 	FileTextOutlined,
 	TeamOutlined,
+	EditOutlined,
+	CheckOutlined,
 } from '@ant-design/icons'
 import {
 	getTemplateDetail,
 	editTemplateRequest,
+	editTemplateTitle,
 } from '~/states/modules/editTemplate'
 
 import BreadCrumb from '~/components/breadCrumb'
@@ -29,6 +32,7 @@ const EditTemplate = () => {
 	const dispatch = useDispatch()
 	const [form] = Form.useForm()
 	const [current, setCurrent] = useState('form')
+	const [editTitle, setEditTitle] = useState(false)
 	const [inputsFilled, setInputsFilled] = useState({
 		form: edit,
 		workflow: edit,
@@ -45,6 +49,11 @@ const EditTemplate = () => {
 
 	const handleNav = (e) => {
 		setCurrent(e.key)
+	}
+
+	const handleEditTitle = (e) => {
+		const title = e.target.value
+		dispatch(editTemplateTitle({ title }))
 	}
 
 	// Checks if all fields are filled (all but form tab for now)
@@ -173,7 +182,34 @@ const EditTemplate = () => {
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			<PageHeader>
-				<BreadCrumb parent="Templates" current={data.title} />
+				<BreadCrumb
+					parent="Templates"
+					current={
+						editTitle ? (
+							<>
+								<Input
+									style={{ maxWidth: '300px' }}
+									value={data.title}
+									onChange={(e) => handleEditTitle(e)}
+								/>
+								<Button
+									onClick={() => setEditTitle(false)}
+									icon={<CheckOutlined style={{ fontSize: '18px' }} />}
+									style={{ border: 'none', marginLeft: '5px' }}
+								/>
+							</>
+						) : (
+							<>
+								{data.title}
+								<Button
+									onClick={() => setEditTitle(true)}
+									icon={<EditOutlined style={{ fontSize: '18px' }} />}
+									style={{ border: 'none', marginLeft: '5px' }}
+								/>
+							</>
+						)
+					}
+				/>
 			</PageHeader>
 			<Menu
 				onClick={handleNav}
