@@ -182,7 +182,10 @@ class RemoteDocument:
                     if key.split("image_")[1] in para.text:
                         for field in document.form[0]['fields']:
                             if field['variable']['name'] == key.strip("image_"):
-                                width_size = field['variable']['width']
+                                try:
+                                    width_size = field['variable']['width']
+                                except KeyError:
+                                    width_size = 12.0
                                 height_size = width_size * proportion
                                 r = para.add_run()
                                 r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
