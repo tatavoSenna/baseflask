@@ -46,7 +46,7 @@ def merge_into_staging():
             source_branch = mr.source_branch
             repo.git.merge(f'origin/{source_branch}')
             
-    # repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
+    repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
 
     for mr in mrs:
         try:
