@@ -40,8 +40,12 @@ function InputFactory({
 	disabled,
 	initialValues,
 }) {
-	const { values } = useHistory().location.state
-	const currentPage = values !== undefined ? parseInt(values.current) : 0
+	const state = useHistory().location.state
+	let values = { current: 0 }
+	if (state && state.values) {
+		values = state.values
+	}
+	const currentPage = values.current
 	const dispatch = useDispatch()
 	const children = []
 

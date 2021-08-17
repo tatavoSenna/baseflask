@@ -21,7 +21,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				modelId,
 				title,
-				data: data.DocumentTemplate.form,
+				data: data.form,
 				error: null,
 				loading: false,
 			})

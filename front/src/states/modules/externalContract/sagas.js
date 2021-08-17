@@ -9,6 +9,7 @@ import {
 	createContractExternalSuccess,
 	createContractExternalFailure,
 } from '.'
+import { listQuestionSuccess } from '../question'
 import {
 	loadingMessage,
 	successMessage,
@@ -33,41 +34,32 @@ function* verifyTokenSaga({ payload = {} }) {
 				data: { ...data, token, ...data.Template },
 			})
 		)
+		const modelId = data.Template.id
+		const title = 'Meu processo'
+		const parent = null
+		const templateData = data.Template
+		yield put(
+			listQuestionSuccess({ modelId, title, parent, data: templateData })
+		)
 	} catch (error) {
 		yield put(verifyTokenFailure(error))
 	}
 }
 
-function* createContractExternalSaga() {
+function* createContractExternalSaga({ payload }) {
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
 		updateKey: 'createContractExternal',
 	})
 
-	const { answer, id, token } = yield select((state) => {
-		const {
-			answer,
-			externalContract: { data },
-		} = state
-		return { answer, id: data.id, token: data.token }
-	})
-
+	const { token, data, visible } = payload
 	let dataImg = {}
-	let objectData = answer.data
-
-	for (var [key] of Object.entries(objectData)) {
-		if (key.includes('image_')) {
-			dataImg[key] = document
-				.getElementById(key)
-				.getElementsByTagName('input')[0].value
-		}
-	}
 
 	try {
 		yield call(api.post, '/external/create', {
-			document_template: id,
 			token,
-			variables: { ...answer.data, ...dataImg },
+			variables: { ...data, ...dataImg },
+			visible,
 		})
 		yield put(createContractExternalSuccess())
 		successMessage({

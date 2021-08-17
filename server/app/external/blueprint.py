@@ -20,8 +20,6 @@ from .controllers import (
     ExceptionWithMsg
 )
 
-from app.documents.variables import specify_variables
-
 external_bp = Blueprint("external", __name__)
 
 
@@ -69,25 +67,17 @@ def authorize_token():
 @external_bp.route("/create", methods=["POST"])
 def create_document_from_token():
     content = request.json
-    document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
     token = content.get("token", None)
-
-    if not document_template_id or not variables:
+    visible = content.get("visible",None)
+    if not visible or not variables or not token:
         abort(400, "Need to provide variables and template id")
-
-    try:
-        variables = specify_variables(variables, document_template_id)
-    except Exception as e:
-        logging.exception(e)
-        error_msg = "Variable specification is incorrect"
-        return jsonify({"message": error_msg}), 400
 
     try:
         document = create_external_document_controller(
             variables,
-            document_template_id,
-            token
+            token,
+            visible
         )
     except ExceptionWithMsg as e:
         logging.exception(

@@ -8,6 +8,7 @@ import { SmileOutlined, AlertOutlined } from '@ant-design/icons'
 import FormFactory from '~/components/formFactory'
 
 import { verifyToken } from '~/states/modules/externalContract'
+import { listVisible } from '~/states/modules/question'
 
 const getCurrentStepAndComponent = (
 	pageFieldsData,
@@ -40,24 +41,35 @@ const AddContractExternal = () => {
 	const { token } = useParams()
 
 	const dispatch = useDispatch()
-	const { form, data, created, authorized } = useSelector(
+	const { created, authorized } = useSelector(
 		({ externalContract }) => externalContract
 	)
+
+	const { data: questions } = useSelector(({ question }) => question)
+
 	useEffect(() => {
 		dispatch(verifyToken({ token }))
 	}, [dispatch, token])
+
 	const state = useHistory().location.state
-	let values = { current: 0, ...data }
+	let values = { current: 0 }
 	if (state && state.values) {
 		values = state.values
 	}
 	const currentPage = parseInt(values.current)
+
+	useEffect(() => {
+		if (Object.keys(questions).length > 0) {
+			dispatch(listVisible({ questions }))
+		}
+	}, [dispatch, questions])
+
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 
 	useEffect(() => {
-		const pageFieldsData = form ? form[currentPage] : null
-		const isLastPage = currentPage === form.length - 1
-		const pageNumber = form.length
+		const pageFieldsData = questions ? questions[currentPage] : null
+		const isLastPage = currentPage === questions.length - 1
+		const pageNumber = questions.length
 		const pageFormComponent = getCurrentStepAndComponent(
 			pageFieldsData,
 			isLastPage,
@@ -66,7 +78,7 @@ const AddContractExternal = () => {
 		)
 
 		setStepComponent(pageFormComponent)
-	}, [currentPage, form, token])
+	}, [currentPage, questions, token])
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
