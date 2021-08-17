@@ -70,7 +70,10 @@ def create_document_controller(user_id, user_email, company_id,
     document_workflow = document_template.workflow
     document_workflow['created_by'] = username
     current_node = document_workflow["current_node"]
-    step_name = document_workflow["nodes"][current_node]["title"]
+    try:
+        step_name = document_workflow["nodes"][current_node]["title"]
+    except KeyError:
+        step_name = None
 
     # Fills form with 'visible' parameter
     form_with_visible = document_template.form
@@ -261,7 +264,12 @@ def upload_document_text_controller(document_id, document_text):
 def next_status_controller(document_id, username):
     document = get_document_controller(document_id)
     workflow = document.workflow
-    next_node = workflow["nodes"][workflow["current_node"]]["next_node"]
+
+    current_node = workflow["current_node"]
+    if current_node is None:
+        return document, 1
+
+    next_node = workflow["nodes"][current_node]["next_node"]
     # check if there is a next node
     if next_node is None:
         return document, 1
@@ -280,7 +288,11 @@ def next_status_controller(document_id, username):
 def previous_status_controller(document_id):
     document = get_document_controller(document_id)
     workflow = document.workflow
+
     current_node = workflow["current_node"]
+    if current_node is None:
+        return document, 1
+
     previous_node = None
     nodes = workflow["nodes"].items()
     for key, value in nodes:
@@ -314,6 +326,8 @@ def workflow_status_change_email_controller(document_id, name):
     document = get_document_controller(document_id)
     workflow = document.workflow
     node = workflow["current_node"]
+    if node is None:
+        return
     users_IDS = workflow["nodes"][node]["responsible_users"]
     status = workflow["nodes"][node]["title"]
     title = document.title

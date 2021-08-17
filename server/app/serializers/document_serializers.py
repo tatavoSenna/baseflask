@@ -70,6 +70,8 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
             if nodes:
                 current_status = nodes.get(
                     current_node, {"title": "-"}).get('title', {"title": "-"})
+            else:
+                current_status = "-"
 
             return current_status
 
@@ -135,6 +137,8 @@ def order_nodes(nodes):
 
 def generate_steps(obj_workflow, ordered_nodes):
     steps = []
+    if ordered_nodes is None:
+        return steps
     for node in ordered_nodes:
         steps.append({
             'step': node,
