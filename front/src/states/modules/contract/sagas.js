@@ -27,12 +27,13 @@ export default function* rootSaga() {
 }
 
 function* loginSaga({ payload = {} }) {
-	const { perPage = 10, page = 1, search = '' } = payload
+	const { perPage = 10, page = 1, search = '', parent } = payload
+	let url = `/documents/?per_page=${perPage}&page=${page}&search=${search}`
+	if (parent) {
+		url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&folder=${parent}`
+	}
 	try {
-		const { data } = yield call(
-			api.get,
-			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
-		)
+		const { data } = yield call(api.get, url)
 
 		yield put(listContractSuccess(data))
 	} catch (error) {

@@ -86,7 +86,8 @@ def create_document_controller(user_id, user_email, company_id, variables,
         data_inicio_contrato=data_inicio_contrato,
         data_final_contrato=data_final_contrato,
         data_assinatura=data_assinatura,
-        valor_contrato=valor_contrato
+        valor_contrato=valor_contrato,
+        parent_id=parent_id
     )
     db.session.add(document)
     db.session.commit()

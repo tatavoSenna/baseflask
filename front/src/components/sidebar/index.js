@@ -16,6 +16,7 @@ import { getSettings } from '~/states/modules/settings'
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logoSmall from '~/assets/logo-small.png'
+import { setInitialFolder } from '~/states/modules/folder'
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const { data } = useSelector(({ settings }) => settings)
@@ -33,6 +34,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 
 	const { is_admin } = useSelector(({ session }) => session)
 
+	const handleFolderRowBack = () => {
+		dispatch(setInitialFolder())
+	}
+
 	function handleGoTo(path) {
 		if (!isWeb) {
 			handleCollapsed()
@@ -48,7 +53,9 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 			<Menu.Item
 				key="empresas"
 				icon={<IdcardOutlined />}
-				onClick={() => handleGoTo('/companies')}>
+				onClick={() => {
+					handleGoTo('/companies')
+				}}>
 				<Tooltip className={styles.tooltip}>Empresas</Tooltip>
 			</Menu.Item>
 		)
@@ -97,7 +104,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						defaultSelectedKeys={['1']}>
 						<Menu.Item
 							key="/"
-							onClick={() => handleGoTo('/')}
+							onClick={() => {
+								handleFolderRowBack()
+								handleGoTo('/')
+							}}
 							icon={
 								<FolderOpenOutlined
 									className={styles.icons}
@@ -171,7 +181,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						mode="inline">
 						<Menu.Item
 							key="/"
-							onClick={() => handleGoTo('/')}
+							onClick={() => {
+								handleFolderRowBack()
+								handleGoTo('/')
+							}}
 							icon={<FolderOpenOutlined />}>
 							Documentos
 						</Menu.Item>

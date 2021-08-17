@@ -31,7 +31,13 @@ function AddContract() {
 	}, [dispatch, questions])
 
 	useEffect(() => {
-		dispatch(listQuestion({ modelId: values.modelId, title: values.title }))
+		dispatch(
+			listQuestion({
+				modelId: values.modelId,
+				title: values.title,
+				parent: values.parent,
+			})
+		)
 	}, [dispatch, values])
 
 	useEffect(() => {
