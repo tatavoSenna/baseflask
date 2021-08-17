@@ -444,7 +444,7 @@ def document(current_user, documentTemplate_id):
     document_template = get_document_template_details_controller(
         current_user["company_id"], documentTemplate_id)
 
-    return jsonify({"DocumentTemplate": DocumentTemplateSerializer().dump(document_template)})
+    return jsonify(DocumentTemplateSerializer().dump(document_template))
 
 
 @documents_bp.route('/sign', methods=["POST"])
@@ -647,4 +647,4 @@ def modify_document(current_user, document_id):
             "Could not change document variables")
         abort(400, "Could not change document variables")
 
-    return DocumentSerializer().dump(document)
+    return DocumentSerializer().dump(document)    

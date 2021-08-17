@@ -22,7 +22,7 @@ const { actions, reducer } = createSlice({
 				parent,
 				modelId,
 				title,
-				data: data.DocumentTemplate.form,
+				data: data.form,
 				error: null,
 				loading: false,
 			})
