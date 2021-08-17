@@ -29,6 +29,7 @@ import cityField, { cityFieldSaga } from './modules/cityField'
 import fileField, { fileFieldSaga } from './modules/fileField'
 import companies, { companiesSaga } from './modules/companies'
 import session, { sessionSaga } from './modules//session'
+import folder, { folderSaga } from './modules/folder'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -57,6 +58,7 @@ const reducers = combineReducers({
 	fileField,
 	companies,
 	session,
+	folder,
 })
 
 const store = configureStore({
@@ -87,6 +89,7 @@ const rootSaga = function* () {
 		fileFieldSaga(),
 		companiesSaga(),
 		sessionSaga(),
+		folderSaga(),
 	])
 }
 

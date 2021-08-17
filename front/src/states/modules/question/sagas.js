@@ -13,12 +13,12 @@ export default function* rootSaga() {
 }
 
 function* listQuestionSaga({ payload = {} }) {
-	const { modelId, title } = payload
+	const { modelId, title, parent } = payload
 
 	try {
 		const { data } = yield call(api.get, `/documents/templates/${modelId}`)
 
-		yield put(listQuestionSuccess({ modelId, title, data }))
+		yield put(listQuestionSuccess({ modelId, title, parent, data }))
 	} catch (error) {
 		yield put(listQuestionFailure(error))
 	}

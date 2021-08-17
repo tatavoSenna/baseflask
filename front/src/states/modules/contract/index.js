@@ -15,6 +15,7 @@ const initialState = {
 	},
 	error: null,
 	loading: false,
+	parent: null,
 }
 
 const { actions, reducer } = createSlice({
@@ -26,7 +27,7 @@ const { actions, reducer } = createSlice({
 				loading: true,
 			})
 		},
-		listContractSuccess: (state, { payload }) =>
+		listContractSuccess: (state, { payload }) => {
 			extend(state, {
 				data: selectAllContracts(payload.items),
 				pages: {
@@ -36,7 +37,9 @@ const { actions, reducer } = createSlice({
 				},
 				error: null,
 				loading: false,
-			}),
+				parent: payload.parent,
+			})
+		},
 		listContractFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
