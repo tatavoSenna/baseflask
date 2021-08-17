@@ -273,7 +273,7 @@ def add_document_text(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def create(current_user):
-    # check if content_type is json
+    # Check if content_type is json
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
 
@@ -285,6 +285,7 @@ def create(current_user):
     is_folder = content.get("is_folder", None)
     visible = content.get("visible", None)
 
+    # Check if content being created is a folder
     if is_folder:
 
         document = create_folder_controller(
@@ -297,24 +298,17 @@ def create(current_user):
             is_folder
         )
     else:
+        # Check if document template and variables are being communicated
         if not document_template_id or not variables:
             error_msg = "Value is missing. Needs questions and document model id"
             return jsonify({"message": error_msg}), 400
 
-        spec_variables = copy.deepcopy(variables)
-        try:
-            specify_variables(spec_variables, document_template_id)
-        except Exception as e:
-            logging.exception(e)
-            error_msg = "Variable specification is incorrect"
-            return jsonify({"message": error_msg}), 400
-
+        # Try to create document
         try:
             document = create_document_controller(
                 current_user["id"],
                 current_user["email"],
                 current_user["company_id"],
-                spec_variables,
                 document_template_id,
                 title,
                 current_user["name"],
@@ -323,6 +317,7 @@ def create(current_user):
                 is_folder,
                 visible
             )
+        # Logs errors if user is admin
         except jinja2.TemplateSyntaxError as e:
             logging.exception(e)
             if current_user["is_admin"] == True:
@@ -342,13 +337,6 @@ def create(current_user):
             if current_user["is_admin"] == True:
                 error_JSON["Exception"] = str(e)
             return jsonify(error_JSON), 400
-
-        try:
-            response = document_creation_email_controller(
-                title, current_user["company_id"])
-        except Exception as e:
-            logging.exception(
-                "Failed to send emails on document creation. One or more emails is bad formated or invalid")
 
     return DocumentSerializer().dump(document)
 

@@ -3,6 +3,7 @@ import base64
 import io
 import boto3
 import requests
+import logging
 from datetime import datetime
 from datetime import date
 
@@ -18,6 +19,7 @@ import copy
 from flask import current_app, jsonify
 from unittest.mock import MagicMock
 
+from .variables import specify_variables
 
 def get_document_template_list_controller(company_id):
 
@@ -35,23 +37,28 @@ def get_document_template_details_controller(company_id, template_id):
     return document_template
 
 
-def create_document_controller(user_id, user_email, company_id, variables,
+def create_document_controller(user_id, user_email, company_id,
                                document_template_id, title, username, received_variables,
                                parent_id, is_folder, visible):
-
+    # Get document template from the database using template_id and company_id
     document_template = DocumentTemplate.query.get(document_template_id)
     document_company = Company.query.filter_by(id=company_id).first()
-    user_name = User.query.filter_by(id=user_id).first().name
+
+    # Transforms received variables into specified variables with the current date
     current_date_dict = get_current_date_dict()
+    variables = copy.deepcopy(received_variables)
+    specify_variables(variables, document_template_id)
     variables.update(current_date_dict)
     received_variables.update(current_date_dict)
 
+    # Get specific values from received_variables to create Document object
     nome_contrato = received_variables.get("NOME_CONTRATO", None)
     data_inicio_contrato = received_variables.get("DATA_INICIO_CONTRATO", None)
     data_final_contrato = received_variables.get("DATA_FINAL_CONTRATO", None)
     data_assinatura = received_variables.get("DATA_ASSINATURA", None)
     valor_contrato = received_variables.get("VALOR_CONTRATO", None)
 
+    # Specify version 0 to create Document object
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     version = [{"description": "Version 0",
                 "email": user_email,
@@ -59,16 +66,19 @@ def create_document_controller(user_id, user_email, company_id, variables,
                 "id": "0",
                 "comments": None
                 }]
+    # Get workflow from the template and update it
     document_workflow = document_template.workflow
     document_workflow['created_by'] = username
     current_node = document_workflow["current_node"]
     step_name = document_workflow["nodes"][current_node]["title"]
 
+    # Fills form with 'visible' parameter
     form_with_visible = document_template.form
     for page_index, page in enumerate(form_with_visible):
         for field_index, field in enumerate(page['fields']):
             field['visible'] = visible[page_index][field_index]
 
+    # Create Document object
     document = Document(
         user_id=user_id,
         company_id=company_id,
@@ -89,13 +99,8 @@ def create_document_controller(user_id, user_email, company_id, variables,
         valor_contrato=valor_contrato,
         parent_id=parent_id
     )
-    db.session.add(document)
-    db.session.commit()
 
-    remote_document = RemoteDocument()
-    remote_document.create(document, document_template,
-                           company_id, variables)
-
+    # Calls webhooks listed for the company
     webhook_list = Webhook.query.filter_by(company_id=company_id).all()
     for webhook in webhook_list:
         sns = boto3.client('sns')
@@ -107,7 +112,7 @@ def create_document_controller(user_id, user_email, company_id, variables,
                    "company_name": document_company.name,
                    "company_id": company_id,
                    "user_id": user_id,
-                   "user_name": user_name,
+                   "user_name": username,
                    "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),
                    "valor_contrato": valor_contrato,
                    "data_inicio_contrato": data_inicio_contrato,
@@ -122,6 +127,20 @@ def create_document_controller(user_id, user_email, company_id, variables,
             Message=json.dumps({'default': json.dumps(message)}),
             MessageStructure='json'
         )
+    
+    # Add document to the database
+    db.session.add(document)
+    db.session.commit()
+    
+    # Add document to s3 bucket
+    remote_document = RemoteDocument()
+    remote_document.create(document, document_template,company_id, variables)
+
+    # Send email informing document creation
+    try:
+        document_creation_email_controller(title, company_id)
+    except Exception as e:
+        logging.exception("Failed to send emails on document creation. One or more emails is bad formated or invalid")
 
     return document
 
