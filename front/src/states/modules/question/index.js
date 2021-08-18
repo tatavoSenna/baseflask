@@ -54,6 +54,17 @@ const { actions, reducer } = createSlice({
 					return page
 				}),
 			}),
+		setResetQuestion: (state) => {
+			extend(state, {
+				data: {},
+				error: null,
+				loading: false,
+				parent: null,
+				modelId: null,
+				title: '',
+				visible: [],
+			})
+		},
 	},
 })
 
@@ -63,6 +74,7 @@ export const {
 	listQuestionFailure,
 	listVisible,
 	updateVisible,
+	setResetQuestion,
 } = actions
 
 export { default as questionSaga } from './sagas'

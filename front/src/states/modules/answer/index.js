@@ -31,6 +31,14 @@ const { actions, reducer } = createSlice({
 				loadingAnswer: false,
 				error: payload.error,
 			}),
+		setResetAnswer: (state) => {
+			extend(state, {
+				data: {},
+				dataImg: {},
+				error: null,
+				loadingAnswer: false,
+			})
+		},
 	},
 })
 
@@ -39,6 +47,7 @@ export const {
 	answerRequest,
 	answerSuccess,
 	answerFailure,
+	setResetAnswer,
 } = actions
 
 export { default as answerSaga } from './sagas'

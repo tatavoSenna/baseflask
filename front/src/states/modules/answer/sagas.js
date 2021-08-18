@@ -7,7 +7,9 @@ import {
 	errorMessage,
 } from '~/services/messager'
 
-import { answerRequest, answerSuccess, answerFailure } from '.'
+import { answerRequest, answerSuccess, answerFailure, setResetAnswer } from '.'
+
+import { setResetQuestion } from '~/states/modules/question'
 
 export default function* rootSaga() {
 	yield takeEvery(answerRequest, answerSaga)
@@ -53,6 +55,8 @@ function* answerSaga({ payload }) {
 			updateKey: 'answer',
 		})
 		history.push('/')
+		yield put(setResetAnswer())
+		yield put(setResetQuestion())
 	} catch (error) {
 		yield put(answerFailure(error))
 		errorMessage({
