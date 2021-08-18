@@ -31,9 +31,9 @@ const DropdownField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select disabled={disabled}>
+			<Select disabled={disabled} onChange={onChange}>
 				{options.map((option, index) => (
-					<Select.Option key={index} value={option.value} onChange={onChange}>
+					<Select.Option key={index} value={option.value}>
 						{option.label}
 					</Select.Option>
 				))}

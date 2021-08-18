@@ -105,6 +105,8 @@ function InputFactory({
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional } = pageFieldsData[i]
 		const first = i === 0
+		console.log('pageFieldsData:', pageFieldsData)
+		console.log('conditional:', conditional)
 
 		switch (type) {
 			case 'radio':
@@ -188,9 +190,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={initialValues ? initialValues[i] : ''}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={conditional ? (e) => checkField(e, i) : undefined}
 					/>
 				)
 				break
