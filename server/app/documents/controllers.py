@@ -1,4 +1,5 @@
 import json
+import logging
 import base64
 import io
 import boto3
@@ -107,37 +108,14 @@ def create_document_controller(user_id, user_email, company_id, variables,
             MessageStructure='json'
         )
 
+    print(f'webhook company id: {company_id}')
     webhook_list = Webhook.query.filter_by(company_id=company_id).all()
+    print(f'Webhook query result: {webhook_list}')
+    sns = boto3.client('sns')
+    topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+    print(f'sns configurado: {topic_arn}')
     for webhook in webhook_list:
-        sns = boto3.client('sns')
-        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
-        message = {"document_title": title,
-                   "document_id": document.id,
-                   "document_template_name": document_template.name,
-                   "document_template_id": document_template_id,
-                   "company_name": document_company.name,
-                   "company_id": company_id,
-                   "user_id": user_id,
-                   "user_name": user_name,
-                   "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),
-                   "valor_contrato": valor_contrato,
-                   "data_inicio_contrato": data_inicio_contrato,
-                   "data_final_contrato": data_final_contrato,
-                   "data_assinatura": data_assinatura,
-                   "nome_contrato": nome_contrato,
-                   "webhook_url": webhook.webhook
-                   }
-
-        response = sns.publish(
-            TargetArn=topic_arn,
-            Message=json.dumps({'default': json.dumps(message)}),
-            MessageStructure='json'
-        )
-
-    webhook_list = Webhook.query.filter_by(company_id=company_id).all()
-    for webhook in webhook_list:
-        sns = boto3.client('sns')
-        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+        print(f'chamando webhook url: {webhook.webhook}')
         message = {"document_title": title,
                    "document_id": document.id,
                    "document_template_name": document_template.name,
