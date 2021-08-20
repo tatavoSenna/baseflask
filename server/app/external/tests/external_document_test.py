@@ -4,8 +4,7 @@ from unittest.mock import patch
 from app.models.documents import ExternalToken
 from app.external.controllers import(
     generate_external_token_controller,
-    authorize_external_token_controller,
-    create_external_document_controller
+    authorize_external_token_controller
 )
 
 
