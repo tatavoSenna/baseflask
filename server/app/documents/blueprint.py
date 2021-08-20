@@ -113,6 +113,11 @@ def get_document_list(current_user):
     elif type == "file":
         folder = False
 
+    if type == "folder":
+        folder = True
+    elif type == "file":
+        folder = False
+
     if search_param == "":
         if type != "":
             paginated_query = (
@@ -280,6 +285,7 @@ def create(current_user):
     content = request.json
     document_template_id = content.get("document_template", None)
     variables = content.get("variables", None)
+
     title = content.get("title", None)
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
