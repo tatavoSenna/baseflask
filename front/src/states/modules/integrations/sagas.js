@@ -24,10 +24,7 @@ export default function* rootSaga() {
 function* getIntegrationSaga() {
 	const { session } = yield select()
 	try {
-		const { data } = yield call(
-			api.get,
-			`/company/${session.loggedUser.companyId}/docusign`
-		)
+		const { data } = yield call(api.get, `/company/docusign`)
 		yield put(getIntegrationSuccess(data))
 	} catch (error) {
 		yield put(getIntegrationFailure(error))
@@ -41,17 +38,14 @@ function* saveIntegrationSaga({ payload }) {
 			updateKey: 'saveIntegrations',
 		})
 		const { session } = yield select()
-		const response = yield call(
-			api.post,
-			`/company/${session.loggedUser.companyId}/docusign`,
-			payload
-		)
+		const response = yield call(api.post, `/company/docusign`, payload)
 		successMessage({
 			content: 'Dados salvo com sucesso',
 			updateKey: 'saveIntegrations',
 		})
 		yield put(saveIntegrationSuccess(response.data))
 	} catch (error) {
+		console.log(error)
 		yield put(saveIntegrationFailure(error))
 		errorMessage({
 			content: 'Problemas ao salvar dados',

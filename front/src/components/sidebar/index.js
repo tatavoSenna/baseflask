@@ -7,7 +7,6 @@ import {
 	FolderOpenOutlined,
 	TeamOutlined,
 	LayoutOutlined,
-	DeploymentUnitOutlined,
 	SettingOutlined,
 	IdcardOutlined,
 } from '@ant-design/icons'
@@ -139,17 +138,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							<Tooltip className={styles.tooltip}>Templates</Tooltip>
 						</Menu.Item>
 						<Menu.Item
-							key="integration"
-							icon={
-								<DeploymentUnitOutlined
-									className={styles.icons}
-									style={{ fontSize: 18 }}
-								/>
-							}
-							onClick={() => handleGoTo('/integrations')}>
-							<Tooltip className={styles.tooltip}>Integração</Tooltip>
-						</Menu.Item>
-						<Menu.Item
 							key="settings"
 							icon={<SettingOutlined />}
 							onClick={() => handleGoTo('/settings')}>
@@ -199,12 +187,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							icon={<LayoutOutlined />}
 							onClick={() => handleGoTo('/templates')}>
 							Templates
-						</Menu.Item>
-						<Menu.Item
-							key="integration"
-							icon={<DeploymentUnitOutlined />}
-							onClick={() => handleGoTo('/integrations')}>
-							Integração
 						</Menu.Item>
 						<Menu.Item
 							key="settings"
