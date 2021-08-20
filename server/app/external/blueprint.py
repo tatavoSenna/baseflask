@@ -1,5 +1,6 @@
 import logging
 import json
+from app.documents.controllers import create_document_controller
 
 import boto3
 
@@ -16,9 +17,12 @@ from .controllers import (
     generate_external_token_controller,
     authorize_external_token_controller,
     get_template_controller,
-    create_external_document_controller,
-    ExceptionWithMsg
+    ExceptionWithMsg,
+    mark_token_as_used_controller
 )
+from app.models.documents import DocumentTemplate, ExternalToken
+from app.models.user import User
+from app import db
 
 external_bp = Blueprint("external", __name__)
 
@@ -70,15 +74,37 @@ def create_document_from_token():
     variables = content.get("variables", None)
     token = content.get("token", None)
     visible = content.get("visible",None)
+    parent = content.get("parent",None)
+    is_folder = content.get("is_folder",False)
     if not visible or not variables or not token:
         abort(400, "Need to provide variables and template id")
+    
+    # Check if creation token exists and if it has not been used yet
+    creation_token = ExternalToken.query.filter_by(token=str(token)).first()
+    if creation_token == None:
+        raise ExceptionWithMsg("Token not found")
+    elif creation_token.used == True:
+        raise ExceptionWithMsg("This Token has already been used")
+
+
 
     try:
-        document = create_external_document_controller(
+        # Get user parameters and template parameters using the external token and create document
+        user = User.query.filter_by(id=creation_token.user_id).first()
+        document = create_document_controller(
+            user.id,
+            user.email,
+            user.company_id,
+            creation_token.document_template_id,
+            creation_token.title,
+            user.name,
             variables,
-            token,
+            parent,
+            is_folder,
             visible
         )
+        # Marks token as used
+        mark_token_as_used_controller(creation_token.token)
     except ExceptionWithMsg as e:
         logging.exception(
             "Could not create document")
