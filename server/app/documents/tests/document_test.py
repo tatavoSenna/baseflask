@@ -149,6 +149,7 @@ def test_update_document_signers():
 
 @ patch('app.documents.controllers.RemoteDocument.create')
 def test_create_document(create_remote_document_mock):
+    
     company = factories.CompanyFactory(id=17)
     user = factories.UserFactory(
         company=company, email="testemail@gmail.com"
@@ -176,15 +177,35 @@ def test_create_document(create_remote_document_mock):
         "created_by": ""
     }
 
+    form = [
+        {
+            "title": "teste dummy",
+            "fields": [
+                {
+                    "info": "",
+                    "type": "text",
+                    "label": "Dummy text",
+                    "variable": {
+                        "name": "DUMMY",
+                        "type": "string",
+                        "doc_display_style": "plain"
+                    }
+                }
+            ]
+        }
+    ]
+
+    visible = [[True]]
+
     document_template_txt = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".txt"
+        company=company, workflow=workflow, text_type=".txt", form=form
     )
 
     document_template_docx = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".docx"
+        company=company, workflow=workflow, text_type=".docx", form=form
     )
 
-    title = "default title"
+    document_title = "default title"
 
     variables = {}
 
@@ -198,11 +219,13 @@ def test_create_document(create_remote_document_mock):
         user.id,
         user.email,
         user.company_id,
-        variables,
         document_template_txt.id,
-        title,
-        'Joao',
-        variables
+        document_title,
+        user.name,
+        variables,
+        None,
+        False,
+        visible
     )
 
     create_remote_document_mock.assert_called_with(
@@ -213,11 +236,13 @@ def test_create_document(create_remote_document_mock):
         user.id,
         user.email,
         user.company_id,
-        variables,
         document_template_docx.id,
-        title,
-        'Joao',
-        variables
+        document_title,
+        user.name,
+        variables,
+        None,
+        False,
+        visible
     )
 
     create_remote_document_mock.assert_called_with(
@@ -227,8 +252,8 @@ def test_create_document(create_remote_document_mock):
     assert document_txt.user_id == user.id
     assert document_txt.company_id == company.id
     assert document_txt.document_template_id == document_template_txt.id
-    assert document_txt.title == title
-    assert document_txt.workflow['created_by'] == 'Joao'
+    assert document_txt.title == document_title
+    assert document_txt.workflow['created_by'] == user.name
     assert document_txt.text_type == ".txt"
 
     assert document_docx.document_template_id == document_template_docx.id
@@ -255,7 +280,7 @@ def test_email_create_document(send_email_on_document_creation_mock):
         email_title, company_id)
 
     send_email_on_document_creation_mock.assert_called_once_with(
-        'leon@lawing.com.br', email_list, 'New Document created', email_title, 'd-50d8e7117d4640689d8bf638094f2037'
+        'leon@lawing.com.br', email_list, 'New Document created', email_title, 'd-83efa7b8d2fb4742a69dd9059324e148'
     )
 
 
