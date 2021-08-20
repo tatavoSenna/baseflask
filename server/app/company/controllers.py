@@ -2,7 +2,10 @@ from app import db
 from app.models.company import Company, Webhook
 from .remote import RemoteCompany
 
-def save_company_keys_controller(company, docusign_integration_key, docusign_secret_key, docusign_account_id):
+def save_company_keys_controller(company_id, docusign_integration_key, docusign_secret_key, docusign_account_id):
+
+    company = Company.query.get(company_id)
+
     if docusign_integration_key != None:
         company.docusign_integration_key = docusign_integration_key
 
@@ -13,6 +16,8 @@ def save_company_keys_controller(company, docusign_integration_key, docusign_sec
         company.docusign_account_id = docusign_account_id
 
     db.session.commit()
+
+    return company
 
 def upload_logo_controller(company_id, logo_img):
     remote_company = RemoteCompany()

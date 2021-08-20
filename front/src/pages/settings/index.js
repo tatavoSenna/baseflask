@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import { Menu, PageHeader, Layout } from 'antd'
-import { FormOutlined, NodeIndexOutlined } from '@ant-design/icons'
+import {
+	FormOutlined,
+	NodeIndexOutlined,
+	DeploymentUnitOutlined,
+} from '@ant-design/icons'
 
 import BreadCrumb from '~/components/breadCrumb'
 import CompanyConfiguration from './components/companyConfiguration'
 import Webhook from './components/webhook'
+import Integration from './components/integration'
 
 import styles from './index.module.scss'
 
@@ -38,10 +43,14 @@ const Settings = () => {
 				<Menu.Item key="webhook" icon={<NodeIndexOutlined />}>
 					Webhook
 				</Menu.Item>
+				<Menu.Item key="integration" icon={<DeploymentUnitOutlined />}>
+					Integração
+				</Menu.Item>
 			</Menu>
 			<Layout className={styles.content}>
 				{current === 'companyConfiguration' && <CompanyConfiguration />}
 				{current === 'webhook' && <Webhook />}
+				{current === 'integration' && <Integration />}
 			</Layout>
 		</Layout>
 	)

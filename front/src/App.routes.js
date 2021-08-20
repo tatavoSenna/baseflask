@@ -9,7 +9,6 @@ import Users from './pages/users'
 import Templates from './pages/templates'
 import EditTemplate from './pages/editTemplate'
 import DocumentDetails from './pages/documentDetails'
-import Integrations from './pages/integrations'
 import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
 import Companies from './pages/companies'
@@ -29,7 +28,6 @@ export const ROUTES = {
 	newTemplate: '/templates/new',
 	editTemplate: '/templates/edit',
 	documentDetails: '/documentDetails',
-	integrations: '/integrations',
 	externalContract: '/documentcreate/:token',
 	settings: '/settings',
 	companies: '/companies',
@@ -70,7 +68,6 @@ function Routes() {
 						component={Companies}
 						isPrivate
 					/>
-					<Route exact path={ROUTES.integrations} component={Integrations} />
 					<Route exact path={ROUTES.settings} component={Settings} />
 				</Wrapper>
 			</Switch>

@@ -1,4 +1,5 @@
 from os import abort
+import logging
 from sqlalchemy import desc
 from flask import request, Blueprint, jsonify, current_app, abort
 from sqlalchemy.sql.expression import false
@@ -22,46 +23,34 @@ from .controllers import (
 company_bp = Blueprint("company", __name__)
 
 
-@company_bp.route("/<company_id>/docusign", methods=["POST"])
+@company_bp.route("/docusign", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
-def save_keys(logged_user, company_id):
-    company = Company.query.get(company_id)
-    if not company:
-        return {}, 404
-
-    if logged_user['company_id'] != int(company_id):
-        return {}, 401
-
+def save_keys(logged_user):
     content = request.json
     docusign_integration_key = content.get("docusign_integration_key", None)
     docusign_secret_key = content.get("docusign_secret_key", None)
     docusign_account_id = content.get("docusign_account_id", None)
 
     try:
-        save_company_keys_controller(
-            company=company,
+        company = save_company_keys_controller(
+            company_id=logged_user["company_id"],
             docusign_integration_key=docusign_integration_key,
             docusign_secret_key=docusign_secret_key,
             docusign_account_id=docusign_account_id
         )
-    except:
+    except Exception as e:
+        logging.exception(e)
         return {}, 500
 
     return jsonify({"company": CompanySerializer().dump(company)})
 
 
-@company_bp.route("/<company_id>/docusign", methods=["GET"])
+@company_bp.route("/docusign", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
-def get_keys(logged_user, company_id):
-    company = Company.query.get(company_id)
-    if not company:
-        return {}, 404
-
-    if logged_user['company_id'] != int(company_id):
-        return {}, 401
-
+def get_keys(logged_user):
+    company = Company.query.get(logged_user["company_id"])
     return jsonify({"company": CompanySerializer().dump(company)})
 
 @company_bp.route("/upload", methods=["POST"])
