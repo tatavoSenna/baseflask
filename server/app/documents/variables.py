@@ -4,6 +4,7 @@ from app.models.documents import DocumentTemplate
 from app import jinja_env
 import requests
 import json
+import logging
 from flask import Markup
 from num2words import num2words
 from babel.numbers import format_currency
@@ -21,117 +22,171 @@ def specify_variables(variables, document_template_id):
         variable_type = specs["type"]
         if variable_type == "string":
             if specs["doc_display_style"] == "sentence_case":
-                return variables[variable].capitalize()
+                try:
+                    return variables[variable].capitalize()
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "uppercase":
-                return variables[variable].upper()
+                try:
+                    return variables[variable].upper()
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "lowercase":
-                return variables[variable].lower()
+                try:
+                    return variables[variable].lower()
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "plain":
-                return variables[variable]
+                try:
+                    return variables[variable]
+                except Exception as e:
+                    logging.exception(e)
 
         elif variable_type == "number":
             if specs["doc_display_style"] == "extended":
-                return num2words(variables[variable], lang="pt_BR")
+                try:
+                    return num2words(variables[variable], lang="pt_BR")
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "plain":
-                return variables[variable]
+                try:
+                    return variables[variable]
+                except Exception as e:
+                    logging.exception(e)
 
         elif variable_type == "percentage":
             if specs["doc_display_style"] == "extended":
-                return num2words(variables[variable], lang="pt_BR") + " porcento"
+                try:
+                    return num2words(variables[variable], lang="pt_BR") + " porcento"
+                except Exception as e:
+                    logging.exception(e)
             elif specs["doc_display_style"] == "plain":
-                return str(variables[variable]).replace(".", ",") + '%'
+                try:
+                    return str(variables[variable]).replace(".", ",") + '%'
+                except Exception as e:
+                    logging.exception(e)
 
         elif variable_type == "date":
             if specs["doc_display_style"] in ["date_extended", "extended"]:
-                list = variables[variable][0:10].split("-", 2)
-                dia = list[2]
-                mes = month_dictionary.get(
-                    int(list[1].strip("0")))
-                ano = list[0]
-                if mes != None:
-                    return f'{dia} de {mes} de {ano}'
-                else:
-                    return datetime.strptime(variables[variable][0:10], '%d de %B de %Y')
+                try:
+                    list = variables[variable][0:10].split("-", 2)
+                    dia = list[2]
+                    mes = month_dictionary.get(
+                        int(list[1].strip("0")))
+                    ano = list[0]
+                    if mes != None:
+                        return f'{dia} de {mes} de {ano}'
+                    else:
+                        return datetime.strptime(variables[variable][0:10], '%d de %B de %Y')
+                except Exception as e:
+                    logging.exception(e)
             else:
-                date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
-                return date.strftime(specs["doc_display_style"])
+                try:
+                    date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
+                    return date.strftime(specs["doc_display_style"])
+                except Exception as e:
+                    logging.exception(e)
 
         elif variable_type == "database":
-            response = requests.get(
-                f'https://n66nic57s2.execute-api.us-east-1.amazonaws.com/dev/extract/{variables[variable]}').json()
-            variables = {**variables, **response}
-            return True
+            try:
+                response = requests.get(
+                    f'https://n66nic57s2.execute-api.us-east-1.amazonaws.com/dev/extract/{variables[variable]}').json()
+                variables = {**variables, **response}
+                return True
+            except Exception as e:
+                logging.exception(e)
 
         elif variable_type == "list":
             if specs["doc_display_style"] == "commas":
-                list_variable = variables[variable]
-                if len(list_variable) < 2:
-                    return list_variable[0]
-                last_element = list_variable.pop()
-                list_variable[-1] = list_variable[-1] + " e " + last_element
-                return ", ".join(list_variable)
+                try:
+                    list_variable = variables[variable]
+                    if len(list_variable) < 2:
+                        return list_variable[0]
+                    last_element = list_variable.pop()
+                    list_variable[-1] = list_variable[-1] + " e " + last_element
+                    return ", ".join(list_variable)
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "bullets":
                 if text_type == ".txt":
-                    return Markup(
-                        "</li><p>").join(variables[variable])
+                    try:
+                        return Markup(
+                            "</li><p>").join(variables[variable])
+                    except Exception as e:
+                        logging.exception(e)
 
                 elif text_type == ".docx":
-                    return "\a".join(variables[variable])
+                    try:
+                        return "\a".join(variables[variable])
+                    except Exception as e:
+                        logging.exception(e)
 
         elif variable_type == "currency":
-            num_variable = variables[variable]
-            if specs["doc_display_style"] in ["currency_extended", "extended"]:
-                return format_currency(num_variable, "BRL", locale='pt_BR') + \
-                    " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
-            return format_currency(
-                num_variable, "BRL", locale='pt_BR')
+            try:
+                num_variable = variables[variable]
+                if specs["doc_display_style"] in ["currency_extended", "extended"]:
+                    return format_currency(num_variable, "BRL", locale='pt_BR') + \
+                        " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
+                return format_currency(
+                    num_variable, "BRL", locale='pt_BR')
+            except Exception as e:
+                logging.exception(e)
 
         elif variable_type == "person":
-            items = variables[struct_name]
-            if items['PERSON_TYPE'] == 'Física':
-                person_type = 'natural'
-            elif items['PERSON_TYPE'] == 'Jurídica':
-                person_type = 'legal'
-            text_template = specs["doc_display_style"][person_type]
-            jinja_template = jinja_env.from_string(text_template)
-            filled_text = jinja_template.render(items)
-            return filled_text
+            try:
+                items = variables[struct_name]
+                if items['PERSON_TYPE'] == 'Física':
+                    person_type = 'natural'
+                elif items['PERSON_TYPE'] == 'Jurídica':
+                    person_type = 'legal'
+                text_template = specs["doc_display_style"][person_type]
+                jinja_template = jinja_env.from_string(text_template)
+                filled_text = jinja_template.render(items)
+                return filled_text
+            except Exception as e:
+                logging.exception(e)
 
         elif variable_type[0:11] == "structured_":
             if specs["doc_display_style"] == "text":
-                rows_list = []
-                text_template = specs["extra_style_params"]["row_template"]
-                jinja_template = jinja_env.from_string(text_template)
-                for item in variables[struct_name]:
-                    filled_text = jinja_template.render(item)
-                    rows_list.append(filled_text)
+                try:
+                    rows_list = []
+                    text_template = specs["extra_style_params"]["row_template"]
+                    jinja_template = jinja_env.from_string(text_template)
+                    for item in variables[struct_name]:
+                        filled_text = jinja_template.render(item)
+                        rows_list.append(filled_text)
 
-                return specs["extra_style_params"]["separator"].join(rows_list)
+                    return specs["extra_style_params"]["separator"].join(rows_list)
+                except Exception as e:
+                    logging.exception(e)
 
             elif specs["doc_display_style"] == "table":
-                table_list = []
-                table_title = specs["extra_style_params"]["title"]
-                i = 0
-                for item in variables[struct_name]:
-                    table_rows = [
-                        f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"]
-                    i += 1
-                    for lineSpec in specs["extra_style_params"]["lines"]:
-                        columns = []
-                        for info in lineSpec:
-                            for label, value in info.items():
-                                columns.append(
-                                    f"<td>{label}</td><td>{item[value]}</td>")
-                        table_rows.append('<tr>' + ''.join(columns) + '</tr>')
+                try:
+                    table_list = []
+                    table_title = specs["extra_style_params"]["title"]
+                    i = 0
+                    for item in variables[struct_name]:
+                        table_rows = [
+                            f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"]
+                        i += 1
+                        for lineSpec in specs["extra_style_params"]["lines"]:
+                            columns = []
+                            for info in lineSpec:
+                                for label, value in info.items():
+                                    columns.append(
+                                        f"<td>{label}</td><td>{item[value]}</td>")
+                            table_rows.append('<tr>' + ''.join(columns) + '</tr>')
 
-                    table_list.append(''.join(table_rows))
+                        table_list.append(''.join(table_rows))
 
-                return "<figure class='table'><table><tbody>" + "".join(table_list) + "</tbody></table></figure>"
+                    return "<figure class='table'><table><tbody>" + "".join(table_list) + "</tbody></table></figure>"
+                except Exception as e:
+                    logging.exception(e)
 
     if not variables_specification:
         return variables

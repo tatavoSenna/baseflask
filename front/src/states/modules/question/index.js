@@ -17,11 +17,12 @@ const { actions, reducer } = createSlice({
 				loading: true,
 			}),
 		listQuestionSuccess: (state, { payload }) => {
-			const { modelId, title, data } = payload
+			const { modelId, title, parent, data } = payload
 			extend(state, {
+				parent,
 				modelId,
 				title,
-				data: data.DocumentTemplate.form,
+				data: data.form,
 				error: null,
 				loading: false,
 			})
@@ -53,6 +54,17 @@ const { actions, reducer } = createSlice({
 					return page
 				}),
 			}),
+		setResetQuestion: (state) => {
+			extend(state, {
+				data: {},
+				error: null,
+				loading: false,
+				parent: null,
+				modelId: null,
+				title: '',
+				visible: [],
+			})
+		},
 	},
 })
 
@@ -62,6 +74,7 @@ export const {
 	listQuestionFailure,
 	listVisible,
 	updateVisible,
+	setResetQuestion,
 } = actions
 
 export { default as questionSaga } from './sagas'

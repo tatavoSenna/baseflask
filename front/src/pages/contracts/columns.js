@@ -1,17 +1,31 @@
 import React from 'react'
-import { Tag, Button, Space } from 'antd'
+import { Tag, Button, Space, Tooltip } from 'antd'
+import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
 
-export const getColumns = (handleToGo, handleDeleteContract, is_admin) => [
+export const getColumns = (
+	handleToGo,
+	handleDeleteContract,
+	handleFolderSelect,
+	is_admin,
+	setMoveNode
+) => [
 	{
 		title: 'Descrição',
 		dataIndex: 'title',
 		key: 'title',
 		render: (text, row) => (
-			<Button type="link" onClick={() => handleToGo(row)}>
-				{text}
-			</Button>
+			<Space size="small">
+				{row.is_folder ? <FolderOutlined /> : null}
+				<Button
+					type="link"
+					onClick={() =>
+						!row.is_folder ? handleToGo(row) : handleFolderSelect(row)
+					}>
+					{text}
+				</Button>
+			</Space>
 		),
 	},
 	{
@@ -83,12 +97,34 @@ export const getColumns = (handleToGo, handleDeleteContract, is_admin) => [
 		key: 'action',
 		render: (text, row) => (
 			<Space size="middle">
-				{is_admin && (
+				{is_admin && !row.is_folder ? (
 					<Delete
 						title="Deseja excluir esse documento?"
 						handle={() => handleDeleteContract(row)}
 					/>
-				)}
+				) : is_admin ? (
+					<Delete
+						title="Deseja excluir essa pasta?"
+						handle={() => handleDeleteContract(row)}
+					/>
+				) : null}
+				<Tooltip title={'Mover para outra pasta'}>
+					<Button
+						icon={
+							<FolderOpenOutlined
+								style={{
+									fontSize: '20px',
+									color: '#1890FF',
+									margin: 'auto',
+								}}
+							/>
+						}
+						style={{
+							border: 'none',
+						}}
+						onClick={() => setMoveNode(row)}
+					/>
+				</Tooltip>
 			</Space>
 		),
 	},

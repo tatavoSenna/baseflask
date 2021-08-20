@@ -26,15 +26,7 @@ const initialState = {
 			},
 		],
 		workflow: {
-			nodes: [
-				{
-					title: '',
-					next_node: null,
-					responsible_users: [],
-					responsible_group: '',
-					changed_by: '',
-				},
-			],
+			nodes: [],
 		},
 		text: '',
 		isFile: false,

@@ -273,7 +273,6 @@ const Tabs = ({
 				</div>
 			))}
 			{textType === '.docx' && buttonsView()}
-			{downloads()}
 		</div>
 	)
 
@@ -337,6 +336,7 @@ const Tabs = ({
 					</Menu.Item>
 				))}
 			</Menu>
+			{downloads()}
 		</div>
 	)
 
@@ -543,9 +543,11 @@ const Tabs = ({
 				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="2">
 					Versões
 				</Menu.Item>
-				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
-					Workflow
-				</Menu.Item>
+				{steps.length > 0 && (
+					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
+						Workflow
+					</Menu.Item>
+				)}
 				{signers.length > 0 && (
 					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="4">
 						Assinantes

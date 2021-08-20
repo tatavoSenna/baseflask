@@ -7,7 +7,9 @@ import {
 	errorMessage,
 } from '~/services/messager'
 
-import { answerRequest, answerSuccess, answerFailure } from '.'
+import { answerRequest, answerSuccess, answerFailure, setResetAnswer } from '.'
+
+import { setResetQuestion } from '~/states/modules/question'
 
 export default function* rootSaga() {
 	yield takeEvery(answerRequest, answerSaga)
@@ -21,17 +23,28 @@ function* answerSaga({ payload }) {
 		updateKey: 'answer',
 	})
 
-	const { answer, modelId, title } = yield select((state) => {
+	const { answer, modelId, title, parent } = yield select((state) => {
 		const {
 			answer,
-			question: { modelId, title },
+			question: { modelId, title, parent },
 		} = state
-		return { answer, modelId, title }
+		return { answer, modelId, title, parent }
 	})
 
 	try {
+		let dataImg = {}
+		let objectData = answer.data
+
+		for (var [key] of Object.entries(objectData)) {
+			if (key.includes('image_')) {
+				dataImg[key] = document
+					.getElementById(key)
+					.getElementsByTagName('input')[0].value
+			}
+		}
 		const { data } = yield call(api.post, '/documents/', {
 			document_template: modelId,
+			parent: parent,
 			title,
 			visible,
 			variables: { ...answer.data, ...answer.dataImg },
@@ -42,6 +55,8 @@ function* answerSaga({ payload }) {
 			updateKey: 'answer',
 		})
 		history.push('/')
+		yield put(setResetAnswer())
+		yield put(setResetQuestion())
 	} catch (error) {
 		yield put(answerFailure(error))
 		errorMessage({

@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
-import { Layout, PageHeader, Spin } from 'antd'
+import { Layout, PageHeader, Spin, Breadcrumb } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
 import PdfReader from '~/components/pdfFileReader'
-import BreadCrumb from '~/components/breadCrumb'
 import NewVersionModal from './components/modal'
 import ConnectDocusignModal from './components/modalDocusignConnect'
 import AssignModal from './components/tabs/assignModal'
 
+import { listContract } from '~/states/modules/contract'
+import { setInitialFolder, setRollBackFolder } from '~/states/modules/folder'
 import {
 	getDocumentDetail,
 	newVersion,
@@ -28,8 +29,11 @@ import {
 	changeVariables,
 } from '~/states/modules/documentDetail'
 
+import styles from '../contracts/index.module.scss'
+
 const DocumentDetails = () => {
 	const dispatch = useDispatch()
+	const history = useHistory()
 	const {
 		data,
 		loading,
@@ -45,7 +49,9 @@ const DocumentDetails = () => {
 		version_id,
 		file,
 	} = useSelector(({ documentDetail }) => documentDetail)
-	const { id } = useHistory().location.state
+	const { id } = history.location.state
+
+	const { accessFolders } = useSelector(({ folder }) => folder)
 
 	const createDocumentVersion = (form) => {
 		dispatch(newVersion({ id, description, text: textUpdate }))
@@ -106,6 +112,26 @@ const DocumentDetails = () => {
 		dispatch(changeVariables({ id, values }))
 	}
 
+	const handleInitialFolder = () => {
+		dispatch(listContract())
+		dispatch(setInitialFolder())
+		history.push('/')
+	}
+
+	const handleFolderRowBack = (index) => {
+		dispatch(setRollBackFolder(index))
+		history.push('/')
+	}
+
+	var listFolders = accessFolders.map((folder, index) => (
+		<Breadcrumb.Item
+			key={index}
+			className={styles.breadcrumbs}
+			onClick={() => handleFolderRowBack(index)}>
+			{folder ? folder.title : null}
+		</Breadcrumb.Item>
+	))
+
 	useEffect(() => {
 		dispatch(getDocumentDetail({ id }))
 	}, [dispatch, id])
@@ -113,10 +139,17 @@ const DocumentDetails = () => {
 	return (
 		<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
 			<PageHeader>
-				<BreadCrumb
-					parent="Documentos"
-					current={`${Object.keys(data).length > 0 ? data.title : 'Detalhe'}`}
-				/>
+				<Breadcrumb>
+					<Breadcrumb.Item
+						onClick={handleInitialFolder}
+						className={styles.breadcrumbs}>
+						Documentos
+					</Breadcrumb.Item>
+					{accessFolders.length ? listFolders : null}
+					<Breadcrumb.Item className={styles.breadcrumbs}>
+						{data.title}
+					</Breadcrumb.Item>
+				</Breadcrumb>
 			</PageHeader>
 			<NewVersionModal
 				handleCancel={handleCancelModal}
