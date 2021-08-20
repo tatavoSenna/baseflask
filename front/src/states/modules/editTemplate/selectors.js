@@ -377,3 +377,12 @@ export const move = (data, payload) => {
 			return data
 	}
 }
+
+export const movePage = (form, payload) => {
+	let tmpForm = form
+	const dragged = tmpForm[payload.from]
+	tmpForm.splice(payload.from, 1)
+	tmpForm.splice(payload.to, 0, dragged)
+
+	return tmpForm
+}
