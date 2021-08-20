@@ -7,10 +7,16 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(async (config) => {
-	const session = await Auth.currentSession()
-	const accessToken = session.getAccessToken()
-	const jwtToken = accessToken.getJwtToken()
-	config.headers['Authorization'] = `Bearer ${jwtToken}`
+	// in case there is a logged in user, get the token from amplify auth
+	// and add it as an atuh beare token to the api
+	try {
+		const session = await Auth.currentSession()
+		const accessToken = session.getAccessToken()
+		const jwtToken = accessToken.getJwtToken()
+		config.headers['Authorization'] = `Bearer ${jwtToken}`
+	} catch (error) {
+		//pass
+	}
 	return config
 })
 

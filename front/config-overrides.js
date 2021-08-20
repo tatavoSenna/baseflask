@@ -1,14 +1,14 @@
-const { addBabelPlugin, override , fixBabelImports} = require("customize-cra");
+const { addBabelPlugin, override, fixBabelImports } = require('customize-cra')
 
 module.exports = override(
 	addBabelPlugin([
-		"babel-plugin-root-import",
+		'babel-plugin-root-import',
 		{
-			rootPathSuffix: "src"
-		}
+			rootPathSuffix: 'src',
+		},
 	]),
 	fixBabelImports('antd', {
 		libraryDirectory: 'es',
 		style: 'css',
-	}),
-);
+	})
+)
