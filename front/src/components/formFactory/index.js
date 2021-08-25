@@ -50,6 +50,10 @@ const FormFactory = ({
 		})
 	}
 
+	function handleGoTo(path) {
+		return history.push(path)
+	}
+
 	const onSubmit = (data) => {
 		dispatch(appendAnswer({ data, visible: visible[currentPage] }))
 		if (!isLastPage) {
@@ -104,6 +108,18 @@ const FormFactory = ({
 								minWidth: '50%',
 								maxWidth: '100%',
 							}}>
+							<Form.Item>
+								<Button
+									type="default"
+									htmlType="button"
+									className={styles.button}
+									onClick={() => {
+										handleGoTo('/')
+									}}>
+									Cancelar
+								</Button>
+							</Form.Item>
+
 							<Form.Item>
 								{true && currentPage > 0 && (
 									<Button
