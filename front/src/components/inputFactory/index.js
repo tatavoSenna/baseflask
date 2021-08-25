@@ -105,8 +105,6 @@ function InputFactory({
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional } = pageFieldsData[i]
 		const first = i === 0
-		console.log('pageFieldsData:', pageFieldsData)
-		console.log('conditional:', conditional)
 
 		switch (type) {
 			case 'radio':
