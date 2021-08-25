@@ -22,50 +22,12 @@ from flask import current_app
 from app import jinja_env
 
 
-def delete_paragraph(paragraph):
-    p = paragraph._element
-    p.getparent().remove(p)
-    p._p = p._element = None
 
-def separate_string(filename):
-    doc = Document(filename)
-    for p in doc.paragraphs:
-        if '{{ INSERT_PARAGRAFO }}' in p.text:
-            inline = p.runs
-            # Loop added to work with runs (strings with same style)
-            for i in range(len(inline)):
-                if '{{ INSERT_PARAGRAFO }}' in inline[i].text:
-                    text = inline[i].text.split("{{ INSERT_PARAGRAFO }}")
-                    inline[i].text = text[0]
-                    inline[i].add_break()
-                    for j in range(len(text)):
-                        if j != 0:
-                            run = p.add_run(text[j])
-                            run.add_break()
-    doc.save(filename)
+
 
 class RemoteDocument:
 
     s3_client = boto3.client("s3")
-
-    def create(self, document, document_template, company_id, variables):
-        if document_template.text_type == ".txt":
-            text_template = self.download_text_from_template(document)
-            filled_text = self.fill_text_with_variables(
-                text_template, variables).encode()
-            self.upload_filled_text_to_documents(document, filled_text)
-
-        else:
-            docx_io = self.download_docx_from_template(
-                document_template, company_id)
-            filled_docx_io = self.fill_docx_with_variables(
-                document, docx_io, variables)
-
-            copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
-
-            self.convert_docx_to_pdf_and_save(document, filled_docx_io)
-            self.upload_filled_docx_to_documents(
-                document, copy_docx_io, document_template.text_type)
 
     def delete_document(self, document):
         s3_resource = boto3.resource("s3")
@@ -104,9 +66,10 @@ class RemoteDocument:
 
     def upload_filled_docx_to_documents(self, document, filled_text_io, text_type):
         remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}{text_type}'
+        copy_docx_io = io.BytesIO(filled_text_io.getvalue())
 
         self.s3_client.upload_fileobj(
-            filled_text_io,
+            copy_docx_io,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
             remote_path
         )
@@ -157,60 +120,7 @@ class RemoteDocument:
             remote_path,
             docx_io)
 
-        #docx_template = DocxTemplate(text_file_io)
-
         return docx_io
-
-    def fill_text_with_variables(self, text_template, variables):
-        jinja_template = jinja_env.from_string(text_template.decode())
-        filled_text = jinja_template.render(variables)
-
-        return filled_text
-
-    def fill_docx_with_variables(self, document, docx_io, variables):
-
-        doc = Document(docx_io)
-
-        for key in list(variables):
-            if key.startswith("image_") and variables[key]:
-                img_bytes = base64.decodebytes(
-                    variables[key].split("base64,")[1].encode('ascii'))
-                image = io.BytesIO(img_bytes)
-                image_obj = Image.open(io.BytesIO(img_bytes))
-                proportion = float(image_obj.size[1]/image_obj.size[0])
-                for para in doc.paragraphs:
-                    if key.split("image_")[1] in para.text:
-                        for field in document.form[0]['fields']:
-                            if field['variable']['name'] == key.strip("image_"):
-                                try:
-                                    width_size = field['variable']['width']
-                                except KeyError:
-                                    width_size = 12.0
-                                height_size = width_size * proportion
-                                r = para.add_run()
-                                r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
-                                break
-        doc.save(docx_io)
-        docx_template = DocxTemplate(docx_io)
-        docx_template.render(variables)
-
-        filled_text_io = io.BytesIO()
-        docx_template.save(filled_text_io)
-        filled_text_io.seek(0)
-
-        separate_string(filled_text_io)
-        doc = docx.Document(filled_text_io)
-        for para in doc.paragraphs:
-            if para.text == "" or len(para.text) < 2:
-                soup = BeautifulSoup(para._p.xml, 'xml')
-                if len(soup.find_all('w:numId')) > 0:
-                    delete_paragraph(para)
-
-        fileobj = io.BytesIO()
-        doc.save(fileobj)
-        fileobj.seek(0)
-
-        return fileobj
 
     def get_template(self):
         template_file_io = io.BytesIO()
@@ -279,21 +189,7 @@ class RemoteDocument:
         )
         return document_url
 
-    def convert_docx_to_pdf_and_save(self, document, filled_docx_io):
-        convertapi.api_secret = current_app.config["CONVERTAPI_SECRET_KEY"]
-
-        upload_io = convertapi.UploadIO(filled_docx_io, 'filled_docx_io.docx')
-
-        result = convertapi.convert(
-            'pdf',
-            {'File': upload_io},
-            from_format='docx')
-
-        response = requests.get(result.response["Files"][0]["Url"])
-
-        pdf_io = io.BytesIO(response.content)
-
-        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+    def upload_pdf(self, pdf_io, remote_path):
 
         self.s3_client.upload_fileobj(
             pdf_io,
@@ -301,15 +197,3 @@ class RemoteDocument:
             remote_path,
             ExtraArgs={'ContentType': "application/pdf"}
         )
-
-    def update_variables(self, document, document_template, company_id, variables):
-        docx_io = self.download_docx_from_template(
-            document_template, company_id)
-        filled_docx_io = self.fill_docx_with_variables(
-            document, docx_io, variables)
-
-        copy_docx_io = io.BytesIO(filled_docx_io.getvalue())
-
-        self.convert_docx_to_pdf_and_save(document, filled_docx_io)
-        self.upload_filled_docx_to_documents(
-            document, copy_docx_io, document_template.text_type)
