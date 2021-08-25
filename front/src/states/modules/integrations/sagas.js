@@ -1,4 +1,4 @@
-import { call, put, select, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery } from 'redux-saga/effects'
 
 import {
 	errorMessage,
@@ -22,7 +22,6 @@ export default function* rootSaga() {
 }
 
 function* getIntegrationSaga() {
-	const { session } = yield select()
 	try {
 		const { data } = yield call(api.get, `/company/docusign`)
 		yield put(getIntegrationSuccess(data))
@@ -37,7 +36,6 @@ function* saveIntegrationSaga({ payload }) {
 			content: 'Salvando dados...',
 			updateKey: 'saveIntegrations',
 		})
-		const { session } = yield select()
 		const response = yield call(api.post, `/company/docusign`, payload)
 		successMessage({
 			content: 'Dados salvo com sucesso',

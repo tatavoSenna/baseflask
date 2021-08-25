@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { func, bool } from 'prop-types'
 import {
 	UI_AUTH_CHANNEL,
@@ -27,19 +28,7 @@ import styles from './index.module.scss'
 const { Text } = Typography
 
 function Head({ handleCollapsed, isCollapsed, isWeb }) {
-	const [loggedUserName, setLoggedUserName] = useState('-')
-
-	useEffect(() => {
-		let mounted = true
-		const getUserInfo = async () => {
-			const authUserInfo = await Auth.currentUserInfo()
-			if (mounted) {
-				setLoggedUserName(authUserInfo.attributes.name)
-			}
-		}
-		getUserInfo()
-		return () => (mounted = false)
-	}, [])
+	const username = useSelector(({ session }) => session.name)
 
 	const handleLogout = async () => {
 		await Auth.signOut()
@@ -94,27 +83,15 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 					[styles.profileMobile]: !isWeb,
 				})}>
 				<Space size={48}>
-					{/*
-					<div style={{ paddingTop: 12 }}>
-						<Space size={28}>
-							<Badge count={2}>
-								<MessageOutlined style={{ fontSize: '20px' }} />
-							</Badge>
-							<Badge count={2}>
-								<BellOutlined style={{ fontSize: '20px' }} />
-							</Badge>
-						</Space>
-					</div>
-					*/}
 					<Space size={12}>
 						<Dropdown overlay={() => getMenu()}>
 							<Space size={10}>
 								<Avatar>
 									<Text style={{ color: '#333' }}>
-										{loggedUserName.substring(0, 1)}
+										{username.substring(0, 1)}
 									</Text>
 								</Avatar>
-								<Text style={{ color: '#333' }}>{loggedUserName}</Text>
+								<Text style={{ color: '#333' }}>{username}</Text>
 								<DownOutlined />
 							</Space>
 						</Dropdown>

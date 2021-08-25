@@ -93,8 +93,8 @@ const { actions, reducer } = createSlice({
 		editTemplatePageMove: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
-					form: movePage(state.data.form, payload)
-				})
+					form: movePage(state.data.form, payload),
+				}),
 			}),
 		editTemplateFieldAdd: (state, { payload }) =>
 			extend(state, {
