@@ -16,11 +16,15 @@ import {
 	editTemplateRequest,
 	editTemplateSuccess,
 	editTemplateFailure,
+	getTemplateDownload,
+	getTemplateDownloadSuccess,
+	getTemplateDownloadFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(getTemplateDetail, getTemplateDetailSaga)
 	yield takeEvery(editTemplateRequest, editTemplateSaga)
+	yield takeEvery(getTemplateDownload, getTemplateDownloadSaga)
 }
 
 function* getTemplateDetailSaga({ payload = {} }) {
@@ -204,5 +208,32 @@ function* editTemplateSaga({ payload = {} }) {
 				updateKey: 'editTemplate',
 			})
 		}
+	}
+}
+
+function* getTemplateDownloadSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Realizando download do template...',
+		updateKey: 'downloadTemplate',
+	})
+	const { id } = payload
+	try {
+		const { data } = yield call(api.get, `templates/${id}/getupload`)
+		const link = document.createElement('a')
+		link.href = data.download_url
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		successMessage({
+			content: 'Download realizado com sucesso.',
+			updateKey: 'downloadTemplate',
+		})
+		yield put(getTemplateDownloadSuccess())
+	} catch (error) {
+		errorMessage({
+			content: 'Download falhou, favor tente novamente.',
+			updateKey: 'downloadTemplate',
+		})
+		yield put(getTemplateDownloadFailure(error))
 	}
 }
