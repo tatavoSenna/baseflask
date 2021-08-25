@@ -147,8 +147,21 @@ def test_update_document_signers():
     assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_EMAIL'] == "luiz.senna@parafernalia.net.br"
 
 
-@ patch('app.documents.controllers.RemoteDocument.create')
-def test_create_document(create_remote_document_mock):
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
+@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
+@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
+@ patch('app.documents.controllers.fill_text_with_variables')
+@ patch('app.documents.controllers.fill_docx_with_variables')
+def test_create_document(
+    upload_filled_text_to_documents, 
+    upload_filled_docx_to_documents, 
+    download_text_from_template,
+    download_docx_from_template,
+    convert_docx_to_pdf_and_save,
+    fill_text_with_variables,
+    fill_docx_with_variables):
     
     company = factories.CompanyFactory(id=17)
     user = factories.UserFactory(
@@ -228,10 +241,6 @@ def test_create_document(create_remote_document_mock):
         visible
     )
 
-    create_remote_document_mock.assert_called_with(
-        document_txt, document_template_txt, 17, variables
-    )
-
     document_docx = create_document_controller(
         user.id,
         user.email,
@@ -243,10 +252,6 @@ def test_create_document(create_remote_document_mock):
         None,
         False,
         visible
-    )
-
-    create_remote_document_mock.assert_called_with(
-        document_docx, document_template_docx, 17, variables
     )
 
     assert document_txt.user_id == user.id
@@ -528,7 +533,7 @@ def test_download_pdf_document(download_pdf_mock):
     )
 
 
-@ patch('app.documents.controllers.RemoteDocument.fill_text_with_variables')
+@ patch('app.documents.controllers.fill_text_with_variables')
 def test_fill_signing_date(fill_signing_date_mock):
     company_id = 144
     company = factories.CompanyFactory(id=company_id)
@@ -571,7 +576,7 @@ def test_delete_document(delete_document_mock, delete_signed_document_mock):
     )
 
 
-@ patch('app.documents.controllers.RemoteDocument.update_variables')
+@ patch('app.documents.controllers.update_variables')
 def test_change_document_variables(update_variables_mock):
     company = factories.CompanyFactory(id=17)
     user = factories.UserFactory(

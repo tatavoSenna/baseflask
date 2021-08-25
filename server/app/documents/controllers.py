@@ -19,6 +19,14 @@ from sendgrid.helpers.mail import Mail
 import copy
 from flask import current_app, jsonify
 from unittest.mock import MagicMock
+from docxtpl import DocxTemplate, InlineImage
+from docx import Document as docxDocument
+from PIL import Image
+import docx
+from bs4 import BeautifulSoup
+from app import jinja_env
+import convertapi
+import sys, traceback
 
 from .variables import specify_variables
 
@@ -52,7 +60,7 @@ def create_document_controller(user_id, user_email, company_id,
     variables.update(current_date_dict)
     received_variables.update(current_date_dict)
 
-    # Get specific values from received_variables to create Document object
+    # Get global variables
     nome_contrato = received_variables.get("NOME_CONTRATO", None)
     data_inicio_contrato = received_variables.get("DATA_INICIO_CONTRATO", None)
     data_final_contrato = received_variables.get("DATA_FINAL_CONTRATO", None)
@@ -103,45 +111,56 @@ def create_document_controller(user_id, user_email, company_id,
         valor_contrato=valor_contrato,
         parent_id=parent_id
     )
-
-    # Calls webhooks listed for the company
-    webhook_list = Webhook.query.filter_by(company_id=company_id).all()
-    print(f'Webhook query result: {webhook_list}')
-    sns = boto3.client('sns')
-    topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
-    print(f'sns configurado: {topic_arn}')
-    for webhook in webhook_list:
-        print(f'chamando webhook url: {webhook.webhook}')
-        message = {"document_title": title,
-                   "document_id": document.id,
-                   "document_template_name": document_template.name,
-                   "document_template_id": document_template_id,
-                   "company_name": document_company.name,
-                   "company_id": company_id,
-                   "user_id": user_id,
-                   "user_name": username,
-                   "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),
-                   "valor_contrato": valor_contrato,
-                   "data_inicio_contrato": data_inicio_contrato,
-                   "data_final_contrato": data_final_contrato,
-                   "data_assinatura": data_assinatura,
-                   "nome_contrato": nome_contrato,
-                   "webhook_url": webhook.webhook
-                   }
-
-        response = sns.publish(
-            TargetArn=topic_arn,
-            Message=json.dumps({'default': json.dumps(message)}),
-            MessageStructure='json'
-        )
-    
     # Add document to the database
     db.session.add(document)
-    db.session.commit()
-    
-    # Add document to s3 bucket
-    remote_document = RemoteDocument()
-    remote_document.create(document, document_template,company_id, variables)
+    db.session.commit()    
+
+    # Try to run everything after document addition to the database. If an error occurs, document is deleted.
+    try: 
+        # Fill text with variables and upload it
+        remote_document = RemoteDocument()
+        if document_template.text_type == ".txt":
+            text_template = remote_document.download_text_from_template(document)
+            filled_text = fill_text_with_variables(text_template, variables).encode()
+            remote_document.upload_filled_text_to_documents(document, filled_text)
+        else:
+            docx_io = remote_document.download_docx_from_template(document_template, company_id)
+            filled_docx_io = fill_docx_with_variables(document,docx_io,variables)
+
+            convert_docx_to_pdf_and_save(document, filled_docx_io)
+            remote_document.upload_filled_docx_to_documents(document, filled_docx_io, document_template.text_type)
+        
+        # Call webhooks listed for the company
+        webhook_list = Webhook.query.filter_by(company_id=company_id).all()
+        sns = boto3.client('sns')
+        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+        for webhook in webhook_list:
+            message = {"document_title": title,
+                    "document_id": document.id,
+                    "document_template_name": document_template.name,
+                    "document_template_id": document_template_id,
+                    "company_name": document_company.name,
+                    "company_id": company_id,
+                    "user_id": user_id,
+                    "user_name": username,
+                    "created_at": json.dumps(document.created_at, indent=4, sort_keys=True, default=str),
+                    "valor_contrato": valor_contrato,
+                    "data_inicio_contrato": data_inicio_contrato,
+                    "data_final_contrato": data_final_contrato,
+                    "data_assinatura": data_assinatura,
+                    "nome_contrato": nome_contrato,
+                    "webhook_url": webhook.webhook
+                    }
+
+            response = sns.publish(
+                TargetArn=topic_arn,
+                Message=json.dumps({'default': json.dumps(message)}),
+                MessageStructure='json'
+            )
+
+    except:
+        delete_document_controller(document)
+        raise
 
     # Send email informing document creation
     try:
@@ -391,12 +410,11 @@ def fill_signing_date_controller(document, text):
     db.session.add(document)
     db.session.commit()
 
-    remote_document = RemoteDocument()
     if document.text_type == ".txt":
-        filled_text = remote_document.fill_text_with_variables(
+        filled_text = fill_text_with_variables(
             text, variable)
     elif document.text_type == ".docx":
-        filled_text = remote_document.fill_docx_with_variables(
+        filled_text = fill_docx_with_variables(
             document, text, variable)
 
     return filled_text
@@ -405,7 +423,7 @@ def fill_signing_date_controller(document, text):
 def convert_pdf_controller(text):
     remote_document = RemoteDocument()
     template = remote_document.get_template()
-    formatted_text = remote_document.fill_text_with_variables(
+    formatted_text = fill_text_with_variables(
         template, {'text_contract': text})
     document_pdf = requests.post(
         current_app.config["HTMLTOPDF_API_URL"], data=formatted_text.encode('utf-8')).content
@@ -431,7 +449,106 @@ def change_variables_controller(document, new_variables, email, variables):
     document.variables = variables
     db.session.add(document)
     db.session.commit()
-    remote_document = RemoteDocument()
     print(document.company_id)
-    remote_document.update_variables(
+    update_variables(
         document, document_template, document.company_id, new_variables)
+
+def separate_string(filename):
+    doc = docxDocument(filename)
+    for p in doc.paragraphs:
+        if '{{ INSERT_PARAGRAFO }}' in p.text:
+            inline = p.runs
+            # Loop added to work with runs (strings with same style)
+            for i in range(len(inline)):
+                if '{{ INSERT_PARAGRAFO }}' in inline[i].text:
+                    text = inline[i].text.split("{{ INSERT_PARAGRAFO }}")
+                    inline[i].text = text[0]
+                    inline[i].add_break()
+                    for j in range(len(text)):
+                        if j != 0:
+                            run = p.add_run(text[j])
+                            run.add_break()
+    doc.save(filename)
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    p._p = p._element = None
+
+def convert_docx_to_pdf_and_save(document, filled_docx_io):
+    convertapi.api_secret = current_app.config["CONVERTAPI_SECRET_KEY"]
+
+    upload_io = convertapi.UploadIO(filled_docx_io, 'filled_docx_io.docx')
+
+    result = convertapi.convert(
+        'pdf',
+        {'File': upload_io},
+        from_format='docx')
+
+    response = requests.get(result.response["Files"][0]["Url"])
+
+    pdf_io = io.BytesIO(response.content)
+
+    remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{document.versions[0]["id"]}.pdf'
+    remote_document = RemoteDocument()
+    remote_document.upload_pdf( pdf_io, remote_path)
+
+
+def update_variables(document, document_template, company_id, variables):
+    remote_document = RemoteDocument()
+    docx_io = remote_document.download_docx_from_template(
+        document_template, company_id)
+    filled_docx_io = fill_docx_with_variables(
+        document, docx_io, variables)
+
+    convert_docx_to_pdf_and_save(document, filled_docx_io)
+    remote_document.upload_filled_docx_to_documents(
+        document, filled_docx_io, document_template.text_type)
+
+def fill_docx_with_variables(document, docx_io, variables):
+
+    doc = docxDocument(docx_io)
+
+    for key in list(variables):
+        if key.startswith("image_") and variables[key]:
+            img_bytes = base64.decodebytes(
+                variables[key].split("base64,")[1].encode('ascii'))
+            image = io.BytesIO(img_bytes)
+            image_obj = Image.open(io.BytesIO(img_bytes))
+            proportion = float(image_obj.size[1]/image_obj.size[0])
+            for para in doc.paragraphs:
+                if key.split("image_")[1] in para.text:
+                    for field in document.form[0]['fields']:
+                        if field['variable']['name'] == key.strip("image_"):
+                            width_size = field['variable']['width']
+                            height_size = width_size * proportion
+                            r = para.add_run()
+                            r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
+                            break
+    doc.save(docx_io)
+    docx_template = DocxTemplate(docx_io)
+    docx_template.render(variables)
+
+    filled_text_io = io.BytesIO()
+    docx_template.save(filled_text_io)
+    filled_text_io.seek(0)
+
+    separate_string(filled_text_io)
+    doc = docx.Document(filled_text_io)
+    for para in doc.paragraphs:
+        if para.text == "" or len(para.text) < 2:
+            soup = BeautifulSoup(para._p.xml, 'xml')
+            if len(soup.find_all('w:numId')) > 0:
+                delete_paragraph(para)
+
+    fileobj = io.BytesIO()
+    doc.save(fileobj)
+    fileobj.seek(0)
+
+    return fileobj
+
+def fill_text_with_variables(text_template, variables):
+    jinja_template = jinja_env.from_string(text_template.decode())
+    filled_text = jinja_template.render(variables)
+
+    return filled_text
