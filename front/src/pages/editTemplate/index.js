@@ -14,6 +14,7 @@ import {
 	getTemplateDetail,
 	editTemplateRequest,
 	editTemplateTitle,
+	getTemplateDownload,
 } from '~/states/modules/editTemplate'
 
 import BreadCrumb from '~/components/breadCrumb'
@@ -54,6 +55,10 @@ const EditTemplate = () => {
 	const handleEditTitle = (e) => {
 		const title = e.target.value
 		dispatch(editTemplateTitle({ title }))
+	}
+
+	const setDownloadButton = () => {
+		dispatch(getTemplateDownload({ id }))
 	}
 
 	// Checks if all fields are filled (all but form tab for now)
@@ -275,6 +280,7 @@ const EditTemplate = () => {
 								updateFile={postFiles}
 								checked={checked}
 								setChecked={setChecked}
+								setDownloadButton={setDownloadButton}
 								setInputsFilled={setInputsFilled}
 								inputsFilled={inputsFilled}
 							/>

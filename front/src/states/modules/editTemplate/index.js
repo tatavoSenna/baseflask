@@ -205,6 +205,19 @@ const { actions, reducer } = createSlice({
 				loading: false,
 				error: payload.error,
 			}),
+		getTemplateDownload: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getTemplateDownloadSuccess: (state) =>
+			extend(state, {
+				loading: false,
+			}),
+		getTemplateDownloadFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -234,6 +247,9 @@ export const {
 	editTemplateSuccess,
 	editTemplateFailure,
 	editTemplateMove,
+	getTemplateDownload,
+	getTemplateDownloadSuccess,
+	getTemplateDownloadFailure,
 } = actions
 
 export { default as editTemplateSaga } from './sagas'

@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux'
 import { string, object, func, array, bool } from 'prop-types'
 import Editor from './editor'
 import Uploader from '~/components/uploadFile'
-import { Switch, Typography } from 'antd'
+import { Switch, Typography, Button } from 'antd'
+import { DownloadOutlined } from '@ant-design/icons'
 import { editTemplateText } from '~/states/modules/editTemplate'
 
 const { Title } = Typography
@@ -14,6 +15,7 @@ const Text = ({
 	updateFile,
 	checked,
 	setChecked,
+	setDownloadButton,
 	setInputsFilled,
 	inputsFilled,
 }) => {
@@ -63,6 +65,16 @@ const Text = ({
 							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 						]}
 					/>
+
+					{files.length && inputsFilled.text ? (
+						<Button
+							style={{ marginLeft: 15 }}
+							icon={<DownloadOutlined />}
+							onClick={() => {
+								setDownloadButton()
+							}}
+						/>
+					) : null}
 				</div>
 			) : (
 				<Editor text={data} onUpdateText={updateText} />
@@ -80,6 +92,7 @@ Text.propTypes = {
 	updateFile: func,
 	checked: bool,
 	setChecked: func,
+	setDownloadButton: func,
 	setInputsFilled: func,
 	inputsFilled: object,
 }
