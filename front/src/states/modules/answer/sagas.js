@@ -54,7 +54,7 @@ function* answerSaga({ payload }) {
 			content: 'Documento criado com sucesso!',
 			updateKey: 'answer',
 		})
-		history.push('/')
+		history.push(`/documents/${data.id}`)
 		yield put(setResetAnswer())
 		yield put(setResetQuestion())
 	} catch (error) {

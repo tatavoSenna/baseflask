@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Layout, PageHeader, Spin, Breadcrumb } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Tabs from '~/pages/documentDetails/components/tabs'
 import Editor from '~/pages/documentDetails/components/editor'
@@ -32,6 +32,7 @@ import {
 import styles from '../contracts/index.module.scss'
 
 const DocumentDetails = () => {
+	const { id } = useParams()
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const {
@@ -49,7 +50,6 @@ const DocumentDetails = () => {
 		version_id,
 		file,
 	} = useSelector(({ documentDetail }) => documentDetail)
-	const { id } = history.location.state
 
 	const { accessFolders } = useSelector(({ folder }) => folder)
 
