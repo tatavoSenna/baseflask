@@ -146,6 +146,162 @@ def test_update_document_signers():
     assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_NOME'] == "Luiz Senna"
     assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_EMAIL'] == "luiz.senna@parafernalia.net.br"
 
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
+@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
+@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
+@ patch('app.documents.controllers.fill_text_with_variables')
+@ patch('app.documents.controllers.fill_docx_with_variables')
+@ patch('app.documents.controllers.document_creation_email_controller')
+def test_send_email_on_document_creation_with_workflow(
+    document_creation_email_controller,
+    fill_docx_with_variables,
+    fill_text_with_variables,
+    convert_docx_to_pdf_and_save,
+    download_docx_from_template,
+    download_text_from_template,
+    upload_filled_docx_to_documents, 
+    upload_filled_text_to_documents):
+    
+    company = factories.CompanyFactory(id=17)
+    user = factories.UserFactory(
+        company=company, email="testemail@gmail.com"
+    )
+
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+                "changed_by": "",
+                "title": "step1"
+            },
+            "5521": {
+                "next_node": "3485",
+                "changed_by": "",
+                "title": "step2"
+            }
+        },
+        "current_node": "544",
+        "created_by": ""
+    }
+
+    form = [
+        {
+            "title": "teste dummy",
+            "fields": [
+                {
+                    "info": "",
+                    "type": "text",
+                    "label": "Dummy text",
+                    "variable": {
+                        "name": "DUMMY",
+                        "type": "string",
+                        "doc_display_style": "plain"
+                    }
+                }
+            ]
+        }
+    ]
+
+    visible = [[True]]
+
+    document_template_txt = factories.DocumentTemplateFactory(
+        company=company, workflow=workflow, text_type=".txt", form=form
+    )
+
+    document_title = "default title"
+
+    variables = {}
+
+    document_txt = create_document_controller(
+        user.id,
+        user.email,
+        user.company_id,
+        document_template_txt.id,
+        document_title,
+        user.name,
+        variables,
+        None,
+        False,
+        visible
+    )
+
+    document_creation_email_controller.assert_called_once_with(document_title, company.id)
+
+
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
+@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
+@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
+@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
+@ patch('app.documents.controllers.fill_text_with_variables')
+@ patch('app.documents.controllers.fill_docx_with_variables')
+@ patch('app.documents.controllers.document_creation_email_controller')
+def test_send_email_on_document_creation_without_workflow(
+    document_creation_email_controller,
+    fill_docx_with_variables,
+    fill_text_with_variables,
+    convert_docx_to_pdf_and_save,
+    download_docx_from_template,
+    download_text_from_template,
+    upload_filled_docx_to_documents, 
+    upload_filled_text_to_documents):
+    
+    company = factories.CompanyFactory(id=17)
+    user = factories.UserFactory(
+        company=company, email="testemail@gmail.com"
+    )
+
+    workflow = {
+        "nodes": {},
+        "current_node": "0",
+        "created_by": ""
+    }
+
+    form = [
+        {
+            "title": "teste dummy",
+            "fields": [
+                {
+                    "info": "",
+                    "type": "text",
+                    "label": "Dummy text",
+                    "variable": {
+                        "name": "DUMMY",
+                        "type": "string",
+                        "doc_display_style": "plain"
+                    }
+                }
+            ]
+        }
+    ]
+
+    visible = [[True]]
+
+    document_template_txt = factories.DocumentTemplateFactory(
+        company=company, workflow=workflow, text_type=".txt", form=form
+    )
+
+    document_title = "default title"
+
+    variables = {}
+
+    document_txt = create_document_controller(
+        user.id,
+        user.email,
+        user.company_id,
+        document_template_txt.id,
+        document_title,
+        user.name,
+        variables,
+        None,
+        False,
+        visible
+    )
+
+    document_creation_email_controller.assert_not_called()
+
 
 @ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
 @ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')

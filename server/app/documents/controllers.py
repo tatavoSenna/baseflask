@@ -163,10 +163,11 @@ def create_document_controller(user_id, user_email, company_id,
         raise
 
     # Send email informing document creation
-    try:
-        document_creation_email_controller(title, company_id)
-    except Exception as e:
-        logging.exception("Failed to send emails on document creation. One or more emails is bad formated or invalid")
+    if step_name != None:
+        try:
+            document_creation_email_controller(title, company_id)
+        except Exception as e:
+            logging.exception("Failed to send emails on document creation. One or more emails is bad formated or invalid")
 
     return document
 
