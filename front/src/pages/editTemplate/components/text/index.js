@@ -18,6 +18,8 @@ const Text = ({
 	setDownloadButton,
 	setInputsFilled,
 	inputsFilled,
+	docPosted,
+	removeDoc,
 }) => {
 	const dispatch = useDispatch()
 
@@ -64,9 +66,10 @@ const Text = ({
 						allowedTypes={[
 							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 						]}
+						removeDoc={removeDoc}
 					/>
 
-					{files.length && inputsFilled.text ? (
+					{files.length && inputsFilled.text && docPosted ? (
 						<Button
 							style={{ marginLeft: 15 }}
 							icon={<DownloadOutlined />}
@@ -95,4 +98,6 @@ Text.propTypes = {
 	setDownloadButton: func,
 	setInputsFilled: func,
 	inputsFilled: object,
+	docPosted: bool,
+	removeDoc: func,
 }

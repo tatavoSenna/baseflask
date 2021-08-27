@@ -10,6 +10,7 @@ const Uploader = ({
 	max,
 	fileList,
 	setFileList,
+	removeDoc,
 }) => {
 	const beforeUpload = (file) => {
 		let allowed = false
@@ -37,6 +38,7 @@ const Uploader = ({
 		const index = fileList.indexOf(file)
 		const newFileList = fileList.slice()
 		newFileList.splice(index, 1)
+		removeDoc()
 
 		setFileList(newFileList)
 	}
@@ -61,6 +63,7 @@ Uploader.propTypes = {
 	max: number,
 	fileList: array,
 	setFileList: func,
+	removeDoc: func,
 }
 
 Uploader.defaultProps = {
@@ -69,6 +72,7 @@ Uploader.defaultProps = {
 	fileList: [],
 	multiple: false,
 	max: 1,
+	removeDoc: {},
 }
 
 export default Uploader

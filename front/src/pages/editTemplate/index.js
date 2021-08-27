@@ -15,6 +15,7 @@ import {
 	editTemplateRequest,
 	editTemplateTitle,
 	getTemplateDownload,
+	setDocPosted,
 } from '~/states/modules/editTemplate'
 
 import BreadCrumb from '~/components/breadCrumb'
@@ -26,7 +27,9 @@ import Text from './components/text'
 import styles from './index.module.scss'
 
 const EditTemplate = () => {
-	const { data, loading } = useSelector(({ editTemplate }) => editTemplate)
+	const { data, loading, docPosted } = useSelector(
+		({ editTemplate }) => editTemplate
+	)
 	const { id } = useHistory().location.state
 	const history = useHistory()
 	const edit = Number.isInteger(id)
@@ -46,6 +49,10 @@ const EditTemplate = () => {
 	const editDOCX = () => {
 		setChecked(true)
 		postFiles([{ uid: 'edit', name: 'Arquivo Atual' }])
+	}
+
+	const removeDoc = () => {
+		dispatch(setDocPosted(false))
 	}
 
 	const handleNav = (e) => {
@@ -283,6 +290,8 @@ const EditTemplate = () => {
 								setDownloadButton={setDownloadButton}
 								setInputsFilled={setInputsFilled}
 								inputsFilled={inputsFilled}
+								docPosted={docPosted}
+								removeDoc={removeDoc}
 							/>
 						)}
 						{current === 'signers' && (

@@ -38,6 +38,7 @@ const initialState = {
 	},
 	error: null,
 	loading: false,
+	docPosted: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -59,6 +60,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: selectEdit(state.data, payload),
 				loading: false,
+				docPosted: true,
 			}),
 		getTemplateDetailFailure: (state, { payload }) =>
 			extend(state, {
@@ -199,6 +201,7 @@ const { actions, reducer } = createSlice({
 		editTemplateSuccess: (state) =>
 			extend(state, {
 				loading: false,
+				docPosted: true,
 			}),
 		editTemplateFailure: (state, { payload }) =>
 			extend(state, {
@@ -217,6 +220,10 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				error: payload.error,
 				loading: false,
+			}),
+		setDocPosted: (state, { payload }) =>
+			extend(state, {
+				docPosted: payload,
 			}),
 	},
 })
@@ -250,6 +257,7 @@ export const {
 	getTemplateDownload,
 	getTemplateDownloadSuccess,
 	getTemplateDownloadFailure,
+	setDocPosted,
 } = actions
 
 export { default as editTemplateSaga } from './sagas'
