@@ -12,7 +12,7 @@ const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
 		pageFieldsData={pageFieldsData}
 		isLastPage={isLastPage}
 		pageNumber={pageNumber}
-		url="/contracts/new/"
+		url="/documents/new"
 	/>
 )
 

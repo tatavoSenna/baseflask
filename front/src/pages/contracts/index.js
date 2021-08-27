@@ -61,14 +61,14 @@ const Contracts = () => {
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
 		return history.push({
-			pathname: `/contracts/new/`,
+			pathname: `/documents/new`,
 			state: { values: { ...values, current: 0 } },
 		})
 	}
 	const handleCreateInFolder = (values) => {
 		dispatch(setShowModal(false))
 		return history.push({
-			pathname: `/contracts/new/`,
+			pathname: `/documents/new`,
 			state: {
 				values: {
 					...values,
@@ -118,8 +118,7 @@ const Contracts = () => {
 
 	const handleToGo = (record) =>
 		history.push({
-			pathname: `/documentDetails`,
-			state: { id: record.id },
+			pathname: `/documents/${record.id}`,
 		})
 
 	const handleDeleteContract = (record) =>

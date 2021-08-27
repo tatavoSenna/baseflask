@@ -21,13 +21,13 @@ import { store } from '~/states/store'
 export const ROUTES = {
 	docusign: '/docusign-token',
 	home: '/',
-	contracts: '/contracts',
-	form: '/contracts/new',
+	documents: '/documents',
+	form: '/documents/new',
 	users: '/users',
 	templates: '/templates',
 	newTemplate: '/templates/new',
 	editTemplate: '/templates/edit',
-	documentDetails: '/documentDetails',
+	documentDetails: '/documents/:id(\\d+)',
 	externalContract: '/documentcreate/:token',
 	settings: '/settings',
 	companies: '/companies',
@@ -53,6 +53,7 @@ function Routes() {
 				<Wrapper>
 					<Route exact path={ROUTES.form} component={AddContract} />
 					<Route exact path={ROUTES.home} component={Contracts} />
+					<Route exact path={ROUTES.documents} component={Contracts} />
 					<Route exact path={ROUTES.users} component={Users} />
 					<Route exact path={ROUTES.templates} component={Templates} />
 					<Route exact path={ROUTES.newTemplate} component={EditTemplate} />
