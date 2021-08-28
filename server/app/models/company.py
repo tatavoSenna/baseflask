@@ -26,6 +26,8 @@ class Webhook(db.Model):
     company_id = db.Column(
         db.Integer, db.ForeignKey("company.id"), nullable=True)
     webhook = db.Column(db.String(1500), unique=True, nullable=True)
+    pdf = db.Column(db.Boolean, default=False, nullable=True)
+    docx = db.Column(db.Boolean, default=False, nullable=True)
 
     def __repr__(self):
         return "<Webhook %r>" % self.webhook

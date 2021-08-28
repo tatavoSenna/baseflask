@@ -32,8 +32,8 @@ def get_download_url_controller(company_id):
     return url
 
 
-def create_webhook_controller(company_id, webhook):
-    webhook = Webhook(webhook=webhook, company_id=company_id)
+def create_webhook_controller(company_id, webhook, pdf, docx):
+    webhook = Webhook(webhook=webhook, company_id=company_id, pdf=pdf, docx=docx)
     db.session.add(webhook)
     db.session.commit()
     return webhook

@@ -194,8 +194,10 @@ def create_webhook(logged_user):
 
     content = request.json
     url = content.get("url", None)
+    pdf = content.get("pdf", False)
+    docx = content.get("docx", False)
 
-    webhook = create_webhook_controller(company.id, url)
+    webhook = create_webhook_controller(company.id, url, pdf, docx)
     
     return jsonify({"webhook": WebhookSerializer().dump(webhook)})
 
