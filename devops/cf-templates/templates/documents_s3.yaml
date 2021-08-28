@@ -14,3 +14,5 @@ Resources:
 Outputs:
   DocumentsBucket:
     Value: !Ref DocumentsBucket
+    Export:
+      Name: DocumentsBucketName 

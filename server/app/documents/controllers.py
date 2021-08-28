@@ -135,6 +135,13 @@ def create_document_controller(user_id, user_email, company_id,
         sns = boto3.client('sns')
         topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
         for webhook in webhook_list:
+            if webhook.pdf:
+                webhook_text_type = ".pdf"
+            elif webhook.docx:
+                webhook_text_type = ".docx"
+            else:
+                webhook_text_type = None
+
             message = {"document_title": title,
                     "document_id": document.id,
                     "document_template_name": document_template.name,
@@ -149,7 +156,8 @@ def create_document_controller(user_id, user_email, company_id,
                     "data_final_contrato": data_final_contrato,
                     "data_assinatura": data_assinatura,
                     "nome_contrato": nome_contrato,
-                    "webhook_url": webhook.webhook
+                    "webhook_url": webhook.webhook,
+                    "text_type":webhook_text_type
                     }
 
             response = sns.publish(
