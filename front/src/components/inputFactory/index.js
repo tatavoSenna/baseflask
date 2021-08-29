@@ -402,7 +402,11 @@ function InputFactory({
 				)
 				break
 			case 'separator':
-				children.push(<Divider>{pageFieldsData[i].title}</Divider>)
+				children.push(
+					<Divider style={visible[i] ? {} : { display: 'none' }}>
+						{pageFieldsData[i].title}
+					</Divider>
+				)
 				break
 			default:
 				children.push(
