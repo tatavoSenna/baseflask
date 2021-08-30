@@ -3,11 +3,7 @@ import { node } from 'prop-types'
 import { Layout } from 'antd'
 // import ProLayout from '@ant-design/pro-layout'
 import { useMediaQuery } from 'react-responsive'
-import {
-	AmplifyAuthenticator,
-	AmplifyContainer,
-	AmplifySignIn,
-} from '@aws-amplify/ui-react'
+import { AmplifyAuthenticator, AmplifySignIn } from '@aws-amplify/ui-react'
 
 import Header from '../Header'
 import SideBar from '../sidebar'

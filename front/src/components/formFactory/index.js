@@ -87,6 +87,7 @@ const FormFactory = ({
 						data={pageFieldsData.fields}
 						visible={visible[currentPage]}
 						pageIndex={currentPage}
+						form={form}
 					/>
 				)}
 				<div
