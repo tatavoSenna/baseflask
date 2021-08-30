@@ -39,6 +39,7 @@ function InputFactory({
 	pageIndex,
 	disabled,
 	initialValues,
+	form,
 }) {
 	const state = useHistory().location.state
 	let values = { current: 0 }
@@ -50,49 +51,72 @@ function InputFactory({
 	const children = []
 
 	function checkField(input, i) {
+		const compareCondition = (condition, input) => {
+			const { operator, value } = condition
+
+			let comparison
+			switch (operator) {
+				case '>':
+					comparison = input > value
+					break
+				case '>=':
+					comparison = input >= value
+					break
+				case '<':
+					comparison = input < value
+					break
+				case '<=':
+					comparison = input <= value
+					break
+				case '=':
+					// If value is an array, OR logic is applied
+					if (typeof value === 'object') {
+						value.forEach((item) => {
+							if (input === item) {
+								comparison = true
+							}
+						})
+					} else {
+						comparison = input === value
+					}
+					break
+				default:
+					comparison = false
+					break
+			}
+
+			return comparison
+		}
+
+		let comparison
+		let variableName
+
 		// This 'if' is here so templates whose variables are not objects still work
-		let changedName
 		if (typeof pageFieldsData[i].variable === 'string') {
-			changedName = pageFieldsData[i].variable
+			variableName = pageFieldsData[i].variable
 		} else {
-			changedName = pageFieldsData[i].variable.name
+			variableName = pageFieldsData[i].variable.name
 		}
 
 		pageFieldsData.forEach((field, fieldIndex) => {
-			if (field.condition && field.condition.variable === changedName) {
-				const { operator, value } = field.condition
-
-				let comparison
-				switch (operator) {
-					case '>':
-						comparison = input > value
-						break
-					case '>=':
-						comparison = input >= value
-						break
-					case '<':
-						comparison = input < value
-						break
-					case '<=':
-						comparison = input <= value
-						break
-					case '=':
-						// If value is an array, OR logic is applied
-						if (typeof value === 'object') {
-							value.forEach((item) => {
-								if (input === item) {
-									comparison = true
-								}
-							})
-						} else {
-							comparison = input === value
-						}
-						break
-					default:
-						comparison = false
-						break
+			if (Array.isArray(field.condition)) {
+				comparison = Array(field.condition.length).fill(false)
+				field.condition.forEach((condition, index) => {
+					let value
+					if (condition.variable === variableName) {
+						value = input
+					} else {
+						value = form.getFieldValue(condition.variable)
+					}
+					comparison[index] = compareCondition(condition, value)
+				})
+				if (comparison.every((i) => i === true)) {
+					dispatch(updateVisible({ value: true, pageIndex, fieldIndex }))
+				} else {
+					dispatch(updateVisible({ value: false, pageIndex, fieldIndex }))
 				}
-
+			} else if (field.condition && field.condition.variable === variableName) {
+				comparison = compareCondition(field.condition, input)
 				if (comparison) {
 					dispatch(updateVisible({ value: true, pageIndex, fieldIndex }))
 				} else {
