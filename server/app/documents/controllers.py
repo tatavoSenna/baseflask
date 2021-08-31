@@ -21,6 +21,7 @@ from flask import current_app, jsonify
 from unittest.mock import MagicMock
 from docxtpl import DocxTemplate, InlineImage
 from docx import Document as docxDocument
+from docx.shared import Cm
 from PIL import Image
 import docx
 from bs4 import BeautifulSoup
