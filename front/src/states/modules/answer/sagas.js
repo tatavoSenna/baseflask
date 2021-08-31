@@ -32,16 +32,6 @@ function* answerSaga({ payload }) {
 	})
 
 	try {
-		let dataImg = {}
-		let objectData = answer.data
-
-		for (var [key] of Object.entries(objectData)) {
-			if (key.includes('image_')) {
-				dataImg[key] = document
-					.getElementById(key)
-					.getElementsByTagName('input')[0].value
-			}
-		}
 		const { data } = yield call(api.post, '/documents/', {
 			document_template: modelId,
 			parent: parent,
