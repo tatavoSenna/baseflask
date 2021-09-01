@@ -14,6 +14,7 @@ month_dictionary = {1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'M
 
 
 def specify_variables(variables, document_template_id):
+    # TODO: Calling the database twice
     variables_specification = DocumentTemplate.query.get(
         document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
