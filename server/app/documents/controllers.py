@@ -528,13 +528,14 @@ def fill_docx_with_variables(document, docx_io, variables):
             proportion = float(image_obj.size[1]/image_obj.size[0])
             for para in doc.paragraphs:
                 if key.split("image_")[1] in para.text:
-                    for field in document.form[0]['fields']:
-                        if field['variable']['name'] == key.strip("image_"):
-                            width_size = field['variable']['width']
-                            height_size = width_size * proportion
-                            r = para.add_run()
-                            r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
-                            break
+                    for page in document.form:
+                        for field in page['fields']:
+                            if field['variable']['name'] == key.strip("image_"):
+                                width_size = field['variable'].get('width', 8)
+                                height_size = width_size * proportion
+                                r = para.add_run()
+                                r.add_picture(image, width=Cm(width_size), height=Cm(height_size))
+                                break
     doc.save(docx_io)
     docx_template = DocxTemplate(docx_io)
     docx_template.render(variables)
