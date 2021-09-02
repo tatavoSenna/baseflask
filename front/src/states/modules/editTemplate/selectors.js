@@ -25,7 +25,25 @@ export const selectEdit = (data, payload) => {
 	payload.form.forEach((page) => {
 		const pageList = []
 		page.fields.forEach((field) => {
-			pageList.push(field.variable)
+			if (field?.structure) {
+				let variable
+				let structure
+				if (Array.isArray(field.structure)) {
+					structure = []
+					field.structure.forEach((field) => {
+						structure.push(field.variable)
+					})
+				} else {
+					structure = field.structure.variable
+				}
+				variable = {
+					structure: structure,
+					main: field.variable,
+				}
+				pageList.push(variable)
+			} else {
+				pageList.push(field.variable)
+			}
 		})
 		pagesList.push(pageList)
 	})
