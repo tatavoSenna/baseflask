@@ -87,7 +87,8 @@ def specify_variables(variables, document_template_id):
                     logging.exception(e)
             else:
                 try:
-                    date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
+                    date = datetime.strptime(
+                        variables[variable][0:10], "%Y-%m-%d")
                     return date.strftime(specs["doc_display_style"])
                 except Exception as e:
                     logging.exception(e)
@@ -108,7 +109,8 @@ def specify_variables(variables, document_template_id):
                     if len(list_variable) < 2:
                         return list_variable[0]
                     last_element = list_variable.pop()
-                    list_variable[-1] = list_variable[-1] + " e " + last_element
+                    list_variable[-1] = list_variable[-1] + \
+                        " e " + last_element
                     return ", ".join(list_variable)
                 except Exception as e:
                     logging.exception(e)
@@ -132,7 +134,8 @@ def specify_variables(variables, document_template_id):
                 num_variable = variables[variable]
                 if specs["doc_display_style"] in ["currency_extended", "extended"]:
                     return format_currency(num_variable, "BRL", locale='pt_BR') + \
-                        " (" + num2words(num_variable, lang='pt_BR', to='currency') + ")"
+                        " (" + num2words(num_variable,
+                                         lang='pt_BR', to='currency') + ")"
                 return format_currency(
                     num_variable, "BRL", locale='pt_BR')
             except Exception as e:
@@ -158,7 +161,8 @@ def specify_variables(variables, document_template_id):
                     rows_list = []
                     text_template = specs["extra_style_params"]["row_template"]
                     jinja_template = jinja_env.from_string(text_template)
-                    for item in variables[struct_name]:
+                    for index, item in enumerate(variables[struct_name]):
+                        item['INDEX'] = index + 1
                         filled_text = jinja_template.render(item)
                         rows_list.append(filled_text)
 
@@ -181,7 +185,8 @@ def specify_variables(variables, document_template_id):
                                 for label, value in info.items():
                                     columns.append(
                                         f"<td>{label}</td><td>{item[value]}</td>")
-                            table_rows.append('<tr>' + ''.join(columns) + '</tr>')
+                            table_rows.append(
+                                '<tr>' + ''.join(columns) + '</tr>')
 
                         table_list.append(''.join(table_rows))
 
