@@ -53,6 +53,7 @@ def get_keys(logged_user):
     company = Company.query.get(logged_user["company_id"])
     return jsonify({"company": CompanySerializer().dump(company)})
 
+
 @company_bp.route("/upload", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
@@ -68,6 +69,7 @@ def upload_logo(logged_user):
 
     return url
 
+
 @company_bp.route("/download", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
@@ -78,23 +80,28 @@ def download_logo_url(logged_user):
 
     return jsonify({"url": url})
 
+
 @company_bp.route("/")
 @aws_auth.authentication_required
 @get_local_user
 def get_company_list(logged_user):
-    
+
     if not logged_user['is_admin']:
         print(logged_user)
         return {}, 403
 
     try:
-        page = int(request.args.get("page", current_app.config['PAGE_DEFAULT']))
-        per_page = int(request.args.get("per_page", current_app.config['PER_PAGE_DEFAULT']))
+        page = int(request.args.get(
+            "page", current_app.config['PAGE_DEFAULT']))
+        per_page = int(request.args.get(
+            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+        search_param = str(request.args.get("search", ""))
     except:
         abort(400, "invalid parameters")
 
     paginated_query = (
         Company.query.order_by(Company.name)
+        .filter(Company.name.ilike(f"%{search_param}%"))
         .paginate(page=page, per_page=per_page)
     )
 
@@ -108,7 +115,6 @@ def get_company_list(logged_user):
     )
 
 
-
 @company_bp.route("/", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
@@ -120,7 +126,7 @@ def create_company(logged_user):
     company_name = content.get("company_name", None)
     if not company_name:
         return jsonify({"message": "Didn't receive a new company name"}), 400
-   
+
     company = Company.query.filter_by(name=company_name).first()
 
     if company:
@@ -128,33 +134,34 @@ def create_company(logged_user):
 
     company_attributes = dict(
 
-                name = company_name
-            )
+        name=company_name
+    )
     new_company = Company(**company_attributes)
 
     db.session.add(new_company)
-    db.session.commit() 
+    db.session.commit()
     return jsonify({"company": CompanySerializer().dump(new_company)})
 
-    
+
 @company_bp.route("/join", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def change_company(logged_user):
     if not logged_user['is_admin']:
         return {}, 403
-    
+
     user = User.query.filter_by(id=logged_user["id"]).first()
 
     content = request.json
     new_id = content.get("new_id", None)
-   
+
     user.company_id = new_id
 
     db.session.add(user)
-    db.session.commit() 
+    db.session.commit()
 
     return jsonify({"user": UserSerializer().dump(user)})
+
 
 @company_bp.route("/webhook")
 @aws_auth.authentication_required
@@ -198,7 +205,7 @@ def create_webhook(logged_user):
     docx = content.get("docx", False)
 
     webhook = create_webhook_controller(company.id, url, pdf, docx)
-    
+
     return jsonify({"webhook": WebhookSerializer().dump(webhook)})
 
 
@@ -206,7 +213,7 @@ def create_webhook(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def delete_webhook(logged_user, webhook_id):
-    try:    
+    try:
         webhook = get_webhook_controller(webhook_id)
         if not webhook:
             abort(404, "Webhook not Found")
@@ -221,6 +228,3 @@ def delete_webhook(logged_user, webhook_id):
     }
 
     return jsonify(msg_JSON), 200
-
-
-
