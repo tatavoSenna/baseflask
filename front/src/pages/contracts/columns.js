@@ -29,6 +29,11 @@ export const getColumns = (
 		),
 	},
 	{
+		title: 'Template',
+		dataIndex: 'template_name',
+		key: 'template_name',
+	},
+	{
 		title: 'Criação',
 		dataIndex: 'author',
 		key: 'author',

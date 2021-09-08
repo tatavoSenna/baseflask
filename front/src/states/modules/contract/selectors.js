@@ -14,6 +14,7 @@ export const selectAllContracts = (payload) =>
 		id: parseInt(contract.id, 10),
 		key: parseInt(contract.id, 10),
 		title: contract.title,
+		template_name: contract.template_name,
 		clientId: contract.client_id,
 		author: (
 			<>
