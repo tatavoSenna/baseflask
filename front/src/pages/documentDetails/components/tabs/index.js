@@ -336,7 +336,7 @@ const Tabs = ({
 					</Menu.Item>
 				))}
 			</Menu>
-			{downloads()}
+			{textType === '.docx' && downloads()}
 		</div>
 	)
 
