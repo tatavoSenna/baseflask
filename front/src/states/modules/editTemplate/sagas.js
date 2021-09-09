@@ -85,6 +85,7 @@ function* editTemplateSaga({ payload = {} }) {
 		return variable
 	}
 
+	// Applies the extractName func on variables from the structure
 	const structuredVariable = (variable) => {
 		const structVarObj = {
 			structure: {},
@@ -92,7 +93,9 @@ function* editTemplateSaga({ payload = {} }) {
 		}
 		if (Array.isArray(variable.structure)) {
 			variable.structure.forEach((field) => {
-				structVarObj.structure[field.name] = extractName(field)
+				if (field?.name) {
+					structVarObj.structure[field.name] = extractName(field)
+				}
 			})
 		} else {
 			structVarObj.structure[variable.structure.name] = extractName(
@@ -110,6 +113,8 @@ function* editTemplateSaga({ payload = {} }) {
 		return structVarObj
 	}
 
+	// Iterates over the variables applying the extractName function.
+	// Structured variables are named after their specific type and index of both page and field, e.g., structured_list_0_3.
 	const arrangedVariables = (variables) => {
 		const variablesObj = {}
 		variables.forEach((page, pageIndex) => {
@@ -203,6 +208,7 @@ function* editTemplateSaga({ payload = {} }) {
 			history.push('/templates')
 		} catch (error) {
 			yield put(editTemplateFailure(error))
+			console.log(error)
 			errorMessage({
 				content: 'A atualização do template falhou',
 				updateKey: 'editTemplate',
