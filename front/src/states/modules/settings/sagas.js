@@ -74,15 +74,19 @@ function* getWebhooksSaga() {
 	}
 }
 
-function* saveWebhooksSaga() {
+function* saveWebhooksSaga({ payload }) {
 	const { settings } = yield select()
 	const { newWebhook = {} } = settings
+
 	try {
 		loadingMessage({
 			content: 'Salvando dados...',
 			updateKey: 'saveWebhooks',
 		})
-		const { data } = yield call(api.post, `/company/webhook`, newWebhook)
+		const { data } = yield call(api.post, `/company/webhook`, {
+			...newWebhook,
+			...payload,
+		})
 		yield put(saveWebhooksSuccess(data))
 		yield put(getWebhooks())
 		successMessage({

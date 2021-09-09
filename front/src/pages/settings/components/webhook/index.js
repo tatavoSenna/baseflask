@@ -1,5 +1,14 @@
-import React, { useEffect } from 'react'
-import { Card, Typography, Form, Button, Input, Table, Empty } from 'antd'
+import React, { useEffect, useState } from 'react'
+import {
+	Card,
+	Typography,
+	Form,
+	Button,
+	Input,
+	Table,
+	Empty,
+	Checkbox,
+} from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -16,6 +25,19 @@ function Webhook() {
 		({ settings }) => settings
 	)
 
+	const [docx, setDocX] = useState(false)
+	const [pdf, setPDF] = useState(false)
+
+	const onChangeDocx = (e) => {
+		setDocX(e.target.checked)
+		setPDF(false)
+	}
+
+	const onChangePDF = (e) => {
+		setPDF(e.target.checked)
+		setDocX(false)
+	}
+
 	useEffect(() => {
 		dispatch(getWebhooks())
 	}, [dispatch])
@@ -24,7 +46,9 @@ function Webhook() {
 	//	dispatch(getWebhooks())
 
 	const handleSaveWebhooks = (form) => {
-		dispatch(saveWebhooks())
+		dispatch(saveWebhooks({ docx, pdf }))
+		setDocX(false)
+		setPDF(false)
 		form.resetFields()
 	}
 
@@ -59,6 +83,12 @@ function Webhook() {
 					<Form.Item label="Novo Webhook" name="webhook">
 						<Input value={newWebhook.url} />
 					</Form.Item>
+					<Checkbox checked={docx} onChange={onChangeDocx}>
+						Word
+					</Checkbox>
+					<Checkbox checked={pdf} onChange={onChangePDF}>
+						PDF
+					</Checkbox>
 					<div
 						style={{
 							display: 'flex',
