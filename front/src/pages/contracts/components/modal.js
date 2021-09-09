@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Input, Button, Modal, Form, Checkbox } from 'antd'
 import PropTypes from 'prop-types'
 import { AutoComplete } from 'antd'
@@ -24,11 +24,15 @@ const ContractModal = ({
 						model.label.toLowerCase().includes(searchText.toLowerCase())
 				  )
 		)
+	useEffect(() => {
+		setOptions(models)
+	}, [models])
 
 	return (
 		<Modal
 			visible={showModal}
 			onCancel={handleCancel}
+			destroyOnClose={true}
 			footer={[
 				<Button key="cancelar" onClick={handleCancel}>
 					Cancelar
