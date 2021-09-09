@@ -46,6 +46,7 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
         "email": obj.user.email
     })
     status = ma.Method("get_status")
+    template_name = ma.Method("get_template_name")
 
     class Meta:
         model = Document
@@ -74,6 +75,9 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
                 current_status = "-"
 
             return current_status
+
+    def get_template_name(self, obj):
+        return obj.template.name
 
 
 class DocumentSerializer(ma.SQLAlchemyAutoSchema):
