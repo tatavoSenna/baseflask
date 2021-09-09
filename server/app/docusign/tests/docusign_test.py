@@ -13,6 +13,7 @@ from app.models.documents import Document
 
 @patch('docusign_esign.EnvelopesApi.create_envelope')
 def test_sign_document(create_envelope_mock):
+    create_envelope_mock.return_value.envelope_id = 'a1-b2-c3'
 
     company = factories.CompanyFactory(id=134)
     user = factories.UserFactory(id=115, company=company)
