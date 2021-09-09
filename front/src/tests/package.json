@@ -1,0 +1,25 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Automated software testing with Puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout=50000 ./FirstTest"
+  },
+  "keywords": [
+    "Puppeteer",
+    "Mocha",
+    "Chai",
+    "Automation",
+    "query-selector-shadow-dom"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.0",
+    "prettier": "^2.3.2",
+    "puppeteer": "^10.2.0",
+    "query-selector-shadow-dom": "^1.0.0"
+  }
+}
