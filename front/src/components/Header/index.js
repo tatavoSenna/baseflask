@@ -88,7 +88,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 							<Space size={10}>
 								<Avatar>
 									<Text style={{ color: '#333' }}>
-										{username.substring(0, 1)}
+										{username ? username.substring(0, 1) : null}
 									</Text>
 								</Avatar>
 								<Text style={{ color: '#333' }}>{username}</Text>
