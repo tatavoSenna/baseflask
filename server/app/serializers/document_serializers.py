@@ -77,7 +77,7 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
             return current_status
 
     def get_template_name(self, obj):
-        if not obj.is_folder:
+        if obj.template  and not obj.is_folder:
             return obj.template.name
         return  '-'
 
