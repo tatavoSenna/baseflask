@@ -111,7 +111,7 @@ Resources:
                   - s3:PutObject
                   - s3:DeleteObject
                   - s3:ListBucket
-              - Resource: !Sub arn:aws:cognito-idp:sa-east-1:386235651823:userpool/${CognitoUserPool}
+              - Resource: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPool}
                 Effect: Allow
                 Action:
                   - cognito-idp:*
