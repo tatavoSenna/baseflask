@@ -403,7 +403,7 @@ const Tabs = ({
 							className={styles.button}
 							onClick={onClickPrevious}
 							disabled={block}>
-							Reprovar
+							Voltar
 						</Button>
 					)}
 					{current !== steps.length - 1 && signedWorkflow !== true && (
@@ -412,7 +412,7 @@ const Tabs = ({
 							htmlType="button"
 							onClick={onClickNext}
 							disabled={block}>
-							Aprovar
+							Avançar
 						</Button>
 					)}
 					{signedWorkflow === true && (
