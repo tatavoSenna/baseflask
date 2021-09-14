@@ -34,6 +34,7 @@ const Workflow = ({ data, setInputsFilled, inputsFilled }) => {
 			next_node: null,
 			responsible_users: [],
 			responsible_group: '',
+			deadline: null,
 			changed_by: '',
 		}
 
