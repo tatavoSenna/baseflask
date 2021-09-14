@@ -168,6 +168,7 @@ const EditTemplate = () => {
 				[`description_${index}`]: node.title,
 				[`group_${index}`]: node.responsible_group,
 				[`users_${index}`]: node.responsible_users,
+				[`deadline_${index}`]: node.deadline,
 			})
 		)
 

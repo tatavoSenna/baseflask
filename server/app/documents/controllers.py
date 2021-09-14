@@ -2,10 +2,11 @@ import json
 import logging
 import base64
 import io
+from operator import ne
 import boto3
 import requests
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from datetime import date
 
 from app import db
@@ -80,6 +81,10 @@ def create_document_controller(user_id, user_email, company_id,
     document_workflow = document_template.workflow
     document_workflow['created_by'] = username
     current_node = document_workflow["current_node"]
+    try:
+        document_workflow["nodes"][current_node]["due_date"] = str(datetime.today() + timedelta(days=document_workflow["nodes"][current_node]["deadline"]))
+    except:
+        pass
     try:
         step_name = document_workflow["nodes"][current_node]["title"]
     except KeyError:
@@ -313,6 +318,10 @@ def next_status_controller(document_id, username):
                                ]["changed_by"] = username
     document.workflow["current_node"] = next_node
     document.current_step = document.workflow["nodes"][next_node]["title"]
+    try:
+        document.workflow["nodes"][next_node]["due_date"] = str(datetime.today() + timedelta(days=document.workflow["nodes"][next_node]["deadline"]))
+    except:
+        pass
     db.session.add(document)
     db.session.commit()
     return document, 0
@@ -340,6 +349,10 @@ def previous_status_controller(document_id):
     document.workflow = copy.deepcopy(document.workflow)
     document.workflow["current_node"] = previous_node
     document.current_step = document.workflow["nodes"][previous_node]["title"]
+    try:
+        document.workflow["nodes"][previous_node]["due_date"] = str(datetime.today() + timedelta(days=document.workflow["nodes"][previous_node]["deadline"]))
+    except:
+        pass
     db.session.add(document)
     db.session.commit()
     return document, 0

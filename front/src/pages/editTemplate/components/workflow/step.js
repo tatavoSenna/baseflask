@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, array, number } from 'prop-types'
-import { Form, Input, Select } from 'antd'
+import { Form, Input, InputNumber, Select, Checkbox, Typography } from 'antd'
 import {
 	editTemplateStepInfo,
 	editTemplateStepRemove,
@@ -12,6 +12,8 @@ import Delete from '~/components/deleteConfirm'
 
 const { Option } = Select
 var groupSelect = null
+
+const { Text } = Typography
 
 const Step = ({ node, groups, users, index }) => {
 	const dispatch = useDispatch()
@@ -41,6 +43,20 @@ const Step = ({ node, groups, users, index }) => {
 
 	const usersList = listUsers(node.responsible_group)
 	const [usersChildren, setUsersChildren] = useState(usersList)
+
+	const [expire, setExpire] = useState(
+		!(node.deadline === undefined || node.deadline === null)
+	)
+
+	const onChangeExpire = (e) => {
+		if (e) {
+			updateStepInfo(1, index, 'deadline')
+			setExpire(true)
+		} else {
+			updateStepInfo(null, index, 'deadline')
+			setExpire(false)
+		}
+	}
 
 	const updateStepInfo = (e, index, name) => {
 		if (name === 'title') {
@@ -118,6 +134,30 @@ const Step = ({ node, groups, users, index }) => {
 					{usersChildren}
 				</Select>
 			</Form.Item>
+			<div style={{ display: 'flex', marginBottom: '10px' }}>
+				<Checkbox
+					checked={expire}
+					onChange={(e) => onChangeExpire(e.target.checked)}>
+					Prazo de validade{expire && ':'}
+				</Checkbox>
+				{expire && (
+					<>
+						<Form.Item
+							name={`deadline_${index}`}
+							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
+							style={{ position: 'relative', bottom: '5px', margin: 0 }}>
+							<InputNumber
+								value={node.deadline}
+								min={1}
+								size="small"
+								style={{ width: '60px', marginRight: '5px' }}
+								onChange={(e) => updateStepInfo(e, index, 'deadline')}
+							/>
+						</Form.Item>
+						<Text>dia{node.deadline !== 1 && 's'}</Text>
+					</>
+				)}
+			</div>
 		</DragDropCard>
 	)
 }

@@ -128,6 +128,10 @@ export const selectStep = (workflow, payload) => {
 						return extend(node, {
 							responsible_group: payload.value,
 						})
+					case 'deadline':
+						return extend(node, {
+							deadline: payload.value,
+						})
 					default:
 						return node
 				}
