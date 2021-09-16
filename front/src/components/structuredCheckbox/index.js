@@ -45,6 +45,9 @@ const StructuredCheckbox = ({
 						// This next line allows you to manipulate the object
 						const pageFieldsData = JSON.parse(JSON.stringify(structure))
 						pageFieldsData.forEach((field) => {
+							if (field.type === 'separator') {
+								return
+							}
 							field['id'] = option.value
 							field['list'] = listName
 						})
@@ -68,7 +71,7 @@ const StructuredCheckbox = ({
 										visible={Array(visible[index])}
 										disabled={disabled}
 										initialValues={
-											option.checked
+											option.checked && field.type !== 'separator'
 												? [option['struct_values'][field.variable.name]]
 												: ''
 										}
