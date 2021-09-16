@@ -24,6 +24,9 @@ import {
 	deleteWebhooks,
 	deleteWebhooksSuccess,
 	deleteWebhooksFailure,
+	editWebhooks,
+	editWebhooksSuccess,
+	editWebhooksFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -32,6 +35,7 @@ export default function* rootSaga() {
 	yield takeEvery(getWebhooks, getWebhooksSaga)
 	yield takeEvery(saveWebhooks, saveWebhooksSaga)
 	yield takeEvery(deleteWebhooks, deleteWebhooksSaga)
+	yield takeEvery(editWebhooks, editWebhooksSaga)
 }
 
 function* getSettingsSaga() {
@@ -77,7 +81,8 @@ function* getWebhooksSaga() {
 function* saveWebhooksSaga({ payload }) {
 	const { settings } = yield select()
 	const { newWebhook = {} } = settings
-
+	console.log({ ...payload })
+	console.log({ ...newWebhook })
 	try {
 		loadingMessage({
 			content: 'Salvando dados...',
@@ -115,11 +120,39 @@ function* deleteWebhooksSaga({ payload }) {
 		})
 		yield put(deleteWebhooksSuccess())
 		yield put(getWebhooks())
-	} catch {
+	} catch (error) {
 		errorMessage({
 			content: 'Problemas ao deletar webhook',
 			updateKey: 'deleteWebhook',
 		})
-		yield put(deleteWebhooksFailure(payload))
+		yield put(deleteWebhooksFailure(error))
+	}
+}
+
+function* editWebhooksSaga({ payload }) {
+	loadingMessage({
+		content: 'Editando webhook...',
+		updateKey: 'editWebhook',
+	})
+
+	console.log('payload:', payload)
+	try {
+		yield call(api.post, `/company/webhook/edit/${payload.id}`, {
+			url: payload.url,
+			docx: payload.docx,
+			pdf: payload.pdf,
+		})
+		successMessage({
+			content: 'Webhook editado com sucesso',
+			updateKey: 'editWebhook',
+		})
+		yield put(editWebhooksSuccess())
+		yield put(getWebhooks())
+	} catch (error) {
+		yield put(editWebhooksFailure(error))
+		errorMessage({
+			content: 'Problemas ao editar webhook',
+			updateKey: 'editWebhook',
+		})
 	}
 }

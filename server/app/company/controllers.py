@@ -42,3 +42,17 @@ def get_webhook_controller(webhook_id):
     webhook = Webhook.query.filter_by(id=webhook_id).first()
     return webhook
 
+def update_webhook_controller(webhook_id, url, pdf, docx):
+    webhook = get_webhook_controller(webhook_id)
+
+    if url is not None:
+        webhook.webhook = url
+    if pdf is not None:
+        webhook.pdf = pdf
+    if docx is not None:
+        webhook.docx = docx
+        
+    db.session.add(webhook)
+    db.session.commit()
+
+    return webhook

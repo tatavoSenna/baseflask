@@ -14,6 +14,7 @@ from app.serializers.company_serializers import CompanySerializer, CompanyListSe
 
 from .controllers import (
     save_company_keys_controller,
+    update_webhook_controller,
     upload_logo_controller,
     get_download_url_controller,
     create_webhook_controller,
@@ -228,3 +229,22 @@ def delete_webhook(logged_user, webhook_id):
     }
 
     return jsonify(msg_JSON), 200
+
+
+@company_bp.route("/webhook/edit/<int:webhook_id>", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def edit_webhook(logged_user, webhook_id):
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    content = request.json
+    url = content.get("url", None)
+    pdf = content.get("pdf", None)
+    docx = content.get("docx", None)
+    try:
+        webhook = update_webhook_controller(webhook_id, url, pdf, docx)
+    except Exception:
+        abort(500, "Could not update webhook. Check if the id provided is correct.")
+
+    return jsonify({"webhook": WebhookSerializer().dump(webhook)})

@@ -1,5 +1,7 @@
 from app.company.controllers import (
-    save_company_keys_controller, 
+    create_webhook_controller,
+    save_company_keys_controller,
+    update_webhook_controller, 
     upload_logo_controller,
     get_download_url_controller
 )
@@ -8,6 +10,7 @@ import pytest
 import io
 from flask import current_app
 from unittest.mock import patch
+import copy
 
 def test_save_keys():
     company = factories.CompanyFactory()
@@ -52,5 +55,45 @@ def test_download_logo(download_logo_mock):
 
     download_logo_mock.assert_called_once_with(company.id)
 
+def test_update_webhook():
+
+    # Create fake company and fake webhook
+    id = 123
+    company_id = 123
+    company = factories.CompanyFactory(id=company_id)
+    webhook = factories.WebhookFactory(id=id,company_id = company_id, pdf = False, docx = False)
+
+    # Copies webhook to test if changes are being made correctly
+    comparison_webhook = copy.deepcopy(webhook)
+
+    # Test not changing anythings and check if it is still the same
+    pdf = None
+    docx = None
+    url = None
+    updated_webhook = update_webhook_controller(webhook.id, url, pdf, docx)
+    assert updated_webhook.pdf == comparison_webhook.pdf
+    assert updated_webhook.docx == comparison_webhook.docx
+    assert updated_webhook.webhook == comparison_webhook.webhook
+
+    # Test changing everything and check if everything is changed correctly
+    pdf = True
+    docx = True
+    url = "http://test.com"
+    updated_webhook = update_webhook_controller(webhook.id, url, pdf, docx)
+    assert updated_webhook.pdf == True
+    assert updated_webhook.docx == True
+    assert updated_webhook.webhook == "http://test.com"
+
+def test_create_webhook():
+    company_id = 1
+    company = factories.CompanyFactory(id=company_id)
+    url = "http://test.com"
+    pdf = True
+    docx = True
+
+    webhook = create_webhook_controller(company_id, url, pdf, docx)
+    assert webhook.pdf == True
+    assert webhook.docx == True
+    assert webhook.webhook == "http://test.com"
 
 
