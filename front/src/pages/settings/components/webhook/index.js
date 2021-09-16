@@ -16,6 +16,7 @@ import {
 	saveWebhooks,
 	updateNewWebhook,
 	deleteWebhooks,
+	editWebhooks,
 } from '~/states/modules/settings'
 import { getColumns } from './columns'
 
@@ -60,7 +61,11 @@ function Webhook() {
 		dispatch(deleteWebhooks({ id }))
 	}
 
-	const columns = getColumns(handleDeleteWebhook)
+	const handleEditWebhook = (id, docx, pdf, url) => {
+		dispatch(editWebhooks({ id, docx, pdf, url }))
+	}
+
+	const columns = getColumns(handleDeleteWebhook, handleEditWebhook)
 	const { Title } = Typography
 
 	const [form] = Form.useForm()

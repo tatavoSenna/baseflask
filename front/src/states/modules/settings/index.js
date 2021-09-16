@@ -95,6 +95,21 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		editWebhooks: (state) => {
+			extend(state, {
+				loading: true,
+			})
+		},
+		editWebhooksSuccess: (state) => {
+			extend(state, {
+				loading: false,
+			})
+		},
+		editWebhooksFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -115,6 +130,9 @@ export const {
 	deleteWebhooks,
 	deleteWebhooksSuccess,
 	deleteWebhooksFailure,
+	editWebhooks,
+	editWebhooksSuccess,
+	editWebhooksFailure,
 } = actions
 
 export { default as settingsSaga } from './sagas'

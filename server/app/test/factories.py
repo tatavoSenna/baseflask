@@ -1,3 +1,4 @@
+from werkzeug.exceptions import PreconditionFailed
 import factory
 
 from factory.alchemy import SQLAlchemyModelFactory
@@ -73,3 +74,13 @@ class DocumentFactory(BaseFactory):
     company = factory.SubFactory(CompanyFactory)
     user = factory.SubFactory(UserFactory)
     template = factory.SubFactory(DocumentTemplateFactory)
+
+class WebhookFactory(BaseFactory):
+    class Meta:
+        model = models.company.Webhook
+
+    id = factory.Sequence(lambda n: n)
+    webhook = factory.Faker("domain_name")
+    company_id = factory.SubFactory(CompanyFactory)
+    pdf = factory.Faker("pybool")
+    docx = factory.Faker("pybool")
