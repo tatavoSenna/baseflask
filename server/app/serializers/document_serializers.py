@@ -174,6 +174,10 @@ def map_variables_to_form(variables, form):
                 continue
 
             if question['type'] == 'separator':
+                filled_form[-1]["fields"].append({
+                    "type": "separator",
+                    "title": question.get("title"),
+                })
                 continue
 
             if question['type'] == 'structured_list':
@@ -185,21 +189,30 @@ def map_variables_to_form(variables, form):
                 }
                 for variable_item in variables[f'structured_list_{group_index}_{question_index}']:
                     item_list = []
-                    for variable_name, value in variable_item.items():
+                    structure_index = 0
 
-                        for var_obj in question['structure']:
-                            if var_obj['variable']['name'] == variable_name:
-                                label = var_obj['label']
-                                variable_type = var_obj['type']
-                                options = var_obj.get('options')
+                    for var_obj in question['structure']:
 
-                        item_list.append({
-                            "label": label,
-                            "variable": variable_name,
-                            "value": value,
-                            "type": variable_type,
-                            "options": options
-                        })
+                        if var_obj['type'] == 'separator':
+                            item_list.append({
+                                'type': 'separator',
+                                'title': var_obj.get('title'),
+                            })
+                            continue
+
+                        variable_name = var_obj['variable']['name']
+                        value = variable_item.get(variable_name)
+                        if value != None:
+                            label = var_obj['label']
+                            variable_type = var_obj['type']
+                            options = var_obj.get('options')
+                            item_list.append({
+                                "label": label,
+                                "variable": variable_name,
+                                "value": value,
+                                "type": variable_type,
+                                "options": options
+                            })
 
                     variables_obj['items'].append(item_list)
 
@@ -233,9 +246,17 @@ def map_variables_to_form(variables, form):
                             variable_type = 'text'
                         else:
                             for var_obj in question['structure']:
-                                if var_obj['variable']['name'] == variable_name:
-                                    label = var_obj['label']
-                                    variable_type = var_obj['type']
+
+                                if var_obj['type'] == 'separator':
+                                    item_list.append({
+                                        'type': 'separator',
+                                        'title': var_obj.get('title'),
+                                    })
+                                    continue
+
+                            if var_obj['variable']['name'] == variable_name:
+                                label = var_obj['label']
+                                variable_type = var_obj['type']
 
                         item_list.append({
                             "label": label,
