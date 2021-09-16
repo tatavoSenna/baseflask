@@ -3,6 +3,8 @@ import { string, shape, object, func, number, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
 
+const locale = 'pt-br'
+
 const CurrencyField = ({
 	pageFieldsData,
 	className,
@@ -18,6 +20,48 @@ const CurrencyField = ({
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
+	const currencyFormatter = (selectedCurrOpt) => (value) => {
+		return new Intl.NumberFormat(locale, {
+			style: 'currency',
+			currency: selectedCurrOpt.split('::')[1],
+		}).format(value)
+	}
+
+	const currencyParser = (val) => {
+		try {
+			// for when the input gets clears
+			if (typeof val === 'string' && !val.length) {
+				val = '0.0'
+			}
+
+			// detecting and parsing between comma and dot
+			var group = new Intl.NumberFormat(locale).format(1111).replace(/1/g, '')
+			var decimal = new Intl.NumberFormat(locale).format(1.1).replace(/1/g, '')
+			var reversedVal = val.replace(new RegExp('\\' + group, 'g'), '')
+			reversedVal = reversedVal.replace(new RegExp('\\' + decimal, 'g'), '.')
+			//  => 1232.21 €
+
+			// removing everything except the digits and dot
+			reversedVal = reversedVal.replace(/[^0-9.]/g, '')
+			//  => 1232.21
+
+			// appending digits properly
+			const digitsAfterDecimalCount = (reversedVal.split('.')[1] || []).length
+			const needsDigitsAppended = digitsAfterDecimalCount > 2
+
+			if (needsDigitsAppended) {
+				reversedVal = reversedVal * Math.pow(10, digitsAfterDecimalCount - 2)
+			}
+
+			return Number.isNaN(reversedVal) ? 0 : reversedVal
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	const currency = 'BRAZIL::BRL'
+
 	return (
 		<Form.Item
 			key={name}
@@ -47,14 +91,8 @@ const CurrencyField = ({
 			<InputNumber
 				min={0}
 				placeholder=""
-				step={0.1}
-				decimalSeparator="."
-				formatter={(value) =>
-					` R$${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-				}
-				//formatter={(value) => ` R$${value}`}
-				parser={(value) => value.replace(/[A-Z]|[a-z]|[$ ]|,/g, '')}
-				precision={2}
+				formatter={currencyFormatter(currency)}
+				parser={currencyParser}
 				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
 				disabled={disabled}
 			/>
