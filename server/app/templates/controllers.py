@@ -4,11 +4,28 @@ from app.models.documents import DocumentTemplate
 from unittest.mock import MagicMock
 import boto3
 import io
+from app.models.user import User, Group
 
 from .remote import RemoteTemplate
 
 
 def create_template_controller(company_id, user_id, name, form, workflow, signers, text, text_type, variables):
+    
+    for node in workflow["nodes"]:
+        responsible_users_name = []
+        if workflow["nodes"][node]["responsible_users"]:
+            users = User.query.filter(User.id.in_(workflow["nodes"][node]["responsible_users"])).all()
+            users = [next(user for user in users if user.id == int(id)) for id in workflow["nodes"][node]["responsible_users"]]
+            for user in users:
+                responsible_users_name.append(user.name)
+        workflow["nodes"][node]["responsible_users_name"] = responsible_users_name
+
+        try:
+            group = Group.query.filter_by(id=workflow["nodes"][node]["responsible_group"]).first()
+            workflow["nodes"][node]["responsible_group_name"] = group.name
+        except:
+            workflow["nodes"][node]["responsible_group_name"] = []
+
 
     document_template = DocumentTemplate(
         company_id=company_id,
@@ -36,6 +53,21 @@ def edit_template_controller(company_id, user_id, template_id, name, form, workf
 
     if template.company_id != company_id:
         raise Exception('Invalid company')
+        
+    for node in workflow["nodes"]:
+        responsible_users_name = []
+        if workflow["nodes"][node]["responsible_users"]:
+            users = User.query.filter(User.id.in_(workflow["nodes"][node]["responsible_users"])).all()
+            users = [next(user for user in users if user.id == int(id)) for id in workflow["nodes"][node]["responsible_users"]]
+            for user in users:
+                responsible_users_name.append(user.name)
+        workflow["nodes"][node]["responsible_users_name"] = responsible_users_name
+
+        try:
+            group = Group.query.filter_by(id=workflow["nodes"][node]["responsible_group"]).first()
+            workflow["nodes"][node]["responsible_group_name"] = group.name
+        except:
+            workflow["nodes"][node]["responsible_group_name"] = []
 
     template.name = name
     template.form = form

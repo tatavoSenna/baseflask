@@ -7,10 +7,7 @@ import {
 	Menu,
 	Divider,
 	Steps as StepsAntd,
-	Avatar,
-	Space,
 } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
 import {
 	array,
 	bool,
@@ -29,6 +26,7 @@ import PersonField from './components/personField'
 
 import { ContainerTabs } from './styles'
 import styles from './index.module.scss'
+import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 
@@ -70,6 +68,8 @@ const Tabs = ({
 	const [isVariables, setVariables] = useState(false)
 	const [isEdit, setIsEdit] = useState(false)
 	const [form] = Form.useForm()
+
+	console.log('steps:', steps)
 
 	const tab = (option) => {
 		if (option === '1') {
@@ -340,18 +340,106 @@ const Tabs = ({
 		</div>
 	)
 
+	const getStepDescription = (item, index, current) => {
+		if (index < current) {
+			return (
+				<span style={{ fontSize: 12, lineHeight: 1.5 }}>
+					Aprovado por:{' '}
+					<span style={{ fontWeight: 'bold' }}>{item.changed_by}</span>
+				</span>
+			)
+		}
+		if (index === current) {
+			let responsibleUsers = item.responsible_users.map((user) => {
+				return user.name
+			})
+			if (item.due_date) {
+				const dateFormatter = (date) => {
+					if (!date) {
+						return null
+					}
+
+					var yearMonth = date.split('-')
+					var day = yearMonth[2].split(' ')
+					return day[0] + '/' + yearMonth[1] + '/' + yearMonth[0]
+				}
+				const dateNow = () => {
+					var data = new Date(),
+						dia = data.getDate().toString(),
+						diaF = dia.length === 1 ? '0' + dia : dia,
+						mes = (data.getMonth() + 1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+						mesF = mes.length === 1 ? '0' + mes : mes,
+						anoF = data.getFullYear()
+					return diaF + '/' + mesF + '/' + anoF
+				}
+				function process(date) {
+					var parts = date.split('/')
+					return new Date(parts[2], parts[1] - 1, parts[0])
+				}
+				const date = dateFormatter(item.due_date)
+				const verifyPastDue = (date1, date2) => {
+					return process(date1) > process(date2)
+				}
+				return (
+					<span style={{ fontSize: 12, lineHeight: 1.5 }}>
+						Prazo:{' '}
+						<span
+							style={
+								verifyPastDue(dateNow(), date)
+									? { fontWeight: 'bold', color: 'red' }
+									: { fontWeight: 'bold' }
+							}>
+							{date}
+						</span>
+						<br />
+						Grupo: <span style={{ fontWeight: 'bold' }}>{item.group.name}</span>
+						<br />
+						Responsável:{' '}
+						<span style={{ fontWeight: 'bold' }}>
+							{responsibleUsers.join(', ')}
+						</span>
+					</span>
+				)
+			}
+			return (
+				<span style={{ fontSize: 12, lineHeight: 1.5 }}>
+					Grupo: <span style={{ fontWeight: 'bold' }}>{item.group.name}</span>
+					<br />
+					Responsável:{' '}
+					<span style={{ fontWeight: 'bold' }}>
+						{responsibleUsers.join(', ')}
+					</span>
+				</span>
+			)
+		}
+	}
+
+	const getStepTitle = (item, index, current) => {
+		if (index === current) {
+			return (
+				<span style={{ color: '#1890ff', fontSize: 18, fontWeight: '500' }}>
+					{item.title}
+				</span>
+			)
+		}
+		return (
+			<span style={{ fontSize: 18, fontWeight: '500', whiteSpace: 'nowrap' }}>
+				{item.title}
+			</span>
+		)
+	}
+
 	const workflow = () => (
 		<div
 			style={{
 				display: 'flex',
 				flexDirection: 'column',
 				padding: 24,
+				paddingRight: 5,
 				margin: 5,
 				minHeight: 200,
 				background: '#fff',
-				border: '1px solid #F0F0F0',
 			}}>
-			<Title level={3}>Evolução do Documento</Title>
 			<StepsAntd
 				style={{
 					marginTop: '5%',
@@ -363,33 +451,16 @@ const Tabs = ({
 				labelPlacement="vertical">
 				{steps.map((item, index) => (
 					<Step
+						style={{
+							paddingBottom: '30px',
+						}}
 						key={index}
-						title={item.title}
+						title={getStepTitle(item, index, current)}
 						subTitle={item.subTitle}
-						description={item.description}
+						description={getStepDescription(item, index, current)}
 					/>
 				))}
 			</StepsAntd>
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'space-between',
-					minHeight: 100,
-					background: '#fff',
-				}}>
-				{steps.map((item, index) => (
-					<div key={index} className="steps-content">
-						{index < current ? (
-							<Space size={8}>
-								<Avatar size={'large'} icon={<UserOutlined />} />
-								<Text>{item.changed_by}</Text>
-							</Space>
-						) : (
-							<div style={{ width: 180 }}></div>
-						)}
-					</div>
-				))}
-			</div>
 			<div
 				style={{
 					display: 'flex',
@@ -403,7 +474,7 @@ const Tabs = ({
 							className={styles.button}
 							onClick={onClickPrevious}
 							disabled={block}>
-							Voltar
+							Reprovar
 						</Button>
 					)}
 					{current !== steps.length - 1 && signedWorkflow !== true && (
@@ -412,7 +483,7 @@ const Tabs = ({
 							htmlType="button"
 							onClick={onClickNext}
 							disabled={block}>
-							Avançar
+							Aprovar
 						</Button>
 					)}
 					{signedWorkflow === true && (

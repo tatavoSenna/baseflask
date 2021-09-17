@@ -146,11 +146,22 @@ def generate_steps(obj_workflow, ordered_nodes):
     if ordered_nodes is None:
         return steps
     for node in ordered_nodes:
+        user_id_list = obj_workflow['nodes'][node].get('responsible_users', '')
+        user_name_list = obj_workflow['nodes'][node].get('responsible_users_name','')
+        responsible_users_list = []
+        for (user_id, user_name) in zip(user_id_list,user_name_list):
+            responsible_users_list.append({
+                'id': user_id,
+                'name': user_name
+            })
         steps.append({
             'step': node,
             'title': obj_workflow['nodes'][node].get('title', ''),
-            'group': obj_workflow['nodes'][node].get('responsible_group', ""),
-            'responsible_users': obj_workflow['nodes'][node].get('responsible_users', ''),
+            'group': {
+                'id': obj_workflow['nodes'][node].get('responsible_group', ""),
+                'name': obj_workflow['nodes'][node].get('responsible_group_name','')},
+            'responsible_users': responsible_users_list,
+            'due_date': obj_workflow["nodes"][node].get('due_date',''),
             'changed_by': obj_workflow['nodes'][node].get('changed_by', ''),
             'color': obj_workflow['nodes'][node].get('color', '#696969')
         })
