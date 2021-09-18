@@ -9,7 +9,7 @@ import { Spin } from 'antd'
 
 const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 	const { userList } = useSelector(({ users }) => users)
-	const { loggedUser } = useSelector(({ session }) => session)
+	const loggedUser = useSelector(({ session }) => session)
 	class CommentsIntegration {
 		constructor(editor) {
 			this.editor = editor
@@ -120,7 +120,7 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 		<div
 			style={{
 				margin: 5,
-				minWidth: 600,
+				// minWidth: 600,
 				width: '60%',
 			}}>
 			<div className={classNames(styles.documentEditor)}>
