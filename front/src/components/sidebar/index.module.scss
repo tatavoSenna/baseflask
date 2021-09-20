@@ -1,42 +1,42 @@
 .logo {
-  width: 150px;
+	width: 150px;
 }
 
 .logoCollapsed {
-	width: 50px;
+	width: 56px;
 }
 
 .logoWrapper {
-    width: 100%;
-		padding-top: 10px;
-		padding-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	width: 100%;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .sidebar {
-    position: absolute;
-    height: 100%;
-    background-color: #fff;
-    z-index: 2;
+	position: absolute;
+	height: 100%;
+	background-color: #fff;
+	z-index: 2;
 }
 
 .logo {
-  fill: rgba(255, 255, 255, 0.2);
+	fill: rgba(255, 255, 255, 0.2);
 }
 
 .sider {
-	background-color: #ECECEC;
+	background-color: #ececec;
 }
 
 .menu {
-  background-color: #ECECEC;
+	background-color: #ececec;
 }
 
 .menuItem {
 	font-size: 16px;
-  color: #333;
+	color: #333;
 }
 
 .tooltip {
@@ -48,5 +48,3 @@
 	font-weight: 700;
 	color: #333;
 }
-
-
