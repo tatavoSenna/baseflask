@@ -74,6 +74,23 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		)
 	}
 
+	function logoSideBar() {
+		if (data) {
+			return (
+				<img
+					src={data.url}
+					alt="logo"
+					className={styles.logo}
+					onError={(e) => {
+						e.target.onError = null
+						e.target.src = logoSmall
+					}}
+				/>
+			)
+		}
+		return <img src={logoSmall} alt="logo" className={styles.logo} />
+	}
+
 	const { Sider } = Layout
 
 	return (
@@ -90,11 +107,14 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								src={logoSmall}
 								alt="logo"
 								className={styles.logoCollapsed}
-								width="5"
-								height="42"
+								height="50"
+								onError={(e) => {
+									e.target.onError = null
+									e.target.src = logoSmall
+								}}
 							/>
 						) : (
-							data && <img src={data.url} alt="logo" className={styles.logo} />
+							logoSideBar()
 						)}
 					</div>
 					<Menu
