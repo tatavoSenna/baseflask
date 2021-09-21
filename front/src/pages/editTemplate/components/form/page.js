@@ -96,8 +96,11 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 			case 'structured_list':
 				newField.variable.type = type
-				newField.variable.doc_display_style = 'text | table'
-				newField.variable.extra_style_params = {}
+				newField.variable.doc_display_style = 'text'
+				newField.variable.extra_style_params = {
+					row_template: '',
+					separator: '',
+				}
 				newField.structure = [
 					{
 						type: 'text',
