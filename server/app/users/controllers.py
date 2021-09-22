@@ -26,6 +26,7 @@ def create_user_controller(email, name, group_ids=None, company_id=None):
 
     return new_user
 
+
 def get_user_controller(email):
     user = User.query.filter_by(email=email).first()
 
@@ -142,3 +143,10 @@ def edit_user_controller(username, company_id=None, group_ids=None):
         db.session.commit()
 
     return user
+
+
+def resend_user_invite_controller(username):
+    remote_user = RemoteUser()
+    resent_invite = remote_user.resend_user_invite(username)
+
+    return resent_invite

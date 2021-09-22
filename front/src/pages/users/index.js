@@ -16,6 +16,7 @@ import {
 	createUser,
 	deleteUser,
 	updateUser,
+	resendInvite,
 } from '~/states/modules/users'
 import {
 	getGroupList,
@@ -103,6 +104,10 @@ function Users() {
 		form.resetFields()
 	}
 
+	const handleResendInvite = (username) => {
+		dispatch(resendInvite({ username }))
+	}
+
 	const handleEdit = (record) => {
 		dispatch(updateEditUser(record))
 		dispatch(setShowEditModal(true))
@@ -156,7 +161,12 @@ function Users() {
 				/>
 				<DataTable
 					dataSource={userList}
-					columns={getColumns({ handleDelete, loggedUsername, handleEdit })}
+					columns={getColumns({
+						handleDelete,
+						loggedUsername,
+						handleEdit,
+						handleResendInvite,
+					})}
 					loading={loading}
 					pages={pages}
 					onChangePageNumber={getUsers}
