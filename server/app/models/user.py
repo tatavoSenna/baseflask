@@ -22,6 +22,7 @@ class User(db.Model):
         db.DateTime, nullable=True, default=datetime.utcnow()
     )
     active = db.Column(db.Boolean, default=True, nullable=True)
+    verified = db.Column(db.Boolean, default=True, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="users")

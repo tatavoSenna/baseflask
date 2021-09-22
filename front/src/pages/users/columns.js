@@ -1,10 +1,15 @@
 import React from 'react'
 import { Tag, Space, Button, Tooltip } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, SyncOutlined } from '@ant-design/icons'
 
 import Delete from './components/Delete'
 
-export function getColumns({ handleDelete, loggedUsername, handleEdit }) {
+export function getColumns({
+	handleDelete,
+	loggedUsername,
+	handleEdit,
+	handleResendInvite,
+}) {
 	return [
 		{
 			title: 'Nome',
@@ -36,17 +41,25 @@ export function getColumns({ handleDelete, loggedUsername, handleEdit }) {
 				const groups = record.groups.map((item) => item.group_id.toString())
 				return (
 					<Space size="middle">
-						<Delete
-							username={record.username}
-							handleDelete={handleDelete}
-							disabled={loggedUsername === record.username}
-						/>
+						{!record.verified && (
+							<Button
+								icon={<SyncOutlined />}
+								onClick={() => handleResendInvite(record.email)}
+								style={{}}>
+								Reenviar convite
+							</Button>
+						)}
 						<Tooltip title={'Editar'}>
 							<Button
 								icon={<EditOutlined />}
 								onClick={() => handleEdit({ ...record, groups })}
 							/>
 						</Tooltip>
+						<Delete
+							username={record.username}
+							handleDelete={handleDelete}
+							disabled={loggedUsername === record.username}
+						/>
 					</Space>
 				)
 			},

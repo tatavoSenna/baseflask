@@ -81,6 +81,7 @@ const { actions, reducer } = createSlice({
 			}),
 		updateUser: (state) => extend(state),
 		deleteUser: (state) => extend(state),
+		resendInvite: (state) => extend(state),
 	},
 })
 
@@ -96,6 +97,7 @@ export const {
 	updateNewUser,
 	updateEditUser,
 	resetNewUser,
+	resendInvite,
 } = actions
 
 export { default as usersSaga } from './sagas'

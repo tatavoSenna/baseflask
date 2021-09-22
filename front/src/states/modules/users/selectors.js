@@ -6,6 +6,7 @@ export const selectAllUsers = (payload) =>
 			username: user.username,
 			key: user.email,
 			email: user.email,
+			verified: user.verified,
 			groups: user.participates_on.sort((a, b) => {
 				if (a.name < b.name) {
 					return -1

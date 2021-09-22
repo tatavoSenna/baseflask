@@ -13,6 +13,7 @@ import {
 	deleteUser,
 	resetNewUser,
 	updateUser,
+	resendInvite,
 } from '.'
 
 export default function* rootSaga() {
@@ -20,6 +21,7 @@ export default function* rootSaga() {
 	yield takeEvery(createUser, createUserSaga)
 	yield takeEvery(updateUser, updateUserSaga)
 	yield takeEvery(deleteUser, deleteUserSaga)
+	yield takeEvery(resendInvite, resendInviteSaga)
 }
 
 function* getUserListSaga({ payload = {} }) {
@@ -87,4 +89,25 @@ function* deleteUserSaga({ payload }) {
 		})
 		yield put(getUserList())
 	} catch {}
+}
+
+function* resendInviteSaga({ payload }) {
+	loadingMessage({
+		content: 'Reenviando convite...',
+		updateKey: 'resendInvite',
+	})
+	try {
+		yield call(api.post, `/users/re-invite`, {
+			username: payload.username,
+		})
+		successMessage({
+			content: 'Convite reeenviado com sucesso',
+			updateKey: 'resendInvite',
+		})
+	} catch {
+		errorMessage({
+			content: 'Falha no reenvio do convite',
+			updateKey: 'resendInvite',
+		})
+	}
 }

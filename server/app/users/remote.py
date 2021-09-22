@@ -16,7 +16,6 @@ from app.models.company import Company
 from app.serializers.user_serializers import UserSerializer
 
 
-
 class RemoteUser:
 
     client = boto3.client("cognito-idp")
@@ -54,7 +53,7 @@ class RemoteUser:
         local_user = User.query.filter_by(sub=self.sub(), active=True).first()
         default_company = Company.query.filter_by(id="1").first()
         user_attributes = dict(
-            username=self.username(), email=self.email(), sub=self.sub(), name=self.name()
+            username=self.username(), email=self.email(), sub=self.sub(), name=self.name(), verified=False
         )
 
         if local_user:
@@ -105,12 +104,14 @@ class RemoteUser:
         try:
             response = self.client.admin_create_user(**user_attributes)
         except self.client.exceptions.UsernameExistsException:
-            logging.info(f'User {email} already on cognito. Can´t create. Aborting')
-            abort(400, description = 'Usuário já cadastrado')
+            logging.info(
+                f'User {email} already on cognito. Can´t create. Aborting')
+            abort(400, description='Usuário já cadastrado')
         except self.client.exceptions.InvalidPasswordException:
-            logging.info(f'Can´t create User {email} already on cognito with the provided password')
-            abort(400, description='A senha fornecida não está de acordo com a noss politica.')
-
+            logging.info(
+                f'Can´t create User {email} already on cognito with the provided password')
+            abort(
+                400, description='A senha fornecida não está de acordo com a noss politica.')
 
         self.user = response.get("User")
         local_user = self.create_local(company_id)
@@ -127,6 +128,20 @@ class RemoteUser:
                 return attribute["Value"]
 
         return None
+
+    def resend_user_invite(self, username):
+        user_attributes = dict(
+            UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
+            Username=username,
+            MessageAction='RESEND'
+        )
+        try:
+            response = self.client.admin_create_user(**user_attributes)
+        except Exception as e:
+            logging.exception(e)
+            abort(400, description='Ocorreu um erro na solicitação.')
+
+        return response
 
 
 def get_local_user(view):

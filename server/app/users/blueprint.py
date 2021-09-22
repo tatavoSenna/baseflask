@@ -22,12 +22,12 @@ from .controllers import (
     add_user_to_group_controller,
     list_users_on_group_controller,
     remove_user_from_group_controller,
-    get_user_controller
+    get_user_controller,
+    resend_user_invite_controller
 )
 
 users_bp = Blueprint("users", __name__)
 groups_bp = Blueprint("groups", __name__)
-
 
 
 @users_bp.route("me", methods=["GET"])
@@ -145,6 +145,17 @@ def update(logged_user, username):
         return {}, 500
 
     return jsonify({"user": UserSerializer().dump(edited_user)})
+
+
+@users_bp.route("re-invite", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def resend_invite(logged_user):
+    content = request.json
+
+    response = resend_user_invite_controller(content.get('username'))
+
+    return jsonify({"response": response})
 
 
 @groups_bp.route("", methods=["GET"])
