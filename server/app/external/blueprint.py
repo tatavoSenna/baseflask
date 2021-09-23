@@ -73,10 +73,9 @@ def create_document_from_token():
     content = request.json
     variables = content.get("variables", None)
     token = content.get("token", None)
-    visible = content.get("visible",None)
     parent = content.get("parent",None)
     is_folder = content.get("is_folder",False)
-    if not visible or not variables or not token:
+    if not variables or not token:
         abort(400, "Need to provide variables and template id")
     
     # Check if creation token exists and if it has not been used yet
@@ -100,8 +99,7 @@ def create_document_from_token():
             user.name,
             variables,
             parent,
-            is_folder,
-            visible
+            is_folder
         )
         # Marks token as used
         mark_token_as_used_controller(creation_token.token)

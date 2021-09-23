@@ -50,7 +50,7 @@ def get_document_template_details_controller(company_id, template_id):
 
 def create_document_controller(user_id, user_email, company_id,
                                document_template_id, title, username, received_variables,
-                               parent_id, is_folder, visible):
+                               parent_id, is_folder):
     # Get document template from the database using template_id and company_id
     document_template = DocumentTemplate.query.get(document_template_id)
     document_company = Company.query.filter_by(id=company_id).first()
@@ -91,17 +91,11 @@ def create_document_controller(user_id, user_email, company_id,
     except KeyError:
         step_name = None
 
-    # Fills form with 'visible' parameter
-    form_with_visible = document_template.form
-    for page_index, page in enumerate(form_with_visible):
-        for field_index, field in enumerate(page['fields']):
-            field['visible'] = visible[page_index][field_index]
-
     # Create Document object
     document = Document(
         user_id=user_id,
         company_id=company_id,
-        form=form_with_visible,
+        form=document_template.form,
         workflow=document_workflow,
         signers=document_template.signers,
         variables=received_variables,
