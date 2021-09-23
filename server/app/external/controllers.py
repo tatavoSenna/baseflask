@@ -31,13 +31,15 @@ def get_template_controller(template_id):
     return template
 
 
-def generate_external_token_controller(template_id, title, user_id):
+def generate_external_token_controller(template_id, title, user_id, max_token_uses):
     generated_token = uuid.uuid4()
     new_token = ExternalToken(
         document_template_id=template_id,
         token=generated_token,
         user_id=user_id,
-        title=title
+        title=title,
+        max_uses=max_token_uses,
+        current_uses=0
     )
     db.session.add(new_token)
     db.session.commit()
@@ -55,7 +57,9 @@ def authorize_external_token_controller(token):
 
 def mark_token_as_used_controller(token):
     token = ExternalToken.query.filter_by(token=str(token)).first()
-    token.used = True
+    token.current_uses += 1
+    if token.current_uses == token.max_uses and token.max_uses != 0:
+        token.used = True
     db.session.add(token)
     db.session.commit()
     return

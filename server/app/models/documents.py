@@ -94,6 +94,8 @@ class ExternalToken(db.Model):
         db.Integer, db.ForeignKey("document_template.id"), nullable=False
     )
     token = db.Column(db.String(255), unique=True, nullable=False)
+    max_uses = db.Column(db.Integer, unique=False, nullable = False, server_default = '0')
+    current_uses = db.Column(db.Integer, unique = False, nullable = False, server_default = '0')
     used = db.Column(Boolean, nullable=True, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
