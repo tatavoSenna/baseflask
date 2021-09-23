@@ -34,11 +34,14 @@ def generate_token(current_user):
     content = request.json
     template_id = content.get("document_template", None)
     title = content.get("title", None)
+    max_token_uses = content.get("max_uses", None)
+    if max_token_uses == None:
+        max_token_uses = 1
     if title is None:
         abort(400, "Document must have a title")
     try:
         token = generate_external_token_controller(
-            template_id, title, current_user["id"])
+            template_id, title, current_user["id"], max_token_uses)
         token_JSON = {"token": token}
     except Exception as e:
         logging.exception(
