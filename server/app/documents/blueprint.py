@@ -289,7 +289,6 @@ def create(current_user):
     title = content.get("title", None)
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
-    visible = content.get("visible", None)
 
     # Check if content being created is a folder
     if is_folder:
@@ -321,7 +320,6 @@ def create(current_user):
                 variables,
                 parent,
                 is_folder,
-                visible
             )
         # Logs errors if user is admin
         except jinja2.TemplateSyntaxError as e:

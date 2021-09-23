@@ -204,8 +204,6 @@ def test_send_email_on_document_creation_with_workflow(
         }
     ]
 
-    visible = [[True]]
-
     document_template_txt = factories.DocumentTemplateFactory(
         company=company, workflow=workflow, text_type=".txt", form=form
     )
@@ -223,8 +221,7 @@ def test_send_email_on_document_creation_with_workflow(
         user.name,
         variables,
         None,
-        False,
-        visible
+        False
     )
 
     document_creation_email_controller.assert_called_once_with(document_title, company.id)
@@ -277,8 +274,6 @@ def test_send_email_on_document_creation_without_workflow(
         }
     ]
 
-    visible = [[True]]
-
     document_template_txt = factories.DocumentTemplateFactory(
         company=company, workflow=workflow, text_type=".txt", form=form
     )
@@ -296,8 +291,7 @@ def test_send_email_on_document_creation_without_workflow(
         user.name,
         variables,
         None,
-        False,
-        visible
+        False
     )
 
     document_creation_email_controller.assert_not_called()
@@ -365,8 +359,6 @@ def test_create_document(
         }
     ]
 
-    visible = [[True]]
-
     document_template_txt = factories.DocumentTemplateFactory(
         company=company, workflow=workflow, text_type=".txt", form=form
     )
@@ -394,8 +386,7 @@ def test_create_document(
         user.name,
         variables,
         None,
-        False,
-        visible
+        False
     )
 
     document_docx = create_document_controller(
@@ -407,8 +398,7 @@ def test_create_document(
         user.name,
         variables,
         None,
-        False,
-        visible
+        False
     )
 
     assert document_txt.user_id == user.id

@@ -181,17 +181,19 @@ def map_variables_to_form(variables, form):
         question_index = 0
         for question in group['fields']:
 
-            if question['visible'] == False:
-                continue
-
             if question['type'] == 'separator':
                 filled_form[-1]["fields"].append({
                     "type": "separator",
                     "title": question.get("title"),
                 })
-                continue
-
-            if question['type'] == 'structured_list':
+            elif type(question['variable']) == str:
+                if variables.get(question['variable']):
+                    filled_form[-1]["fields"].append({
+                        "label": question['label'],
+                        "variable": question['variable'],
+                        "value": variables[question['variable']],
+                    })
+            elif question['type'] == 'structured_list' and f'structured_list_{group_index}_{question_index}' in variables:
                 variables_obj = {
                     "subtitle": question['label'],
                     "items": [],
@@ -228,8 +230,7 @@ def map_variables_to_form(variables, form):
                     variables_obj['items'].append(item_list)
 
                 filled_form[-1]["fields"].append(variables_obj)
-
-            elif question['type'] == 'structured_checkbox':
+            elif question['type'] == 'structured_checkbox' and f'structured_checkbox_{group_index}_{question_index}' in variables:
                 variables_obj = {
                     "subtitle": question['label'],
                     "items": [],
@@ -279,8 +280,7 @@ def map_variables_to_form(variables, form):
                     variables_obj['items'].append(item_list)
 
                 filled_form[-1]["fields"].append(variables_obj)
-
-            elif question['type'] == 'person':
+            elif question['type'] == 'person' and variables[f'person_{group_index}_{question_index}'] in variables:
                 variables_obj = {
                     "subtitle": question['label'],
                     "items": [],
@@ -304,23 +304,13 @@ def map_variables_to_form(variables, form):
                         })
 
                 filled_form[-1]["fields"].append(variables_obj)
-
-            elif question['type'] == 'variable_image':
+            elif question['type'] == 'variable_image' and 'image_' + question['variable']['name']:
                 filled_form[-1]["fields"].append({
                     "label": question['label'],
                     "variable": question['variable']['name'],
                     "type": 'variable_image',
                     "value": variables['image_' + question['variable']['name']]
                 })
-
-                # This 'if' is here so templates whose variables are not objects still work
-            elif type(question['variable']) == str:
-                if variables.get(question['variable']):
-                    filled_form[-1]["fields"].append({
-                        "label": question['label'],
-                        "variable": question['variable'],
-                        "value": variables[question['variable']],
-                    })
             elif type(question['variable']) == list:
                 for list_variable in question['variable']:
                     if variables.get(list_variable['name']):
@@ -330,17 +320,15 @@ def map_variables_to_form(variables, form):
                             "value": variables[list_variable['name']],
                             "type": question['type']
                         })
-            else:
-                if variables.get(question['variable']['name']):
-                    if question['type'] in ['radio', 'dropdown', 'checkbox']:
-                        filled_form[-1]["fields"].append({
-                            "label": question['label'],
-                            "variable": question['variable']['name'],
-                            "value": variables[question['variable']['name']],
-                            "type": question['type'],
-                            "options": question['options']
-                        })
-                    else:
+            elif question['type'] in ['radio', 'dropdown', 'checkbox'] and question['variable']['name'] in variables:
+                    filled_form[-1]["fields"].append({
+                        "label": question['label'],
+                        "variable": question['variable']['name'],
+                        "value": variables[question['variable']['name']],
+                        "type": question['type'],
+                        "options": question['options']
+                    })
+            elif question['variable']['name'] in variables:
                         filled_form[-1]["fields"].append({
                             "label": question['label'],
                             "variable": question['variable']['name'],
