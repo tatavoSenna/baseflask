@@ -74,6 +74,7 @@ class Document(db.Model):
     signed = db.Column(Boolean, nullable=True, default=False)
     current_step = db.Column(db.String(255), nullable=True)
     text_type = db.Column(db.String(255), unique=False, nullable=True)
+    due_date = db.Column(db.DateTime, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="documents")

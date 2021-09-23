@@ -3,7 +3,7 @@ import json
 from app.test import factories
 from flask import jsonify
 from unittest.mock import patch
-from datetime import datetime
+from datetime import datetime, timedelta
 from datetime import date
 
 from app.models.documents import Document, DocumentTemplate
@@ -329,7 +329,8 @@ def test_create_document(
             "544": {
                 "next_node": "5521",
                 "changed_by": "",
-                "title": "step1"
+                "title": "step1",
+                "deadline": 1
             },
             "3485": {
                 "next_node": None,
@@ -416,9 +417,15 @@ def test_create_document(
     assert document_txt.title == document_title
     assert document_txt.workflow['created_by'] == user.name
     assert document_txt.text_type == ".txt"
+    assert datetime.strptime(document_txt.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert document_txt.due_date.day == (datetime.today() + timedelta(days=1)).day
+
 
     assert document_docx.document_template_id == document_template_docx.id
     assert document_docx.text_type == ".docx"
+    assert datetime.strptime(document_docx.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert document_docx.due_date.day == (datetime.today() + timedelta(days=1)).day
+
 
 
 @ patch('app.documents.controllers.send_email_controller')
@@ -575,7 +582,8 @@ def test_change_document_status_next():
             "3485": {
                 "next_node": None,
                 "changed_by": "",
-                "title": "step3"
+                "title": "step3",
+                "deadline": 1
             },
             "5521": {
                 "next_node": "3485",
@@ -612,6 +620,9 @@ def test_change_document_status_next():
     assert retrieved_document.workflow["current_node"] == "3485"
     assert retrieved_document.workflow['nodes']['5521']['changed_by'] == "joao"
     assert retrieved_document.current_step == "step3"
+    assert datetime.strptime(retrieved_document.workflow["nodes"]["3485"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
+
 
 
 def test_change_document_status_previous():
@@ -622,7 +633,8 @@ def test_change_document_status_previous():
             "544": {
                 "next_node": "5521",
                 "changed_by": "",
-                "title": "step1"
+                "title": "step1",
+                "deadline": 1
             },
             "3485": {
                 "next_node": None,
@@ -663,7 +675,8 @@ def test_change_document_status_previous():
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "544"
     assert retrieved_document.current_step == "step1"
-
+    assert datetime.strptime(retrieved_document.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
 
 @ patch('app.documents.controllers.RemoteDocument.download_signed_document')
 def test_download_signed_document(download_document_mock):

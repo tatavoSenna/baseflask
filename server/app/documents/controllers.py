@@ -83,8 +83,9 @@ def create_document_controller(user_id, user_email, company_id,
     current_node = document_workflow["current_node"]
     try:
         document_workflow["nodes"][current_node]["due_date"] = str(datetime.today() + timedelta(days=document_workflow["nodes"][current_node]["deadline"]))
+        due_date = document_workflow["nodes"][current_node]["due_date"]
     except:
-        pass
+        due_date = None
     try:
         step_name = document_workflow["nodes"][current_node]["title"]
     except KeyError:
@@ -115,7 +116,8 @@ def create_document_controller(user_id, user_email, company_id,
         data_final_contrato=data_final_contrato,
         data_assinatura=data_assinatura,
         valor_contrato=valor_contrato,
-        parent_id=parent_id
+        parent_id=parent_id,
+        due_date = due_date
     )
     # Add document to the database
     db.session.add(document)
@@ -320,6 +322,7 @@ def next_status_controller(document_id, username):
     document.current_step = document.workflow["nodes"][next_node]["title"]
     try:
         document.workflow["nodes"][next_node]["due_date"] = str(datetime.today() + timedelta(days=document.workflow["nodes"][next_node]["deadline"]))
+        document.due_date = document.workflow["nodes"][next_node]["due_date"]
     except:
         pass
     db.session.add(document)
@@ -351,6 +354,7 @@ def previous_status_controller(document_id):
     document.current_step = document.workflow["nodes"][previous_node]["title"]
     try:
         document.workflow["nodes"][previous_node]["due_date"] = str(datetime.today() + timedelta(days=document.workflow["nodes"][previous_node]["deadline"]))
+        document.due_date = document.workflow["nodes"][previous_node]["due_date"]
     except:
         pass
     db.session.add(document)
