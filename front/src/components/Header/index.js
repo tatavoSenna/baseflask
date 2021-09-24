@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { func, bool } from 'prop-types'
 import {
 	UI_AUTH_CHANNEL,
@@ -22,13 +22,15 @@ import {
 } from '@ant-design/icons'
 
 import { classNames } from '~/utils'
+import { connectDocusign } from '~/states/modules/integrations'
 
 import styles from './index.module.scss'
 
 const { Text } = Typography
 
 function Head({ handleCollapsed, isCollapsed, isWeb }) {
-	const username = useSelector(({ session }) => session.name)
+	const { name: username } = useSelector(({ session }) => session)
+	const dispatch = useDispatch()
 
 	const handleLogout = async () => {
 		await Auth.signOut()
@@ -38,21 +40,14 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 			data: null,
 		})
 	}
+	const checkDocusign = () => {
+		dispatch(connectDocusign())
+	}
 
 	function getMenu() {
 		return (
 			<Menu style={{ zIndex: 1 }}>
-				<Menu.Item
-					key="docusign"
-					onClick={() => {
-						window.location.assign(
-							process.env.REACT_APP_DOCUSIGN_OAUTH_URL +
-								'/auth?response_type=code&scope=signature&client_id=' +
-								process.env.REACT_APP_DOCUSIGN_INTEGRATION_KEY +
-								'&redirect_uri=' +
-								process.env.REACT_APP_DOCUSIGN_REDIRECT_URL
-						)
-					}}>
+				<Menu.Item key="docusign" onClick={checkDocusign}>
 					Docusign connect
 				</Menu.Item>
 				<Menu.Item key="logout" onClick={handleLogout}>
