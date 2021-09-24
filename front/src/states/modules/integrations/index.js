@@ -44,6 +44,10 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		connectDocusign: (state) =>
+			extend(state, {
+				loading: true,
+			}),
 	},
 })
 
@@ -54,6 +58,7 @@ export const {
 	saveIntegration,
 	saveIntegrationSuccess,
 	saveIntegrationFailure,
+	connectDocusign,
 } = actions
 
 export { default as integrationsSaga } from './sagas'

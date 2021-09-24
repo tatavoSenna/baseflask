@@ -22,6 +22,7 @@ import {
 import { setCompanyId } from '~/states/modules/session'
 
 import { getSettings } from '~/states/modules/settings'
+import { getIntegration } from '~/states/modules/integrations'
 
 export default function* rootSaga() {
 	yield takeEvery(getCompanyList, getCompanyListSaga)
@@ -85,6 +86,7 @@ function* changeUserCompanySaga({ payload = {} }) {
 		yield put(setCompanyId(data))
 		yield put(changeUserCompanySuccess(data))
 		yield put(getSettings())
+		yield put(getIntegration())
 	} catch (error) {
 		errorMessage({
 			content: error.response.data.error,
