@@ -127,7 +127,21 @@ function InputFactory({
 	}
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
-		const { type, conditional, initialValue } = pageFieldsData[i]
+		const { type, conditional, initialValue, variable } = pageFieldsData[i]
+		const defaultValue = () => {
+			if (initialValues) {
+				if (variable.hasOwnProperty('name')) {
+					return initialValues[variable.name]
+						? initialValues[variable.name]
+						: initialValue
+				} else {
+					return initialValues[variable]
+						? initialValues[variable]
+						: initialValue
+				}
+			}
+			return initialValue
+		}
 		const first = i === 0
 
 		switch (type) {
@@ -137,7 +151,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -151,7 +165,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -166,7 +180,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -181,7 +195,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -196,7 +210,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -210,7 +224,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={conditional ? (e) => checkField(e, i) : undefined}
 					/>
@@ -222,7 +236,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -236,7 +250,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -250,7 +264,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -264,7 +278,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -278,7 +292,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -292,7 +306,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -306,7 +320,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -320,7 +334,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -334,7 +348,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -348,7 +362,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.checked, i) : undefined
@@ -372,7 +386,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined
@@ -438,7 +452,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						inputValue={initialValues ? initialValues[i] : initialValue}
+						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={
 							conditional ? (e) => checkField(e.target.value, i) : undefined

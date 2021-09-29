@@ -208,7 +208,7 @@ const Tabs = ({
 								data={[item]}
 								visible={[true]}
 								disabled={!isEdit}
-								initialValues={[item.value]}
+								initialValues={{ [item.variable]: item.value }}
 							/>
 						)
 				}

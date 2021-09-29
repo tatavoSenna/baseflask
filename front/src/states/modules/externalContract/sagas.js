@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery, select } from 'redux-saga/effects'
 
 import api from '~/services/api'
 import {
@@ -52,9 +52,14 @@ function* createContractExternalSaga({ payload }) {
 		updateKey: 'createContractExternal',
 	})
 
-	const { token, data, visible } = payload
-	let dataImg = {}
+	const { data, dataImg } = yield select((state) => {
+		const { answer } = state
+		return answer
+	})
 
+	const { token, visible } = payload
+
+	console.log(dataImg)
 	try {
 		yield call(api.post, '/external/create', {
 			token,

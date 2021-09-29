@@ -43,7 +43,7 @@ const NumberField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
+			initialValue={!inputValue ? '' : Number(inputValue)}>
 			<InputNumber
 				autoFocus={first}
 				placeholder=""

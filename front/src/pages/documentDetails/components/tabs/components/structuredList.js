@@ -26,7 +26,7 @@ const StructuredList = ({ item, disabled }) => {
 									data={[fieldData]}
 									visible={[true]}
 									disabled={disabled}
-									initialValues={[fieldData.value]}
+									initialValues={{ [fieldData.variable.name]: fieldData.value }}
 								/>
 								{data.length - 1 === index && i < item.items.length - 1 && (
 									<Divider />

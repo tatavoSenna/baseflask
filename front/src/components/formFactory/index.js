@@ -29,6 +29,7 @@ const FormFactory = ({
 	pageNumber,
 	url,
 	token,
+	initialValues,
 }) => {
 	const state = useHistory().location.state
 	let values = { current: 0 }
@@ -66,7 +67,7 @@ const FormFactory = ({
 			})
 		}
 		if (token) {
-			dispatch(createContractExternal({ token, data, visible }))
+			dispatch(createContractExternal({ token, visible }))
 		} else {
 			dispatch(answerRequest({ history, visible }))
 		}
@@ -90,6 +91,7 @@ const FormFactory = ({
 						visible={visible[currentPage]}
 						pageIndex={currentPage}
 						form={form}
+						initialValues={initialValues}
 					/>
 				)}
 				<div
@@ -163,6 +165,7 @@ FormFactory.propTypes = {
 	pageNumber: number,
 	url: string,
 	token: string,
+	initialValues: object,
 }
 FormFactory.defaultProps = {
 	content: [],
