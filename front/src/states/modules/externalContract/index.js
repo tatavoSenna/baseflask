@@ -5,6 +5,7 @@ const initialState = {
 	data: {},
 	form: [],
 	user: {},
+	filledVars: {},
 	created: false,
 	authorized: true,
 	error: null,
@@ -33,6 +34,10 @@ const { actions, reducer } = createSlice({
 				authorized: false,
 				loading: false,
 			}),
+		storeURLVariables: (state, { payload }) =>
+			extend(state, {
+				filledVars: payload.variables,
+			}),
 		createContractExternal: (state) => state,
 		createContractExternalSuccess: (state) =>
 			extend(state, {
@@ -49,6 +54,7 @@ export const {
 	verifyToken,
 	verifyTokenSuccess,
 	verifyTokenFailure,
+	storeURLVariables,
 	createContractExternal,
 	createContractExternalSuccess,
 	createContractExternalFailure,

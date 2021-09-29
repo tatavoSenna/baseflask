@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Layout, Result } from 'antd'
-import { useParams } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
+import { useParams, useHistory, useLocation } from 'react-router-dom'
 import { SmileOutlined, AlertOutlined } from '@ant-design/icons'
 
 import FormFactory from '~/components/formFactory'
 
-import { verifyToken } from '~/states/modules/externalContract'
+import {
+	verifyToken,
+	storeURLVariables,
+} from '~/states/modules/externalContract'
 import { listVisible } from '~/states/modules/question'
 
 const getCurrentStepAndComponent = (
 	pageFieldsData,
 	isLastPage,
 	pageNumber,
-	token
+	token,
+	initialValues
 ) => (
 	<FormFactory
 		pageFieldsData={pageFieldsData}
@@ -22,6 +25,7 @@ const getCurrentStepAndComponent = (
 		pageNumber={pageNumber}
 		url={`/documentcreate/${token}`}
 		token={token}
+		initialValues={initialValues}
 	/>
 )
 
@@ -39,13 +43,24 @@ const getMessage = (success) => (
 
 const AddContractExternal = () => {
 	const { token } = useParams()
+	const { search } = useLocation()
+	const searchParams = new URLSearchParams(search)
 
 	const dispatch = useDispatch()
-	const { created, authorized } = useSelector(
+	const { created, authorized, filledVars } = useSelector(
 		({ externalContract }) => externalContract
 	)
 
 	const { data: questions } = useSelector(({ question }) => question)
+
+	useEffect(() => {
+		const variables = {}
+		for (var p of searchParams) {
+			variables[p[0]] = p[1]
+		}
+		dispatch(storeURLVariables({ variables }))
+		// eslint-disable-next-line
+	}, [dispatch])
 
 	useEffect(() => {
 		dispatch(verifyToken({ token }))
@@ -70,15 +85,28 @@ const AddContractExternal = () => {
 		const pageFieldsData = questions ? questions[currentPage] : null
 		const isLastPage = currentPage === questions.length - 1
 		const pageNumber = questions.length
+
+		const initialValues = {}
+		if (pageFieldsData) {
+			pageFieldsData.fields.forEach((field) =>
+				Object.entries(filledVars).forEach(([varName, value]) => {
+					if (field.variable.name === varName) {
+						initialValues[varName] = value
+					}
+				})
+			)
+		}
+
 		const pageFormComponent = getCurrentStepAndComponent(
 			pageFieldsData,
 			isLastPage,
 			pageNumber,
-			token
+			token,
+			initialValues
 		)
 
 		setStepComponent(pageFormComponent)
-	}, [currentPage, questions, token])
+	}, [currentPage, questions, token, filledVars])
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>

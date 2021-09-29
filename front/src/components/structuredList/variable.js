@@ -16,7 +16,6 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 						data={[pageFieldsData]}
 						visible={[true]}
 						// disabled={!isEdit}
-						// initialValues={[item.value]}
 					/>
 				)
 			})}
