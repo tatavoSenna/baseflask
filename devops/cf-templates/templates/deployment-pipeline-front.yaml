@@ -194,9 +194,10 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
+            install: 
+              runtime-versions:
+                nodejs: 14
             build:
-              runtimespec:
-                - node:12.x
               commands:
                 - cd front
                 - yarn install
@@ -206,8 +207,8 @@ Resources:
               - '**/*'
             base-directory: 'front/build'
       Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:4.0
+        ComputeType: BUILD_GENERAL1_MEDIUM
+        Image: aws/codebuild/standard:5.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: NODE_ENV
