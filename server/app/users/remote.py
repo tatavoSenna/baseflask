@@ -10,7 +10,7 @@ from flask import g, current_app, abort
 from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
 
-from app import db
+from app import db, aws_auth
 from app.models.user import User
 from app.models.company import Company
 from app.serializers.user_serializers import UserSerializer
@@ -157,3 +157,15 @@ def get_local_user(view):
         return view(serialized_user, *args, **kwargs)
 
     return decorated
+
+
+def authenticated_user(view):
+    @wraps(view)
+    def request_user(*args, **kwargs):
+        user_data_from_cognito_jwt = g.cognito_claims
+        user_model_instance = User.query.filter_by(
+            sub=user_data_from_cognito_jwt["sub"]
+        ).one()
+        return view(user_model_instance, *args, **kwargs)
+
+    return aws_auth.authentication_required(request_user)
