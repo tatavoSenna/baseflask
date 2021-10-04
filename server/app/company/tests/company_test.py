@@ -1,3 +1,6 @@
+from sqlalchemy import exc
+
+from app import db
 from app.company.controllers import (
     create_webhook_controller,
     save_company_keys_controller,
@@ -6,6 +9,7 @@ from app.company.controllers import (
     get_download_url_controller
 )
 from app.test import factories
+
 import pytest
 import io
 from flask import current_app
@@ -96,4 +100,19 @@ def test_create_webhook():
     assert webhook.docx == True
     assert webhook.webhook == "http://test.com"
 
-
+def test_company_signatures_provider_initialization():
+    company = factories.CompanyFactory()
+    db.session.commit()
+    assert company.signatures_provider == 'docusign'
+    company = factories.CompanyFactory(signatures_provider='not permitted')
+    with pytest.raises(exc.StatementError):
+        db.session.commit()
+    db.session.rollback()
+    company = factories.CompanyFactory(signatures_provider='d4sign')
+    db.session.commit()
+    assert company.signatures_provider == 'd4sign'
+    company.signatures_provider = None
+    db.session.commit()
+    assert company.signatures_provider is None
+    db.session.delete(company)
+    db.session.commit()

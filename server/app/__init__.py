@@ -74,4 +74,8 @@ def create_app():
 
     app.register_blueprint(scripts_bp)
 
+    from .d4sign.blueprint import d4sign_bp
+
+    app.register_blueprint(d4sign_bp, url_prefix="/d4sign")
+
     return app

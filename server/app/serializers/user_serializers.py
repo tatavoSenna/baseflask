@@ -21,6 +21,7 @@ class ParticipatesOnSerializer(ma.SQLAlchemyAutoSchema):
 
 class UserSerializer(ma.SQLAlchemyAutoSchema):
     participates_on = ma.Nested(ParticipatesOnSerializer, many=True)
+    signatures_provider = ma.Method('get_signatures_provider')
 
     class Meta:
         exclude = (
@@ -31,3 +32,6 @@ class UserSerializer(ma.SQLAlchemyAutoSchema):
         )
         model = User
         include_fk = True
+
+    def get_signatures_provider(self, obj):
+        return obj.company.signatures_provider

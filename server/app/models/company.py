@@ -1,4 +1,7 @@
+from sqlalchemy.dialects.postgresql.json import JSON
+
 from app import db
+from app.models.fields import StringChoiceField
 
 
 class Company(db.Model):
@@ -15,6 +18,17 @@ class Company(db.Model):
     groups = db.relationship("Group", back_populates="company")
     templates = db.relationship("DocumentTemplate", back_populates="company")
     documents = db.relationship("Document", back_populates="company")
+
+    signatures_provider = db.Column(
+        StringChoiceField(['docusign', 'd4sign']),
+        server_default='docusign',
+        nullable=True
+    )
+
+    d4sign_api_token = db.Column(db.String(255), nullable=True)
+    d4sign_api_cryptkey = db.Column(db.String(255), nullable=True)
+    d4sign_api_hmac_secret = db.Column(db.String(255), nullable=True)  # authorizes webhook calls
+    d4sign_safe_name = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return "<Company %r>" % self.name
