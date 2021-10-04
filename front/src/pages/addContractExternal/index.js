@@ -68,8 +68,8 @@ const AddContractExternal = () => {
 
 	const state = useHistory().location.state
 	let values = { current: 0 }
-	if (state && state.values) {
-		values = state.values
+	if (state && state.current) {
+		values.current = state.current
 	}
 	const currentPage = parseInt(values.current)
 

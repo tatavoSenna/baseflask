@@ -16,6 +16,7 @@ import {
 	setShowModal,
 	setShowLinkModal,
 } from '~/states/modules/contract'
+import { listQuestion } from '~/states/modules/question'
 
 import {
 	setShowModalFolder,
@@ -60,9 +61,16 @@ const Contracts = () => {
 
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
+		dispatch(
+			listQuestion({
+				modelId: values.modelId,
+				title: values.title,
+				parent: values.parent,
+			})
+		)
 		return history.push({
 			pathname: `/documents/new`,
-			state: { values: { ...values, current: 0 } },
+			state: { current: 0 },
 		})
 	}
 	const handleCreateInFolder = (values) => {
@@ -70,11 +78,8 @@ const Contracts = () => {
 		return history.push({
 			pathname: `/documents/new`,
 			state: {
-				values: {
-					...values,
-					current: 0,
-					parent: accessFolders[accessFolders.length - 1].id,
-				},
+				current: 0,
+				parent: accessFolders[accessFolders.length - 1].id,
 			},
 		})
 	}

@@ -33,10 +33,11 @@ const FormFactory = ({
 }) => {
 	const state = useHistory().location.state
 	let values = { current: 0 }
-	if (state && state.values) {
-		values = state.values
+	if (state && state.current) {
+		values.current = state.current
 	}
 	const { visible } = useSelector(({ question }) => question)
+
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const history = useHistory()
@@ -47,7 +48,7 @@ const FormFactory = ({
 		const previousPage = currentPage - 1
 		history.push({
 			pathname: url,
-			state: { values: { ...values, current: previousPage } },
+			state: { current: previousPage },
 		})
 	}
 
@@ -63,7 +64,7 @@ const FormFactory = ({
 			const nextPage = currentPage + 1
 			return history.push({
 				pathname: url,
-				state: { values: { ...values, current: nextPage } },
+				state: { current: nextPage },
 			})
 		}
 		if (token) {
