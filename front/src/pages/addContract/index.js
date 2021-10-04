@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import FormFactory from '~/components/formFactory'
 
-import { listQuestion, listVisible } from '~/states/modules/question'
+import { listVisible } from '~/states/modules/question'
 
 const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
 	<FormFactory
@@ -17,7 +17,11 @@ const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
 )
 
 function AddContract() {
-	const { values } = useHistory().location.state
+	const { current } = useHistory().location.state
+	let values = { current: 0 }
+	if (current !== undefined) {
+		values.current = current
+	}
 	const currentPage = parseInt(values.current)
 	const dispatch = useDispatch()
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
@@ -29,16 +33,6 @@ function AddContract() {
 			dispatch(listVisible({ questions }))
 		}
 	}, [dispatch, questions])
-
-	useEffect(() => {
-		dispatch(
-			listQuestion({
-				modelId: values.modelId,
-				title: values.title,
-				parent: values.parent,
-			})
-		)
-	}, [dispatch, values])
 
 	useEffect(() => {
 		const pageFieldsData = questions ? questions[currentPage] : null
