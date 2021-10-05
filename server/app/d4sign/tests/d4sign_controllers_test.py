@@ -36,24 +36,32 @@ def signers():
             'status': '',
             'signing_date': '',
             'fields': [
-                {'type': 'email', 'value': '0@mail.com'}
+                {'type': 'email', 'variable': 'EMAIL_0'}
             ]
         },
         {
             'status': '',
             'signing_date': '',
             'fields': [
-                {'type': 'email', 'value': '1@mail.com'}
+                {'type': 'email', 'variable': 'EMAIL_1'}
             ]
         }
     ]
 
 @pytest.fixture
-def document(company, user, signers):
+def variables():
+    return {
+        'EMAIL_0': '0@mail.com',
+        'EMAIL_1': '1@mail.com'
+    }
+
+@pytest.fixture
+def document(company, user, signers, variables):
     return factories.DocumentFactory(
         company=company,
         user=user,
         signers=signers,
+        variables=variables,
         d4sign_document_uuid='a1-b2-c3',
         text_type='.docx'
     )

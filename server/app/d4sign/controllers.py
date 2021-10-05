@@ -318,7 +318,7 @@ def d4sign_register_document_signers_controller(user,
             continue
         for field in signer['fields']:
             if field['type'] == 'email':
-                signer_email = field['value']
+                signer_email = document.variables[field['variable']]
                 break
         d4sign_api_response_payload = d4sign_api.register_document_signer(
             document_uuid=document.d4sign_document_uuid,
@@ -382,7 +382,7 @@ def d4sign_send_document_for_signing_controller(user,
     for signer in document.signers:
         for field in signer['fields']:
             if field['type'] == 'email':
-                signer_email = field['value']
+                signer_email = document.variables[field['variable']]
                 break
         if signer['status'] in ['sent', 'Completed']:
             already_sent_emails.append(signer_email)
@@ -478,7 +478,7 @@ def d4sign_document_webhook_controller(document,
         found_signer = False
         for signer in document.signers:
             for field in signer['fields']:
-                if field['type'] == 'email' and field['value'] == signer_email:
+                if field['type'] == 'email' and document.variables[field['variable']] == signer_email:
                     found_signer = True
                     break
                 if found_signer: break
@@ -527,7 +527,7 @@ def d4sign_document_webhook_controller(document,
         found_signer = False
         for signer in document.signers:
             for field in signer['fields']:
-                if field['type'] == 'email' and field['value'] == signer_email:
+                if field['type'] == 'email' and document.variables[field['variable']] == signer_email:
                     found_signer = True
                     break
                 if found_signer: break
