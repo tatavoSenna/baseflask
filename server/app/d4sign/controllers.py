@@ -41,14 +41,6 @@ def d4sign_get_company_info_controller(user,
         control['status_code'] = 403
         return control
 
-    if company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this company are not '
-            'provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
-
     if (d4sign_api_cryptkey := company.d4sign_api_cryptkey) is not None:
         d4sign_api_cryptkey = '*'
 
@@ -102,16 +94,16 @@ def d4sign_update_company_info_controller(
         control['status_code'] = 403
         return control
 
-    if company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this company are not '
-            'provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
-
     updated_fields = {}
     updated = False
+
+    if (signatures_provider := company.signatures_provider) != 'd4sign':
+        updated = True
+        company.signatures_provider = 'd4sign'
+        updated_fields['signatures_provider'] = {
+            'old': signatures_provider,
+            'new': 'd4sign'
+        }
 
     if d4sign_api_token is not None:
         d4sign_api_token_old = company.d4sign_api_token

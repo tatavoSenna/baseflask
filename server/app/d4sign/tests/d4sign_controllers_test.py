@@ -78,16 +78,6 @@ def test_d4sign_get_company_info_controller_prohibited_user(company):
     assert control['status_code'] == 403
     assert control['data'] == {}
 
-def test_d4sign_get_company_info_controller_invalid_signatures_provider(user, company):
-    company.signatures_provider = 'docusign'
-
-    control = d4sign_get_company_info_controller(
-        user=user,
-        company_id=company.id
-    )
-    assert control['status_code'] == 451
-    assert control['data'] == {}
-
 def test_d4sign_get_company_info_controller_successfully_retrieved(user, company):
     company.d4sign_api_token = 'token_a1-b2-c3'
     company.d4sign_api_cryptkey = 'cryptkey_a1-b2-c3'
@@ -131,15 +121,18 @@ def test_d4sign_update_company_info_controller_prohibited_user(company):
     assert control['status_code'] == 403
     assert control['data'] == {}
 
-def test_d4sign_update_company_info_controller_invalid_signatures_provider(user, company):
+def test_d4sign_update_company_info_controller_changes_signatures_provider(user, company):
     company.signatures_provider = 'docusign'
 
     control = d4sign_update_company_info_controller(
         user=user,
         company_id=company.id
     )
-    assert control['status_code'] == 451
-    assert control['data'] == {}
+    assert control['status_code'] == 200
+    assert control['data']['updated_fields']['signatures_provider'] == {
+        'old': 'docusign',
+        'new': 'd4sign'
+    }
 
 def test_d4sign_update_company_info_controller_successfully_updated(user, company):
     company.d4sign_api_token = 'token_a1-b2-c3'

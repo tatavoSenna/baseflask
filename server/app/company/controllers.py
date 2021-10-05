@@ -6,6 +6,8 @@ def save_company_keys_controller(company_id, docusign_integration_key, docusign_
 
     company = Company.query.get(company_id)
 
+    company.signatures_provider = 'docusign'
+
     if docusign_integration_key != None:
         company.docusign_integration_key = docusign_integration_key
 
