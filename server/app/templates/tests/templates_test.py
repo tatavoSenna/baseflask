@@ -13,7 +13,11 @@ from unittest.mock import patch
 def test_create_template_controller(upload_template_mock):
     name = "New Template"
     form = [{"form": "new form"}]
-    workflow = {"workflow": "new workflow"}
+    workflow = {
+        "nodes": {},
+        "created_by": "",
+        "current_node": "0"
+    }
     signers = [{"signers": "new signers"}]
     template_text = [{"text": "file text"}]
     company = factories.CompanyFactory(id=777)
@@ -22,7 +26,7 @@ def test_create_template_controller(upload_template_mock):
     )
 
     template_id = create_template_controller(
-        user.company_id, user.id, name, form, workflow, signers, template_text, ".txt","")
+        user.company_id, user.id, name, form, workflow, signers, template_text, ".txt", "")
 
     upload_template_mock.assert_called_once_with(
         template_text, template_id, company.id)

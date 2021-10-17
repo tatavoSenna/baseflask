@@ -9,14 +9,12 @@ from datetime import date
 from app.models.documents import Document, DocumentTemplate
 from app.documents.controllers import(
     get_document_controller,
-    create_document_controller,
     create_new_version_controller,
     save_signers_controller,
     download_document_text_controller,
     upload_document_text_controller,
     next_status_controller,
     previous_status_controller,
-    document_creation_email_controller,
     workflow_status_change_email_controller,
     get_download_url_controller,
     fill_signing_date_controller,
@@ -145,301 +143,6 @@ def test_update_document_signers():
 
     assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_NOME'] == "Luiz Senna"
     assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_EMAIL'] == "luiz.senna@parafernalia.net.br"
-
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
-@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
-@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
-@ patch('app.documents.controllers.fill_text_with_variables')
-@ patch('app.documents.controllers.fill_docx_with_variables')
-@ patch('app.documents.controllers.document_creation_email_controller')
-def test_send_email_on_document_creation_with_workflow(
-    document_creation_email_controller,
-    fill_docx_with_variables,
-    fill_text_with_variables,
-    convert_docx_to_pdf_and_save,
-    download_docx_from_template,
-    download_text_from_template,
-    upload_filled_docx_to_documents, 
-    upload_filled_text_to_documents):
-    
-    company = factories.CompanyFactory(id=17)
-    user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
-    )
-
-    workflow = {
-        "nodes": {
-            "544": {
-                "next_node": "5521",
-                "changed_by": "",
-                "title": "step1"
-            },
-            "5521": {
-                "next_node": "3485",
-                "changed_by": "",
-                "title": "step2"
-            }
-        },
-        "current_node": "544",
-        "created_by": ""
-    }
-
-    form = [
-        {
-            "title": "teste dummy",
-            "fields": [
-                {
-                    "info": "",
-                    "type": "text",
-                    "label": "Dummy text",
-                    "variable": {
-                        "name": "DUMMY",
-                        "type": "string",
-                        "doc_display_style": "plain"
-                    }
-                }
-            ]
-        }
-    ]
-
-    document_template_txt = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".txt", form=form
-    )
-
-    document_title = "default title"
-
-    variables = {}
-
-    document_txt = create_document_controller(
-        user.id,
-        user.email,
-        user.company_id,
-        document_template_txt.id,
-        document_title,
-        user.name,
-        variables,
-        None,
-        False
-    )
-
-    document_creation_email_controller.assert_called_once_with(document_title, company.id)
-
-
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
-@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
-@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
-@ patch('app.documents.controllers.fill_text_with_variables')
-@ patch('app.documents.controllers.fill_docx_with_variables')
-@ patch('app.documents.controllers.document_creation_email_controller')
-def test_send_email_on_document_creation_without_workflow(
-    document_creation_email_controller,
-    fill_docx_with_variables,
-    fill_text_with_variables,
-    convert_docx_to_pdf_and_save,
-    download_docx_from_template,
-    download_text_from_template,
-    upload_filled_docx_to_documents, 
-    upload_filled_text_to_documents):
-    
-    company = factories.CompanyFactory(id=17)
-    user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
-    )
-
-    workflow = {
-        "nodes": {},
-        "current_node": "0",
-        "created_by": ""
-    }
-
-    form = [
-        {
-            "title": "teste dummy",
-            "fields": [
-                {
-                    "info": "",
-                    "type": "text",
-                    "label": "Dummy text",
-                    "variable": {
-                        "name": "DUMMY",
-                        "type": "string",
-                        "doc_display_style": "plain"
-                    }
-                }
-            ]
-        }
-    ]
-
-    document_template_txt = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".txt", form=form
-    )
-
-    document_title = "default title"
-
-    variables = {}
-
-    document_txt = create_document_controller(
-        user.id,
-        user.email,
-        user.company_id,
-        document_template_txt.id,
-        document_title,
-        user.name,
-        variables,
-        None,
-        False
-    )
-
-    document_creation_email_controller.assert_not_called()
-
-
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents')
-@ patch('app.documents.controllers.RemoteDocument.download_text_from_template')
-@ patch('app.documents.controllers.RemoteDocument.download_docx_from_template')
-@ patch('app.documents.controllers.convert_docx_to_pdf_and_save')
-@ patch('app.documents.controllers.fill_text_with_variables')
-@ patch('app.documents.controllers.fill_docx_with_variables')
-def test_create_document(
-    upload_filled_text_to_documents, 
-    upload_filled_docx_to_documents, 
-    download_text_from_template,
-    download_docx_from_template,
-    convert_docx_to_pdf_and_save,
-    fill_text_with_variables,
-    fill_docx_with_variables):
-    
-    company = factories.CompanyFactory(id=17)
-    user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
-    )
-
-    workflow = {
-        "nodes": {
-            "544": {
-                "next_node": "5521",
-                "changed_by": "",
-                "title": "step1",
-                "deadline": 1
-            },
-            "3485": {
-                "next_node": None,
-                "changed_by": "",
-                "title": "step3"
-            },
-            "5521": {
-                "next_node": "3485",
-                "changed_by": "",
-                "title": "step2"
-            }
-        },
-        "current_node": "544",
-        "created_by": ""
-    }
-
-    form = [
-        {
-            "title": "teste dummy",
-            "fields": [
-                {
-                    "info": "",
-                    "type": "text",
-                    "label": "Dummy text",
-                    "variable": {
-                        "name": "DUMMY",
-                        "type": "string",
-                        "doc_display_style": "plain"
-                    }
-                }
-            ]
-        }
-    ]
-
-    document_template_txt = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".txt", form=form
-    )
-
-    document_template_docx = factories.DocumentTemplateFactory(
-        company=company, workflow=workflow, text_type=".docx", form=form
-    )
-
-    document_title = "default title"
-
-    variables = {}
-
-    assert DocumentTemplate.query.get(
-        document_template_txt.id).company_id == company.id
-
-    assert DocumentTemplate.query.get(
-        document_template_docx.id).company_id == company.id
-
-    document_txt = create_document_controller(
-        user.id,
-        user.email,
-        user.company_id,
-        document_template_txt.id,
-        document_title,
-        user.name,
-        variables,
-        None,
-        False
-    )
-
-    document_docx = create_document_controller(
-        user.id,
-        user.email,
-        user.company_id,
-        document_template_docx.id,
-        document_title,
-        user.name,
-        variables,
-        None,
-        False
-    )
-
-    assert document_txt.user_id == user.id
-    assert document_txt.company_id == company.id
-    assert document_txt.document_template_id == document_template_txt.id
-    assert document_txt.title == document_title
-    assert document_txt.workflow['created_by'] == user.name
-    assert document_txt.text_type == ".txt"
-    assert datetime.strptime(document_txt.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert document_txt.due_date.day == (datetime.today() + timedelta(days=1)).day
-
-
-    assert document_docx.document_template_id == document_template_docx.id
-    assert document_docx.text_type == ".docx"
-    assert datetime.strptime(document_docx.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert document_docx.due_date.day == (datetime.today() + timedelta(days=1)).day
-
-
-
-@ patch('app.documents.controllers.send_email_controller')
-def test_email_create_document(send_email_on_document_creation_mock):
-    company_id = 134
-    company = factories.CompanyFactory(id=company_id)
-    user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
-    )
-    user2 = factories.UserFactory(
-        company=company, email="testemail2@gmail.com"
-    )
-    email_title = 'teste'
-
-    email_list = []
-    email_list.append(user.email)
-    email_list.append(user2.email)
-
-    document_creation_email_controller(
-        email_title, company_id)
-
-    send_email_on_document_creation_mock.assert_called_once_with(
-        'leon@lawing.com.br', email_list, 'New Document created', email_title, 'd-83efa7b8d2fb4742a69dd9059324e148'
-    )
 
 
 @ patch('app.documents.controllers.send_email_controller')
@@ -610,9 +313,10 @@ def test_change_document_status_next():
     assert retrieved_document.workflow["current_node"] == "3485"
     assert retrieved_document.workflow['nodes']['5521']['changed_by'] == "joao"
     assert retrieved_document.current_step == "step3"
-    assert datetime.strptime(retrieved_document.workflow["nodes"]["3485"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
-
+    assert datetime.strptime(retrieved_document.workflow["nodes"]["3485"]["due_date"],
+                             '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert retrieved_document.due_date.day == (
+        datetime.today() + timedelta(days=1)).day
 
 
 def test_change_document_status_previous():
@@ -665,8 +369,11 @@ def test_change_document_status_previous():
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "544"
     assert retrieved_document.current_step == "step1"
-    assert datetime.strptime(retrieved_document.workflow["nodes"]["544"]["due_date"], '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
+    assert datetime.strptime(retrieved_document.workflow["nodes"]["544"]["due_date"],
+                             '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
+    assert retrieved_document.due_date.day == (
+        datetime.today() + timedelta(days=1)).day
+
 
 @ patch('app.documents.controllers.RemoteDocument.download_signed_document')
 def test_download_signed_document(download_document_mock):
