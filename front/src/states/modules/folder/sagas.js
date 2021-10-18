@@ -59,7 +59,7 @@ function* createFolderSaga({ payload = {} }) {
 	} catch (error) {
 		yield put(createFolderFailure(error))
 		errorMessage({
-			content: 'Criação da pasta falhou.',
+			content: error.response.data.error,
 			updateKey: 'createFolderSaga',
 		})
 	}
@@ -113,7 +113,7 @@ function* setMoveFolderSaga({ payload = {} }) {
 	} catch (error) {
 		yield put(setMoveFolderFailure(error))
 		errorMessage({
-			content: 'Falha na troca de diretório',
+			content: error.response.data.error,
 			updateKey: 'moveDocSaga',
 		})
 	}
