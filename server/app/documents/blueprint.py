@@ -162,6 +162,12 @@ def change_folder(current_user):
     destination_id = content.get("destination_id", None)
 
     document = Document.query.filter_by(id=document_id).first()
+
+    folder_already_exists = Document.query.filter_by(
+        parent_id=destination_id, title=document.title).all()
+    if folder_already_exists:
+        abort(400, description= f'Já existe um documento ou pasta com este nome na pasta de destino.')
+
     document.parent_id = destination_id
     db.session.commit()
 
@@ -292,6 +298,12 @@ def create(current_user):
 
     # Check if content being created is a folder
     if is_folder:
+
+        folder = Document.query.filter_by(
+            parent_id=parent, title=title).all()
+
+        if folder:
+            abort(400, description='Titulo da pasta já existe nesse diretório.')
 
         document = create_folder_controller(
             current_user["id"],
@@ -651,4 +663,4 @@ def modify_document(current_user, document_id):
             "Could not change document variables")
         abort(400, "Could not change document variables")
 
-    return DocumentSerializer().dump(document)    
+    return DocumentSerializer().dump(document)
