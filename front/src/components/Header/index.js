@@ -29,7 +29,9 @@ import styles from './index.module.scss'
 const { Text } = Typography
 
 function Head({ handleCollapsed, isCollapsed, isWeb }) {
-	const { name: username } = useSelector(({ session }) => session)
+	const { name: username, signatures_provider } = useSelector(
+		({ session }) => session
+	)
 	const dispatch = useDispatch()
 
 	const handleLogout = async () => {
@@ -47,9 +49,11 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 	function getMenu() {
 		return (
 			<Menu style={{ zIndex: 1 }}>
-				<Menu.Item key="docusign" onClick={checkDocusign}>
-					Docusign connect
-				</Menu.Item>
+				{signatures_provider === 'docusign' ? (
+					<Menu.Item key="docusign" onClick={checkDocusign}>
+						Docusign connect
+					</Menu.Item>
+				) : null}
 				<Menu.Item key="logout" onClick={handleLogout}>
 					Sair
 				</Menu.Item>

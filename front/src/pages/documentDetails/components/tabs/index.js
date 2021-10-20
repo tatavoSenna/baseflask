@@ -69,8 +69,6 @@ const Tabs = ({
 	const [isEdit, setIsEdit] = useState(false)
 	const [form] = Form.useForm()
 
-	console.log('steps:', steps)
-
 	const tab = (option) => {
 		if (option === '1') {
 			return info()

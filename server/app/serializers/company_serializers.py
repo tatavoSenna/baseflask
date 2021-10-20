@@ -6,8 +6,11 @@ class CompanySerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         exclude = (
             "docusign_secret_key",
+            "d4sign_api_cryptkey",
+            "d4sign_api_hmac_secret"
         )
         model = Company
+
 
 class CompanyListSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -18,6 +21,7 @@ class CompanyListSerializer(ma.SQLAlchemyAutoSchema):
             'docusign_integration_key',
             'docusign_secret_key',
         )
+
 
 class WebhookSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
