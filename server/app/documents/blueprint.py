@@ -24,7 +24,7 @@ from docusign_esign import (
 )
 from docxtpl import DocxTemplate
 from slugify import slugify
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 
 
 from app import db, aws_auth
@@ -32,13 +32,14 @@ from app.serializers.document_serializers import (
     DocumentSerializer,
     DocumentTemplateSerializer,
     DocumentTemplateListSerializer,
-    DocumentListSerializer
+    DocumentListSerializer,
 )
 from app.models.documents import Document, DocumentTemplate
 from app.models.company import Company
 from app.users.remote import get_local_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
+from app.models.user import User
 
 from .controllers import (
     get_document_template_list_controller,
@@ -63,12 +64,9 @@ from .controllers import (
     convert_pdf_controller,
     get_docx_download_url_controller,
     change_variables_controller,
-    create_folder_controller
+    create_folder_controller,
 )
-from app.docusign.controllers import (
-    sign_document_controller,
-    void_envelope_controller
-)
+from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
 from .variables import specify_variables
 
@@ -93,55 +91,58 @@ def get_document_detail(current_user, document_id):
 @get_local_user
 def get_document_list(current_user):
     try:
-        page = int(request.args.get(
-            "page", current_app.config['PAGE_DEFAULT']))
-        per_page = int(request.args.get(
-            "per_page", current_app.config['PER_PAGE_DEFAULT']))
-        search_param = str(request.args.get("search", ""))
-        folder_name = int(request.args.get("folder", 0))
-        type = str(request.args.get("type", ""))
+        page = int(request.args.get("page", current_app.config["PAGE_DEFAULT"]))
+        per_page = int(
+            request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
+        )
+        search_term = str(request.args.get("search", ""))
+
+        folder_id = request.args.get("folder", None)
+        folder_id = int(folder_id) if folder_id else None
+
+        type = request.args.get("type", None)
+
+        order_by = str(request.args.get("order_by", "creation_date"))
+        order = str(request.args.get("order", "desc"))
     except:
         abort(400, "invalid parameters")
 
-    if folder_name == 0:
-        parent = None
-    else:
-        parent = folder_name
-
-    if type == "folder":
-        folder = True
-    elif type == "file":
-        folder = False
-
-    if type == "folder":
-        folder = True
-    elif type == "file":
-        folder = False
-
-    if search_param == "":
-        if type != "":
-            paginated_query = (
-                Document.query.filter_by(
-                    company_id=current_user["company_id"], parent_id=parent, is_folder=folder)
-                .filter(Document.title.ilike(f"%{search_param}%"))
-                .order_by(desc(Document.created_at))
-                .paginate(page=page, per_page=per_page)
-            )
-        else:
-            paginated_query = (
-                Document.query.filter_by(
-                    company_id=current_user["company_id"], parent_id=parent)
-                .filter(Document.title.ilike(f"%{search_param}%"))
-                .order_by(desc(Document.created_at))
-                .paginate(page=page, per_page=per_page)
-            )
-    else:
-        paginated_query = (
-            Document.query.filter_by(company_id=current_user["company_id"])
-            .filter(Document.title.ilike(f"%{search_param}%"))
-            .order_by(desc(Document.created_at))
-            .paginate(page=page, per_page=per_page)
+    paginated_query = Document.query.filter_by(
+            company_id=current_user["company_id"], parent_id=folder_id
         )
+
+    if type:
+        files_or_folders = type == "folder" 
+        paginated_query = paginated_query.filter_by(is_folder=files_or_folders)
+
+    if search_term:
+        paginated_query = paginated_query.filter(Document.title.ilike(f"%{search_term}%"))
+
+    if order_by:
+        order_by_dict = {
+            "title": Document.title,
+            "due_date": Document.due_date,
+            "status": Document.current_step,
+            "template": DocumentTemplate.name,
+            "creation_date": Document.created_at,
+            "username": User.name
+        }
+        order_dict = {
+            "asc": asc(order_by_dict[order_by]),
+            "desc": desc(order_by_dict[order_by])
+        }
+        
+        if order_by == "template":
+            paginated_query = paginated_query.join(Document.template)
+        
+        if order_by == "username":
+            paginated_query = paginated_query.join(Document.user)
+
+        paginated_query = paginated_query.order_by(desc(Document.is_folder), order_dict[order])
+    else:
+        paginated_query = paginated_query.order_by(desc(Document.is_folder))
+        
+    paginated_query = paginated_query.paginate(page=page, per_page=per_page)
 
     return jsonify(
         {
@@ -171,19 +172,14 @@ def change_folder(current_user):
     document.parent_id = destination_id
     db.session.commit()
 
-    return jsonify(
-        {
-            "moved_document": document_id,
-            "new_folder": destination_id
-        }
-    )
+    return jsonify({"moved_document": document_id, "new_folder": destination_id})
 
 
 @documents_bp.route("/<int:document_id>/text", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def get_document_text(current_user, document_id):
-    version_id = request.args.get('version')
+    version_id = request.args.get("version")
     comments = get_comments_version_controller(document_id)
     if not version_id:
         version_id = get_document_version_controller(document_id)
@@ -191,20 +187,14 @@ def get_document_text(current_user, document_id):
         textfile = download_document_text_controller(document_id, version_id)
     except Exception:
         abort(404, "Document not Found")
-    return jsonify(
-        {
-            "text": textfile,
-            "version_id": version_id,
-            "comments": comments
-        }
-    )
+    return jsonify({"text": textfile, "version_id": version_id, "comments": comments})
 
 
 @documents_bp.route("/<int:document_id>/pdf", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def get_document_pdf(current_user, document_id):
-    version_id = request.args.get('version', None)
+    version_id = request.args.get("version", None)
     if not document_id:
         abort(400, "Missing document id")
     if not version_id:
@@ -217,12 +207,9 @@ def get_document_pdf(current_user, document_id):
     try:
         pdf_url = get_pdf_download_url_controller(document, version_id)
     except:
-        abort(
-            400, "Could not download document pdf from S3")
+        abort(400, "Could not download document pdf from S3")
 
-    response = {
-        "download_url": pdf_url
-    }
+    response = {"download_url": pdf_url}
     return jsonify(response)
 
 
@@ -240,12 +227,9 @@ def get_document_docx(current_user, document_id):
     try:
         docx_url = get_docx_download_url_controller(document)
     except:
-        abort(
-            400, "Could not download document docx from S3")
+        abort(400, "Could not download document docx from S3")
 
-    response = {
-        "download_url": docx_url
-    }
+    response = {"download_url": docx_url}
     return jsonify(response)
 
 
@@ -262,7 +246,8 @@ def add_document_text(current_user, document_id):
     try:
         # create new version in 'versions' array before uploading the text
         create_new_version_controller(
-            document_id, description, current_user["email"], comments)
+            document_id, description, current_user["email"], comments
+        )
     except Exception:
         abort(404, "Document not Found")
 
@@ -273,10 +258,7 @@ def add_document_text(current_user, document_id):
         abort(404, "Error uploading to s3")
 
     return jsonify(
-        {
-            "uploaded_text": document_text,
-            "updated_versions_list": document.versions
-        }
+        {"uploaded_text": document_text, "updated_versions_list": document.versions}
     )
 
 
@@ -312,7 +294,7 @@ def create(current_user):
             title,
             current_user["name"],
             parent,
-            is_folder
+            is_folder,
         )
     else:
         # Check if document template and variables are being communicated
@@ -339,13 +321,11 @@ def create(current_user):
             if current_user["is_admin"] == True:
                 error_JSON = {
                     "error": "There is a problem with template syntax",
-                    "message": e.message
+                    "message": e.message,
                 }
                 return jsonify(error_JSON), 500
             else:
-                error_JSON = {
-                    "error": "There is a problem with template syntax"
-                }
+                error_JSON = {"error": "There is a problem with template syntax"}
                 return jsonify(error_JSON), 500
         except Exception as e:
             logging.exception("Could not create document")
@@ -370,17 +350,16 @@ def download(current_user, document_id):
         abort(404, "Document not Found")
     if document.signed != True:
         abort(
-            403, "Document has not finished signing yet, so it's not available for download")
+            403,
+            "Document has not finished signing yet, so it's not available for download",
+        )
 
     try:
         document_url = get_download_url_controller(document)
     except:
-        abort(
-            400, "Could not download document from S3")
+        abort(400, "Could not download document from S3")
 
-    response = {
-        "download_url": document_url
-    }
+    response = {"download_url": document_url}
 
     return jsonify(response)
 
@@ -394,22 +373,18 @@ def next_document_status(current_user, document_id):
             user = current_user["email"]
         else:
             user = current_user["name"]
-        document, status = next_status_controller(
-            document_id, user)
+        document, status = next_status_controller(document_id, user)
         if not document:
             abort(404, "Document not Found")
         if status == 1:
             abort(400, "There is no next status")
     except Exception:
-        logging.exception(
-            "Could not change document status")
+        logging.exception("Could not change document status")
         abort(404, "Could not change document status")
     try:
-        response = workflow_status_change_email_controller(
-            document_id, user)
+        response = workflow_status_change_email_controller(document_id, user)
     except Exception:
-        logging.exception(
-            "Could not send email after changing workflow status")
+        logging.exception("Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 
@@ -429,15 +404,12 @@ def previous_document_status(current_user, document_id):
         if status == 1:
             abort(404, "There is no previous status")
     except Exception:
-        logging.exception(
-            "Could not change document status")
+        logging.exception("Could not change document status")
         abort(404, "Could not change document status")
     try:
-        response = workflow_status_change_email_controller(
-            document_id, user)
+        response = workflow_status_change_email_controller(document_id, user)
     except Exception:
-        logging.exception(
-            "Could not send email after changing workflow status")
+        logging.exception("Could not send email after changing workflow status")
 
     return DocumentSerializer().dump(document)
 
@@ -448,9 +420,16 @@ def previous_document_status(current_user, document_id):
 def documents(current_user):
 
     document_templates = get_document_template_list_controller(
-        current_user["company_id"])
+        current_user["company_id"]
+    )
 
-    return jsonify({"DocumentTemplates": DocumentTemplateListSerializer(many=True).dump(document_templates)})
+    return jsonify(
+        {
+            "DocumentTemplates": DocumentTemplateListSerializer(many=True).dump(
+                document_templates
+            )
+        }
+    )
 
 
 @documents_bp.route("/templates/<int:documentTemplate_id>", methods=["GET"])
@@ -458,19 +437,20 @@ def documents(current_user):
 @get_local_user
 def document(current_user, documentTemplate_id):
     document_template = get_document_template_details_controller(
-        current_user["company_id"], documentTemplate_id)
+        current_user["company_id"], documentTemplate_id
+    )
 
     return jsonify(DocumentTemplateSerializer().dump(document_template))
 
 
-@documents_bp.route('/sign', methods=["POST"])
+@documents_bp.route("/sign", methods=["POST"])
 @aws_auth.authentication_required
 @get_local_user
 def request_signatures(current_user):
     content = request.json
     document_id = content.get("document_id", None)
     if not document_id:
-        abort(400, 'Missing document id')
+        abort(400, "Missing document id")
 
     try:
         current_document = get_document_controller(document_id)
@@ -478,11 +458,9 @@ def request_signatures(current_user):
         document_type = current_document.text_type
 
         if document_type == ".txt":
-            textfile = download_document_text_controller(
-                document_id, version_id)
+            textfile = download_document_text_controller(document_id, version_id)
         elif document_type == ".docx":
-            docx_io = download_document_docx_controller(
-                document_id, version_id)
+            docx_io = download_document_docx_controller(document_id, version_id)
         else:
             abort(400, "Document has no type defined in database")
     except Exception:
@@ -490,8 +468,7 @@ def request_signatures(current_user):
         abort(404, "Could not get document text")
 
     if current_document.sent == True:
-        abort(
-            400, {"message": "Signature already requested for this document"})
+        abort(400, {"message": "Signature already requested for this document"})
 
     try:
         if document_type == ".txt":
@@ -500,7 +477,8 @@ def request_signatures(current_user):
             docx_io = fill_signing_date_controller(current_document, docx_io)
     except:
         logging.exception(
-            "Could not fill Current Date variable. Please add variable to document before signing")
+            "Could not fill Current Date variable. Please add variable to document before signing"
+        )
     if document_type == ".txt":
         try:
             pdf_document = convert_pdf_controller(textfile)
@@ -511,38 +489,32 @@ def request_signatures(current_user):
     company = Company.query.get(current_user.get("company_id"))
     account_ID = company.docusign_account_id
     if account_ID == None:
-        error_JSON = {
-            "message": "User has no Docusign Account ID registered"
-        }
+        error_JSON = {"message": "User has no Docusign Account ID registered"}
         return jsonify(error_JSON), 400
     token = get_token(current_user)
     if token is None:
-        error_JSON = {
-            "message": "Missing DocuSign user token"
-        }
+        error_JSON = {"message": "Missing DocuSign user token"}
         return jsonify(error_JSON), 400
     try:
         if document_type == ".txt":
             sign_document_controller(
-                current_document, pdf_document, account_ID, token, current_user["name"])
+                current_document, pdf_document, account_ID, token, current_user["name"]
+            )
         elif document_type == ".docx":
             sign_document_controller(
-                current_document, docx_io, account_ID, token, current_user["name"])
+                current_document, docx_io, account_ID, token, current_user["name"]
+            )
     except Exception as e:
         logging.exception("Could not sign document")
         dict_str = e.body.decode("utf-8")
         ans_json = ast.literal_eval(dict_str)
-        if ans_json['errorCode'] == 'ANCHOR_TAB_STRING_NOT_FOUND':
-            error_JSON = {
-                "message": "Missing Anchor String on Document text"
-            }
+        if ans_json["errorCode"] == "ANCHOR_TAB_STRING_NOT_FOUND":
+            error_JSON = {"message": "Missing Anchor String on Document text"}
 
-        elif ans_json['errorCode'] == 'AUTHORIZATION_INVALID_TOKEN':
-            error_JSON = {
-                "message": "Token is expired or invalid"
-            }
+        elif ans_json["errorCode"] == "AUTHORIZATION_INVALID_TOKEN":
+            error_JSON = {"message": "Token is expired or invalid"}
 
-        elif ans_json['errorCode'] == 'USER_AUTHENTICATION_FAILED':
+        elif ans_json["errorCode"] == "USER_AUTHENTICATION_FAILED":
             error_JSON = {
                 "message": "Invalid Docusign access token. User authentication failed"
             }
@@ -557,9 +529,9 @@ def request_signatures(current_user):
     return jsonify(DocumentSerializer().dump(current_document))
 
 
-@ documents_bp.route("/<int:document_id>/signers", methods=["POST"])
-@ aws_auth.authentication_required
-@ get_local_user
+@documents_bp.route("/<int:document_id>/signers", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
 def save_signers(current_user, document_id):
     content = request.json
     if content:
@@ -569,14 +541,14 @@ def save_signers(current_user, document_id):
             print(e)
             abort(404, "Could not save document signers")
     else:
-        abort(400, 'no content')
+        abort(400, "no content")
 
     return jsonify(DocumentSerializer(many=False).dump(document))
 
 
-@ documents_bp.route("/<int:document_id>/void", methods=["PUT"])
-@ aws_auth.authentication_required
-@ get_local_user
+@documents_bp.route("/<int:document_id>/void", methods=["PUT"])
+@aws_auth.authentication_required
+@get_local_user
 def void_envelope(current_user, document_id):
     content = request.json
     try:
@@ -596,7 +568,8 @@ def void_envelope(current_user, document_id):
         abort(400, "User has no Docusign Account ID registered")
     try:
         response = void_envelope_controller(
-            document, document.envelope, token, account_ID)
+            document, document.envelope, token, account_ID
+        )
     except Exception as e:
         print(e)
         abort(400, "Could not delete docusign envelope")
@@ -608,7 +581,7 @@ def void_envelope(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document(current_user, document_id):
-    if not current_user['is_admin']:
+    if not current_user["is_admin"]:
         abort(403, "Only Admin Users can delete documents")
     try:
         document = get_document_controller(document_id)
@@ -617,12 +590,9 @@ def delete_document(current_user, document_id):
     try:
         delete_document_controller(document)
     except Exception:
-        logging.exception(
-            "The document could not be deleted")
+        logging.exception("The document could not be deleted")
         abort(400, "The document could not be deleted")
-    msg_JSON = {
-        "message": "The document was deleted"
-    }
+    msg_JSON = {"message": "The document was deleted"}
 
     return jsonify(msg_JSON), 200
 
@@ -657,10 +627,10 @@ def modify_document(current_user, document_id):
 
     try:
         change_variables_controller(
-            document, spec_variables, current_user["email"], variables)
+            document, spec_variables, current_user["email"], variables
+        )
     except Exception as e:
-        logging.exception(
-            "Could not change document variables")
+        logging.exception("Could not change document variables")
         abort(400, "Could not change document variables")
 
     return DocumentSerializer().dump(document)
