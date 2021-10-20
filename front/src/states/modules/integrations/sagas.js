@@ -15,12 +15,16 @@ import {
 	saveIntegrationSuccess,
 	saveIntegrationFailure,
 	connectDocusign,
+	getD4sign,
+	getD4signSuccess,
+	getD4signFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(getIntegration, getIntegrationSaga)
 	yield takeEvery(saveIntegration, saveIntegrationSaga)
 	yield takeEvery(connectDocusign, connectDocusignSaga)
+	yield takeEvery(getD4sign, getD4signSaga)
 }
 
 function* getIntegrationSaga() {
@@ -64,12 +68,31 @@ function* saveIntegrationSaga({ payload }) {
 			content: 'Salvando dados...',
 			updateKey: 'saveIntegrations',
 		})
-		const response = yield call(api.post, `/company/docusign`, payload)
-		successMessage({
-			content: 'Dados salvo com sucesso',
-			updateKey: 'saveIntegrations',
-		})
-		yield put(saveIntegrationSuccess(response.data))
+		if (payload.d4sign) {
+			const responseD4sign = yield call(
+				api.put,
+				`/d4sign/company-info`,
+				payload.fields
+			)
+			successMessage({
+				content: 'Dados salvo com sucesso',
+				updateKey: 'saveIntegrations',
+			})
+			yield put(saveIntegrationSuccess(responseD4sign.data))
+		}
+		if (payload.docusign) {
+			const responseDocusign = yield call(
+				api.post,
+				`/company/docusign`,
+				payload.fields
+			)
+			successMessage({
+				content: 'Dados salvo com sucesso',
+				updateKey: 'saveIntegrations',
+			})
+			yield put(saveIntegrationSuccess(responseDocusign.data))
+		}
+		yield put(getIntegration())
 	} catch (error) {
 		console.log(error)
 		yield put(saveIntegrationFailure(error))
@@ -77,5 +100,14 @@ function* saveIntegrationSaga({ payload }) {
 			content: 'Problemas ao salvar dados',
 			updateKey: 'saveIntegrations',
 		})
+	}
+}
+
+function* getD4signSaga({ payload }) {
+	try {
+		const { data } = yield call(api.get, `/d4sign/company-info`, payload)
+		yield put(getD4signSuccess(data))
+	} catch (error) {
+		yield put(getD4signFailure(error))
 	}
 }

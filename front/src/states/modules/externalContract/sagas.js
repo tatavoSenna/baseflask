@@ -59,7 +59,6 @@ function* createContractExternalSaga({ payload }) {
 
 	const { token, visible } = payload
 
-	console.log(dataImg)
 	try {
 		yield call(api.post, '/external/create', {
 			token,

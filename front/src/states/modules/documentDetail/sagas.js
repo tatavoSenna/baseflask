@@ -114,7 +114,7 @@ function* selectVersionSaga({ payload = {} }) {
 	const { documentDetail } = yield select()
 	try {
 		let response
-		console.log(documentDetail.data.text_type)
+
 		if (documentDetail.data.text_type === '.docx') {
 			response = yield call(
 				api.get,
@@ -126,7 +126,6 @@ function* selectVersionSaga({ payload = {} }) {
 				`/documents/${documentDetail.data.id}/text?version=${id}`
 			)
 		}
-		console.log(response)
 		successMessage({
 			content: 'Versão selecionada com sucesso.',
 			updateKey: 'selectVersion',
@@ -153,45 +152,70 @@ function* selectVersionSaga({ payload = {} }) {
 }
 
 function* sentAssignSaga({ payload = {} }) {
-	loadingMessage({
-		content: 'Enviando documento para assinatura via Docusign.',
-		updateKey: 'sentAssign',
-	})
 	const { id } = payload
+	const { session } = yield select()
+	const { signatures_provider = null } = session
+
 	try {
-		const response = yield call(api.post, `/documents/sign`, {
-			document_id: id,
-		})
-		if (response.data.sent) {
-			successMessage({
-				content: 'Enviamos, via docusign, o documento para assinatura.',
+		if (signatures_provider === 'docusign') {
+			loadingMessage({
+				content: 'Enviando documento para assinatura via Docusign.',
 				updateKey: 'sentAssign',
 			})
-			yield put(sentAssignSuccess({ ...response.data }))
-		} else {
-			errorMessage({
-				content:
-					'Envio para docusign falhou, favor revisar os dados de assinantes.',
-				updateKey: 'sentAssign',
+			const responseDocusign = yield call(api.post, `/documents/sign`, {
+				document_id: id,
 			})
+			if (responseDocusign.data.sent) {
+				successMessage({
+					content: 'Enviamos, via docusign, o documento para assinatura.',
+					updateKey: 'sentAssign',
+				})
+				yield put(sentAssignSuccess({ ...responseDocusign.data }))
+			} else {
+				errorMessage({
+					content:
+						'Envio para docusign falhou, favor revisar os dados de assinantes.',
+					updateKey: 'sentAssign',
+				})
+			}
 		}
-		yield put(
-			sentAssignFailure({
-				error:
-					'Envio para docusign falhou, favor revisar os dados de assinantes.',
-				showConnectModal: false,
+		if (signatures_provider === 'd4sign') {
+			loadingMessage({
+				content: 'Enviando documento para assinatura via D4sign.',
+				updateKey: 'sentAssign',
 			})
-		)
+			const responseD4sign = yield call(
+				api.post,
+				`/d4sign/upload-and-send-document-for-signing/`,
+				{
+					document_id: id,
+				}
+			)
+			successMessage({
+				content: 'Enviamos, via d4sign, o documento para assinatura.',
+				updateKey: 'sentAssign',
+			})
+			yield put(sentAssignSuccess({ ...responseD4sign.data }))
+		}
 	} catch (error) {
 		let showConnectModal = false
-		if (error.response.data.message.includes('Invalid Docusign access token')) {
-			showConnectModal = true
-		} else {
+		if (signatures_provider === 'docusign') {
+			if (
+				error.response.data.message.includes('Invalid Docusign access token')
+			) {
+				showConnectModal = true
+			}
 			errorMessage({
 				content: error.response.data.message,
 				updateKey: 'sentAssign',
 			})
+		} else {
+			errorMessage({
+				content: 'Erro ao conectar com a assinatura',
+				updateKey: 'sentAssign',
+			})
 		}
+
 		yield put(sentAssignFailure({ error, showConnectModal }))
 	}
 }

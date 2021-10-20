@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	loading: false,
 	company: {},
+	d4sign: {},
 }
 
 const { actions, reducer } = createSlice({
@@ -13,6 +14,7 @@ const { actions, reducer } = createSlice({
 		getIntegration: (state) =>
 			extend(state, {
 				loading: true,
+				company: {},
 			}),
 		getIntegrationSuccess: (state, { payload }) =>
 			extend(state, {
@@ -48,6 +50,23 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loading: true,
 			}),
+		getD4sign: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getD4signSuccess: (state, { payload }) =>
+			extend(state, {
+				loading: false,
+				d4sign: {
+					...payload,
+				},
+				data: payload,
+			}),
+		getD4signFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 	},
 })
 
@@ -59,6 +78,9 @@ export const {
 	saveIntegrationSuccess,
 	saveIntegrationFailure,
 	connectDocusign,
+	getD4sign,
+	getD4signSuccess,
+	getD4signFailure,
 } = actions
 
 export { default as integrationsSaga } from './sagas'

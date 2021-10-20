@@ -84,6 +84,10 @@ class Document(db.Model):
         db.String(255), unique=True, nullable=True
     )
 
+    d4sign_document_uuid = db.Column(
+        db.String(255), unique=True, nullable=True
+    )
+
     # Belongs to
     company = db.relationship("Company", back_populates="documents")
     user = db.relationship("User", back_populates="documents")

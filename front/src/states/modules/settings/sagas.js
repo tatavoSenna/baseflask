@@ -81,8 +81,7 @@ function* getWebhooksSaga() {
 function* saveWebhooksSaga({ payload }) {
 	const { settings } = yield select()
 	const { newWebhook = {} } = settings
-	console.log({ ...payload })
-	console.log({ ...newWebhook })
+
 	try {
 		loadingMessage({
 			content: 'Salvando dados...',
@@ -135,7 +134,6 @@ function* editWebhooksSaga({ payload }) {
 		updateKey: 'editWebhook',
 	})
 
-	console.log('payload:', payload)
 	try {
 		yield call(api.post, `/company/webhook/edit/${payload.id}`, {
 			url: payload.url,
