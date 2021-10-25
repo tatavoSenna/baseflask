@@ -9,6 +9,7 @@ import {
 	LayoutOutlined,
 	SettingOutlined,
 	IdcardOutlined,
+	FileTextOutlined,
 } from '@ant-design/icons'
 import { getUserList } from '~/states/modules/users'
 import { getSettings } from '~/states/modules/settings'
@@ -42,36 +43,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 			handleCollapsed()
 		}
 		return history.push(path)
-	}
-
-	function adminSideBar() {
-		if (!is_admin) {
-			return null
-		}
-		return (
-			<Menu.Item
-				key="empresas"
-				icon={<IdcardOutlined />}
-				onClick={() => {
-					handleGoTo('/companies')
-				}}>
-				<Tooltip className={styles.tooltip}>Empresas</Tooltip>
-			</Menu.Item>
-		)
-	}
-
-	function adminSideBarNotWeb() {
-		if (!is_admin) {
-			return null
-		}
-		return (
-			<Menu.Item
-				key="empresas"
-				icon={<IdcardOutlined />}
-				onClick={() => handleGoTo('/companies')}>
-				Empresas
-			</Menu.Item>
-		)
 	}
 
 	function logoSideBar() {
@@ -163,8 +134,32 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/settings')}>
 							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
 						</Menu.Item>
-
-						{adminSideBar()}
+						{is_admin && (
+							<Menu.Item
+								key="empresas"
+								icon={
+									<IdcardOutlined
+										className={styles.icons}
+										style={{ fontSize: 18 }}
+									/>
+								}
+								onClick={() => handleGoTo('/companies')}>
+								<Tooltip className={styles.tooltip}>Empresas</Tooltip>
+							</Menu.Item>
+						)}
+						{is_admin && (
+							<Menu.Item
+								key="docs"
+								icon={
+									<FileTextOutlined
+										className={styles.icons}
+										style={{ fontSize: 18 }}
+									/>
+								}
+								onClick={() => handleGoTo('/docs')}>
+								<Tooltip className={styles.tooltip}>Docs</Tooltip>
+							</Menu.Item>
+						)}
 					</Menu>
 				</Sider>
 			) : (
@@ -214,7 +209,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							onClick={() => handleGoTo('/settings')}>
 							Configurações
 						</Menu.Item>
-						{adminSideBarNotWeb()}
 					</Menu>
 				</Sider>
 			)}

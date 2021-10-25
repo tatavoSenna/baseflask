@@ -12,6 +12,7 @@ import DocumentDetails from './pages/documentDetails'
 import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
 import Companies from './pages/companies'
+import Documentation from './pages/documentation'
 
 import Wrapper from '~/components/wrapper'
 
@@ -31,6 +32,7 @@ export const ROUTES = {
 	externalContract: '/documentcreate/:token',
 	settings: '/settings',
 	companies: '/companies',
+	documentation: '/docs',
 }
 
 Hub.listen('auth', (data) => {
@@ -58,6 +60,7 @@ function Routes() {
 					<Route exact path={ROUTES.templates} component={Templates} />
 					<Route exact path={ROUTES.newTemplate} component={EditTemplate} />
 					<Route exact path={ROUTES.editTemplate} component={EditTemplate} />
+					<Route exact path={ROUTES.documentation} component={Documentation} />
 					<Route
 						exact
 						path={ROUTES.documentDetails}
