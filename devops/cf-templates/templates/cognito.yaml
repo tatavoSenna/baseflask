@@ -46,9 +46,9 @@ Resources:
       AutoVerifiedAttributes:
         - email
       MfaConfiguration: "OFF"
-      # SmsConfiguration:
-      #   ExternalId: !Sub ${AuthName}-external
-      #   # SnsCallerArn: !GetAtt SNSRole.Arn
+      #SmsConfiguration:
+        #ExternalId: !Sub ${AuthName}-external
+        #SnsCallerArn: !GetAtt SNSRole.Arn
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: true
       Schema:

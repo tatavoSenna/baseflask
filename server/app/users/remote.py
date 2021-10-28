@@ -45,6 +45,9 @@ class RemoteUser:
     def sub(self):
         return self.__extract_user_attributes("sub")
 
+    def generate_temp_pasword(self):
+        return str(random.randint(100000, 999999))
+
     """
     Create a user or update attributes on application database
     """
@@ -89,16 +92,15 @@ class RemoteUser:
     """
 
     def create(self, email, name, company_id):
-        password = str(random.randint(100000, 999999))
 
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
             Username=email,
             UserAttributes=[
                 {"Name": "email", "Value": email},
-                {"Name": "name", "Value": name}
-            ],
-            TemporaryPassword=password,
+                {"Name": "email_verified", "Value": "True"},
+                {"Name": "name", "Value": name}],
+            TemporaryPassword=self.generate_temp_pasword()
         )
 
         try:
@@ -133,7 +135,8 @@ class RemoteUser:
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
             Username=username,
-            MessageAction='RESEND'
+            MessageAction='RESEND',
+            TemporaryPassword=self.generate_temp_pasword()
         )
         try:
             response = self.client.admin_create_user(**user_attributes)
@@ -152,6 +155,10 @@ def get_local_user(view):
         user_model_instance = User.query.filter_by(
             sub=user_data_from_cognito_jwt["sub"]
         ).one()
+        if not user_model_instance.verified:
+            user_model_instance.verified = True
+            db.session.add(user_model_instance)
+            db.session.commit()
         serialized_user = UserSerializer().dump(user_model_instance)
 
         return view(serialized_user, *args, **kwargs)
