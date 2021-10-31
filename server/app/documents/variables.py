@@ -49,7 +49,13 @@ def specify_variables(variables, document_template_id):
         elif variable_type == "number":
             if specs["doc_display_style"] == "extended":
                 try:
-                    return num2words(variables[variable], lang="pt_BR")
+                    return f'{variables[variable]} ({num2words(variables[variable], lang="pt_BR")})'
+                except Exception as e:
+                    logging.exception(e)
+
+            elif specs["doc_display_style"] == "ordinal":
+                try:
+                    return num2words(variables[variable], lang="pt_BR", to='ordinal')
                 except Exception as e:
                     logging.exception(e)
 

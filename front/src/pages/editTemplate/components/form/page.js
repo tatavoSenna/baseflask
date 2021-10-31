@@ -55,7 +55,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 		switch (type) {
 			case 'number':
 				newField.variable.type = 'number'
-				newField.variable.doc_display_style = 'plain | extended'
+				newField.variable.doc_display_style = 'plain | extended | ordinal'
 				newField.decimals = ''
 				newField.min = ''
 				newField.max = ''
