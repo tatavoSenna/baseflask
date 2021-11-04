@@ -1,13 +1,12 @@
 import logging
 from num2words import num2words
 
-class NumberFormatter:
 
+class NumberFormatter:
     def __init__(self, value, default_display_style=None):
-        
+
         self._default_display_style = default_display_style
         self._value = value
-
 
     def __str__(self):
         if self._default_display_style:
@@ -45,3 +44,7 @@ class NumberFormatter:
             return str(self._value)
         except Exception as e:
             logging.exception(e)
+
+    @property
+    def plain(self):
+        return self.default
