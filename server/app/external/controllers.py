@@ -1,13 +1,6 @@
-import logging
 import uuid
-
 from app import db
-from datetime import datetime
-from app.models.user import User
-from app.models.documents import Document, DocumentTemplate, ExternalToken
-from app.documents.controllers import get_current_date_dict
-from app.documents.remote import RemoteDocument
-from app.documents.variables import specify_variables
+from app.models.documents import DocumentTemplate, ExternalToken
 
 
 class ExceptionWithMsg(Exception):
@@ -16,6 +9,7 @@ class ExceptionWithMsg(Exception):
 
     def __str__(self):
         return repr(self.msg)
+
 
 class VariableStylingException(Exception):
     def __init__(self, msg):
@@ -39,7 +33,7 @@ def generate_external_token_controller(template_id, title, user_id, max_token_us
         user_id=user_id,
         title=title,
         max_uses=max_token_uses,
-        current_uses=0
+        current_uses=0,
     )
     db.session.add(new_token)
     db.session.commit()
@@ -54,6 +48,7 @@ def authorize_external_token_controller(token):
         raise ExceptionWithMsg("This token has already been used")
     template_id = token.document_template_id
     return template_id
+
 
 def mark_token_as_used_controller(token):
     token = ExternalToken.query.filter_by(token=str(token)).first()
