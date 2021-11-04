@@ -6,18 +6,23 @@ import requests
 import json
 import logging
 from flask import Markup
-from num2words import num2words
+
+
 from babel.numbers import format_currency
+from app.documents.formatters.number_formatter import NumberFormatter
+
 
 month_dictionary = {1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho',
                     7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'}
 
 
-def specify_variables(variables, document_template_id):
+def format_variables(variables, document_template_id):
+    print(variables)
     # TODO: Calling the database twice
     variables_specification = DocumentTemplate.query.get(
         document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
+    print(variables_specification)
 
     def format_variable(specs, variable, variables, struct_name):
         variable_type = specs["type"]
@@ -47,23 +52,8 @@ def specify_variables(variables, document_template_id):
                     logging.exception(e)
 
         elif variable_type == "number":
-            if specs["doc_display_style"] == "extended":
-                try:
-                    return f'{variables[variable]} ({num2words(variables[variable], lang="pt_BR")})'
-                except Exception as e:
-                    logging.exception(e)
-
-            elif specs["doc_display_style"] == "ordinal":
-                try:
-                    return num2words(variables[variable], lang="pt_BR", to='ordinal')
-                except Exception as e:
-                    logging.exception(e)
-
-            elif specs["doc_display_style"] == "plain":
-                try:
-                    return variables[variable]
-                except Exception as e:
-                    logging.exception(e)
+            print("xxxxx")
+            return NumberFormatter(variables[variable], specs.get("doc_display_style", None))
 
         elif variable_type == "percentage":
             if specs["doc_display_style"] == "extended":

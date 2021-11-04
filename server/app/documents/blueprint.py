@@ -68,7 +68,7 @@ from .controllers import (
 )
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
-from .variables import specify_variables
+from app.documents.formatters.variables_formatter import format_variables
 
 documents_bp = Blueprint("documents", __name__)
 
@@ -619,7 +619,7 @@ def modify_document(current_user, document_id):
 
     spec_variables = copy.deepcopy(variables)
     try:
-        specify_variables(spec_variables, document.document_template_id)
+        format_variables(spec_variables, document.document_template_id)
     except Exception as e:
         logging.exception(e)
         error_msg = "Variable specification is incorrect"
