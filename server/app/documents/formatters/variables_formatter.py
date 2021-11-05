@@ -17,12 +17,10 @@ month_dictionary = {1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'M
 
 
 def format_variables(variables, document_template_id):
-    print(variables)
     # TODO: Calling the database twice
     variables_specification = DocumentTemplate.query.get(
         document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
-    print(variables_specification)
 
     def format_variable(specs, variable, variables, struct_name):
         variable_type = specs["type"]
@@ -52,7 +50,6 @@ def format_variables(variables, document_template_id):
                     logging.exception(e)
 
         elif variable_type == "number":
-            print("xxxxx")
             return NumberFormatter(variables[variable], specs.get("doc_display_style", None))
 
         elif variable_type == "percentage":
