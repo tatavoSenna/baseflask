@@ -7,7 +7,7 @@ import json
 import logging
 from flask import Markup
 
-
+from num2words import num2words
 from babel.numbers import format_currency
 from app.documents.formatters.number_formatter import NumberFormatter
 
