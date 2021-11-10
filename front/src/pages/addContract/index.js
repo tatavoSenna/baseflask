@@ -7,45 +7,59 @@ import FormFactory from '~/components/formFactory'
 
 import { listVisible } from '~/states/modules/question'
 
-const getCurrentStepAndComponent = (pageFieldsData, isLastPage, pageNumber) => (
+const getCurrentStepAndComponent = (
+	pageFieldsData,
+	isLastPage,
+	formStepsCount,
+	currentFormStep
+) => (
 	<FormFactory
 		pageFieldsData={pageFieldsData}
 		isLastPage={isLastPage}
-		pageNumber={pageNumber}
+		formStepsCount={formStepsCount}
 		url="/documents/new"
+		currentFormStep={currentFormStep}
 	/>
 )
 
 function AddContract() {
+	const dispatch = useDispatch()
+
+	// Get the current step number
 	const { current } = useHistory().location.state
 	let values = { current: 0 }
 	if (current !== undefined) {
 		values.current = current
 	}
-	const currentPage = parseInt(values.current)
-	const dispatch = useDispatch()
+	const currentFormStep = parseInt(values.current)
+
+	// Store the current form step on this component state
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
+
 	const { data: questions } = useSelector(({ question }) => question)
 	const { loadingAnswer } = useSelector(({ answer }) => answer)
 
+	// Calculate the visible items of the form
 	useEffect(() => {
 		if (Object.keys(questions).length > 0) {
 			dispatch(listVisible({ questions }))
 		}
 	}, [dispatch, questions])
 
+	// Build the current step form component
 	useEffect(() => {
-		const pageFieldsData = questions ? questions[currentPage] : null
-		const isLastPage = currentPage === questions.length - 1
-		const pageNumber = questions.length
+		const pageFieldsData = questions ? questions[currentFormStep] : null
+		const isLastPage = currentFormStep === questions.length - 1
+		const formStepsCount = questions.length
 		const pageFormComponent = getCurrentStepAndComponent(
 			pageFieldsData,
 			isLastPage,
-			pageNumber
+			formStepsCount,
+			currentFormStep
 		)
 
 		setStepComponent(pageFormComponent)
-	}, [currentPage, questions])
+	}, [currentFormStep, questions])
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>

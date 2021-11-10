@@ -17,15 +17,17 @@ const getCurrentStepAndComponent = (
 	isLastPage,
 	pageNumber,
 	token,
-	initialValues
+	initialValues,
+	currentFormStep
 ) => (
 	<FormFactory
 		pageFieldsData={pageFieldsData}
 		isLastPage={isLastPage}
-		pageNumber={pageNumber}
+		formStepsCount={pageNumber}
 		url={`/documentcreate/${token}`}
 		token={token}
 		initialValues={initialValues}
+		currentFormStep={currentFormStep}
 	/>
 )
 
@@ -71,7 +73,7 @@ const AddContractExternal = () => {
 	if (state && state.current) {
 		values.current = state.current
 	}
-	const currentPage = parseInt(values.current)
+	const currentFormStep = parseInt(values.current)
 
 	useEffect(() => {
 		if (Object.keys(questions).length > 0) {
@@ -82,8 +84,8 @@ const AddContractExternal = () => {
 	const [stepComponent, setStepComponent] = useState(<FormFactory />)
 
 	useEffect(() => {
-		const pageFieldsData = questions ? questions[currentPage] : null
-		const isLastPage = currentPage === questions.length - 1
+		const pageFieldsData = questions ? questions[currentFormStep] : null
+		const isLastPage = currentFormStep === questions.length - 1
 		const pageNumber = questions.length
 
 		const initialValues = {}
@@ -102,11 +104,12 @@ const AddContractExternal = () => {
 			isLastPage,
 			pageNumber,
 			token,
-			initialValues
+			initialValues,
+			currentFormStep
 		)
 
 		setStepComponent(pageFormComponent)
-	}, [currentPage, questions, token, filledVars])
+	}, [currentFormStep, questions, token, filledVars])
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>

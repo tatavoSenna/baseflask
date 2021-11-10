@@ -1,6 +1,5 @@
 import React from 'react'
 import { array, number } from 'prop-types'
-import { useHistory } from 'react-router-dom'
 
 import RadioField from '~/components/radioField'
 import CnpjField from '~/components/cnpjField'
@@ -36,17 +35,11 @@ import './styles.css'
 function InputFactory({
 	data: pageFieldsData,
 	visible,
-	pageIndex,
 	disabled,
 	initialValues,
 	form,
+	currentFormStep,
 }) {
-	const state = useHistory().location.state
-	let values = { current: 0 }
-	if (state && state.values) {
-		values = state.values
-	}
-	const currentPage = values.current
 	const dispatch = useDispatch()
 	const children = []
 
@@ -111,16 +104,40 @@ function InputFactory({
 					comparison[index] = compareCondition(condition, value)
 				})
 				if (comparison.every((i) => i === true)) {
-					dispatch(updateVisible({ value: true, pageIndex, fieldIndex }))
+					dispatch(
+						updateVisible({
+							value: true,
+							pageIndex: currentFormStep,
+							fieldIndex,
+						})
+					)
 				} else {
-					dispatch(updateVisible({ value: false, pageIndex, fieldIndex }))
+					dispatch(
+						updateVisible({
+							value: false,
+							pageIndex: currentFormStep,
+							fieldIndex,
+						})
+					)
 				}
 			} else if (field.condition && field.condition.variable === variableName) {
 				comparison = compareCondition(field.condition, input)
 				if (comparison) {
-					dispatch(updateVisible({ value: true, pageIndex, fieldIndex }))
+					dispatch(
+						updateVisible({
+							value: true,
+							pageIndex: currentFormStep,
+							fieldIndex,
+						})
+					)
 				} else {
-					dispatch(updateVisible({ value: false, pageIndex, fieldIndex }))
+					dispatch(
+						updateVisible({
+							value: false,
+							pageIndex: currentFormStep,
+							fieldIndex,
+						})
+					)
 				}
 			}
 		})
@@ -407,7 +424,7 @@ function InputFactory({
 				children.push(
 					<PersonField
 						key={i}
-						pageIndex={currentPage}
+						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
@@ -418,7 +435,7 @@ function InputFactory({
 				children.push(
 					<StructuredList
 						key={i}
-						pageIndex={currentPage}
+						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
@@ -429,7 +446,7 @@ function InputFactory({
 				children.push(
 					<StructuredCheckbox
 						key={i}
-						pageIndex={currentPage}
+						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
@@ -468,7 +485,7 @@ function InputFactory({
 InputFactory.propTypes = {
 	data: array.isRequired,
 	visible: array,
-	pageIndex: number,
+	currentFormStep: number,
 }
 
 export default InputFactory
