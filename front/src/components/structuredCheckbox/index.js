@@ -73,9 +73,9 @@ const StructuredCheckbox = ({
 										initialValues={
 											option.checked && field.type !== 'separator'
 												? {
-													[field.variable.name]:
-														option['struct_values'][field.variable.name],
-												}
+														[field.variable.name]:
+															option['struct_values'][field.variable.name],
+												  }
 												: ''
 										}
 									/>

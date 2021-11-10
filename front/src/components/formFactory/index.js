@@ -26,26 +26,22 @@ const layout = {
 const FormFactory = ({
 	pageFieldsData,
 	isLastPage,
-	pageNumber,
+	formStepsCount,
 	url,
 	token,
 	initialValues,
+	currentFormStep,
 }) => {
-	const state = useHistory().location.state
-	let values = { current: 0 }
-	if (state && state.current) {
-		values.current = state.current
-	}
+	const dispatch = useDispatch()
+
 	const { visible } = useSelector(({ question }) => question)
 
-	const currentPage = parseInt(values.current)
-	const dispatch = useDispatch()
 	const history = useHistory()
 	const [form] = Form.useForm()
-	const lastPage = pageNumber
+	const lastPage = formStepsCount
 
 	const handleBack = () => {
-		const previousPage = currentPage - 1
+		const previousPage = currentFormStep - 1
 		history.push({
 			pathname: url,
 			state: { current: previousPage },
@@ -58,10 +54,10 @@ const FormFactory = ({
 
 	const onSubmit = (data) => {
 		dispatch(
-			appendAnswer({ data, pageFieldsData, visible: visible[currentPage] })
+			appendAnswer({ data, pageFieldsData, visible: visible[currentFormStep] })
 		)
 		if (!isLastPage) {
-			const nextPage = currentPage + 1
+			const nextPage = currentFormStep + 1
 			return history.push({
 				pathname: url,
 				state: { current: nextPage },
@@ -89,10 +85,10 @@ const FormFactory = ({
 				{pageFieldsData && pageFieldsData.fields.length > 0 && (
 					<InputFactory
 						data={pageFieldsData.fields}
-						visible={visible[currentPage]}
-						pageIndex={currentPage}
+						visible={visible[currentFormStep]}
 						form={form}
 						initialValues={initialValues}
+						currentFormStep={currentFormStep}
 					/>
 				)}
 				<div
@@ -127,7 +123,7 @@ const FormFactory = ({
 							</Form.Item>
 
 							<Form.Item>
-								{true && currentPage > 0 && (
+								{true && currentFormStep > 0 && (
 									<Button
 										type="default"
 										htmlType="button"
@@ -139,7 +135,7 @@ const FormFactory = ({
 							</Form.Item>
 							{lastPage > 1 && (
 								<Typography className={styles.text}>
-									{currentPage + 1} de {lastPage}
+									{currentFormStep + 1} de {lastPage}
 								</Typography>
 							)}
 							<Form.Item>
@@ -163,10 +159,11 @@ export default FormFactory
 FormFactory.propTypes = {
 	pageFieldsData: object,
 	isLastPage: bool,
-	pageNumber: number,
+	formStepsCount: number,
 	url: string,
 	token: string,
 	initialValues: object,
+	currentFormStep: number,
 }
 FormFactory.defaultProps = {
 	content: [],
