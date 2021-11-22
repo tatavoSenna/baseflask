@@ -102,17 +102,17 @@ export const getColumns = (
 		key: 'action',
 		render: (text, row) => (
 			<Space size="middle">
-				{is_admin && !row.is_folder ? (
+				{!row.is_folder ? (
 					<Delete
 						title="Deseja excluir esse documento?"
 						handle={() => handleDeleteContract(row)}
 					/>
-				) : is_admin ? (
+				) : (
 					<Delete
 						title="Deseja excluir essa pasta?"
 						handle={() => handleDeleteContract(row)}
 					/>
-				) : null}
+				)}
 				<Tooltip title={'Mover para outra pasta'}>
 					<Button
 						icon={
