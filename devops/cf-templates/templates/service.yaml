@@ -65,6 +65,9 @@ Parameters:
   ConvertApiSecretKey:
     Type: String
 
+  D4SignApiURL:
+    Type: String
+
 Conditions:
   Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
 
@@ -210,6 +213,10 @@ Resources:
             Value: !Ref SendGridApiKey
           - Name: SNS_NEWDOCUMENT_ARN
             Value: !ImportValue SNSNewDocumentARN
+          - Name: D4SIGN_API_URL
+            Value: !Ref D4SignApiURL
+          - Name: D4SIGN_API_DOCUMENT_WEBHOOK_URL
+            Value: !Sub 'https://${ApiDomainName}/d4sign/document-webhook'
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000

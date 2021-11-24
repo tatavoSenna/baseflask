@@ -18,6 +18,7 @@ aws cloudformation update-stack \
         ParameterKey=AppCertificate,UsePreviousValue=true \
         ParameterKey=FlaskSecretKey,UsePreviousValue=true \
         ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
-        ParameterKey=SendGridApiKey,ParameterValue=UsePreviousValue=true \
+        ParameterKey=SendGridApiKey,UsePreviousValue=true \
+        ParameterKey=D4SignApiURL,UsePreviousValue=true \
     --profile \
         lawing-dev

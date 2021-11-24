@@ -8,16 +8,17 @@ aws cloudformation update-stack \
     --parameter \
         ParameterKey=DBUser,UsePreviousValue=true \
         ParameterKey=DBPassword,UsePreviousValue=true \
-        ParameterKey=DBName,ParameterValue=lawing \
+        ParameterKey=DBName,UsePreviousValue=true \
         ParameterKey=GitHubToken,UsePreviousValue=true \
         ParameterKey=AppDomainName,UsePreviousValue=true \
         ParameterKey=ApiDomainName,UsePreviousValue=true \
         ParameterKey=TemplateBucket,UsePreviousValue=true \
-        ParameterKey=GitHubBranch,ParameterValue=master \
+        ParameterKey=GitHubBranch,UsePreviousValue=true \
         ParameterKey=ApiLBCertificate,UsePreviousValue=true \
         ParameterKey=AppCertificate,UsePreviousValue=true \
         ParameterKey=FlaskSecretKey,UsePreviousValue=true \
         ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
-        ParameterKey=SendGridApiKey,ParameterValue=UsePreviousValue=true \
+        ParameterKey=SendGridApiKey,UsePreviousValue=true \
+        ParameterKey=D4SignApiURL,UsePreviousValue=true \
     --profile \
         lawing-prod

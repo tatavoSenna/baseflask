@@ -31,6 +31,9 @@ class Config(object):
     AWS_S3_COMPANY_ROOT = "company"
     AWS_S3_SIGNED_DOCUMENTS_ROOT = "signed_documents"
     SNS_NEWDOCUMENT_ARN = os.environ.get("SNS_NEWDOCUMENT_ARN")
+    D4SIGN_API_DOCUMENT_WEBHOOK_URL = os.environ.get("D4SIGN_API_DOCUMENT_WEBHOOK_URL")
+    D4SIGN_API_URL = os.environ.get("D4SIGN_API_URL")
+
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20
 
