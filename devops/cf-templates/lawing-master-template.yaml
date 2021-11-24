@@ -115,6 +115,11 @@ Parameters:
     NoEcho: true
     Description: The Send Grid api secret key.
 
+  D4SignApiURL:
+    Type: String
+    Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1 or 
+  
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterLabels:
@@ -263,6 +268,7 @@ Resources:
         FlaskSecretKey: !Ref FlaskSecretKey
         ConvertApiSecretKey: !Ref ConvertApiSecretKey
         SendGridApiKey: !Ref SendGridApiKey
+        D4SignApiURL: !Ref D4SignApiURL
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
