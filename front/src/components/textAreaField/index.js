@@ -11,7 +11,7 @@ const TextAreaField = ({
 	first,
 	disabled,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info, list, placeholder } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -37,7 +37,7 @@ const TextAreaField = ({
 			<TextArea
 				autoFocus={first}
 				autoSize={true}
-				placeholder=""
+				placeholder={placeholder}
 				disabled={disabled}
 			/>
 		</Form.Item>

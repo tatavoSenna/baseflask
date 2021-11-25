@@ -140,6 +140,16 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 					title: '',
 				}
 				break
+			case 'text':
+				newField.placeholder = ''
+				newField.variable.type = 'string'
+				newField.variable.doc_display_style = 'plain | sentence_case | uppercase | lowercase'
+				break
+			case 'text_area':
+				newField.placeholder = ''
+				newField.variable.type = 'string'
+				newField.variable.doc_display_style = 'plain | sentence_case | uppercase | lowercase'
+				break
 			default:
 				newField.variable.type = 'string'
 				newField.variable.doc_display_style =
