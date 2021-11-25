@@ -11,7 +11,7 @@ const TextField = ({
 	first,
 	disabled,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info, list, placeholder } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -33,7 +33,7 @@ const TextField = ({
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Input autoFocus={first} placeholder="" disabled={disabled} />
+			<Input autoFocus={first} placeholder={placeholder} disabled={disabled} />
 		</Form.Item>
 	)
 }
