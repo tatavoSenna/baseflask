@@ -131,15 +131,20 @@ const Contracts = () => {
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent }))
-
+	
+		
 	const handleSearch = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent }))
-
+	
 	const handleFolderSelect = (folder) => {
 		dispatch(listContract({ parent: folder.id }))
 		dispatch(setChooseFolder(folder))
 	}
+	
+	const sortTable = (parameter, sortingOrder) => 
+		dispatch(listContract({ order_by: parameter, order: sortingOrder }))
 
+	
 	const handleInitialFolder = () => {
 		dispatch(listContract())
 		dispatch(setInitialFolder())
@@ -255,7 +260,8 @@ const Contracts = () => {
 						handleDeleteContract,
 						handleFolderSelect,
 						is_admin,
-						setMoveNode
+						setMoveNode,
+						sortTable
 					)}
 					dataSource={contracts}
 					pages={pages}
@@ -272,6 +278,7 @@ const Contracts = () => {
 							onClick: handleShowModalFolder,
 						},
 					]}
+					sortTable={sortTable}
 				/>
 			</Layout>
 		</Layout>

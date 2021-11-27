@@ -103,7 +103,7 @@ def get_document_list(current_user):
         type = request.args.get("type", None)
 
         order_by = str(request.args.get("order_by", "creation_date"))
-        order = str(request.args.get("order", "desc"))
+        order = str(request.args.get("order", "descend"))
     except:
         abort(400, "invalid parameters")
 
@@ -128,8 +128,8 @@ def get_document_list(current_user):
             "username": User.name
         }
         order_dict = {
-            "asc": asc(order_by_dict[order_by]),
-            "desc": desc(order_by_dict[order_by])
+            "ascend": asc(order_by_dict[order_by]),
+            "descend": desc(order_by_dict[order_by])
         }
         
         if order_by == "template":

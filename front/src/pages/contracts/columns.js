@@ -3,13 +3,15 @@ import { Tag, Button, Space, Tooltip } from 'antd'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
+import moment from 'moment'
 
 export const getColumns = (
 	handleToGo,
 	handleDeleteContract,
 	handleFolderSelect,
 	is_admin,
-	setMoveNode
+	setMoveNode,
+	sortTable
 ) => [
 	{
 		title: 'Descrição',
@@ -27,21 +29,67 @@ export const getColumns = (
 				</Button>
 			</Space>
 		),
+		sorter: true,
+		onHeaderCell: column => {
+			return {
+				onClick: () => {
+					sortTable('title', 'ascend')
+				}
+			};
+		}
 	},
 	{
 		title: 'Template',
 		dataIndex: 'template_name',
 		key: 'template_name',
+		sorter: true,
+		onHeaderCell: column => {
+			return {
+				onClick: () => {
+					sortTable('template', 'ascend')
+				}
+			};
+		}
 	},
 	{
-		title: 'Criação',
+		title: 'Criado por',
 		dataIndex: 'author',
 		key: 'author',
+		sorter: true,
+		onHeaderCell: column => {
+			return {
+				onClick: () => {
+					sortTable('username', 'ascend')
+				}
+			};
+		}
 	},
 	{
-		title: 'Data',
+		title: 'Criado em',
 		dataIndex: 'createdAt',
 		key: 'createdAt',
+		sorter: true,
+		onHeaderCell: column => {
+			return {
+				onClick: () => {
+					sortTable('creation_date', 'ascend')
+				}
+			};
+		}
+	},
+	{
+		title: 'Prazo',
+		dataIndex: 'dueDate',
+		key: 'dueDate',
+		sorter: true,
+		onHeaderCell: column => {
+			var cont = 0
+			return {
+				onClick: () => {
+					sortTable('due_date', 'ascend')
+				}
+			};
+		}
 	},
 	{
 		title: 'Status',
@@ -95,6 +143,14 @@ export const getColumns = (
 					return text
 			}
 		},
+		sorter: true,
+		onHeaderCell: column => {
+			return {
+				onClick: () => {
+					sortTable('status', 'ascend')
+				}
+			};
+		}
 	},
 	{
 		title: '',
