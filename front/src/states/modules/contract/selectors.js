@@ -16,11 +16,11 @@ export const selectAllContracts = (payload) =>
 		title: contract.title,
 		template_name: contract.template_name,
 		clientId: contract.client_id,
-		author: (
+		author: contract.user.name, /*(
 			<>
 				<Text>{contract.user.name}</Text>
 			</>
-		),
+		),*/
 		authorEmail: contract.user.email,
 		documentId: contract.document_model_id,
 		status: contract.status,
@@ -28,5 +28,8 @@ export const selectAllContracts = (payload) =>
 		parent_id: contract.parent_id,
 		createdAt: contract.created_at
 			? moment(contract.created_at).format('DD/MM/YYYY')
+			: null,
+		dueDate: contract.due_date
+			? moment(contract.due_date).format('DD/MM/YYYY')
 			: null,
 	}))

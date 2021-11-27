@@ -27,10 +27,15 @@ export default function* rootSaga() {
 }
 
 function* loginSaga({ payload = {} }) {
-	const { perPage = 10, page = 1, search = '', parent } = payload
+	const { perPage = 10, page = 1, search = '', parent, order_by, order } = payload
 	let url = `/documents/?per_page=${perPage}&page=${page}&search=${search}`
 	if (parent) {
 		url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&folder=${parent}`
+	}
+	if(order_by)
+	{
+		console.log(order_by, order)
+		url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&order_by=${order_by}&order${order}`
 	}
 	try {
 		const { data } = yield call(api.get, url)
