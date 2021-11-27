@@ -12,6 +12,7 @@ import { listModel } from '~/states/modules/model'
 import {
 	listContract,
 	deleteContract,
+	deleteFolder,
 	createLink,
 	setShowModal,
 	setShowLinkModal,
@@ -128,6 +129,9 @@ const Contracts = () => {
 
 	const handleDeleteContract = (record) =>
 		dispatch(deleteContract({ id: record.id, pages }))
+
+	const handleDeleteFolder = (record) =>
+		dispatch(deleteFolder({ id: record.id, pages }))
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent }))
@@ -258,6 +262,7 @@ const Contracts = () => {
 					columns={getColumns(
 						handleToGo,
 						handleDeleteContract,
+						handleDeleteFolder,
 						handleFolderSelect,
 						is_admin,
 						setMoveNode,
