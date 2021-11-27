@@ -82,6 +82,26 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		deleteFolder: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		deleteFolderSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllContracts(payload.items),
+				pages: {
+					page: payload.page,
+					per_page: payload.per_page,
+					total: payload.total,
+				},
+				error: null,
+				loading: false,
+			}),
+		deleteFolderFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		viewContract: (state) => state,
 		setShowModal: (state, { payload }) =>
 			extend(state, {
@@ -102,6 +122,9 @@ export const {
 	deleteContract,
 	deleteContractSuccess,
 	deleteContractFailure,
+	deleteFolder,
+	deleteFolderSuccess,
+	deleteFolderFailure,
 	listContractSuccess,
 	listContractFailure,
 	viewContract,

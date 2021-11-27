@@ -7,6 +7,7 @@ import Delete from '~/components/deleteConfirm'
 export const getColumns = (
 	handleToGo,
 	handleDeleteContract,
+	handleDeleteFolder,
 	handleFolderSelect,
 	is_admin,
 	setMoveNode
@@ -110,7 +111,7 @@ export const getColumns = (
 				) : (
 					<Delete
 						title="Deseja excluir essa pasta?"
-						handle={() => handleDeleteContract(row)}
+						handle={() => handleDeleteFolder(row)}
 					/>
 				)}
 				<Tooltip title={'Mover para outra pasta'}>

@@ -16,6 +16,9 @@ import {
 	deleteContract,
 	deleteContractSuccess,
 	deleteContractFailure,
+	deleteFolder,
+	deleteFolderSuccess,
+	deleteFolderFailure,
 	viewContract,
 } from '.'
 
@@ -23,6 +26,7 @@ export default function* rootSaga() {
 	yield takeEvery(listContract, loginSaga)
 	yield takeEvery(createLink, createLinkSaga)
 	yield takeEvery(deleteContract, deleteContractSaga)
+	yield takeEvery(deleteFolder, deleteFolderSaga)
 	yield takeEvery(viewContract, viewSaga)
 }
 
@@ -93,6 +97,33 @@ function* deleteContractSaga({ payload = {} }) {
 		errorMessage({
 			content: 'Exclusão do documento falhou.',
 			updateKey: 'deleteContractSaga',
+		})
+	}
+}
+
+function* deleteFolderSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Excluindo pasta...',
+		updateKey: 'deleteFolderSaga',
+	})
+	const { id, pages } = payload
+	const { perPage = 10, page = 1, search = '' } = pages
+	try {
+		yield call(api.delete, `/documents/${id}`)
+		const { data } = yield call(
+			api.get,
+			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
+		)
+		yield put(deleteFolderSuccess(data))
+		successMessage({
+			content: 'Pasta excluída com sucesso.',
+			updateKey: 'deleteFolderSaga',
+		})
+	} catch (error) {
+		yield put(deleteFolderFailure(error))
+		errorMessage({
+			content: 'Pasta não está vazia. Apague o conteúdo primeiro',
+			updateKey: 'deleteFolderSaga',
 		})
 	}
 }
