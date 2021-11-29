@@ -4,6 +4,7 @@ import { Form, Select } from 'antd'
 import { getCityField } from '~/states/modules/cityField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
+import { filterText } from '~/services/filter'
 
 const CityField = ({
 	pageFieldsData,
@@ -43,7 +44,7 @@ const CityField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select showSearch={true} disabled={disabled}>
+			<Select showSearch={true} disabled={disabled} filterOption={filterText}>
 				{cityName.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}

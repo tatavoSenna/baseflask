@@ -4,6 +4,7 @@ import { Form, Select } from 'antd'
 import { getCnaeField } from '~/states/modules/cnaeField'
 import { useDispatch, useSelector } from 'react-redux'
 import InfoField from '~/components/infoField'
+import { filterText } from '~/services/filter'
 
 const CnaeField = ({
 	pageFieldsData,
@@ -45,7 +46,7 @@ const CnaeField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select showSearch={true} disabled={disabled}>
+			<Select showSearch={true} disabled={disabled} filterOption={filterText}>
 				{cnaeDescription.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}
