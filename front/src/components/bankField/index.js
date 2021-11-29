@@ -3,6 +3,7 @@ import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import bank from './bankName'
 import InfoField from '~/components/infoField'
+import { filterText } from '~/services/filter'
 
 const BankField = ({
 	pageFieldsData,
@@ -32,7 +33,7 @@ const BankField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select showSearch={true} disabled={disabled}>
+			<Select showSearch={true} disabled={disabled} filterOption={filterText}>
 				{bank.names.map((option, index) => (
 					<Select.Option key={index} value={option} onChange={onChange}>
 						{option}
