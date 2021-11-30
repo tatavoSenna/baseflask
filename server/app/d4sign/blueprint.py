@@ -16,6 +16,8 @@ from .controllers import (
     d4sign_document_webhook_controller,
 )
 
+from app.serializers.document_serializers import DocumentSerializer
+
 
 d4sign_bp = Blueprint('d4sign', __name__)
 
@@ -64,83 +66,6 @@ def d4sign_update_company_info(user):
     return response_payload, status_code
 
 
-@d4sign_bp.route('/upload-document/', methods=['POST'])
-@authenticated_user
-def d4sign_upload_document(user):
-    payload = request.json
-    
-    document_id = payload['document_id']
-    version_id = payload.get('version_id', '0')
-
-    if isinstance(version_id, int):
-        version_id = str(version_id)
-
-    control = d4sign_upload_document_controller(
-        user=user,
-        document_id=document_id,
-        version_id=version_id
-    )
-
-    status_code = control.pop('status_code')
-    response_payload = jsonify(control)
-
-    return response_payload, status_code
-
-
-@d4sign_bp.route('/register-document-webhook/', methods=['POST'])
-@authenticated_user
-def d4sign_register_document_webhook(user):
-    payload = request.json
-    
-    document_id = payload['document_id']
-
-    control = d4sign_register_document_webhook_controller(
-        user=user,
-        document_id=document_id
-    )
-
-    status_code = control.pop('status_code')
-    response_payload = jsonify(control)
-
-    return response_payload, status_code
-
-
-@d4sign_bp.route('/register-document-signers/', methods=['POST'])
-@authenticated_user
-def d4sign_register_document_signers(user):
-    payload = request.json
-    
-    document_id = payload['document_id']
-
-    control = d4sign_register_document_signers_controller(
-        user=user,
-        document_id=document_id
-    )
-
-    status_code = control.pop('status_code')
-    response_payload = jsonify(control)
-
-    return response_payload, status_code
-
-
-@d4sign_bp.route('/send-document-for-signing/', methods=['POST'])
-@authenticated_user
-def d4sign_send_document_for_signing(user):
-    payload = request.json
-    
-    document_id = payload['document_id']
-
-    control = d4sign_send_document_for_signing_controller(
-        user=user,
-        document_id=document_id
-    )
-
-    status_code = control.pop('status_code')
-    response_payload = jsonify(control)
-
-    return response_payload, status_code
-
-
 @d4sign_bp.route('/upload-and-send-document-for-signing/', methods=['POST'])
 @authenticated_user
 def d4sign_upload_and_send_document_for_signing(user):
@@ -148,15 +73,18 @@ def d4sign_upload_and_send_document_for_signing(user):
     
     document_id = payload['document_id']
 
-    control = d4sign_upload_and_send_document_for_signing_controller(
+    document, control = d4sign_upload_and_send_document_for_signing_controller(
         user=user,
         document_id=document_id
     )
 
-    status_code = control.pop('status_code')
-    response_payload = jsonify(control)
+    if control['status_code'] not in [200, 202]:
+        status_code = control.pop('status_code')
+        response_payload = jsonify(control)
 
-    return response_payload, status_code
+        return response_payload, status_code
+    
+    return jsonify(DocumentSerializer().dump(document))
 
 
 @d4sign_bp.route('/document-webhook/<hmac_sha256>/', methods=['POST'])
