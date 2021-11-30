@@ -161,7 +161,7 @@ def d4sign_update_company_info_controller(
 
 
 def d4sign_upload_document_controller(user,
-                                      document_id: int,
+                                      document_instance,
                                       version_id: str = '0') -> dict:
     """
     Controls D4Sign document uploading.
@@ -169,60 +169,41 @@ def d4sign_upload_document_controller(user,
     """
     control = {'status_code': 200, 'message': '', 'data': {}}
 
-    document = Document.query.get(document_id)
-    if document is None:
-        control['message'] = 'Document not found'
-        control['status_code'] = 404
-        return control
-
-    if document.company != user.company:
-        control['message'] = 'Document does not belong to this user\'s company'
-        control['status_code'] = 403
-        return control
-
-    if document.company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this document '
-            'are not provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
-
-    if document.d4sign_document_uuid is not None:
+    if document_instance.d4sign_document_uuid is not None:
         control['message'] = 'Document already uploaded'
         control['status_code'] = 202
         return control
 
     remote_document = RemoteDocument()
     
-    ext = document.text_type.replace('.', '')
+    ext = document_instance.text_type.replace('.', '')
     if ext == 'docx':
         document_file = remote_document.download_docx_from_documents(
-            document=document,
+            document=document_instance,
             version_id=version_id
         )
     elif ext == 'pdf':
         document_file = remote_document.download_pdf_from_documents(
-            document=document,
+            document=document_instance,
             version_id=version_id
         )  # TODO: implement
     else:
         document_file = remote_document.download_text_from_documents(
-            document=document,
+            document=document_instance,
             version_id=version_id
         )
 
-    d4sign_api = D4SignAPI(company=document.company)
+    d4sign_api = D4SignAPI(company=document_instance.company)
     d4sign_api_response_payload = d4sign_api.upload_document_file(
         file=document_file,
-        filename=document.title,
-        safe_name=document.company.d4sign_safe_name,
+        filename=document_instance.title,
+        safe_name=document_instance.company.d4sign_safe_name,
         ext=ext
     )
 
     d4sign_document_uuid = d4sign_api_response_payload['uuid']
-    document.d4sign_document_uuid = d4sign_document_uuid
-    db.session.add(document)
+    document_instance.d4sign_document_uuid = d4sign_document_uuid
+    db.session.add(document_instance)
     db.session.commit()
 
     control['message'] = 'Document successfully uploaded'
@@ -232,38 +213,19 @@ def d4sign_upload_document_controller(user,
 
 
 def d4sign_register_document_webhook_controller(user,
-                                                document_id: int) -> dict:
+                                                document_instance) -> dict:
     """
     Controls D4Sign document webhook registering.
     docs: https://docapi.d4sign.com.br/pt-br/v1/webhook-register
     """
     control = {'status_code': 200, 'message': '', 'data': {}}
 
-    document = Document.query.get(document_id)
-    if document is None:
-        control['message'] = 'Document not found'
-        control['status_code'] = 404
-        return control
-
-    if document.company != user.company:
-        control['message'] = 'Document does not belong to this user\'s company'
-        control['status_code'] = 403
-        return control
-
-    if document.company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this document '
-            'are not provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
-
-    if (d4sign_document_uuid := document.d4sign_document_uuid) is None:
+    if (d4sign_document_uuid := document_instance.d4sign_document_uuid) is None:
         control['message'] = 'Document has not been uploaded to D4Sign yet'
         control['status_code'] = 403
         return control
 
-    d4sign_api = D4SignAPI(company=document.company)
+    d4sign_api = D4SignAPI(company=document_instance.company)
     d4sign_api_response_payload = \
         d4sign_api.register_document_webhook(document_uuid=d4sign_document_uuid)
     
@@ -277,51 +239,32 @@ def d4sign_register_document_webhook_controller(user,
 
 
 def d4sign_register_document_signers_controller(user,
-                                                document_id: int) -> dict:
+                                                document_instance) -> dict:
     """
     Controls D4Sign document signers registering.
     docs: https://docapi.d4sign.com.br/pt-br/v1/api/endpoints-post
     """
     control = {'status_code': 200, 'message': '', 'data': {}}
-
-    document = Document.query.get(document_id)
-    if document is None:
-        control['message'] = 'Document not found'
-        control['status_code'] = 404
-        return control
-
-    if document.company != user.company:
-        control['message'] = 'Document does not belong to this user\'s company'
-        control['status_code'] = 403
-        return control
-
-    if document.company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this document '
-            'are not provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
     
-    if document.d4sign_document_uuid is None:
+    if document_instance.d4sign_document_uuid is None:
         control['message'] = 'Document has not been uploaded to D4Sign yet'
         control['status_code'] = 403
         return control
 
-    d4sign_api = D4SignAPI(company=document.company)
+    d4sign_api = D4SignAPI(company=document_instance.company)
 
     registered_emails = []
     signers_modified = False
     
-    for signer in document.signers:
+    for signer in document_instance.signers:
         if signer['status'] != '':
             continue
         for field in signer['fields']:
             if field['type'] == 'email':
-                signer_email = document.variables[field['variable']]
+                signer_email = document_instance.variables[field['variable']]
                 break
         d4sign_api_response_payload = d4sign_api.register_document_signer(
-            document_uuid=document.d4sign_document_uuid,
+            document_uuid=document_instance.d4sign_document_uuid,
             signer_email=signer_email
         )
         if d4sign_api_response_payload['message'][0]['success'] == '1':
@@ -330,8 +273,8 @@ def d4sign_register_document_signers_controller(user,
             signers_modified = True
 
     if signers_modified:
-        flag_modified(document, 'signers')
-        db.session.add(document)
+        flag_modified(document_instance, 'signers')
+        db.session.add(document_instance)
         db.session.commit()
 
     control['message'] = 'Successfully registered document signers'
@@ -341,48 +284,29 @@ def d4sign_register_document_signers_controller(user,
 
 
 def d4sign_send_document_for_signing_controller(user,
-                                                document_id: int) -> dict:
+                                                document_instance) -> dict:
     """
     Controls D4Sign document requests for signing.
     docs: https://docapi.d4sign.com.br/pt-br/v1/api/endpoints-post
     """
     control = {'status_code': 200, 'message': '', 'data': {}}
-
-    document = Document.query.get(document_id)
-    if document is None:
-        control['message'] = 'Document not found'
-        control['status_code'] = 404
-        return control
-
-    if document.company != user.company:
-        control['message'] = 'Document does not belong to this user\'s company'
-        control['status_code'] = 403
-        return control
-
-    if document.company.signatures_provider != 'd4sign':
-        control['message'] = (
-            'Signatures for this document '
-            'are not provided through D4Sign'
-        )
-        control['status_code'] = 451
-        return control
     
-    if document.d4sign_document_uuid is None:
+    if document_instance.d4sign_document_uuid is None:
         control['message'] = 'Document has not been uploaded to D4Sign yet'
         control['status_code'] = 403
         return control
 
-    d4sign_api = D4SignAPI(company=document.company)
+    d4sign_api = D4SignAPI(company=document_instance.company)
 
     sent_emails = []
     already_sent_emails = []
     not_registered_emails = []
     signers_modified = False
     
-    for signer in document.signers:
+    for signer in document_instance.signers:
         for field in signer['fields']:
             if field['type'] == 'email':
-                signer_email = document.variables[field['variable']]
+                signer_email = document_instance.variables[field['variable']]
                 break
         if signer['status'] in ['sent', 'Completed']:
             already_sent_emails.append(signer_email)
@@ -396,12 +320,12 @@ def d4sign_send_document_for_signing_controller(user,
         signers_modified = True
 
     if signers_modified:
-        document.sent = True
+        document_instance.sent = True
         d4sign_api.send_document_for_signing(
-            document_uuid=document.d4sign_document_uuid
+            document_uuid=document_instance.d4sign_document_uuid
         )
-        flag_modified(document, 'signers')
-        db.session.add(document)
+        flag_modified(document_instance, 'signers')
+        db.session.add(document_instance)
         db.session.commit()
 
     if not_registered_emails:
@@ -429,6 +353,28 @@ def d4sign_upload_and_send_document_for_signing_controller(user,
     Controls the full flow from uploading to sending
     a document for signing on the D4Sign API.
     """
+    control = {'status_code': 200, 'message': '', 'data': {}}
+
+    document_model_instance = Document.query.get(document_id)
+
+    if document_model_instance is None:
+        control['message'] = 'Document not found'
+        control['status_code'] = 404
+        return control
+
+    if document_model_instance.company != user.company:
+        control['message'] = 'Document does not belong to this user\'s company'
+        control['status_code'] = 403
+        return control
+
+    if document_model_instance.company.signatures_provider != 'd4sign':
+        control['message'] = (
+            'Signatures for this document '
+            'are not provided through D4Sign'
+        )
+        control['status_code'] = 451
+        return control
+
     controllers = [
         d4sign_upload_document_controller,
         d4sign_register_document_webhook_controller,
@@ -437,11 +383,13 @@ def d4sign_upload_and_send_document_for_signing_controller(user,
     ]
 
     for controller in controllers:
-        control = controller(user=user, document_id=document_id)
+        control = controller(user=user, document_instance=document_model_instance)
         if control['status_code'] not in [200, 202]:
-            break
+            return control
     
-    return control
+    updated_document_model_instance = Document.query.get(document_id)
+
+    return updated_document_model_instance, control
 
 
 def d4sign_document_webhook_controller(document,

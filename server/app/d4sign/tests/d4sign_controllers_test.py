@@ -174,43 +174,13 @@ def test_d4sign_update_company_info_controller_successfully_updated(user, compan
     
 
 # Test d4sign_upload_document_controller
-def test_d4sign_upload_document_controller_document_not_found(document):
-    document.d4sign_document_uuid = None
-    control = d4sign_upload_document_controller(
-        user=document.user,
-        document_id=document.id+1
-    )
-    assert control['status_code'] == 404
-    assert document.d4sign_document_uuid is None
-
-def test_d4sign_upload_document_controller_prohibited_user(document):
-    document.d4sign_document_uuid = None
-    other_user = factories.UserFactory()
-
-    control = d4sign_upload_document_controller(
-        user=other_user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 403
-    assert document.d4sign_document_uuid is None
-
-def test_d4sign_upload_document_controller_invalid_signatures_provider(document):
-    document.d4sign_document_uuid = None
-    document.company.signatures_provider = 'docusign'
-
-    control = d4sign_upload_document_controller(
-        user=document.user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 451
-    assert document.d4sign_document_uuid is None
 
 def test_d4sign_upload_document_controller_already_uploaded(document):
     original_d4sign_document_uuid = document.d4sign_document_uuid
 
     control = d4sign_upload_document_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 202
     assert document.d4sign_document_uuid == original_d4sign_document_uuid
@@ -227,44 +197,20 @@ def test_d4sign_upload_document_controller_successfully_uploaded(upload_document
 
     control = d4sign_upload_document_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 200
     assert document.d4sign_document_uuid == 'a1-b2-c3'
 
 
 # Test d4sign_register_document_webhook_controller
-def test_d4sign_register_document_webhook_controller_document_not_found(document):
-    control = d4sign_register_document_webhook_controller(
-        user=document.user,
-        document_id=document.id+1
-    )
-    assert control['status_code'] == 404
-
-def test_d4sign_register_document_webhook_controller_prohibited_user(document):
-    other_user = factories.UserFactory()
-
-    control = d4sign_register_document_webhook_controller(
-        user=other_user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 403
-
-def test_d4sign_register_document_webhook_controller_invalid_signatures_provider(document):
-    document.company.signatures_provider = 'docusign'
-
-    control = d4sign_register_document_webhook_controller(
-        user=document.user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 451
 
 def test_d4sign_register_document_webhook_controller_document_not_uploaded_yet(document):
     document.d4sign_document_uuid = None
 
     control = d4sign_register_document_webhook_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 403
     assert document.d4sign_document_uuid is None
@@ -279,7 +225,7 @@ def test_d4sign_register_document_webhook_controller_successfully_registered(reg
 
     control = d4sign_register_document_webhook_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 200
     assert control['data']['d4sign_document_uuid'] == 'a1-b2-c3'
@@ -287,37 +233,13 @@ def test_d4sign_register_document_webhook_controller_successfully_registered(reg
 
 
 # Test d4sign_register_document_signers_controller
-def test_d4sign_register_document_signers_controller_document_not_found(document):
-    control = d4sign_register_document_signers_controller(
-        user=document.user,
-        document_id=document.id+1
-    )
-    assert control['status_code'] == 404
-
-def test_d4sign_register_document_signers_controller_prohibited_user(document):
-    other_user = factories.UserFactory()
-
-    control = d4sign_register_document_signers_controller(
-        user=other_user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 403
-
-def test_d4sign_register_document_signers_controller_invalid_signatures_provider(document):
-    document.company.signatures_provider = 'docusign'
-
-    control = d4sign_register_document_signers_controller(
-        user=document.user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 451
 
 def test_d4sign_register_document_signers_controller_document_not_uploaded_yet(document):
     document.d4sign_document_uuid = None
 
     control = d4sign_register_document_signers_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 403
     assert document.d4sign_document_uuid is None
@@ -329,7 +251,7 @@ def test_d4sign_register_document_signers_controller_successfully_registered(reg
 
     control = d4sign_register_document_signers_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 200
     assert control['data']['registered_emails'] == ['0@mail.com', '1@mail.com']
@@ -339,37 +261,13 @@ def test_d4sign_register_document_signers_controller_successfully_registered(reg
 
 
 # Test d4sign_send_document_for_signing_controller
-def test_d4sign_send_document_for_signing_controller_document_not_found(document):
-    control = d4sign_send_document_for_signing_controller(
-        user=document.user,
-        document_id=document.id+1
-    )
-    assert control['status_code'] == 404
-
-def test_d4sign_send_document_for_signing_controller_prohibited_user(document):
-    other_user = factories.UserFactory()
-
-    control = d4sign_send_document_for_signing_controller(
-        user=other_user,
-        document_id=document.id,
-    )
-    assert control['status_code'] == 403
-
-def test_d4sign_send_document_for_signing_controller_invalid_signatures_provider(document):
-    document.company.signatures_provider = 'docusign'
-
-    control = d4sign_send_document_for_signing_controller(
-        user=document.user,
-        document_id=document.id
-    )
-    assert control['status_code'] == 451
 
 def test_d4sign_send_document_for_signing_controller_document_not_uploaded_yet(document):
     document.d4sign_document_uuid = None
 
     control = d4sign_send_document_for_signing_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 403
     assert document.d4sign_document_uuid is None
@@ -384,7 +282,7 @@ def test_d4sign_send_document_for_signing_controller_successfully_sent(send_docu
 
     control = d4sign_send_document_for_signing_controller(
         user=document.user,
-        document_id=document.id
+        document_instance=document
     )
     assert control['status_code'] == 200
     assert control['data']['sent_emails'] == ['0@mail.com', '1@mail.com']
@@ -414,17 +312,48 @@ def test_d4sign_upload_and_send_document_for_signing_controller(send_document_fo
     
     document.d4sign_document_uuid = None
     
-    control = d4sign_upload_and_send_document_for_signing_controller(
+    document_instance, control = d4sign_upload_and_send_document_for_signing_controller(
         user=document.user,
         document_id=document.id
     )
     assert control['status_code'] == 200
     assert control['data']['sent_emails'] == ['0@mail.com', '1@mail.com']
     assert document.d4sign_document_uuid is not None
-    assert document.sent
-    for signer in document.signers:
+    assert document_instance is not None
+    assert document_instance.sent
+    for signer in document_instance.signers:
         assert signer['status'] == 'sent'
 
+def test_d4sign_upload_and_send_document_for_signing_controller_document_not_found(document):
+    document.d4sign_document_uuid = None
+    control = d4sign_upload_and_send_document_for_signing_controller(
+        user=document.user,
+        document_id=document.id+1
+    )
+    assert control['status_code'] == 404
+    assert document.d4sign_document_uuid is None
+
+def test_d4sign_upload_and_send_document_for_signing_prohibited_user(document):
+    document.d4sign_document_uuid = None
+    other_user = factories.UserFactory()
+
+    control = d4sign_upload_and_send_document_for_signing_controller(
+        user=other_user,
+        document_id=document.id
+    )
+    assert control['status_code'] == 403
+    assert document.d4sign_document_uuid is None
+
+def test_d4sign_upload_and_send_document_for_signing_controller_invalid_signatures_provider(document):
+    document.d4sign_document_uuid = None
+    document.company.signatures_provider = 'docusign'
+
+    control = d4sign_upload_and_send_document_for_signing_controller(
+        user=document.user,
+        document_id=document.id
+    )
+    assert control['status_code'] == 451
+    assert document.d4sign_document_uuid is None
 
 # Test d4sign_document_webhook_controller
 def test_d4sign_document_webhook_controller_finished(document):
