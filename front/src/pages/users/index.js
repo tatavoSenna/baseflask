@@ -26,6 +26,7 @@ import {
 } from '~/states/modules/groups'
 import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
+import MainLayout from '~/components/mainLayout'
 
 function Users() {
 	const dispatch = useDispatch()
@@ -131,58 +132,60 @@ function Users() {
 	}
 
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<BreadCrumb parent="Usuários" current="Lista" />
-			</PageHeader>
+		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
-				<UserModal
-					handleCancel={handleCancel}
-					handleCreate={handleCreate}
-					handleNewUser={handleNewUser}
-					showModal={showModal}
-					newUser={newUser}
-					groups={groupList}
-				/>
-				<UserEditModal
-					handleCancel={handleCancelEdit}
-					handleUpdate={handleUpdate}
-					handleEditUser={handleEditUser}
-					showModal={showEditModal}
-					editUser={editUser}
-					groups={groupList}
-				/>
-				<GroupModal
-					handleCancel={handleGroupCancel}
-					handleCreate={handleGroupCreate}
-					handleNewGroup={handleNewGroup}
-					showModal={showGroupModal}
-					newGroup={newGroup}
-				/>
-				<DataTable
-					dataSource={userList}
-					columns={getColumns({
-						handleDelete,
-						loggedUsername,
-						handleEdit,
-						handleResendInvite,
-					})}
-					loading={loading}
-					pages={pages}
-					onChangePageNumber={getUsers}
-					onSearch={handleSearch}
-					onClickButton={handleShowModal}
-					textButton="+ Usuário "
-					placeholderNoData={!loading ? 'Nenhum usuário encontrado' : ''}
-					buttons={[
-						{
-							title: '+ Grupo',
-							onClick: handleShowGroupModal,
-						},
-					]}
-				/>
+				<PageHeader>
+					<BreadCrumb parent="Usuários" current="Lista" />
+				</PageHeader>
+				<Layout style={{ backgroundColor: '#fff' }}>
+					<UserModal
+						handleCancel={handleCancel}
+						handleCreate={handleCreate}
+						handleNewUser={handleNewUser}
+						showModal={showModal}
+						newUser={newUser}
+						groups={groupList}
+					/>
+					<UserEditModal
+						handleCancel={handleCancelEdit}
+						handleUpdate={handleUpdate}
+						handleEditUser={handleEditUser}
+						showModal={showEditModal}
+						editUser={editUser}
+						groups={groupList}
+					/>
+					<GroupModal
+						handleCancel={handleGroupCancel}
+						handleCreate={handleGroupCreate}
+						handleNewGroup={handleNewGroup}
+						showModal={showGroupModal}
+						newGroup={newGroup}
+					/>
+					<DataTable
+						dataSource={userList}
+						columns={getColumns({
+							handleDelete,
+							loggedUsername,
+							handleEdit,
+							handleResendInvite,
+						})}
+						loading={loading}
+						pages={pages}
+						onChangePageNumber={getUsers}
+						onSearch={handleSearch}
+						onClickButton={handleShowModal}
+						textButton="+ Usuário "
+						placeholderNoData={!loading ? 'Nenhum usuário encontrado' : ''}
+						buttons={[
+							{
+								title: '+ Grupo',
+								onClick: handleShowGroupModal,
+							},
+						]}
+					/>
+				</Layout>
 			</Layout>
-		</Layout>
+		</MainLayout>
 	)
 }
 

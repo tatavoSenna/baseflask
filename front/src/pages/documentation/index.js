@@ -3,6 +3,7 @@ import SwaggerUI from "swagger-ui-react"
 import "swagger-ui-react/swagger-ui.css"
 import swaggerDocs from "./swagger.json"
 import { Layout, PageHeader, Breadcrumb } from 'antd'
+import MainLayout from "~/components/mainLayout"
 
 
 function addHostAndToken(swaggerDocs) {
@@ -12,16 +13,18 @@ function addHostAndToken(swaggerDocs) {
 
 const Documentation = () => {
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<Breadcrumb>
-					<Breadcrumb.Item>
-						Documentação
-					</Breadcrumb.Item>
-				</Breadcrumb>
-			</PageHeader>
-			<SwaggerUI spec={addHostAndToken(swaggerDocs)} />
-		</Layout>
+		<MainLayout>
+			<Layout style={{ backgroundColor: '#fff' }}>
+				<PageHeader>
+					<Breadcrumb>
+						<Breadcrumb.Item>
+							Documentação
+						</Breadcrumb.Item>
+					</Breadcrumb>
+				</PageHeader>
+				<SwaggerUI spec={addHostAndToken(swaggerDocs)} />
+			</Layout>
+		</MainLayout>
 	)
 }
 

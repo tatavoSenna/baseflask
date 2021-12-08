@@ -16,6 +16,7 @@ import {
 	resetTemplateState,
 	editTemplateTitle,
 } from '../../states/modules/editTemplate'
+import MainLayout from '~/components/mainLayout'
 
 const Templates = () => {
 	const dispatch = useDispatch()
@@ -68,34 +69,36 @@ const Templates = () => {
 	}, [dispatch])
 
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<BreadCrumb parent="Templates" current="Lista" />
-			</PageHeader>
+		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
-				<TemplateModal
-					handleCancel={handleCancel}
-					handleCreate={handleCreate}
-					showModal={showModal}
-				/>
-				<DataTable
-					columns={getColumns(
-						handleToGo,
-						handlePublishTemplate,
-						handleDeleteTemplate,
-						is_admin
-					)}
-					dataSource={templates}
-					pages={pages}
-					onChangePageNumber={getTemplates}
-					onSearch={handleSearch}
-					onClickButton={handleShowModal}
-					textButton="Novo Template"
-					placeholderNoData={!loading ? 'Nenhum template encontrado' : ''}
-					loading={loading}
-				/>
+				<PageHeader>
+					<BreadCrumb parent="Templates" current="Lista" />
+				</PageHeader>
+				<Layout style={{ backgroundColor: '#fff' }}>
+					<TemplateModal
+						handleCancel={handleCancel}
+						handleCreate={handleCreate}
+						showModal={showModal}
+					/>
+					<DataTable
+						columns={getColumns(
+							handleToGo,
+							handlePublishTemplate,
+							handleDeleteTemplate,
+							is_admin
+						)}
+						dataSource={templates}
+						pages={pages}
+						onChangePageNumber={getTemplates}
+						onSearch={handleSearch}
+						onClickButton={handleShowModal}
+						textButton="Novo Template"
+						placeholderNoData={!loading ? 'Nenhum template encontrado' : ''}
+						loading={loading}
+					/>
+				</Layout>
 			</Layout>
-		</Layout>
+		</MainLayout>
 	)
 }
 

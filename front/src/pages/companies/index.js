@@ -13,6 +13,7 @@ import {
 } from '~/states/modules/companies'
 import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
+import MainLayout from '~/components/mainLayout'
 
 function Companies() {
 	const dispatch = useDispatch()
@@ -58,32 +59,34 @@ function Companies() {
 	const columns = getColumns(handleChangeUserCompany, company_id)
 
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<BreadCrumb parent="Empresas" current="Lista" />
-			</PageHeader>
+		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
-				<CompanyModal
-					handleCancel={handleCancel}
-					handleAdd={handleAdd}
-					handleNewCompany={handleNewCompany}
-					showModal={showModal}
-					newCompany={newCompany}
-				/>
+				<PageHeader>
+					<BreadCrumb parent="Empresas" current="Lista" />
+				</PageHeader>
+				<Layout style={{ backgroundColor: '#fff' }}>
+					<CompanyModal
+						handleCancel={handleCancel}
+						handleAdd={handleAdd}
+						handleNewCompany={handleNewCompany}
+						showModal={showModal}
+						newCompany={newCompany}
+					/>
 
-				<DataTable
-					dataSource={companyList}
-					columns={columns}
-					loading={loading}
-					pages={pages}
-					onChangePageNumber={getCompanies}
-					onSearch={handleSearch}
-					onClickButton={handleShowModal}
-					textButton="+ Empresa "
-					placeholderNoData={!loading ? 'Nenhuma empresa encontrada' : ''}
-				/>
+					<DataTable
+						dataSource={companyList}
+						columns={columns}
+						loading={loading}
+						pages={pages}
+						onChangePageNumber={getCompanies}
+						onSearch={handleSearch}
+						onClickButton={handleShowModal}
+						textButton="+ Empresa "
+						placeholderNoData={!loading ? 'Nenhuma empresa encontrada' : ''}
+					/>
+				</Layout>
 			</Layout>
-		</Layout>
+		</MainLayout>
 	)
 }
 
