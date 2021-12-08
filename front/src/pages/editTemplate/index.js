@@ -25,6 +25,7 @@ import Signers from './components/signers'
 import Text from './components/text'
 
 import styles from './index.module.scss'
+import MainLayout from '~/components/mainLayout'
 
 const EditTemplate = () => {
 	const { data, loading, docPosted } = useSelector(
@@ -193,119 +194,121 @@ const EditTemplate = () => {
 	}
 
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<BreadCrumb
-					parent="Templates"
-					current={
-						editTitle ? (
-							<>
-								<Input
-									style={{ maxWidth: '300px' }}
-									value={data.title}
-									onChange={(e) => handleEditTitle(e)}
+		<MainLayout>
+			<Layout style={{ backgroundColor: '#fff' }}>
+				<PageHeader>
+					<BreadCrumb
+						parent="Templates"
+						current={
+							editTitle ? (
+								<>
+									<Input
+										style={{ maxWidth: '300px' }}
+										value={data.title}
+										onChange={(e) => handleEditTitle(e)}
+									/>
+									<Button
+										onClick={() => setEditTitle(false)}
+										icon={<CheckOutlined style={{ fontSize: '18px' }} />}
+										style={{ border: 'none', marginLeft: '5px' }}
+									/>
+								</>
+							) : (
+								<>
+									{data.title}
+									<Button
+										onClick={() => setEditTitle(true)}
+										icon={<EditOutlined style={{ fontSize: '18px' }} />}
+										style={{ border: 'none', marginLeft: '5px' }}
+									/>
+								</>
+							)
+						}
+					/>
+				</PageHeader>
+				<Menu
+					onClick={handleNav}
+					selectedKeys={[current]}
+					mode="horizontal"
+					style={{ display: 'flex' }}>
+					<Menu.Item
+						key="form"
+						className={!inputsFilled.form ? styles.empty : undefined}
+						icon={<FormOutlined />}>
+						Formulário
+					</Menu.Item>
+					<Menu.Item
+						key="workflow"
+						className={!inputsFilled.workflow ? styles.empty : undefined}
+						icon={<NodeIndexOutlined />}>
+						Workflow
+					</Menu.Item>
+					<Menu.Item
+						key="text"
+						className={!inputsFilled.text ? styles.empty : undefined}
+						icon={<FileTextOutlined />}>
+						Texto
+					</Menu.Item>
+					<Menu.Item
+						key="signers"
+						className={!inputsFilled.signers ? styles.empty : undefined}
+						icon={<TeamOutlined />}>
+						Assinantes
+					</Menu.Item>
+				</Menu>
+				<Button
+					form="createTemplate"
+					key="button"
+					type="primary"
+					htmlType="submit"
+					className={styles.button}
+					disabled={!Object.values(inputsFilled).every(Boolean)}>
+					Enviar
+				</Button>
+				<Layout className={styles.content}>
+					{loading ? (
+						<Spin spinning={loading} className={styles.spin} />
+					) : (
+						<Form
+							id="createTemplate"
+							form={form}
+							layout="horizontal"
+							hideRequiredMark
+							onFinish={onSubmit}>
+							{current === 'form' && <TemplateForm data={data.form} />}
+							{current === 'workflow' && (
+								<Workflow
+									data={data.workflow}
+									inputsFilled={inputsFilled}
+									setInputsFilled={setInputsFilled}
 								/>
-								<Button
-									onClick={() => setEditTitle(false)}
-									icon={<CheckOutlined style={{ fontSize: '18px' }} />}
-									style={{ border: 'none', marginLeft: '5px' }}
+							)}
+							{current === 'text' && (
+								<Text
+									data={data.text}
+									files={files}
+									updateFile={postFiles}
+									checked={checked}
+									setChecked={setChecked}
+									setDownloadButton={setDownloadButton}
+									setInputsFilled={setInputsFilled}
+									inputsFilled={inputsFilled}
+									docPosted={docPosted}
+									removeDoc={removeDoc}
 								/>
-							</>
-						) : (
-							<>
-								{data.title}
-								<Button
-									onClick={() => setEditTitle(true)}
-									icon={<EditOutlined style={{ fontSize: '18px' }} />}
-									style={{ border: 'none', marginLeft: '5px' }}
+							)}
+							{current === 'signers' && (
+								<Signers
+									data={data.signers}
+									inputsFilled={inputsFilled}
+									setInputsFilled={setInputsFilled}
 								/>
-							</>
-						)
-					}
-				/>
-			</PageHeader>
-			<Menu
-				onClick={handleNav}
-				selectedKeys={[current]}
-				mode="horizontal"
-				style={{ display: 'flex' }}>
-				<Menu.Item
-					key="form"
-					className={!inputsFilled.form ? styles.empty : undefined}
-					icon={<FormOutlined />}>
-					Formulário
-				</Menu.Item>
-				<Menu.Item
-					key="workflow"
-					className={!inputsFilled.workflow ? styles.empty : undefined}
-					icon={<NodeIndexOutlined />}>
-					Workflow
-				</Menu.Item>
-				<Menu.Item
-					key="text"
-					className={!inputsFilled.text ? styles.empty : undefined}
-					icon={<FileTextOutlined />}>
-					Texto
-				</Menu.Item>
-				<Menu.Item
-					key="signers"
-					className={!inputsFilled.signers ? styles.empty : undefined}
-					icon={<TeamOutlined />}>
-					Assinantes
-				</Menu.Item>
-			</Menu>
-			<Button
-				form="createTemplate"
-				key="button"
-				type="primary"
-				htmlType="submit"
-				className={styles.button}
-				disabled={!Object.values(inputsFilled).every(Boolean)}>
-				Enviar
-			</Button>
-			<Layout className={styles.content}>
-				{loading ? (
-					<Spin spinning={loading} className={styles.spin} />
-				) : (
-					<Form
-						id="createTemplate"
-						form={form}
-						layout="horizontal"
-						hideRequiredMark
-						onFinish={onSubmit}>
-						{current === 'form' && <TemplateForm data={data.form} />}
-						{current === 'workflow' && (
-							<Workflow
-								data={data.workflow}
-								inputsFilled={inputsFilled}
-								setInputsFilled={setInputsFilled}
-							/>
-						)}
-						{current === 'text' && (
-							<Text
-								data={data.text}
-								files={files}
-								updateFile={postFiles}
-								checked={checked}
-								setChecked={setChecked}
-								setDownloadButton={setDownloadButton}
-								setInputsFilled={setInputsFilled}
-								inputsFilled={inputsFilled}
-								docPosted={docPosted}
-								removeDoc={removeDoc}
-							/>
-						)}
-						{current === 'signers' && (
-							<Signers
-								data={data.signers}
-								inputsFilled={inputsFilled}
-								setInputsFilled={setInputsFilled}
-							/>
-						)}
-					</Form>
-				)}
+							)}
+						</Form>
+					)}
+				</Layout>
 			</Layout>
-		</Layout>
+		</MainLayout>
 	)
 }
 

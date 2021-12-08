@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Hub } from 'aws-amplify'
 
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
@@ -13,11 +12,9 @@ import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
 import Companies from './pages/companies'
 import Documentation from './pages/documentation'
+import Home from './pages/home'
 
-import Wrapper from '~/components/wrapper'
-
-import { getUserProfile } from '~/states/modules/session'
-import { store } from '~/states/store'
+import AuthWrapper from '~/components/authWrapper'
 
 export const ROUTES = {
 	docusign: '/docusign-token',
@@ -35,31 +32,20 @@ export const ROUTES = {
 	documentation: '/docs',
 }
 
-Hub.listen('auth', (data) => {
-	switch (data.payload.event) {
-		case 'signIn':
-			store.dispatch(getUserProfile())
-			break
-		default:
-			break
-	}
-})
-
 function Routes() {
 	return (
 		<Router>
 			<Switch>
-				ƒ
 				<Route path={ROUTES.externalContract} component={AddContractExternal} />
 				<Route path={ROUTES.docusign} component={Docusign} />
-				<Wrapper>
+				<AuthWrapper>
+					<Route exact path={ROUTES.home} component={Home} />
 					<Route exact path={ROUTES.form} component={AddContract} />
-					<Route exact path={ROUTES.home} component={Contracts} />
 					<Route exact path={ROUTES.documents} component={Contracts} />
-					<Route exact path={ROUTES.users} component={Users} />
 					<Route exact path={ROUTES.templates} component={Templates} />
 					<Route exact path={ROUTES.newTemplate} component={EditTemplate} />
 					<Route exact path={ROUTES.editTemplate} component={EditTemplate} />
+					<Route exact path={ROUTES.users} component={Users} />
 					<Route exact path={ROUTES.documentation} component={Documentation} />
 					<Route
 						exact
@@ -73,7 +59,7 @@ function Routes() {
 						isPrivate
 					/>
 					<Route exact path={ROUTES.settings} component={Settings} />
-				</Wrapper>
+				</AuthWrapper>
 			</Switch>
 		</Router>
 	)

@@ -1,23 +1,61 @@
 import React from 'react'
-import { Layout } from 'antd'
-
-import BreadCrumb from '~/components/breadCrumb'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router'
+import { Layout, Typography, Spin } from 'antd'
+import { getUserProfile } from '~/states/modules/session'
+import MainLayout from '~/components/mainLayout'
 
 function Home() {
 	const { Content } = Layout
+	const { Title, Text } = Typography
 
+	const dispatch = useDispatch()
+	const history = useHistory()
+
+	dispatch(getUserProfile({ history }))
 	return (
-		<Layout style={{ padding: '0 24px 24px' }}>
-			<BreadCrumb current="Home" />
+		<Layout
+			style={{
+				display: 'flex',
+				flexDirection: 'row',
+				alignItems: 'center',
+				justifyContent: 'center',
+				height: '100%',
+			}}>
 			<Content
 				style={{
+					background: 'transparent',
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'center',
+					flex: 'none',
 					padding: 24,
 					margin: 0,
 					minHeight: 280,
-					background: '#fff',
+					width: '50%',
+					height: '50%',
 				}}>
-				Bem vindo a Lawing, a sua plataforma digital de gerenciamento de
-				documentos!
+				<Title
+					style={{
+						flex: 'none',
+						textAlign: 'center',
+					}}>
+					Bem vindo a Lawing!
+				</Title>
+				<Text
+					level={4}
+					style={{
+						flex: 'none',
+						textAlign: 'center',
+					}}>
+					por favor aguarde enquanto carregamos seus dados
+				</Text>
+				<Spin
+					style={{
+						padding: '60px',
+					}}
+				/>
 			</Content>
 		</Layout>
 	)

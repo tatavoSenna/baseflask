@@ -16,11 +16,11 @@ export const selectAllContracts = (payload) =>
 		title: contract.title,
 		template_name: contract.template_name,
 		clientId: contract.client_id,
-		author: contract.user.name, /*(
+		author: contract.user.name /*(
 			<>
 				<Text>{contract.user.name}</Text>
 			</>
-		),*/
+		),*/,
 		authorEmail: contract.user.email,
 		documentId: contract.document_model_id,
 		status: contract.status,

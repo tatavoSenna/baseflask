@@ -33,6 +33,7 @@ import {
 } from '~/states/modules/folder'
 
 import styles from './index.module.scss'
+import MainLayout from '~/components/mainLayout'
 
 const Contracts = () => {
 	const dispatch = useDispatch()
@@ -135,20 +136,18 @@ const Contracts = () => {
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent }))
-	
-		
+
 	const handleSearch = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent }))
-	
+
 	const handleFolderSelect = (folder) => {
 		dispatch(listContract({ parent: folder.id }))
 		dispatch(setChooseFolder(folder))
 	}
-	
-	const sortTable = (parameter, sortingOrder) => 
+
+	const sortTable = (parameter, sortingOrder) =>
 		dispatch(listContract({ order_by: parameter, order: sortingOrder }))
 
-	
 	const handleInitialFolder = () => {
 		dispatch(listContract())
 		dispatch(setInitialFolder())
@@ -207,86 +206,88 @@ const Contracts = () => {
 			  )
 	}, [dispatch, accessFolders])
 	return (
-		<Layout style={{ backgroundColor: '#fff' }}>
-			<PageHeader>
-				<Breadcrumb>
-					<Breadcrumb.Item
-						onClick={handleInitialFolder}
-						className={styles.breadcrumbs}>
-						Documentos
-					</Breadcrumb.Item>
-					{accessFolders.length ? listFolders : null}
-				</Breadcrumb>
-			</PageHeader>
+		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
-				{models.length > 0 && (
-					<ContractModal
-						handleCancel={handleCancel}
-						handleCreate={
-							accessFolders.length ? handleCreateInFolder : handleCreate
-						}
-						handleCreateLink={handleCreateLinkExternal}
-						showModal={showModal}
-						models={models}
-					/>
-				)}
-				<FolderModal
-					handleCancel={handleCancelFolder}
-					parent={
-						accessFolders.length
-							? accessFolders[accessFolders.length - 1].id
-							: null
-					}
-					handleNewFolder={handleCreateFolder}
-					handleUpdate={handleUpdate}
-					showModal={showFolderModal}
-					newFolder={newFolder}
-				/>
-				<MoveFolderModal
-					handleCancel={handleMoveFolderModal}
-					showModal={moveFolderModal}
-					handleMoveFolder={handleMoveFolder}
-					parent={
-						accessFolders.length
-							? accessFolders[accessFolders.length - 1].id
-							: null
-					}
-					chosenMoveRow={chosenMoveRow}
-				/>
-				<LinkModal
-					handleOk={handleCancelLinkModal}
-					showModal={showLinkModal}
-					link={link}
-				/>
-				<DataTable
-					columns={getColumns(
-						handleToGo,
-						handleDeleteContract,
-						handleDeleteFolder,
-						handleFolderSelect,
-						is_admin,
-						setMoveNode,
-						sortTable
+				<PageHeader>
+					<Breadcrumb>
+						<Breadcrumb.Item
+							onClick={handleInitialFolder}
+							className={styles.breadcrumbs}>
+							Documentos
+						</Breadcrumb.Item>
+						{accessFolders.length ? listFolders : null}
+					</Breadcrumb>
+				</PageHeader>
+				<Layout style={{ backgroundColor: '#fff' }}>
+					{models.length > 0 && (
+						<ContractModal
+							handleCancel={handleCancel}
+							handleCreate={
+								accessFolders.length ? handleCreateInFolder : handleCreate
+							}
+							handleCreateLink={handleCreateLinkExternal}
+							showModal={showModal}
+							models={models}
+						/>
 					)}
-					dataSource={contracts}
-					pages={pages}
-					onChangePageNumber={getContracts}
-					onSearch={handleSearch}
-					onClickButton={handleShowModal}
-					textButton="Novo Documento"
-					placeholderSearch="Buscar Documento"
-					placeholderNoData={!loading ? 'Nenhum documento encontrado' : ''}
-					loading={loading}
-					buttons={[
-						{
-							title: 'Nova Pasta',
-							onClick: handleShowModalFolder,
-						},
-					]}
-					sortTable={sortTable}
-				/>
+					<FolderModal
+						handleCancel={handleCancelFolder}
+						parent={
+							accessFolders.length
+								? accessFolders[accessFolders.length - 1].id
+								: null
+						}
+						handleNewFolder={handleCreateFolder}
+						handleUpdate={handleUpdate}
+						showModal={showFolderModal}
+						newFolder={newFolder}
+					/>
+					<MoveFolderModal
+						handleCancel={handleMoveFolderModal}
+						showModal={moveFolderModal}
+						handleMoveFolder={handleMoveFolder}
+						parent={
+							accessFolders.length
+								? accessFolders[accessFolders.length - 1].id
+								: null
+						}
+						chosenMoveRow={chosenMoveRow}
+					/>
+					<LinkModal
+						handleOk={handleCancelLinkModal}
+						showModal={showLinkModal}
+						link={link}
+					/>
+					<DataTable
+						columns={getColumns(
+							handleToGo,
+							handleDeleteContract,
+							handleDeleteFolder,
+							handleFolderSelect,
+							is_admin,
+							setMoveNode,
+							sortTable
+						)}
+						dataSource={contracts}
+						pages={pages}
+						onChangePageNumber={getContracts}
+						onSearch={handleSearch}
+						onClickButton={handleShowModal}
+						textButton="Novo Documento"
+						placeholderSearch="Buscar Documento"
+						placeholderNoData={!loading ? 'Nenhum documento encontrado' : ''}
+						loading={loading}
+						buttons={[
+							{
+								title: 'Nova Pasta',
+								onClick: handleShowModalFolder,
+							},
+						]}
+						sortTable={sortTable}
+					/>
+				</Layout>
 			</Layout>
-		</Layout>
+		</MainLayout>
 	)
 }
 

@@ -15,7 +15,7 @@ api.interceptors.request.use(async (config) => {
 		const jwtToken = accessToken.getJwtToken()
 		config.headers['Authorization'] = `Bearer ${jwtToken}`
 	} catch (error) {
-		//pass
+		console.log(error)
 	}
 	return config
 })

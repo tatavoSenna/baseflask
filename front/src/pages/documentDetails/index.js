@@ -30,6 +30,7 @@ import {
 } from '~/states/modules/documentDetail'
 
 import styles from '../contracts/index.module.scss'
+import MainLayout from '~/components/mainLayout'
 
 const DocumentDetails = () => {
 	const { id } = useParams()
@@ -137,60 +138,95 @@ const DocumentDetails = () => {
 	}, [dispatch, id])
 
 	return (
-		<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
-			<PageHeader>
-				<Breadcrumb>
-					<Breadcrumb.Item
-						onClick={handleInitialFolder}
-						className={styles.breadcrumbs}>
-						Documentos
-					</Breadcrumb.Item>
-					{accessFolders.length ? listFolders : null}
-					<Breadcrumb.Item className={styles.breadcrumbs}>
-						{data.title}
-					</Breadcrumb.Item>
-				</Breadcrumb>
-			</PageHeader>
-			<NewVersionModal
-				handleCancel={handleCancelModal}
-				handleCreate={createDocumentVersion}
-				showModal={showModal}
-				description={description}
-				handleDescription={handleDescription}
-			/>
-			<ConnectDocusignModal
-				handleCancel={handleCancelConnectModal}
-				showModal={showConnectModal}
-			/>
-			<AssignModal
-				handleCancel={handleCancelAssignModal}
-				handleAssign={handleAssign}
-				signers={data.signers}
-				showModal={showAssignModal}
-			/>
-			{Object.keys(data).length < 1 && <Spin spinning={loading} />}
-			{Object.keys(data).length > 0 && (
-				<div
-					style={{
-						display: 'flex',
-						flexWrap: 'wrap',
-						paddingBottom: 50,
-					}}>
-					{file ? (
-						<div
-							style={{
-								display: 'flex',
-								minHeight: '29.7cm',
-								minWidth: '21cm',
-							}}>
-							<PdfReader url={file} />
-						</div>
-					) : (
-						<Editor
+		<MainLayout>
+			<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
+				<PageHeader>
+					<Breadcrumb>
+						<Breadcrumb.Item
+							onClick={handleInitialFolder}
+							className={styles.breadcrumbs}>
+							Documentos
+						</Breadcrumb.Item>
+						{accessFolders.length ? listFolders : null}
+						<Breadcrumb.Item className={styles.breadcrumbs}>
+							{data.title}
+						</Breadcrumb.Item>
+					</Breadcrumb>
+				</PageHeader>
+				<NewVersionModal
+					handleCancel={handleCancelModal}
+					handleCreate={createDocumentVersion}
+					showModal={showModal}
+					description={description}
+					handleDescription={handleDescription}
+				/>
+				<ConnectDocusignModal
+					handleCancel={handleCancelConnectModal}
+					showModal={showConnectModal}
+				/>
+				<AssignModal
+					handleCancel={handleCancelAssignModal}
+					handleAssign={handleAssign}
+					signers={data.signers}
+					showModal={showAssignModal}
+				/>
+				{Object.keys(data).length < 1 && <Spin spinning={loading} />}
+				{Object.keys(data).length > 0 && (
+					<div
+						style={{
+							display: 'flex',
+							flexWrap: 'wrap',
+							paddingBottom: 50,
+						}}>
+						{file ? (
+							<div
+								style={{
+									display: 'flex',
+									minHeight: '29.7cm',
+									minWidth: '21cm',
+								}}>
+								<PdfReader url={file} />
+							</div>
+						) : (
+							<Editor
+								text={text}
+								comments={comments}
+								onUpdateText={updateText}
+								block={
+									loadingSign ||
+									loading ||
+									data.sent ||
+									version_id !== data.versions[0].id
+								}
+								versionLoading={loadingVersion}
+							/>
+						)}
+
+						<Tabs
+							textType={data.text_type}
+							downloadDocument={getDocumentWord}
+							signers={data.signers}
+							versions={data.versions}
+							showAssignModal={handleShowAssignModal}
+							infos={data.info}
+							variables={data.variables}
+							signed={data.sent}
+							sentAssign={handleSentAssign}
+							loadingSign={loadingSign}
+							handleVersion={handleVersion}
+							versionId={version_id}
+							onChangeVariables={onSubmitChangeVariables}
+							current={data.workflow.current}
+							steps={data.workflow.steps}
+							onClickPrevious={getPreviousStep}
+							onClickNext={getNextStep}
+							onClickDownload={downloadDocument}
+							block={loadingSign || loading}
+							signedWorkflow={data.signed}
 							text={text}
-							comments={comments}
-							onUpdateText={updateText}
-							block={
+							textUpdate={textUpdate}
+							onClickUpdate={handleShowModal}
+							blockVersion={
 								loadingSign ||
 								loading ||
 								data.sent ||
@@ -198,43 +234,10 @@ const DocumentDetails = () => {
 							}
 							versionLoading={loadingVersion}
 						/>
-					)}
-
-					<Tabs
-						textType={data.text_type}
-						downloadDocument={getDocumentWord}
-						signers={data.signers}
-						versions={data.versions}
-						showAssignModal={handleShowAssignModal}
-						infos={data.info}
-						variables={data.variables}
-						signed={data.sent}
-						sentAssign={handleSentAssign}
-						loadingSign={loadingSign}
-						handleVersion={handleVersion}
-						versionId={version_id}
-						onChangeVariables={onSubmitChangeVariables}
-						current={data.workflow.current}
-						steps={data.workflow.steps}
-						onClickPrevious={getPreviousStep}
-						onClickNext={getNextStep}
-						onClickDownload={downloadDocument}
-						block={loadingSign || loading}
-						signedWorkflow={data.signed}
-						text={text}
-						textUpdate={textUpdate}
-						onClickUpdate={handleShowModal}
-						blockVersion={
-							loadingSign ||
-							loading ||
-							data.sent ||
-							version_id !== data.versions[0].id
-						}
-						versionLoading={loadingVersion}
-					/>
-				</div>
-			)}
-		</Layout>
+					</div>
+				)}
+			</Layout>
+		</MainLayout>
 	)
 }
 

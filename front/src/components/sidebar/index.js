@@ -96,7 +96,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							key="/"
 							onClick={() => {
 								handleFolderRowBack()
-								handleGoTo('/')
+								handleGoTo('/documents')
 							}}
 							icon={
 								<FolderOpenOutlined
