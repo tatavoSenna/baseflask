@@ -24,7 +24,7 @@ import StructuredList from './components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
 import PersonField from './components/personField'
 
-import { ContainerTabs } from './styles'
+import { ContainerTabs, ScrollContent } from './styles'
 import styles from './index.module.scss'
 import './step.css'
 import * as moment from 'moment'
@@ -255,7 +255,7 @@ const Tabs = ({
 	)
 
 	const info = () => (
-		<div>
+		<ScrollContent>
 			{infos.map((item, index) => (
 				<div key={index}>
 					<ContainerTabs key={index}>
@@ -271,11 +271,11 @@ const Tabs = ({
 				</div>
 			))}
 			{textType === '.docx' && buttonsView()}
-		</div>
+		</ScrollContent>
 	)
 
 	const version = () => (
-		<div>
+		<ScrollContent>
 			<div
 				style={{
 					display: 'flex',
@@ -335,7 +335,7 @@ const Tabs = ({
 				))}
 			</Menu>
 			{textType === '.docx' && downloads()}
-		</div>
+		</ScrollContent>
 	)
 
 	const getStepDescription = (item, index, current) => {
@@ -428,79 +428,81 @@ const Tabs = ({
 	}
 
 	const workflow = () => (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				padding: 24,
-				paddingRight: 5,
-				margin: 5,
-				minHeight: 200,
-				background: '#fff',
-			}}>
-			<StepsAntd
-				style={{
-					marginTop: '5%',
-					marginBottom: '5%',
-				}}
-				progressDot
-				direction="vertical"
-				current={current}
-				labelPlacement="vertical">
-				{steps.map((item, index) => (
-					<Step
-						style={{
-							paddingBottom: '30px',
-						}}
-						key={index}
-						title={getStepTitle(item, index, current)}
-						subTitle={item.subTitle}
-						description={getStepDescription(item, index, current)}
-					/>
-				))}
-			</StepsAntd>
+		<ScrollContent>
 			<div
 				style={{
 					display: 'flex',
-					justifyContent: 'center',
+					flexDirection: 'column',
+					padding: 24,
+					paddingRight: 5,
+					margin: 5,
+					minHeight: 200,
+					background: '#fff',
 				}}>
-				<Form.Item {...tailLayout}>
-					{current !== 0 && signedWorkflow !== true && (
-						<Button
-							type="default"
-							htmlType="button"
-							className={styles.button}
-							onClick={onClickPrevious}
-							disabled={block}>
-							Reprovar
-						</Button>
-					)}
-					{current !== steps.length - 1 && signedWorkflow !== true && (
-						<Button
-							type="primary"
-							htmlType="button"
-							onClick={onClickNext}
-							disabled={block}>
-							Aprovar
-						</Button>
-					)}
-					{signedWorkflow === true && (
-						<Button
-							type="primary"
-							htmlType="button"
-							className={styles.button}
-							onClick={onClickDownload}
-							disabled={block}>
-							Baixar Documento
-						</Button>
-					)}
-				</Form.Item>
+				<StepsAntd
+					style={{
+						marginTop: '5%',
+						marginBottom: '5%',
+					}}
+					progressDot
+					direction="vertical"
+					current={current}
+					labelPlacement="vertical">
+					{steps.map((item, index) => (
+						<Step
+							style={{
+								paddingBottom: '30px',
+							}}
+							key={index}
+							title={getStepTitle(item, index, current)}
+							subTitle={item.subTitle}
+							description={getStepDescription(item, index, current)}
+						/>
+					))}
+				</StepsAntd>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'center',
+					}}>
+					<Form.Item {...tailLayout}>
+						{current !== 0 && signedWorkflow !== true && (
+							<Button
+								type="default"
+								htmlType="button"
+								className={styles.button}
+								onClick={onClickPrevious}
+								disabled={block}>
+								Reprovar
+							</Button>
+						)}
+						{current !== steps.length - 1 && signedWorkflow !== true && (
+							<Button
+								type="primary"
+								htmlType="button"
+								onClick={onClickNext}
+								disabled={block}>
+								Aprovar
+							</Button>
+						)}
+						{signedWorkflow === true && (
+							<Button
+								type="primary"
+								htmlType="button"
+								className={styles.button}
+								onClick={onClickDownload}
+								disabled={block}>
+								Baixar Documento
+							</Button>
+						)}
+					</Form.Item>
+				</div>
 			</div>
-		</div>
+		</ScrollContent>
 	)
 
 	const assign = () => (
-		<div>
+		<ScrollContent>
 			{signers.map((item, index) => (
 				<ContainerTabs key={index}>
 					<Title level={4} style={{ marginTop: 20, fontSize: 18 }}>
@@ -558,7 +560,7 @@ const Tabs = ({
 					)}
 				</Form.Item>
 			</div>
-		</div>
+		</ScrollContent>
 	)
 
 	const downloads = () => (
@@ -590,7 +592,7 @@ const Tabs = ({
 				flexDirection: 'column',
 				padding: 24,
 				margin: 5,
-				minHeight: 500,
+				height: '100%',
 				width: textType === '.docx' ? '35%' : '35%',
 				background: '#fff',
 				alignItems: 'center',

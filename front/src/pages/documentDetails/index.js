@@ -139,7 +139,7 @@ const DocumentDetails = () => {
 
 	return (
 		<MainLayout>
-			<Layout style={{ padding: '0 24px 24px', background: '#fff' }}>
+			<Layout style={{ padding: '0', background: '#fff' }}>
 				<PageHeader>
 					<Breadcrumb>
 						<Breadcrumb.Item
@@ -172,18 +172,18 @@ const DocumentDetails = () => {
 				/>
 				{Object.keys(data).length < 1 && <Spin spinning={loading} />}
 				{Object.keys(data).length > 0 && (
+					//aaaaa
 					<div
 						style={{
 							display: 'flex',
 							flexWrap: 'wrap',
-							paddingBottom: 50,
+							height: '80vh',
 						}}>
 						{file ? (
 							<div
 								style={{
 									display: 'flex',
-									minHeight: '29.7cm',
-									minWidth: '21cm',
+									width: '60%',
 								}}>
 								<PdfReader url={file} />
 							</div>
