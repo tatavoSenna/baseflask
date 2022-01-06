@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Layout } from 'antd'
 import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
 import FormFactory from '~/components/formFactory'
 
@@ -63,19 +64,29 @@ function AddContract() {
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
-			{loadingAnswer && (
-				<lottie-player
-					src="https://assets1.lottiefiles.com/private_files/lf30_4kmk2efh.json"
-					background="transparent"
-					speed="1"
-					styles="width: 200px; height: 200px;"
-					loop
-					autoplay
-				/>
+			{loadingAnswer ? (
+				<LoadingContainer>
+					<lottie-player
+						src="https://assets1.lottiefiles.com/private_files/lf30_4kmk2efh.json"
+						background="transparent"
+						speed="1"
+						style={{ width: '300px', height: '300px' }}
+						loop
+						autoplay
+					/>
+				</LoadingContainer>
+			) : (
+				stepComponent
 			)}
-			{stepComponent}
 		</Layout>
 	)
 }
 
 export default AddContract
+
+const LoadingContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+`
