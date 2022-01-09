@@ -14,6 +14,7 @@ function InputFactory(fields) {
 						key={i + fields[i].variable}
 						inputValue={!fields[i].valueVariable ? '' : fields[i].valueVariable}
 						pageFieldsData={fields[i]}
+						OutsideLabel="Digite o email: "
 					/>
 				)
 				break
@@ -22,6 +23,7 @@ function InputFactory(fields) {
 					<TextField
 						key={i + fields[i].variable}
 						inputValue={!fields[i].valueVariable ? '' : fields[i].valueVariable}
+						OutsideLabel="Digite o nome: "
 						pageFieldsData={fields[i]}
 					/>
 				)
