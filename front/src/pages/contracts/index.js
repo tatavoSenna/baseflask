@@ -75,14 +75,19 @@ const Contracts = () => {
 			state: { current: 0 },
 		})
 	}
+
 	const handleCreateInFolder = (values) => {
 		dispatch(setShowModal(false))
+		dispatch(
+			listQuestion({
+				modelId: values.modelId,
+				title: values.title,
+				parent: accessFolders[accessFolders.length - 1].id,
+			})
+		)
 		return history.push({
 			pathname: `/documents/new`,
-			state: {
-				current: 0,
-				parent: accessFolders[accessFolders.length - 1].id,
-			},
+			state: { current: 0 },
 		})
 	}
 
