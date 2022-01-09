@@ -134,7 +134,6 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 								style={{
 									display: 'flex',
 									flexDirection: 'column',
-									minHeight: 100,
 									width: '100%',
 									background: '#fff',
 									alignItems: 'center',
