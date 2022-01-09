@@ -35,7 +35,7 @@ def generate_token(current_user):
     template_id = content.get("document_template", None)
     title = content.get("title", None)
     max_token_uses = content.get("max_uses", None)
-    if max_token_uses == None:
+    if max_token_uses == None or max_token_uses == 0:
         max_token_uses = 1
     if title is None:
         abort(400, "Document must have a title")
