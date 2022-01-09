@@ -29,6 +29,7 @@ import styles from './index.module.scss'
 import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
+import styled from 'styled-components'
 
 moment.locale('pt-br')
 
@@ -503,49 +504,85 @@ const Tabs = ({
 		<div>
 			{signers.map((item, index) => (
 				<ContainerTabs key={index}>
-					<Title level={4} style={{ marginTop: 20, fontSize: 18 }}>
-						{item.title}
-					</Title>
-					{item.fields.map((field, index) => (
-						<div key={index}>
-							<Paragraph
-								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
-								{field.value}:
-							</Paragraph>
-							<Paragraph
-								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
-								{!field.valueVariable ? '' : field.valueVariable}
-							</Paragraph>
-						</div>
-					))}
-					{signed && (
+					{index === 0 ? (
+						<Title
+							level={4}
+							style={{ marginTop: 30, marginBottom: 10, fontSize: 18 }}>
+							Parte {item.party}
+						</Title>
+					) : null}
+					{signers[index - 1] && item.party !== signers[index - 1].party ? (
+						<Title
+							level={4}
+							style={{ marginTop: 10, marginBottom: 10, fontSize: 18 }}>
+							Parte {item.party}
+						</Title>
+					) : null}
+					<DivContainer
+						i={index}
+						currentSigners={item.party}
+						allSigners={signers}>
 						<div>
-							<Paragraph
-								style={{ color: '#000', fontSize: 12, marginBottom: 0 }}>
-								Status
-							</Paragraph>
-							<Paragraph
-								style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}>
-								{item.status}
-							</Paragraph>
+							<Title style={{ fontSize: 18, fontWeight: 400 }}>
+								{item.title}
+							</Title>
+							{item.fields.map((field, index) => (
+								<div key={index}>
+									<Paragraph style={{ color: '#000', fontSize: 12 }}>
+										{field.value}:
+										<Paragraph
+											style={{
+												color: `${
+													!field.valueVariable ? '#e6e6e6' : '#646464'
+												}`,
+												fontSize: 12,
+												display: 'inline',
+												marginLeft: 5,
+												fontWeight: `${!field.valueVariable ? 400 : 700}`,
+											}}>
+											{!field.valueVariable
+												? 'Aguardando preenchimento dos dados'
+												: field.valueVariable}
+										</Paragraph>
+									</Paragraph>
+								</div>
+							))}
+
+							{signed && (
+								<div>
+									<Paragraph style={{ color: '#000', fontSize: 12 }}>
+										Status:
+										<Paragraph
+											style={{
+												color: '#646464',
+												fontSize: 12,
+												display: 'inline',
+												marginLeft: 5,
+											}}>
+											{item.status}
+										</Paragraph>
+									</Paragraph>
+								</div>
+							)}
 						</div>
-					)}
+					</DivContainer>
 				</ContainerTabs>
 			))}
 			<div
 				style={{
 					display: 'flex',
-					justifyContent: 'center',
+					justifyContent: 'right',
 					marginTop: 10,
 				}}>
 				<Form.Item {...tailLayout}>
 					{!signed && (
 						<Button
 							key="editar"
+							type="primary"
 							className={styles.button}
 							onClick={() => showAssignModal(true)}
 							disabled={loadingSign}>
-							Editar
+							Cadastrar
 						</Button>
 					)}
 					{!signed && isVariables && (
@@ -671,3 +708,17 @@ Tabs.propTypes = {
 }
 
 export default Tabs
+
+const DivContainer = styled.div`
+	margin-left: 24px !important;
+	padding: 30px 0 20px;
+
+	${(props) =>
+		props.allSigners[props.i - 1] &&
+		props.i !== 0 &&
+		props.currentSigners === props.allSigners[props.i - 1].party &&
+		`
+			border: solid #cccccc;
+			border-width: 1px 0 0 0;
+		`}
+`

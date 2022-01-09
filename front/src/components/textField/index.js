@@ -10,6 +10,7 @@ const TextField = ({
 	onChange,
 	first,
 	disabled,
+	OutsideLabel,
 }) => {
 	const { label, variable, type, id, info, list, placeholder } = pageFieldsData
 	const isObj = typeof variable === 'object'
@@ -19,11 +20,21 @@ const TextField = ({
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
+	const returnLabel = () => {
+		if (label.length > 0) {
+			return <InfoField label={label} info={info} />
+		} else if (OutsideLabel.length > 0) {
+			return <InfoField label={OutsideLabel} info={info} />
+		}
+		return null
+	}
+
 	return (
 		<Form.Item
 			key={name}
 			name={list !== undefined ? [list, name] : name}
-			label={<InfoField label={label} info={info} />}
+			label={returnLabel()}
 			type={type}
 			className={className}
 			onChange={onChange}
@@ -50,12 +61,15 @@ TextField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	typeOfText: string,
+	OutsideLabel: string,
 }
 
 TextField.defaultProps = {
 	inputValue: '',
 	className: {},
 	onChange: () => null,
+	OutsideLabel: '',
 }
 
 export default TextField
