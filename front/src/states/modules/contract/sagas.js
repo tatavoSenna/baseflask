@@ -61,11 +61,12 @@ function* createLinkSaga({ payload = {} }) {
 		content: 'Criando link externo...',
 		updateKey: 'createLinkSaga',
 	})
-	const { modelId, title } = payload
+	const { modelId, title, maxUses } = payload
 	try {
 		const { data } = yield call(api.post, `/external/token`, {
 			document_template: modelId,
 			title,
+			max_uses: maxUses,
 		})
 		yield put(
 			createLinkSuccess({
