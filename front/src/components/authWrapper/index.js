@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { node } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { Authenticator } from '@aws-amplify/ui-react'
@@ -8,13 +8,13 @@ import LogOutContext from '~/context/LogOutContext'
 
 function AuthWrapper({ children }) {
 	let history = useHistory()
-
-	//TODO: register this listener only once
-	Hub.listen('auth', (data) => {
-		if (data.payload.event === 'signIn') {
-			history.push('/')
-		}
-	})
+	useEffect(() => {
+		Hub.listen('auth', (data) => {
+			if (data.payload.event === 'signIn') {
+				history.push('/')
+			}
+		})
+	}, [history])
 
 	return (
 		<Authenticator
