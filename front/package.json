@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@aws-amplify/ui-react": "^1.2.0",
+		"@aws-amplify/ui": "^3.0.6",
+		"@aws-amplify/ui-react": "^2.1.6",
 		"@ckeditor/ckeditor5-build-classic": "^23.0.0",
 		"@ckeditor/ckeditor5-build-decoupled-document": "^23.0.0",
 		"@ckeditor/ckeditor5-react": "^2.1.0",
@@ -17,7 +18,7 @@
 		"@types/react-dom": "^17.0.11",
 		"antd": "^4.2.2",
 		"antd-mask-input": "^0.1.13",
-		"aws-amplify": "^4.0.2",
+		"aws-amplify": "^4.3.11",
 		"axios": "^0.19.2",
 		"babel-plugin-import": "^1.13.0",
 		"babel-plugin-root-import": "^6.5.0",

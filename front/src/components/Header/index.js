@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { func, bool } from 'prop-types'
 import {
@@ -23,6 +23,7 @@ import {
 
 import { classNames } from '~/utils'
 import { connectDocusign } from '~/states/modules/integrations'
+import LogOutContext from '~/context/LogOutContext'
 
 import styles from './index.module.scss'
 
@@ -33,15 +34,8 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 		({ session }) => session
 	)
 	const dispatch = useDispatch()
+	const handleLogout = useContext(LogOutContext)
 
-	const handleLogout = async () => {
-		await Auth.signOut()
-		Hub.dispatch(UI_AUTH_CHANNEL, {
-			event: AUTH_STATE_CHANGE_EVENT,
-			message: AuthState.SignedOut,
-			data: null,
-		})
-	}
 	const checkDocusign = () => {
 		dispatch(connectDocusign())
 	}
