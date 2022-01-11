@@ -1,10 +1,62 @@
 import React, { useEffect } from 'react'
 import { node } from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { Authenticator } from '@aws-amplify/ui-react'
-import '@aws-amplify/ui-react/styles.css'
+
 import { Hub } from 'aws-amplify'
+import {
+	Authenticator,
+	Heading,
+	View,
+	Image,
+	useTheme,
+} from '@aws-amplify/ui-react'
 import LogOutContext from '~/context/LogOutContext'
+
+import '@aws-amplify/ui-react/styles.css'
+import './index.module.scss'
+import logo from '~/assets/logo.png'
+
+const components = {
+	Header() {
+		const { tokens } = useTheme()
+
+		return (
+			<View
+				textAlign="center"
+				padding={`${tokens.space.large} 0 ${tokens.space.small} 0`}>
+				<Image alt="Lawing logo" src={logo} />
+			</View>
+		)
+	},
+
+	SignIn: {
+		Header() {
+			const { tokens } = useTheme()
+
+			return (
+				<Heading
+					padding={`${tokens.space.large} 0 0 ${tokens.space.xl}`}
+					level={4}>
+					Entre na sua conta Lawing
+				</Heading>
+			)
+		},
+	},
+
+	SignUp: {
+		Header() {
+			const { tokens } = useTheme()
+
+			return (
+				<Heading
+					padding={`${tokens.space.large} 0 0 ${tokens.space.xl}`}
+					level={4}>
+					Crie uma nova conta
+				</Heading>
+			)
+		},
+	},
+}
 
 function AuthWrapper({ children }) {
 	let history = useHistory()
@@ -18,6 +70,7 @@ function AuthWrapper({ children }) {
 
 	return (
 		<Authenticator
+			components={components}
 			loginMechanisms={['email', 'phone_number']}
 			signUpAttributes={['name', 'email', 'phone_number']}>
 			{({ signOut, user }) => {
