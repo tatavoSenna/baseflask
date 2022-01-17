@@ -48,6 +48,8 @@ const Contracts = () => {
 		showLinkModal,
 		link,
 		parent,
+		order,
+		order_by,
 	} = useSelector(({ contract }) => contract)
 
 	const {
@@ -140,18 +142,22 @@ const Contracts = () => {
 		dispatch(deleteFolder({ id: record.id, pages }))
 
 	const getContracts = ({ page, perPage, search }) =>
-		dispatch(listContract({ page, perPage, search, parent }))
+		dispatch(listContract({ page, perPage, search, parent, order_by, order }))
 
 	const handleSearch = ({ page, perPage, search }) =>
-		dispatch(listContract({ page, perPage, search, parent }))
+		dispatch(listContract({ page, perPage, search, parent, order_by, order }))
 
 	const handleFolderSelect = (folder) => {
 		dispatch(listContract({ parent: folder.id }))
 		dispatch(setChooseFolder(folder))
 	}
-
-	const sortTable = (parameter, sortingOrder) =>
-		dispatch(listContract({ order_by: parameter, order: sortingOrder }))
+	
+	const sortTable = (parameter) => {
+		var currentOrder
+		order == "ascend" ? currentOrder = "descend" : order == "descend" ? currentOrder = null : currentOrder = "ascend"
+		parameter != order_by ? currentOrder = "ascend" : currentOrder = currentOrder 
+		dispatch(listContract({ parent, order_by: parameter, order: currentOrder }))
+	}
 
 	const handleInitialFolder = () => {
 		dispatch(listContract())

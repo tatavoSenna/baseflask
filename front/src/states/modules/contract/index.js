@@ -16,6 +16,8 @@ const initialState = {
 	error: null,
 	loading: false,
 	parent: null,
+	order: null,
+	order_by: null
 }
 
 const { actions, reducer } = createSlice({
@@ -38,6 +40,8 @@ const { actions, reducer } = createSlice({
 				error: null,
 				loading: false,
 				parent: payload.parent,
+				order: payload.order,
+				order_by: payload.order_by
 			})
 		},
 		listContractFailure: (state, { payload }) =>
