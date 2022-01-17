@@ -34,10 +34,10 @@ export const getColumns = (
 		onHeaderCell: (column) => {
 			return {
 				onClick: () => {
-					sortTable('title', 'ascend')
-				},
-			}
-		},
+					sortTable('title')
+				}
+			};
+		}
 	},
 	{
 		title: 'Template',
@@ -47,10 +47,10 @@ export const getColumns = (
 		onHeaderCell: (column) => {
 			return {
 				onClick: () => {
-					sortTable('template', 'ascend')
-				},
-			}
-		},
+					sortTable('template')
+				}
+			};
+		}
 	},
 	{
 		title: 'Criado por',
@@ -60,10 +60,10 @@ export const getColumns = (
 		onHeaderCell: (column) => {
 			return {
 				onClick: () => {
-					sortTable('username', 'ascend')
-				},
-			}
-		},
+					sortTable('username')
+				}
+			};
+		}
 	},
 	{
 		title: 'Criado em',
@@ -73,10 +73,10 @@ export const getColumns = (
 		onHeaderCell: (column) => {
 			return {
 				onClick: () => {
-					sortTable('creation_date', 'ascend')
-				},
-			}
-		},
+					sortTable('creation_date')
+				}
+			};
+		}
 	},
 	{
 		title: 'Prazo',
@@ -87,10 +87,10 @@ export const getColumns = (
 			var cont = 0
 			return {
 				onClick: () => {
-					sortTable('due_date', 'ascend')
-				},
-			}
-		},
+					sortTable('due_date')
+				}
+			};
+		}
 	},
 	{
 		title: 'Status',
@@ -148,10 +148,10 @@ export const getColumns = (
 		onHeaderCell: (column) => {
 			return {
 				onClick: () => {
-					sortTable('status', 'ascend')
-				},
-			}
-		},
+					sortTable('status')
+				}
+			};
+		}
 	},
 	{
 		title: '',
