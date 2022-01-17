@@ -7,10 +7,12 @@ import {
 	Checkbox,
 	InputNumber,
 	Typography,
+	Tooltip,
 } from 'antd'
 import PropTypes from 'prop-types'
 import { AutoComplete } from 'antd'
 import styled from 'styled-components'
+import { QuestionCircleFilled } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -115,12 +117,16 @@ const ContractModal = ({
 					rules={[
 						{
 							type: 'number',
-							min: 1,
-							message: 'Por favor insira um número maior que 0',
+							min: 0,
+							message: 'Número inválido!',
 						},
 					]}>
 					<InputNumber autoFocus value={maxUses} onChange={(e) => setUses(e)} />
+					<Tooltip placement="top" title="Selecione 0 para a url não expirar">
+						<QuestionCircleFilled style={{ marginLeft: '7px' }} />
+					</Tooltip>
 				</StyledItemForm>
+
 				<NewDivider />
 				{getFooterModal()}
 			</Form>
