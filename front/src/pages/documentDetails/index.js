@@ -172,7 +172,6 @@ const DocumentDetails = () => {
 				/>
 				{Object.keys(data).length < 1 && <Spin spinning={loading} />}
 				{Object.keys(data).length > 0 && (
-					//aaaaa
 					<div
 						style={{
 							display: 'flex',
