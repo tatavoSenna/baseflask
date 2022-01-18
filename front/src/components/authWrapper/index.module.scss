@@ -16,3 +16,13 @@
 [data-amplify-authenticator] [data-amplify-router] [data-amplify-footer] {
 	padding-bottom: var(--amplify-space-xs);
 }
+
+.amplify-nosignup [role='tablist'] {
+	display: none;
+}
+
+.amplify-nosignup [data-amplify-router] {
+	border-color: var(--amplify-components-tabs-item-active-border-color);
+	border-width: var(--amplify-components-tabs-border-width) 0 0 0;
+	border-style: var(--amplify-components-tabs-item-border-style);
+}

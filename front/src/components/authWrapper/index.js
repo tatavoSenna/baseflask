@@ -7,7 +7,7 @@ import { Authenticator, View, Image, useTheme } from '@aws-amplify/ui-react'
 import LogOutContext from '~/context/LogOutContext'
 
 import '@aws-amplify/ui-react/styles.css'
-import './index.module.scss'
+import styles from './index.module.scss'
 import logo from '~/assets/logo.png'
 
 const components = {
@@ -36,6 +36,9 @@ function AuthWrapper({ children }) {
 
 	return (
 		<Authenticator
+			className={
+				process.env.REACT_APP_SIGNUP_ON ? '' : styles['amplify-nosignup']
+			}
 			components={components}
 			loginMechanisms={['email']}
 			signUpAttributes={['name', 'email']}>
