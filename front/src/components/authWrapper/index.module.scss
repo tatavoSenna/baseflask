@@ -1,9 +1,18 @@
 [data-amplify-authenticator] {
 	width: 100%;
-	height: 87%;
+	height: 95%;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+	width: 24rem;
 }
 
 [data-amplify-form][data-amplify-authenticator-signin],
 [data-amplify-form][data-amplify-authenticator-signup] {
-	padding-top: var(--amplify-space-large);
+	padding: var(--amplify-space-large) var(--amplify-space-large)
+		var(--amplify-space-medium) var(--amplify-space-large);
+}
+
+[data-amplify-authenticator] [data-amplify-router] [data-amplify-footer] {
+	padding-bottom: var(--amplify-space-xs);
 }
