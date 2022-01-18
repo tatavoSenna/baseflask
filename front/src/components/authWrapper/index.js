@@ -37,8 +37,8 @@ function AuthWrapper({ children }) {
 	return (
 		<Authenticator
 			components={components}
-			loginMechanisms={['email', 'phone_number']}
-			signUpAttributes={['name', 'email', 'phone_number']}>
+			loginMechanisms={['email']}
+			signUpAttributes={['name', 'email']}>
 			{({ signOut, user }) => {
 				return (
 					<LogOutContext.Provider value={signOut}>
