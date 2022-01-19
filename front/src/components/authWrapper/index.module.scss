@@ -6,11 +6,15 @@
 [data-amplify-authenticator] [data-amplify-container] {
 	width: 24rem;
 }
-
+[data-amplify-form][data-amplify-authenticator-resetpassword],
 [data-amplify-form][data-amplify-authenticator-signin],
 [data-amplify-form][data-amplify-authenticator-signup] {
 	padding: var(--amplify-space-large) var(--amplify-space-large)
 		var(--amplify-space-medium) var(--amplify-space-large);
+}
+
+[data-amplify-authenticator-resetpassword] div h3 {
+	font-size: var(--amplify-components-heading-4-font-size);
 }
 
 [data-amplify-authenticator] [data-amplify-router] [data-amplify-footer] {
