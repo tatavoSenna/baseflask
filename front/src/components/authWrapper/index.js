@@ -37,7 +37,9 @@ function AuthWrapper({ children }) {
 	return (
 		<Authenticator
 			className={
-				process.env.REACT_APP_SIGNUP_ON ? '' : styles['amplify-nosignup']
+				process.env.REACT_APP_SIGNUP_ON === 'true'
+					? ''
+					: styles['amplify-nosignup']
 			}
 			components={components}
 			loginMechanisms={['email']}
