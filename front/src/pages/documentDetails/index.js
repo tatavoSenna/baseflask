@@ -176,7 +176,8 @@ const DocumentDetails = () => {
 						style={{
 							display: 'flex',
 							flexWrap: 'wrap',
-							height: '80vh',
+							height: 'calc(100vh - 155px)',
+							overflowY: 'hidden',
 						}}>
 						{file ? (
 							<div
