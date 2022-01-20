@@ -20,5 +20,6 @@ aws cloudformation update-stack \
         ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
         ParameterKey=SendGridApiKey,UsePreviousValue=true \
         ParameterKey=D4SignApiURL,UsePreviousValue=true \
+        ParameterKey=SignUpOn,ParameterValue=false \
     --profile \
         lawing-prod

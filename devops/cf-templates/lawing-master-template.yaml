@@ -117,7 +117,15 @@ Parameters:
 
   D4SignApiURL:
     Type: String
-    Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1 or 
+    Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1
+  
+  SignUpOn:
+    Type: String
+    Description: Set to true to enable the sign up form on the frontend
+    AllowedValues:
+      - true
+      - false
+    Default: "true"
   
 
 Metadata:
@@ -226,6 +234,7 @@ Resources:
         UserPoolId: !GetAtt UserPool.Outputs.UserPoolId
         UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
         IdentityPoolId: !GetAtt UserPool.Outputs.IdentityPoolId
+        SignUpOn: !Ref SignUpOn
 
 
   LoadBalancer:
