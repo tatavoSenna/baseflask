@@ -630,7 +630,7 @@ const Tabs = ({
 				padding: 24,
 				margin: 5,
 				height: '100%',
-				width: textType === '.docx' ? '35%' : '35%',
+				width: '35%',
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
