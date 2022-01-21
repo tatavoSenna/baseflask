@@ -32,7 +32,7 @@ groups_bp = Blueprint("groups", __name__)
 
 @users_bp.route("me", methods=["GET"])
 @aws_auth.authentication_required
-@get_local_user
+@get_local_user(raise_forbidden=False)
 def me(current_user):
     return jsonify(current_user)
 
