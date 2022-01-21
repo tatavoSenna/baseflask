@@ -4,6 +4,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Amplify, { I18n } from 'aws-amplify'
+import { translations } from '@aws-amplify/ui'
 
 import { store, persistor } from './states/store'
 import Routes from './App.routes'
@@ -18,25 +19,19 @@ Amplify.configure({
 	},
 })
 
-I18n.setLanguage('pt-br')
-
-const language_dict = {
-	'pt-br': {
-		'Sign In': 'Entrar',
-		'Sign Up': 'Registrar-se',
-		'Sign in to your account': 'Entre na sua conta Lawing',
-		'Username *': 'Email *',
-		'Password *': 'Senha *',
-		'Forgot your password?': 'Esqueceu sua senha?',
-		'Reset password': 'Recupere sua senha.',
-		'No account?': 'Não tem conta?',
-		'Create account': 'Crie sua conta.',
-		'Enter your username': 'Digite seu email',
-		'Enter your password': 'Digite sua senha',
+I18n.putVocabularies(translations)
+I18n.putVocabularies({
+	pt: {
+		Email: 'Email',
+		Name: 'Nome',
+		'Email or Phone Number': 'Email ou número de telefone',
+		'We Emailed You': 'Confirmação de email',
+		'We Sent A Code': 'Confirmação de email',
+		Confirm: 'Confirmar',
+		'Your code is on the way. To log in, enter the code we sent you. It may take a minute to arrive.':
+			'Seu código está a caminho. Para fazer o login, digite o código que enviamos a você. Pode demorar um minuto para chegar.',
 	},
-}
-
-I18n.putVocabularies(language_dict)
+})
 
 const App = () => {
 	return (

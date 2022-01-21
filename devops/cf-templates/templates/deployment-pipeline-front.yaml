@@ -37,6 +37,10 @@ Parameters:
   IdentityPoolId:
     Type: String
 
+  SignUpOn:
+    Type: String
+  
+
 Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
@@ -239,6 +243,8 @@ Resources:
             Value: !Ref UserPoolClientId
           - Name: REACT_APP_AWS_IDENTITY_POOL_ID
             Value: !Ref IdentityPoolId
+          - Name: REACT_APP_SIGNUP_ON
+            Value: !Ref SignUpOn
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole

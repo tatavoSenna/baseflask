@@ -1,17 +1,32 @@
-
-
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
-	transition: color 0.3s;
-	:hover {
-		color: #1890ff;
-	}
+[data-amplify-authenticator] {
+	width: 100%;
+	height: 92%;
 }
 
-.logo {
-	width: 60%;
-  margin: 16px;
-  fill: rgba(255, 255, 255, 0.2);
+[data-amplify-authenticator] [data-amplify-container] {
+	width: 24rem;
+}
+[data-amplify-form][data-amplify-authenticator-resetpassword],
+[data-amplify-form][data-amplify-authenticator-signin],
+[data-amplify-form][data-amplify-authenticator-signup] {
+	padding: var(--amplify-space-large) var(--amplify-space-large)
+		var(--amplify-space-medium) var(--amplify-space-large);
+}
+
+[data-amplify-authenticator-resetpassword] div h3 {
+	font-size: var(--amplify-components-heading-4-font-size);
+}
+
+[data-amplify-authenticator] [data-amplify-router] [data-amplify-footer] {
+	padding-bottom: var(--amplify-space-xs);
+}
+
+.amplify-nosignup [role='tablist'] {
+	display: none;
+}
+
+.amplify-nosignup [data-amplify-router] {
+	border-color: var(--amplify-components-tabs-item-active-border-color);
+	border-width: var(--amplify-components-tabs-border-width) 0 0 0;
+	border-style: var(--amplify-components-tabs-item-border-style);
 }
