@@ -2,11 +2,11 @@ import random
 import secrets
 import logging
 
-from functools import wraps
+from functools import wraps, partial
 
 import boto3
 
-from flask import g, current_app, abort
+from flask import g, current_app, abort, request
 from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
 
@@ -147,21 +147,39 @@ class RemoteUser:
         return response
 
 
-def get_local_user(view):
+def get_local_user(view = None, raise_forbidden = True):
+    if view is None:
+        return partial(get_local_user, raise_forbidden=raise_forbidden)
     @wraps(view)
     def decorated(*args, **kwargs):
-
         user_data_from_cognito_jwt = g.cognito_claims
-        user_model_instance = User.query.filter_by(
-            sub=user_data_from_cognito_jwt["sub"]
-        ).one()
-        if not user_model_instance.verified:
-            user_model_instance.verified = True
-            db.session.add(user_model_instance)
-            db.session.commit()
-        serialized_user = UserSerializer().dump(user_model_instance)
+        try:
+            user_model_instance = User.query.filter_by(
+                sub=user_data_from_cognito_jwt["sub"]
+            ).one()
+            if not user_model_instance.verified:
+                user_model_instance.verified = True
+                db.session.add(user_model_instance)
+                db.session.commit()
+            serialized_user = UserSerializer().dump(user_model_instance)
+            serialized_user["created"] = True
 
-        return view(serialized_user, *args, **kwargs)
+            return view(serialized_user, *args, **kwargs)
+        except:
+            if raise_forbidden:
+                return {}, 403
+            client = boto3.client("cognito-idp")
+            user = client.get_user(
+                AccessToken=cognito_utils.extract_access_token(request.headers)
+            )
+            current_user_known_info = {
+                "name": user["UserAttributes"][2]["Value"],
+                "username": user.get("Username"),
+                "sub": user["UserAttributes"][0]["Value"],
+                "email": user["UserAttributes"][3]["Value"],
+                "created": False
+            }
+            return view(current_user_known_info, *args, **kwargs)
 
     return decorated
 
