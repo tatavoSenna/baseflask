@@ -78,7 +78,8 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				break
 			case 'database':
 				newField.variable.type = 'database'
-				newField.variable.database_name = ''
+				newField.variable.database_endpoint = ''
+				newField.variable.search_key = ''
 				break
 			case 'variable_file':
 				newField.variable.type = 'variable_file'

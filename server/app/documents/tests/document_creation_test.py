@@ -1,7 +1,7 @@
 import pytest
 from docx import Document as DocxDocument
 from io import BytesIO
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from app.test import factories
 from app.test import factories
 from flask import jsonify
@@ -159,6 +159,75 @@ def test_creation_of_docx_document_with_number_field_with_doc_display_style(
     assert (
         DocxDocument(upload_filled_docx_to_documents_args[1]).paragraphs[0].text
         == "11 (onze)"
+    )
+    assert upload_filled_docx_to_documents_args[2] == ".docx"
+
+
+
+
+@patch("app.documents.controllers.RemoteDocument.download_docx_from_template")
+@patch("app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents")
+@patch("app.documents.controllers.convert_docx_to_pdf_and_save")
+@patch("app.documents.formatters.variables_formatter.requests.get")
+def test_creation_of_docx_document_with_database_field(
+    requests_get,
+    convert_docx_to_pdf_and_save,
+    upload_filled_docx_to_documents,
+    download_docx_from_template,
+    user,
+    document_template,
+):
+    mock_response = [{
+        'userId': 1,
+        'id': 1,
+        'title': 'Mock Response',
+        'completed': False
+    }]
+
+    requests_get.return_value = Mock(ok=True)
+    requests_get.return_value.json.return_value = mock_response
+
+    database_field = {
+        "info": "",
+        "type": "database",
+        "label": "",
+        "variable": {
+            "name": "KEY_VALUE",
+            "type": "database",
+            "search_key": "id",
+            "database_endpoint": "http://jsonplaceholder.typicode.com/todos",
+        },
+    }
+
+    template_docx = generate_docx(
+        "{{ KEY_VALUE.TITLE }} {{ KEY_VALUE.COMPLETED }}"
+    )
+    download_docx_from_template.return_value = template_docx
+
+    template = document_template(".docx", database_field)
+    variables = {"KEY_VALUE": "1"}
+
+    document = create_document_controller(
+        user_id=user.id,
+        user_email=user.email,
+        company_id=user.company.id,
+        document_template_id=template.id,
+        title="title",
+        username=user.username,
+        received_variables=variables,
+        parent_id=None,
+        is_folder=False,
+    )
+
+    upload_filled_docx_to_documents.assert_called_once()
+    upload_filled_docx_to_documents_args = (
+        upload_filled_docx_to_documents.call_args.args
+    )
+
+    assert upload_filled_docx_to_documents_args[0] == document
+    assert (
+        DocxDocument(upload_filled_docx_to_documents_args[1]).paragraphs[0].text
+        == "Mock Response False"
     )
     assert upload_filled_docx_to_documents_args[2] == ".docx"
 
