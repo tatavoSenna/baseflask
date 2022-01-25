@@ -140,8 +140,6 @@ def get_template_list(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document_template(current_user, document_template_id):
-    if not current_user['is_admin']:
-        abort(403, "Only Admin Users can delete templates")
     try:
         document_template = get_template_controller(
             current_user["company_id"],
@@ -219,8 +217,6 @@ def get_upload(current_user, document_template_id):
 @aws_auth.authentication_required
 @get_local_user
 def set_published(current_user, document_template_id):
-    if not current_user['is_admin']:
-        abort(403, "Only Admin Users can publish templates")
     template = get_template_controller(
         current_user["company_id"], document_template_id)
     if not request.is_json:
