@@ -8,6 +8,8 @@ import {
 	Divider,
 	Steps as StepsAntd,
 } from 'antd'
+import { UserOutlined, DownloadOutlined } from '@ant-design/icons'
+
 import {
 	array,
 	bool,
@@ -275,69 +277,97 @@ const Tabs = ({
 		</ScrollContent>
 	)
 
-	const version = () => (
-		<ScrollContent>
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'center',
-					paddingTop: 20,
-				}}>
-				<Form.Item>
-					<Button
-						type="primary"
-						htmlType="button"
-						onClick={() => onClickUpdate(textUpdate)}
-						disabled={
-							!(text !== textUpdate.text && !blockVersion && !versionLoading)
-						}>
-						Criar versão
-					</Button>
-				</Form.Item>
-			</div>
+	const version = () => {
+		const bolder = true
+		const disableButton = !(
+			text !== textUpdate.text &&
+			!blockVersion &&
+			!versionLoading
+		)
+		const isItNotDocX = !(textType === '.docx')
 
-			<Menu
-				onClick={(item) => handleVersion(item.key)}
-				style={{ width: '100%', border: 'none' }}
-				selectedKeys={[versionId]}
-				mode="vertical">
-				{versions.map((item) => (
-					<Menu.Item style={{ height: 80 }} key={item.id}>
-						<div
-							style={{
-								display: 'flex',
-								flexDirection: 'column',
-								justifyContent: 'center',
-								height: 80,
-							}}>
-							<Text style={{ color: '#000', fontSize: 16, lineHeight: 2.5 }}>
-								{item.description}
-							</Text>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-								}}>
-								<Text
-									style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
-									por{' '}
-									<Text
-										style={{ color: '#000', fontSize: 12, lineHeight: 1.5 }}>
-										{item.email}
-									</Text>
-								</Text>
-								<Text
-									style={{ color: '#646464', fontSize: 12, lineHeight: 1.5 }}>
-									{moment(item.created_at).fromNow()}
-								</Text>
-							</div>
-						</div>
-					</Menu.Item>
-				))}
-			</Menu>
-			{textType === '.docx' && downloads()}
-		</ScrollContent>
-	)
+		return (
+			<ScrollContent>
+				{isItNotDocX && (
+					<div
+						style={{ display: 'flex', justifyContent: 'left', paddingTop: 20 }}>
+						<Form.Item>
+							<Button
+								type="primary"
+								htmlType="button"
+								onClick={() => onClickUpdate(textUpdate)}
+								disabled={disableButton}>
+								Criar nova versão
+							</Button>
+						</Form.Item>
+					</div>
+				)}
+
+				<StyledMenu
+					onClick={(item) => isItNotDocX && handleVersion(item.key)}
+					docxverification={isItNotDocX}
+					selectedKeys={[versionId]}
+					mode="vertical">
+					{versions.map((item) => (
+						<ItemContainer
+							key={item.id}
+							propscolor={item.id === versionId ? 'selected' : undefined}
+							propsdifferentpadding={
+								isItNotDocX ? 'regularPadding' : 'smallPadding'
+							}
+							propsbordertop={
+								isItNotDocX ? 'withBordeTop' : 'withoutBorderTop'
+							}>
+							{isItNotDocX ? (
+								<>
+									<ContainerIcon>
+										<StyledText
+											boldertext={bolder && 'bolder'}
+											style={{ fontSize: 14 }}>
+											{item.description}
+										</StyledText>
+									</ContainerIcon>
+
+									<StyledText style={{ display: 'block', padding: '5px 0' }}>
+										Por:{' '}
+										<StyledText boldertext={bolder && 'bolder'}>
+											{item.email}
+										</StyledText>
+									</StyledText>
+								</>
+							) : (
+								<ContainerIcon>
+									<StyledText style={{ padding: '0 0 5px', fontSize: 14 }}>
+										Por:{' '}
+										<StyledText
+											boldertext={bolder && 'bolder'}
+											style={{ fontSize: 14 }}>
+											{item.email}
+										</StyledText>
+									</StyledText>
+									{item.id === Object.keys(versions)[versions.length - 1] && (
+										<DownloadIcon
+											style={{ fontSize: 25, padding: 5 }}
+											onClick={(e) => {
+												e.stopPropagation()
+												downloadDocument()
+											}}
+										/>
+									)}
+								</ContainerIcon>
+							)}
+							<StyledText>
+								Data:{' '}
+								<StyledText boldertext={bolder && 'bolder'}>
+									{moment(item.created_at).format('DD/MM/YYYY')}
+								</StyledText>
+							</StyledText>
+						</ItemContainer>
+					))}
+				</StyledMenu>
+			</ScrollContent>
+		)
+	}
 
 	const getStepDescription = (item, index, current) => {
 		if (index < current) {
@@ -605,8 +635,8 @@ const Tabs = ({
 			<div
 				style={{
 					display: 'flex',
-					justifyContent: 'center',
-					marginTop: 10,
+					justifyContent: 'left',
+					marginTop: 20,
 				}}>
 				<Form.Item {...tailLayout}>
 					<Button
@@ -723,4 +753,72 @@ const DivContainer = styled.div`
 			border: solid #cccccc;
 			border-width: 1px 0 0 0;
 		`}
+`
+
+const StyledMenu = styled(Menu)`
+	width: 100%;
+	border: none;
+
+	*:not(:first-child) {
+		border-top: none;
+	}
+
+	* {
+		margin: 0 !important;
+	}
+
+	*:hover {
+		${(props) =>
+			props.docxverification ? `cursor: pointer;` : `cursor: default;`}
+	}
+`
+
+const StyledText = styled(Text)`
+	font-size: 0.75rem;
+	line-height: 2;
+	color: #000;
+	opacity: 0.65;
+	${(props) =>
+		props.boldertext === 'bolder' &&
+		`
+		font-weight: 700;
+	`}
+`
+
+const ItemContainer = styled(Menu.Item)`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	background-color: #ffffff !important;
+	border: solid #cccccc;
+
+	${(props) =>
+		props.propsbordertop === 'withBorderTop'
+			? `border-width: 1px 0 !important;`
+			: `border-width: 0 0 1px !important;`}
+	${(props) =>
+		props.propsdifferentpadding === 'regularPadding'
+			? `padding: 70px 5px !important;`
+			: `padding: 60px 5px !important;`}
+	* {
+		${(props) =>
+			props.propscolor === 'selected' &&
+			`
+				color: #0099ff !important;
+				opacity: 1;
+			`}
+	}
+`
+
+const ContainerIcon = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+`
+
+const DownloadIcon = styled(DownloadOutlined)`
+	*:hover {
+		cursor: pointer;
+	}
 `
