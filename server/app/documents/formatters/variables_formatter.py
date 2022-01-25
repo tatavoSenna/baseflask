@@ -1,4 +1,5 @@
 from datetime import datetime
+from slugify import slugify
 from datetime import date
 from app.models.documents import DocumentTemplate
 from app import jinja_env
@@ -89,9 +90,19 @@ def format_variables(variables, document_template_id):
         elif variable_type == "database":
             try:
                 response = requests.get(
-                    f'https://n66nic57s2.execute-api.us-east-1.amazonaws.com/dev/extract/{variables[variable]}').json()
-                variables = {**variables, **response}
-                return True
+                    f'{specs["database_endpoint"]}').json()
+
+                new_variables = {}
+
+                for item in response:
+                    if item[specs['search_key']] == int(variables[variable]):
+                        search_result = item
+                        break
+                
+                for key in search_result:
+                    new_variables[slugify(key).upper().replace('-','_')] = search_result[key]
+
+                return new_variables
             except Exception as e:
                 logging.exception(e)
 
