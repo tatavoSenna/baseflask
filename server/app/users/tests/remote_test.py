@@ -1,3 +1,4 @@
+from threading import local
 import pytest
 
 import botocore.session
@@ -6,7 +7,10 @@ from faker import Faker
 
 from app.models import User, Company
 from app.test import factories
-from app.users.remote import RemoteUser
+from app.users.remote import RemoteUser, get_local_user
+from unittest.mock import patch
+from app import db
+from app.serializers.user_serializers import UserSerializer
 
 fake = Faker()
 email = fake.email()
@@ -93,3 +97,44 @@ def test_get_local_creates_user(session):
     local_user = session.query(User).filter_by(sub=remote_user.sub()).one()
     assert local_user.email == email
     assert local_user.name == name
+
+@patch('app.users.remote.get_cognito_claims')
+def test_get_local_user(cognito_claims_mock, session):
+
+    @get_local_user()
+    def raise_forbidden_true_test(local_user):
+        return local_user
+    
+    assert raise_forbidden_true_test() == ({}, 403)
+
+    company_id = 123
+    company = factories.CompanyFactory(id=company_id)
+    user = factories.UserFactory(id=42, company=company, email="testemail@gmail.com")
+    db.session.commit()
+
+    searched_user = session.query(User).filter_by(sub=user.sub).one()
+
+    assert searched_user.email == user.email
+
+    user_info = {
+        "verified": searched_user.verified,
+        "name": searched_user.name,
+        "username": searched_user.username,
+        "id": searched_user.id,
+        "active": searched_user.active,
+        "participates_on": searched_user.participates_on,
+        "is_admin": searched_user.is_admin,
+        "company_id": searched_user.company_id,
+        "email": searched_user.email,
+        "sub": searched_user.sub
+    }
+
+    cognito_claims_mock.return_value = user_info
+
+    @get_local_user()
+    def user_already_exists_test(local_user):
+        return local_user
+
+    assert cognito_claims_mock.called
+    assert cognito_claims_mock.return_value == user_info
+    assert user_already_exists_test()["created"] == True

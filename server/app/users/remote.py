@@ -152,7 +152,7 @@ def get_local_user(view = None, raise_forbidden = True):
         return partial(get_local_user, raise_forbidden=raise_forbidden)
     @wraps(view)
     def decorated(*args, **kwargs):
-        user_data_from_cognito_jwt = g.cognito_claims
+        user_data_from_cognito_jwt = get_cognito_claims()
         try:
             user_model_instance = User.query.filter_by(
                 sub=user_data_from_cognito_jwt["sub"]
@@ -163,7 +163,6 @@ def get_local_user(view = None, raise_forbidden = True):
                 db.session.commit()
             serialized_user = UserSerializer().dump(user_model_instance)
             serialized_user["created"] = True
-
             return view(serialized_user, *args, **kwargs)
         except:
             if raise_forbidden:
@@ -172,11 +171,12 @@ def get_local_user(view = None, raise_forbidden = True):
             user = client.get_user(
                 AccessToken=cognito_utils.extract_access_token(request.headers)
             )
+            print(user)
             current_user_known_info = {
-                "name": user["UserAttributes"][2]["Value"],
+                "name": get_new_user_attributes(user, "name"),
                 "username": user.get("Username"),
-                "sub": user["UserAttributes"][0]["Value"],
-                "email": user["UserAttributes"][3]["Value"],
+                "sub": get_new_user_attributes(user, "sub"),
+                "email": get_new_user_attributes(user, "email"),
                 "created": False
             }
             return view(current_user_known_info, *args, **kwargs)
@@ -194,3 +194,16 @@ def authenticated_user(view):
         return view(user_model_instance, *args, **kwargs)
 
     return aws_auth.authentication_required(request_user)
+
+def get_new_user_attributes(user, attribute_name):
+    user_attributes = user.get("UserAttributes", False) or user.get(
+        "Attributes", []
+    )
+    for attribute in user_attributes:
+        if ("Name" and "Value") in attribute and attribute[
+            "Name"
+        ] == attribute_name:
+            return attribute["Value"]
+
+def get_cognito_claims():
+    return g.cognito_claims
