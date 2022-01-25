@@ -6,8 +6,7 @@ import Delete from '~/components/deleteConfirm'
 export const getColumns = (
 	handleToGo,
 	handlePublishTemplate,
-	handleDeleteTemplate,
-	is_admin
+	handleDeleteTemplate
 ) => [
 	{
 		title: 'Publicado',
@@ -17,7 +16,6 @@ export const getColumns = (
 			return (
 				<Switch
 					checked={published}
-					disabled={!is_admin}
 					onChange={() => handlePublishTemplate(row, !published)}
 				/>
 			)
@@ -49,12 +47,10 @@ export const getColumns = (
 		key: 'action',
 		render: (text, row) => (
 			<Space size="middle">
-				{is_admin && (
-					<Delete
-						title="Deseja excluir essa template?"
-						handle={() => handleDeleteTemplate(row)}
-					/>
-				)}
+				<Delete
+					title="Deseja excluir essa template?"
+					handle={() => handleDeleteTemplate(row)}
+				/>
 			</Space>
 		),
 	},
