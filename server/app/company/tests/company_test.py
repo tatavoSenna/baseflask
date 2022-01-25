@@ -1,3 +1,4 @@
+from cgi import test
 from sqlalchemy import exc
 
 from app import db
@@ -6,15 +7,18 @@ from app.company.controllers import (
     save_company_keys_controller,
     update_webhook_controller, 
     upload_logo_controller,
-    get_download_url_controller
+    get_download_url_controller,
+    assign_company_to_new_user_controller
 )
 from app.test import factories
+from app.models import User
 
 import pytest
 import io
 from flask import current_app
 from unittest.mock import patch
 import copy
+from faker import Faker
 
 def test_save_keys():
     company = factories.CompanyFactory()
@@ -116,3 +120,27 @@ def test_company_signatures_provider_initialization():
     assert company.signatures_provider is None
     db.session.delete(company)
     db.session.commit()
+
+def test_assign_company_to_new_user(session):
+    fake = Faker()
+
+    test_user = {
+        "name": "Test User",
+        "username": fake.slug(),
+        "sub": fake.uuid4(),
+        "email": fake.email(),
+        "created": False
+    }
+
+    company = factories.CompanyFactory(id=123)
+
+    assign_company_to_new_user_controller(test_user, company.id)
+
+    user = session.query(User).filter_by(sub=test_user["sub"]).one()
+
+    assert user is not None
+    assert user.sub == test_user["sub"]
+    assert user.name == test_user["name"]
+    assert user.username == test_user["username"]
+    assert user.email == test_user["email"]
+    assert user.company_id == company.id

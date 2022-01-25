@@ -1,5 +1,6 @@
 from app import db
 from app.models.company import Company, Webhook
+from app.models.user import User
 from .remote import RemoteCompany
 
 def save_company_keys_controller(company_id, docusign_integration_key, docusign_secret_key, docusign_account_id):
@@ -58,3 +59,25 @@ def update_webhook_controller(webhook_id, url, pdf, docx):
     db.session.commit()
 
     return webhook
+
+def assign_company_to_new_user_controller(logged_user, company_id):
+        local_user = User.query.filter_by(sub=logged_user["sub"], active=True).first()
+        default_company = Company.query.filter_by(id="1").first()
+        user_attributes = dict(
+            username=logged_user["username"], email=logged_user["email"], sub=logged_user["sub"], name=logged_user["name"], verified=False
+        )
+
+        if local_user:
+            local_user.email = logged_user["email"]
+        else:
+            if not company_id:
+                if not default_company:
+                    company_id = None
+                else:
+                    company_id = default_company.id
+            user_attributes.update(company_id=company_id)
+            local_user = User(**user_attributes)
+
+        db.session.add(local_user)
+        db.session.commit()
+        return local_user

@@ -6,7 +6,6 @@ from sqlalchemy.sql.expression import false
 
 from app import aws_auth, db
 from app.users.remote import get_local_user
-from app.users.controllers import create_user_controller
 from app.models.company import Company
 from app.models.user import User
 from app.serializers.user_serializers import UserSerializer
@@ -19,7 +18,8 @@ from .controllers import (
     upload_logo_controller,
     get_download_url_controller,
     create_webhook_controller,
-    get_webhook_controller
+    get_webhook_controller,
+    assign_company_to_new_user_controller
 )
 
 company_bp = Blueprint("company", __name__)
@@ -147,11 +147,8 @@ def create_company(logged_user):
     if not logged_user['created']:
         serialized_company = CompanySerializer().dump(new_company)
 
-        new_user = create_user_controller(
-            email=logged_user["email"],
-            name=str(logged_user["name"]),
-            company_id=serialized_company["id"]
-        )
+        new_user = assign_company_to_new_user_controller(logged_user, serialized_company["id"])
+        
         db.session.add(new_user)
         db.session.commit()
         logged_user['created'] = True
