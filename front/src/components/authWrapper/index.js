@@ -8,7 +8,7 @@ import LogOutContext from '~/context/LogOutContext'
 
 import '@aws-amplify/ui-react/styles.css'
 import styles from './index.module.scss'
-import logo from '~/assets/logo.png'
+import logo from '~/assets/logo.svg'
 
 const components = {
 	Header() {
@@ -17,7 +17,7 @@ const components = {
 		return (
 			<View
 				textAlign="center"
-				padding={`${tokens.space.large} 0 ${tokens.space.small} 0`}>
+				padding={`${tokens.space.large} ${tokens.space.xxl} ${tokens.space.xs} ${tokens.space.xxl}`}>
 				<Image alt="Lawing logo" src={logo} />
 			</View>
 		)
