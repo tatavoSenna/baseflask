@@ -121,7 +121,12 @@ const ContractModal = ({
 							message: 'Número inválido!',
 						},
 					]}>
-					<InputNumber autoFocus value={maxUses} onChange={(e) => setUses(e)} />
+					<InputNumber
+						autoFocus
+						value={maxUses}
+						min={0}
+						onChange={(e) => setUses(e)}
+					/>
 					<Tooltip placement="top" title="Selecione 0 para a url não expirar">
 						<QuestionCircleFilled style={{ marginLeft: '7px' }} />
 					</Tooltip>
