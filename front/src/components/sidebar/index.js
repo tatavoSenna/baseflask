@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { bool, func } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -17,6 +17,8 @@ import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logoSmall from '~/assets/logo-small.png'
 import { setInitialFolder } from '~/states/modules/folder'
+
+const { Sider } = Layout
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const { data } = useSelector(({ settings }) => settings)
@@ -62,7 +64,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		return <img src={logoSmall} alt="logo" className={styles.logo} />
 	}
 
-	const { Sider } = Layout
+	const [collapse, setCollapse] = useState(false)
 
 	return (
 		<>
@@ -70,15 +72,16 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 				<Sider
 					className={styles.sider}
 					trigger={null}
-					collapsible
-					collapsed={collapsed}>
+					breakpoint="xl"
+					onCollapse={(collapsed) => {
+						setCollapse(collapsed)
+					}}>
 					<div className={styles.logoWrapper}>
-						{collapsed ? (
+						{collapse ? (
 							<img
 								src={logoSmall}
 								alt="logo"
 								className={styles.logoCollapsed}
-								height="50"
 								onError={(e) => {
 									e.target.onError = null
 									e.target.src = logoSmall
