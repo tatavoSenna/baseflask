@@ -8,10 +8,11 @@ from app.company.controllers import (
     update_webhook_controller, 
     upload_logo_controller,
     get_download_url_controller,
-    assign_company_to_new_user_controller
+    assign_company_to_new_user_controller,
+    create_company_controller
 )
 from app.test import factories
-from app.models import User
+from app.models import User, Company
 
 import pytest
 import io
@@ -121,6 +122,47 @@ def test_company_signatures_provider_initialization():
     db.session.delete(company)
     db.session.commit()
 
+def test_create_company_by_non_admin_user(session):
+    fake = Faker()
+
+    company_name = "Test company"
+
+    created_non_admin_user = {
+        "name": "Test User 1",
+        "username": fake.slug(),
+        "sub": fake.uuid4(),
+        "email": fake.email(),
+        "created": True,
+        "is_admin": False
+    }
+
+    response = create_company_controller(created_non_admin_user, company_name)
+
+    assert response == ({}, 403)
+
+
+def test_create_company_by_admin_user(session):
+    fake = Faker()
+
+    company_name = "Test company"
+
+    created_admin_user = {
+        "name": "Test User 1",
+        "username": fake.slug(),
+        "sub": fake.uuid4(),
+        "email": fake.email(),
+        "created": True,
+        "is_admin": True
+    }
+
+    response = create_company_controller(created_admin_user, company_name)
+    company = session.query(Company).filter_by(name=company_name).one()    
+
+    assert company is not None
+    assert company.name == company_name
+    assert response == company
+    assert company.id > 0
+
 def test_assign_company_to_new_user(session):
     fake = Faker()
 
@@ -132,15 +174,17 @@ def test_assign_company_to_new_user(session):
         "created": False
     }
 
-    company = factories.CompanyFactory(id=123)
+    company_name = "Test company"
 
-    assign_company_to_new_user_controller(test_user, company.id)
+    create_company_controller(test_user, company_name)
 
     user = session.query(User).filter_by(sub=test_user["sub"]).one()
+    company = session.query(Company).filter_by(name=company_name).one()    
 
     assert user is not None
     assert user.sub == test_user["sub"]
     assert user.name == test_user["name"]
     assert user.username == test_user["username"]
     assert user.email == test_user["email"]
+    assert test_user["created"] == True
     assert user.company_id == company.id
