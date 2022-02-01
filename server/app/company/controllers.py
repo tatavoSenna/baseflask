@@ -1,3 +1,4 @@
+from this import d
 from app import db
 from app.models.company import Company, Webhook
 from app.models.user import User
@@ -60,24 +61,43 @@ def update_webhook_controller(webhook_id, url, pdf, docx):
 
     return webhook
 
+def create_company_controller(logged_user, new_company_name):
+    if logged_user['created']:
+        if not logged_user['is_admin']:
+            return {}, 403
+    
+    company_attributes = dict(
+        name=new_company_name
+    )
+    new_company = Company(**company_attributes)
+    
+    db.session.add(new_company)
+    db.session.commit()
+    
+    if not logged_user['created']:
+       assign_company_to_new_user_controller(logged_user, new_company.id)
+    return new_company
+
+
 def assign_company_to_new_user_controller(logged_user, company_id):
-        local_user = User.query.filter_by(sub=logged_user["sub"], active=True).first()
-        default_company = Company.query.filter_by(id="1").first()
-        user_attributes = dict(
-            username=logged_user["username"], email=logged_user["email"], sub=logged_user["sub"], name=logged_user["name"], verified=False
-        )
+    local_user = User.query.filter_by(sub=logged_user["sub"], active=True).first()
+    default_company = Company.query.filter_by(id="1").first()
+    user_attributes = dict(
+        username=logged_user["username"], email=logged_user["email"], sub=logged_user["sub"], name=logged_user["name"], verified=False
+    )
 
-        if local_user:
-            local_user.email = logged_user["email"]
-        else:
-            if not company_id:
-                if not default_company:
-                    company_id = None
-                else:
-                    company_id = default_company.id
-            user_attributes.update(company_id=company_id)
-            local_user = User(**user_attributes)
+    if local_user:
+        local_user.email = logged_user["email"]
+    else:
+        if not company_id:
+            if not default_company:
+                company_id = None
+            else:
+                company_id = default_company.id
+        user_attributes.update(company_id=company_id)
+        local_user = User(**user_attributes)
 
-        db.session.add(local_user)
-        db.session.commit()
-        return local_user
+    db.session.add(local_user)
+    db.session.commit()
+    logged_user["created"] = True
+    return local_user

@@ -13,6 +13,7 @@ from app.models.company import Company, Webhook
 from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer, WebhookSerializer
 
 from .controllers import (
+    create_company_controller,
     save_company_keys_controller,
     update_webhook_controller,
     upload_logo_controller,
@@ -121,10 +122,6 @@ def get_company_list(logged_user):
 @aws_auth.authentication_required
 @get_local_user(raise_forbidden=False)
 def create_company(logged_user):
-    if logged_user['created']:
-        if not logged_user['is_admin']:
-            return {}, 403
-
     content = request.json
     company_name = content.get("company_name", None)
     if not company_name:
@@ -135,23 +132,7 @@ def create_company(logged_user):
     if company:
         return jsonify({"message": "Company already exists"}), 400
 
-    company_attributes = dict(
-
-        name=company_name
-    )
-    new_company = Company(**company_attributes)
-
-    db.session.add(new_company)
-    db.session.commit()
-
-    if not logged_user['created']:
-        serialized_company = CompanySerializer().dump(new_company)
-
-        new_user = assign_company_to_new_user_controller(logged_user, serialized_company["id"])
-        
-        db.session.add(new_user)
-        db.session.commit()
-        logged_user['created'] = True
+    new_company = create_company_controller(logged_user, company_name)
 
     return jsonify({"company": CompanySerializer().dump(new_company)})
 
