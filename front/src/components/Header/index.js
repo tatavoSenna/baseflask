@@ -58,19 +58,8 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 	const { Header } = Layout
 	return (
 		<Header
-			style={{ opacity: !isWeb && !isCollapsed ? 0.5 : 1 }}
-			className={classNames(styles.siteLayout, { [styles.mobile]: !isWeb })}>
-			{isWeb ? (
-				React.createElement(
-					isCollapsed ? ArrowRightOutlined : ArrowLeftOutlined,
-					{
-						className: styles.trigger,
-						onClick: () => handleCollapsed(),
-					}
-				)
-			) : (
-				<div />
-			)}
+			style={{ display: 'flex', justifyContent: 'flex-end' }}
+			className={classNames(styles.siteLayout)}>
 			<div
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
