@@ -18,7 +18,11 @@ function* getUserProfileSaga({ payload = {} }) {
 	try {
 		const { data } = yield call(api.get, url)
 		yield put(getUserProfileSuccess(data))
-		history.push('/documents')
+		if (data.created) {
+			history.push('/documents')
+		} else {
+			history.push('/newuser')
+		}
 	} catch (error) {
 		yield put(getUserProfileFailure())
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { array, number } from 'prop-types'
 
 import RadioField from '~/components/radioField'
@@ -43,105 +43,14 @@ function InputFactory({
 	const dispatch = useDispatch()
 	const children = []
 
-	function checkField(input, i) {
-		const compareCondition = (condition, input) => {
-			const { operator, value } = condition
-
-			let comparison
-			switch (operator) {
-				case '>':
-					comparison = input > value
-					break
-				case '>=':
-					comparison = input >= value
-					break
-				case '<':
-					comparison = input < value
-					break
-				case '<=':
-					comparison = input <= value
-					break
-				case '=':
-					// If value is an array, OR logic is applied
-					if (typeof value === 'object') {
-						value.forEach((item) => {
-							if (input === item) {
-								comparison = true
-							}
-						})
-					} else {
-						comparison = input === value
-					}
-					break
-				default:
-					comparison = false
-					break
-			}
-
-			return comparison
-		}
-
-		let comparison
-		let variableName
-
-		// This 'if' is here so templates whose variables are not objects still work
-		if (typeof pageFieldsData[i].variable === 'string') {
-			variableName = pageFieldsData[i].variable
-		} else {
-			variableName = pageFieldsData[i].variable.name
-		}
-
-		pageFieldsData.forEach((field, fieldIndex) => {
-			if (Array.isArray(field.condition)) {
-				comparison = Array(field.condition.length).fill(false)
-				field.condition.forEach((condition, index) => {
-					let value
-					if (condition.variable === variableName) {
-						value = input
-					} else {
-						value = form.getFieldValue(condition.variable)
-					}
-					comparison[index] = compareCondition(condition, value)
-				})
-				if (comparison.every((i) => i === true)) {
-					dispatch(
-						updateVisible({
-							value: true,
-							pageIndex: currentFormStep,
-							fieldIndex,
-						})
-					)
-				} else {
-					dispatch(
-						updateVisible({
-							value: false,
-							pageIndex: currentFormStep,
-							fieldIndex,
-						})
-					)
-				}
-			} else if (field.condition && field.condition.variable === variableName) {
-				comparison = compareCondition(field.condition, input)
-				if (comparison) {
-					dispatch(
-						updateVisible({
-							value: true,
-							pageIndex: currentFormStep,
-							fieldIndex,
-						})
-					)
-				} else {
-					dispatch(
-						updateVisible({
-							value: false,
-							pageIndex: currentFormStep,
-							fieldIndex,
-						})
-					)
-				}
-			}
-		})
-	}
+	// Call updateVisible after first render, so the default values are considered for visibility
+	useEffect(() => {
+		dispatch(
+			updateVisible({
+				form,
+			})
+		)
+	}, [dispatch, form])
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional, initialValue, variable } = pageFieldsData[i]
@@ -161,6 +70,19 @@ function InputFactory({
 		}
 		const first = i === 0
 
+		let onchange = (selector) =>
+			conditional
+				? (e) =>
+						dispatch(
+							updateVisible({
+								input: selector(e),
+								form,
+								fieldIndex: i,
+								pageIndex: currentFormStep,
+							})
+						)
+				: undefined
+
 		switch (type) {
 			case 'radio':
 				children.push(
@@ -170,9 +92,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -184,9 +104,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 						first={first}
 					/>
 				)
@@ -199,9 +117,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 						first={first}
 					/>
 				)
@@ -214,9 +130,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 						first={first}
 					/>
 				)
@@ -229,9 +143,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -243,7 +155,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={conditional ? (e) => checkField(e, i) : undefined}
+						onChange={onchange((e) => e)}
 					/>
 				)
 				break
@@ -255,9 +167,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -269,9 +179,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -283,9 +191,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -297,9 +203,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -311,9 +215,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -325,9 +227,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -339,9 +239,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -353,9 +251,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -367,9 +263,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -381,9 +275,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.checked, i) : undefined
-						}
+						onChange={onchange((e) => e.target.checked)}
 					/>
 				)
 				break
@@ -405,9 +297,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -450,9 +340,7 @@ function InputFactory({
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -471,9 +359,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={
-							conditional ? (e) => checkField(e.target.value, i) : undefined
-						}
+						onChange={onchange((e) => e.target.value)}
 						first={first}
 					/>
 				)

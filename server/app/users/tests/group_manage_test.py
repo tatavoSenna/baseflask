@@ -3,7 +3,7 @@ from app.users.controllers import (
     add_user_to_group_controller,
     list_users_on_group_controller,
     remove_user_from_group_controller,
-    edit_user_controller
+    edit_user_controller,
 )
 from app.models.user import Group, User, ParticipatesOn
 
@@ -95,9 +95,7 @@ def test_patch_user_groups():
     assert group3.name not in previous_groups
 
     edit_user_controller(
-        username=user.username,
-        company_id=company.id,
-        group_ids=[group2.id, group3.id]
+        username=user.username, company_id=company.id, group_ids=[group2.id, group3.id]
     )
 
     new_groups = []
@@ -118,10 +116,6 @@ def test_patch_user_with_empty_groups():
 
     assert len(user.participates_on) == 1
 
-    edit_user_controller(
-        username=user.username,
-        company_id=company.id,
-        group_ids=[]
-    )
+    edit_user_controller(username=user.username, company_id=company.id, group_ids=[])
 
     assert len(user.participates_on) == 0

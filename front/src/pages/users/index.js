@@ -39,7 +39,7 @@ function Users() {
 		editUser,
 		pages,
 	} = useSelector(({ users }) => users)
-	const { groupList, showGroupModal, newGroup } = useSelector(
+	const { groupsList, showGroupModal, newGroup } = useSelector(
 		({ groups }) => groups
 	)
 
@@ -144,7 +144,7 @@ function Users() {
 						handleNewUser={handleNewUser}
 						showModal={showModal}
 						newUser={newUser}
-						groups={groupList}
+						groups={groupsList}
 					/>
 					<UserEditModal
 						handleCancel={handleCancelEdit}
@@ -152,7 +152,7 @@ function Users() {
 						handleEditUser={handleEditUser}
 						showModal={showEditModal}
 						editUser={editUser}
-						groups={groupList}
+						groups={groupsList}
 					/>
 					<GroupModal
 						handleCancel={handleGroupCancel}

@@ -17,6 +17,7 @@ const { actions, reducer } = createSlice({
 		setSignaturesProvider: (state, { payload }) => {
 			extend(state, { signatures_provider: payload })
 		},
+		clearSession: () => ({}),
 	},
 })
 
@@ -26,6 +27,7 @@ export const {
 	getUserProfileFailure,
 	setCompanyId,
 	setSignaturesProvider,
+	clearSession,
 } = actions
 
 export { default as sessionSaga } from './sagas'

@@ -1,9 +1,10 @@
 import React from 'react'
-import { object, bool, number, string } from 'prop-types'
+import { object, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Button, Typography, PageHeader } from 'antd'
 import { appendAnswer, answerRequest } from '~/states/modules/answer'
+import { nextPage, previousPage } from 'states/modules/question'
 import { createContractExternal } from '~/states/modules/externalContract'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
@@ -23,50 +24,42 @@ const layout = {
 	},
 }
 
-const FormFactory = ({
-	pageFieldsData,
-	isLastPage,
-	formStepsCount,
-	url,
-	token,
-	initialValues,
-	currentFormStep,
-}) => {
+const FormFactory = ({ token, initialValues }) => {
 	const dispatch = useDispatch()
 
-	const { visible } = useSelector(({ question }) => question)
+	const {
+		data: questions,
+		visible,
+		currentPage,
+	} = useSelector(({ question }) => question)
 
 	const history = useHistory()
 	const [form] = Form.useForm()
-	const lastPage = formStepsCount
-
-	const handleBack = () => {
-		const previousPage = currentFormStep - 1
-		history.push({
-			pathname: url,
-			state: { current: previousPage },
-		})
-	}
+	const lastPage = questions.length
+	const isLastPage = currentPage + 1 === lastPage
+	const pageFieldsData = questions[currentPage]
 
 	function handleGoTo(path) {
 		return history.push(path)
 	}
 
+	const onPrevious = () => {
+		dispatch(previousPage())
+	}
+
 	const onSubmit = (data) => {
 		dispatch(
-			appendAnswer({ data, pageFieldsData, visible: visible[currentFormStep] })
+			appendAnswer({ data, pageFieldsData, visible: visible[currentPage] })
 		)
+
 		if (!isLastPage) {
-			const nextPage = currentFormStep + 1
-			return history.push({
-				pathname: url,
-				state: { current: nextPage },
-			})
-		}
-		if (token) {
-			dispatch(createContractExternal({ token, visible }))
+			dispatch(nextPage())
 		} else {
-			dispatch(answerRequest({ history, visible }))
+			if (token) {
+				dispatch(createContractExternal({ token, visible }))
+			} else {
+				dispatch(answerRequest({ history, visible }))
+			}
 		}
 	}
 
@@ -85,10 +78,10 @@ const FormFactory = ({
 				{pageFieldsData && pageFieldsData.fields.length > 0 && (
 					<InputFactory
 						data={pageFieldsData.fields}
-						visible={visible[currentFormStep]}
+						visible={visible[currentPage]}
 						form={form}
 						initialValues={initialValues}
-						currentFormStep={currentFormStep}
+						currentFormStep={currentPage}
 					/>
 				)}
 				<div
@@ -123,19 +116,19 @@ const FormFactory = ({
 							</Form.Item>
 
 							<Form.Item>
-								{true && currentFormStep > 0 && (
+								{true && currentPage > 0 && (
 									<Button
 										type="default"
 										htmlType="button"
 										className={styles.button}
-										onClick={handleBack}>
+										onClick={onPrevious}>
 										Anterior
 									</Button>
 								)}
 							</Form.Item>
 							{lastPage > 1 && (
 								<Typography className={styles.text}>
-									{currentFormStep + 1} de {lastPage}
+									{currentPage + 1} de {lastPage}
 								</Typography>
 							)}
 							<Form.Item>
@@ -157,15 +150,6 @@ const FormFactory = ({
 export default FormFactory
 
 FormFactory.propTypes = {
-	pageFieldsData: object,
-	isLastPage: bool,
-	formStepsCount: number,
-	url: string,
 	token: string,
 	initialValues: object,
-	currentFormStep: number,
-}
-FormFactory.defaultProps = {
-	content: [],
-	edge: {},
 }

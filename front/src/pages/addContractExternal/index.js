@@ -10,26 +10,6 @@ import {
 	verifyToken,
 	storeURLVariables,
 } from '~/states/modules/externalContract'
-import { listVisible } from '~/states/modules/question'
-
-const getCurrentStepAndComponent = (
-	pageFieldsData,
-	isLastPage,
-	pageNumber,
-	token,
-	initialValues,
-	currentFormStep
-) => (
-	<FormFactory
-		pageFieldsData={pageFieldsData}
-		isLastPage={isLastPage}
-		formStepsCount={pageNumber}
-		url={`/documentcreate/${token}`}
-		token={token}
-		initialValues={initialValues}
-		currentFormStep={currentFormStep}
-	/>
-)
 
 const getMessage = (success) => (
 	<Result
@@ -53,8 +33,6 @@ const AddContractExternal = () => {
 		({ externalContract }) => externalContract
 	)
 
-	const { data: questions } = useSelector(({ question }) => question)
-
 	useEffect(() => {
 		const variables = {}
 		for (var p of searchParams) {
@@ -68,52 +46,13 @@ const AddContractExternal = () => {
 		dispatch(verifyToken({ token }))
 	}, [dispatch, token])
 
-	const state = useHistory().location.state
-	let values = { current: 0 }
-	if (state && state.current) {
-		values.current = state.current
-	}
-	const currentFormStep = parseInt(values.current)
-
-	useEffect(() => {
-		if (Object.keys(questions).length > 0) {
-			dispatch(listVisible({ questions }))
-		}
-	}, [dispatch, questions])
-
-	const [stepComponent, setStepComponent] = useState(<FormFactory />)
-
-	useEffect(() => {
-		const pageFieldsData = questions ? questions[currentFormStep] : null
-		const isLastPage = currentFormStep === questions.length - 1
-		const pageNumber = questions.length
-
-		const initialValues = {}
-		if (pageFieldsData) {
-			pageFieldsData.fields.forEach((field) =>
-				Object.entries(filledVars).forEach(([varName, value]) => {
-					if (field.variable.name === varName) {
-						initialValues[varName] = value
-					}
-				})
-			)
-		}
-
-		const pageFormComponent = getCurrentStepAndComponent(
-			pageFieldsData,
-			isLastPage,
-			pageNumber,
-			token,
-			initialValues,
-			currentFormStep
-		)
-
-		setStepComponent(pageFormComponent)
-	}, [currentFormStep, questions, token, filledVars])
-
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
-			{authorized && !created ? stepComponent : getMessage(created)}
+			{authorized && !created ? (
+				<FormFactory token={token} initialValues={filledVars} />
+			) : (
+				getMessage(created)
+			)}
 		</Layout>
 	)
 }

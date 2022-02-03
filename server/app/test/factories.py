@@ -26,7 +26,7 @@ class CompanyFactory(BaseFactory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("company")
-    
+
 
 class UserFactory(BaseFactory):
     class Meta:
@@ -56,7 +56,8 @@ class ParticipatesOnFactory(BaseFactory):
     id = factory.Sequence(lambda n: n)
     group = factory.SubFactory(GroupFactory)
     user = factory.SubFactory(UserFactory)
-    
+
+
 class DocumentTemplateFactory(BaseFactory):
     class Meta:
         model = models.documents.DocumentTemplate
@@ -66,6 +67,7 @@ class DocumentTemplateFactory(BaseFactory):
     textfile = factory.Faker("last_name_nonbinary")
     company = factory.SubFactory(CompanyFactory)
 
+
 class DocumentFactory(BaseFactory):
     class Meta:
         model = models.documents.Document
@@ -74,6 +76,7 @@ class DocumentFactory(BaseFactory):
     company = factory.SubFactory(CompanyFactory)
     user = factory.SubFactory(UserFactory)
     template = factory.SubFactory(DocumentTemplateFactory)
+
 
 class WebhookFactory(BaseFactory):
     class Meta:

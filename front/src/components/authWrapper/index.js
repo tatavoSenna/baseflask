@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { node } from 'prop-types'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import { Hub } from 'aws-amplify'
 import { Authenticator, View, Image, useTheme } from '@aws-amplify/ui-react'
 import LogOutContext from '~/context/LogOutContext'
+import { clearSession } from 'states/modules/session'
 
 import '@aws-amplify/ui-react/styles.css'
 import styles from './index.module.scss'
@@ -25,14 +27,16 @@ const components = {
 }
 
 function AuthWrapper({ children }) {
-	let history = useHistory()
+	const dispatch = useDispatch()
+	const history = useHistory()
 	useEffect(() => {
 		Hub.listen('auth', (data) => {
 			if (data.payload.event === 'signIn') {
+				dispatch(clearSession())
 				history.push('/')
 			}
 		})
-	}, [history])
+	}, [dispatch, history])
 
 	return (
 		<Authenticator

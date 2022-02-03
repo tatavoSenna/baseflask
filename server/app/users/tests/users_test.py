@@ -33,25 +33,23 @@ def test_retrieve_specific_users():
 
     factories.UserFactory(
         company=company,
-        email='testing@testCorp.com',
-        username='b1',
-        name='tester1',
+        email="testing@testCorp.com",
+        username="b1",
+        name="tester1",
     )
     factories.UserFactory(
         company=company,
-        email='test@testCorp.com',
-        username='b2',
-        name='tester2',
+        email="test@testCorp.com",
+        username="b2",
+        name="tester2",
     )
 
     paginated_query2 = list_user_controller(company.id)
-    paginated_query3 = list_user_controller(company.id, search_param='')
-    paginated_query4 = list_user_controller(company.id, search_param='Mamão')
-    paginated_query5 = list_user_controller(company.id, search_param='téstẽr')
-    paginated_query6 = list_user_controller(
-        company.id, search_param='@testCorp')
-    paginated_query7 = list_user_controller(
-        company.id, search_param='tEsTeR2')
+    paginated_query3 = list_user_controller(company.id, search_param="")
+    paginated_query4 = list_user_controller(company.id, search_param="Mamão")
+    paginated_query5 = list_user_controller(company.id, search_param="téstẽr")
+    paginated_query6 = list_user_controller(company.id, search_param="@testCorp")
+    paginated_query7 = list_user_controller(company.id, search_param="tEsTeR2")
 
     assert paginated_query2.total == 2
     assert paginated_query3.total == 2

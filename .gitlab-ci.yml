@@ -1,11 +1,23 @@
+before_script:
+  - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  - python3 get-pip.py
+
 stages:
+  - black
   - staging
+
+black:
+  stage: black
+  allow_failure: false
+  script:
+    - pip3 install black
+    - black --check ./server
+  only:
+    - merge_requests
 
 merge_into_staging:
   stage: staging
   script:
-    - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py 
-    - python3 get-pip.py
     - pip3 install GitPython
     - pip3 install --upgrade python-gitlab
     - python3 ./devops/staging.py

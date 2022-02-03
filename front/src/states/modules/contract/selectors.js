@@ -1,11 +1,7 @@
 // import get from 'lodash/get'
 // import sortBy from 'lodash/sortBy'
-import React from 'react'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
-import { Typography } from 'antd'
-
-const { Text } = Typography
 
 moment.locale('pt-br')
 

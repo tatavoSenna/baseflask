@@ -2,6 +2,14 @@ import { extend } from 'lodash'
 import update from 'immutability-helper'
 import { errorMessage, successMessage } from '~/services/messager'
 
+const formatWorkflowNodes = (workflowNodes) => {
+	const workflowNodesList = []
+	for (const key in workflowNodes) {
+		workflowNodesList.push(workflowNodes[key])
+	}
+	return workflowNodesList
+}
+
 export const selectEdit = (data, payload) => {
 	let partiesList = []
 	let signersCount = 0
@@ -48,18 +56,19 @@ export const selectEdit = (data, payload) => {
 		pagesList.push(pageList)
 	})
 
-	return extend(data, {
+	const temp = extend(data, {
 		title: payload.name,
 		form: payload.form,
 		text: payload.textfile,
-		workflow: extend(data.workflow, {
-			nodes: Object.values(payload.workflow.nodes),
+		workflow: extend(payload.workflow, {
+			nodes: formatWorkflowNodes(payload.workflow.nodes),
 		}),
 		signers: extend(data.signers, {
 			parties: partiesList,
 		}),
 		variables: pagesList,
 	})
+	return temp
 }
 
 export const selectForm = (form, payload) => {
@@ -112,34 +121,10 @@ export const removeField = (form, payload) => {
 }
 
 export const selectStep = (workflow, payload) => {
-	return extend(workflow, {
-		nodes: workflow.nodes.map((node, index) => {
-			if (index === payload.index) {
-				switch (payload.name) {
-					case 'title':
-						return extend(node, {
-							title: payload.value,
-						})
-					case 'responsible_users':
-						return extend(node, {
-							responsible_users: payload.value,
-						})
-					case 'responsible_group':
-						return extend(node, {
-							responsible_group: payload.value,
-						})
-					case 'deadline':
-						return extend(node, {
-							deadline: payload.value,
-						})
-					default:
-						return node
-				}
-			} else {
-				return node
-			}
-		}),
-	})
+	const { node, index } = payload
+	const { nodes } = workflow
+	nodes[index] = node
+	return extend(workflow, { nodes })
 }
 
 export const addStep = (workflow, payload) => {

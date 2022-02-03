@@ -3,7 +3,6 @@ import { Tag, Button, Space, Tooltip } from 'antd'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
-import moment from 'moment'
 
 export const getColumns = (
 	handleToGo,
@@ -35,9 +34,9 @@ export const getColumns = (
 			return {
 				onClick: () => {
 					sortTable('title')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: 'Template',
@@ -48,9 +47,9 @@ export const getColumns = (
 			return {
 				onClick: () => {
 					sortTable('template')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: 'Criado por',
@@ -61,9 +60,9 @@ export const getColumns = (
 			return {
 				onClick: () => {
 					sortTable('username')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: 'Criado em',
@@ -74,9 +73,9 @@ export const getColumns = (
 			return {
 				onClick: () => {
 					sortTable('creation_date')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: 'Prazo',
@@ -84,13 +83,12 @@ export const getColumns = (
 		key: 'dueDate',
 		sorter: true,
 		onHeaderCell: (column) => {
-			var cont = 0
 			return {
 				onClick: () => {
 					sortTable('due_date')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: 'Status',
@@ -149,9 +147,9 @@ export const getColumns = (
 			return {
 				onClick: () => {
 					sortTable('status')
-				}
-			};
-		}
+				},
+			}
+		},
 	},
 	{
 		title: '',

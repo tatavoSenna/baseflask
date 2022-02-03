@@ -55,6 +55,7 @@ const { actions, reducer } = createSlice({
 		addCompanySuccess: (state) => {
 			extend(state, {
 				loading: false,
+				error: undefined,
 			})
 		},
 		addCompanyFailure: (state, { payload }) =>

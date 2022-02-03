@@ -20,25 +20,27 @@ class Company(db.Model):
     documents = db.relationship("Document", back_populates="company")
 
     signatures_provider = db.Column(
-        StringChoiceField(['docusign', 'd4sign']),
-        server_default='docusign',
-        nullable=True
+        StringChoiceField(["docusign", "d4sign"]),
+        server_default="docusign",
+        nullable=True,
     )
 
     d4sign_api_token = db.Column(db.String(255), nullable=True)
     d4sign_api_cryptkey = db.Column(db.String(255), nullable=True)
-    d4sign_api_hmac_secret = db.Column(db.String(255), nullable=True)  # authorizes webhook calls
+    d4sign_api_hmac_secret = db.Column(
+        db.String(255), nullable=True
+    )  # authorizes webhook calls
     d4sign_safe_name = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return "<Company %r>" % self.name
 
+
 class Webhook(db.Model):
     __tablename__ = "webhook"
 
     id = db.Column(db.Integer, primary_key=True)
-    company_id = db.Column(
-        db.Integer, db.ForeignKey("company.id"), nullable=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=True)
     webhook = db.Column(db.String(1500), unique=True, nullable=True)
     pdf = db.Column(db.Boolean, default=False, nullable=True)
     docx = db.Column(db.Boolean, default=False, nullable=True)

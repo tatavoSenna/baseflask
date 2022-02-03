@@ -5,11 +5,11 @@ from app import db
 from app.company.controllers import (
     create_webhook_controller,
     save_company_keys_controller,
-    update_webhook_controller, 
+    update_webhook_controller,
     upload_logo_controller,
     get_download_url_controller,
     assign_company_to_new_user_controller,
-    create_company_controller
+    create_company_controller,
 )
 from app.test import factories
 from app.models import User, Company
@@ -21,6 +21,7 @@ from unittest.mock import patch
 import copy
 from faker import Faker
 
+
 def test_save_keys():
     company = factories.CompanyFactory()
     docusign_integration_key = "34545tgwc45g56vg5ee5"
@@ -28,7 +29,8 @@ def test_save_keys():
     docusign_account_id = "34534ft345g6y46h"
 
     save_company_keys_controller(
-        company.id, docusign_integration_key, docusign_secret_key, docusign_account_id)
+        company.id, docusign_integration_key, docusign_secret_key, docusign_account_id
+    )
 
     assert company.docusign_integration_key == docusign_integration_key
     assert company.docusign_secret_key == docusign_secret_key
@@ -38,13 +40,16 @@ def test_save_keys():
     docusign_secret_key = None
     docusign_account_id = "67534fty75g6c86h"
 
-    save_company_keys_controller(company.id, docusign_integration_key, docusign_secret_key, docusign_account_id)
-    
+    save_company_keys_controller(
+        company.id, docusign_integration_key, docusign_secret_key, docusign_account_id
+    )
+
     assert company.docusign_integration_key == docusign_integration_key
     assert company.docusign_secret_key == "453456574yf4hyv6h767"
     assert company.docusign_account_id == docusign_account_id
 
-@ patch('app.company.controllers.RemoteCompany.upload_logo')
+
+@patch("app.company.controllers.RemoteCompany.upload_logo")
 def test_upload_logo(upload_logo_mock):
     company_id = 123
     company = factories.CompanyFactory(id=company_id)
@@ -55,7 +60,8 @@ def test_upload_logo(upload_logo_mock):
 
     upload_logo_mock.assert_called_once_with(company.id, logo_img)
 
-@ patch('app.company.controllers.RemoteCompany.download_logo_url')
+
+@patch("app.company.controllers.RemoteCompany.download_logo_url")
 def test_download_logo(download_logo_mock):
     company_id = 123
     company = factories.CompanyFactory(id=company_id)
@@ -64,13 +70,16 @@ def test_download_logo(download_logo_mock):
 
     download_logo_mock.assert_called_once_with(company.id)
 
+
 def test_update_webhook():
 
     # Create fake company and fake webhook
     id = 123
     company_id = 123
     company = factories.CompanyFactory(id=company_id)
-    webhook = factories.WebhookFactory(id=id,company_id = company_id, pdf = False, docx = False)
+    webhook = factories.WebhookFactory(
+        id=id, company_id=company_id, pdf=False, docx=False
+    )
 
     # Copies webhook to test if changes are being made correctly
     comparison_webhook = copy.deepcopy(webhook)
@@ -93,6 +102,7 @@ def test_update_webhook():
     assert updated_webhook.docx == True
     assert updated_webhook.webhook == "http://test.com"
 
+
 def test_create_webhook():
     company_id = 1
     company = factories.CompanyFactory(id=company_id)
@@ -105,22 +115,24 @@ def test_create_webhook():
     assert webhook.docx == True
     assert webhook.webhook == "http://test.com"
 
+
 def test_company_signatures_provider_initialization():
     company = factories.CompanyFactory()
     db.session.commit()
-    assert company.signatures_provider == 'docusign'
-    company = factories.CompanyFactory(signatures_provider='not permitted')
+    assert company.signatures_provider == "docusign"
+    company = factories.CompanyFactory(signatures_provider="not permitted")
     with pytest.raises(exc.StatementError):
         db.session.commit()
     db.session.rollback()
-    company = factories.CompanyFactory(signatures_provider='d4sign')
+    company = factories.CompanyFactory(signatures_provider="d4sign")
     db.session.commit()
-    assert company.signatures_provider == 'd4sign'
+    assert company.signatures_provider == "d4sign"
     company.signatures_provider = None
     db.session.commit()
     assert company.signatures_provider is None
     db.session.delete(company)
     db.session.commit()
+
 
 def test_create_company_by_non_admin_user(session):
     fake = Faker()
@@ -133,7 +145,7 @@ def test_create_company_by_non_admin_user(session):
         "sub": fake.uuid4(),
         "email": fake.email(),
         "created": True,
-        "is_admin": False
+        "is_admin": False,
     }
 
     response = create_company_controller(created_non_admin_user, company_name)
@@ -152,16 +164,17 @@ def test_create_company_by_admin_user(session):
         "sub": fake.uuid4(),
         "email": fake.email(),
         "created": True,
-        "is_admin": True
+        "is_admin": True,
     }
 
     response = create_company_controller(created_admin_user, company_name)
-    company = session.query(Company).filter_by(name=company_name).one()    
+    company = session.query(Company).filter_by(name=company_name).one()
 
     assert company is not None
     assert company.name == company_name
     assert response == company
     assert company.id > 0
+
 
 def test_assign_company_to_new_user(session):
     fake = Faker()
@@ -171,7 +184,7 @@ def test_assign_company_to_new_user(session):
         "username": fake.slug(),
         "sub": fake.uuid4(),
         "email": fake.email(),
-        "created": False
+        "created": False,
     }
 
     company_name = "Test company"
@@ -179,7 +192,7 @@ def test_assign_company_to_new_user(session):
     create_company_controller(test_user, company_name)
 
     user = session.query(User).filter_by(sub=test_user["sub"]).one()
-    company = session.query(Company).filter_by(name=company_name).one()    
+    company = session.query(Company).filter_by(name=company_name).one()
 
     assert user is not None
     assert user.sub == test_user["sub"]

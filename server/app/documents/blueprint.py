@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import io
 import logging
@@ -65,7 +66,9 @@ from .controllers import (
     get_docx_download_url_controller,
     change_variables_controller,
     create_folder_controller,
+    edit_document_workflow_controller,
 )
+
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
 from app.documents.formatters.variables_formatter import format_variables
@@ -108,15 +111,17 @@ def get_document_list(current_user):
         abort(400, "invalid parameters")
 
     paginated_query = Document.query.filter_by(
-            company_id=current_user["company_id"], parent_id=folder_id
-        )
+        company_id=current_user["company_id"], parent_id=folder_id
+    )
 
     if type:
-        files_or_folders = type == "folder" 
+        files_or_folders = type == "folder"
         paginated_query = paginated_query.filter_by(is_folder=files_or_folders)
 
     if search_term:
-        paginated_query = paginated_query.filter(Document.title.ilike(f"%{search_term}%"))
+        paginated_query = paginated_query.filter(
+            Document.title.ilike(f"%{search_term}%")
+        )
 
     if order_by:
         order_by_dict = {
@@ -125,23 +130,25 @@ def get_document_list(current_user):
             "status": Document.current_step,
             "template": DocumentTemplate.name,
             "creation_date": Document.created_at,
-            "username": User.name
+            "username": User.name,
         }
         order_dict = {
             "ascend": asc(order_by_dict[order_by]),
-            "descend": desc(order_by_dict[order_by])
+            "descend": desc(order_by_dict[order_by]),
         }
-        
+
         if order_by == "template":
             paginated_query = paginated_query.join(Document.template)
-        
+
         if order_by == "username":
             paginated_query = paginated_query.join(Document.user)
 
-        paginated_query = paginated_query.order_by(desc(Document.is_folder), order_dict[order])
+        paginated_query = paginated_query.order_by(
+            desc(Document.is_folder), order_dict[order]
+        )
     else:
         paginated_query = paginated_query.order_by(desc(Document.is_folder))
-        
+
     paginated_query = paginated_query.paginate(page=page, per_page=per_page)
 
     return jsonify(
@@ -165,9 +172,13 @@ def change_folder(current_user):
     document = Document.query.filter_by(id=document_id).first()
 
     folder_already_exists = Document.query.filter_by(
-        parent_id=destination_id, title=document.title).all()
+        parent_id=destination_id, title=document.title
+    ).all()
     if folder_already_exists:
-        abort(400, description= f'Já existe um documento ou pasta com este nome na pasta de destino.')
+        abort(
+            400,
+            description=f"Já existe um documento ou pasta com este nome na pasta de destino.",
+        )
 
     document.parent_id = destination_id
     db.session.commit()
@@ -281,11 +292,10 @@ def create(current_user):
     # Check if content being created is a folder
     if is_folder:
 
-        folder = Document.query.filter_by(
-            parent_id=parent, title=title).all()
+        folder = Document.query.filter_by(parent_id=parent, title=title).all()
 
         if folder:
-            abort(400, description='Titulo da pasta já existe nesse diretório.')
+            abort(400, description="Titulo da pasta já existe nesse diretório.")
 
         document = create_folder_controller(
             current_user["id"],
@@ -630,5 +640,32 @@ def modify_document(current_user, document_id):
     except Exception as e:
         logging.exception("Could not change document variables")
         abort(400, "Could not change document variables")
+
+    return DocumentSerializer().dump(document)
+
+
+@documents_bp.route("/<int:document_id>/edit_workflow", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def edit_document_workflow(current_user, document_id):
+    content = request.json
+    new_group = content.get("group", None)
+    new_responsible_users = content.get("responsible_users", None)
+    new_due_date = content.get("due_date", None)
+
+    if new_group or new_responsible_users or new_due_date:
+        document = get_document_controller(document_id)
+        try:
+            document = edit_document_workflow_controller(
+                document, new_group, new_responsible_users, new_due_date
+            )
+        except Exception as e:
+            logging.exception(e)
+            return jsonify({"message": "Could not edit document workflow"}), 400
+    else:
+        return (
+            jsonify({"message": "Must send group, responsibl_users or due_date"}),
+            400,
+        )
 
     return DocumentSerializer().dump(document)

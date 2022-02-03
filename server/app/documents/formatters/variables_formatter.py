@@ -13,14 +13,25 @@ from babel.numbers import format_currency
 from app.documents.formatters.number_formatter import NumberFormatter
 
 
-month_dictionary = {1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril', 5: 'Maio', 6: 'Junho',
-                    7: 'Julho', 8: 'Agosto', 9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'}
+month_dictionary = {
+    1: "Janeiro",
+    2: "Fevereiro",
+    3: "Março",
+    4: "Abril",
+    5: "Maio",
+    6: "Junho",
+    7: "Julho",
+    8: "Agosto",
+    9: "Setembro",
+    10: "Outubro",
+    11: "Novembro",
+    12: "Dezembro",
+}
 
 
 def format_variables(variables, document_template_id):
     # TODO: Calling the database twice
-    variables_specification = DocumentTemplate.query.get(
-        document_template_id).variables
+    variables_specification = DocumentTemplate.query.get(document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
 
     def format_variable(specs, variable, variables, struct_name):
@@ -51,7 +62,9 @@ def format_variables(variables, document_template_id):
                     logging.exception(e)
 
         elif variable_type == "number":
-            return NumberFormatter(variables[variable], specs.get("doc_display_style", None))
+            return NumberFormatter(
+                variables[variable], specs.get("doc_display_style", None)
+            )
 
         elif variable_type == "percentage":
             if specs["doc_display_style"] == "extended":
@@ -61,7 +74,7 @@ def format_variables(variables, document_template_id):
                     logging.exception(e)
             elif specs["doc_display_style"] == "plain":
                 try:
-                    return str(variables[variable]).replace(".", ",") + '%'
+                    return str(variables[variable]).replace(".", ",") + "%"
                 except Exception as e:
                     logging.exception(e)
 
@@ -70,37 +83,38 @@ def format_variables(variables, document_template_id):
                 try:
                     list = variables[variable][0:10].split("-", 2)
                     dia = list[2]
-                    mes = month_dictionary.get(
-                        int(list[1].strip("0")))
+                    mes = month_dictionary.get(int(list[1].strip("0")))
                     ano = list[0]
                     if mes != None:
-                        return f'{dia} de {mes} de {ano}'
+                        return f"{dia} de {mes} de {ano}"
                     else:
-                        return datetime.strptime(variables[variable][0:10], '%d de %B de %Y')
+                        return datetime.strptime(
+                            variables[variable][0:10], "%d de %B de %Y"
+                        )
                 except Exception as e:
                     logging.exception(e)
             else:
                 try:
-                    date = datetime.strptime(
-                        variables[variable][0:10], "%Y-%m-%d")
+                    date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
                     return date.strftime(specs["doc_display_style"])
                 except Exception as e:
                     logging.exception(e)
 
         elif variable_type == "database":
             try:
-                response = requests.get(
-                    f'{specs["database_endpoint"]}').json()
+                response = requests.get(f'{specs["database_endpoint"]}').json()
 
                 new_variables = {}
 
                 for item in response:
-                    if item[specs['search_key']] == int(variables[variable]):
+                    if item[specs["search_key"]] == int(variables[variable]):
                         search_result = item
                         break
-                
+
                 for key in search_result:
-                    new_variables[slugify(key).upper().replace('-','_')] = search_result[key]
+                    new_variables[
+                        slugify(key).upper().replace("-", "_")
+                    ] = search_result[key]
 
                 return new_variables
             except Exception as e:
@@ -113,8 +127,7 @@ def format_variables(variables, document_template_id):
                     if len(list_variable) < 2:
                         return list_variable[0]
                     last_element = list_variable.pop()
-                    list_variable[-1] = list_variable[-1] + \
-                        " e " + last_element
+                    list_variable[-1] = list_variable[-1] + " e " + last_element
                     return ", ".join(list_variable)
                 except Exception as e:
                     logging.exception(e)
@@ -122,8 +135,7 @@ def format_variables(variables, document_template_id):
             elif specs["doc_display_style"] == "bullets":
                 if text_type == ".txt":
                     try:
-                        return Markup(
-                            "</li><p>").join(variables[variable])
+                        return Markup("</li><p>").join(variables[variable])
                     except Exception as e:
                         logging.exception(e)
 
@@ -137,21 +149,23 @@ def format_variables(variables, document_template_id):
             try:
                 num_variable = variables[variable]
                 if specs["doc_display_style"] in ["currency_extended", "extended"]:
-                    return format_currency(num_variable, "BRL", locale='pt_BR') + \
-                        " (" + num2words(num_variable,
-                                         lang='pt_BR', to='currency') + ")"
-                return format_currency(
-                    num_variable, "BRL", locale='pt_BR')
+                    return (
+                        format_currency(num_variable, "BRL", locale="pt_BR")
+                        + " ("
+                        + num2words(num_variable, lang="pt_BR", to="currency")
+                        + ")"
+                    )
+                return format_currency(num_variable, "BRL", locale="pt_BR")
             except Exception as e:
                 logging.exception(e)
 
         elif variable_type == "person":
             try:
                 items = variables[struct_name]
-                if items['PERSON_TYPE'] == 'Física':
-                    person_type = 'natural'
-                elif items['PERSON_TYPE'] == 'Jurídica':
-                    person_type = 'legal'
+                if items["PERSON_TYPE"] == "Física":
+                    person_type = "natural"
+                elif items["PERSON_TYPE"] == "Jurídica":
+                    person_type = "legal"
                 text_template = specs["doc_display_style"][person_type]
                 jinja_template = jinja_env.from_string(text_template)
                 filled_text = jinja_template.render(items)
@@ -166,7 +180,7 @@ def format_variables(variables, document_template_id):
                     text_template = specs["extra_style_params"]["row_template"]
                     jinja_template = jinja_env.from_string(text_template)
                     for index, item in enumerate(variables[struct_name]):
-                        item['INDEX'] = index + 1
+                        item["INDEX"] = index + 1
                         filled_text = jinja_template.render(item)
                         rows_list.append(filled_text)
 
@@ -181,20 +195,25 @@ def format_variables(variables, document_template_id):
                     i = 0
                     for item in variables[struct_name]:
                         table_rows = [
-                            f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"]
+                            f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"
+                        ]
                         i += 1
                         for lineSpec in specs["extra_style_params"]["lines"]:
                             columns = []
                             for info in lineSpec:
                                 for label, value in info.items():
                                     columns.append(
-                                        f"<td>{label}</td><td>{item[value]}</td>")
-                            table_rows.append(
-                                '<tr>' + ''.join(columns) + '</tr>')
+                                        f"<td>{label}</td><td>{item[value]}</td>"
+                                    )
+                            table_rows.append("<tr>" + "".join(columns) + "</tr>")
 
-                        table_list.append(''.join(table_rows))
+                        table_list.append("".join(table_rows))
 
-                    return "<figure class='table'><table><tbody>" + "".join(table_list) + "</tbody></table></figure>"
+                    return (
+                        "<figure class='table'><table><tbody>"
+                        + "".join(table_list)
+                        + "</tbody></table></figure>"
+                    )
                 except Exception as e:
                     logging.exception(e)
 
@@ -207,30 +226,34 @@ def format_variables(variables, document_template_id):
         if not variable in variables_specification:
             continue
 
-        if variable[0:11] == 'structured_':
+        if variable[0:11] == "structured_":
 
             # This first loop formats the variables from the structure
             for index, item in enumerate(variables[variable]):
-                for variable_name, specs in variables_specification[variable]['structure'].items():
+                for variable_name, specs in variables_specification[variable][
+                    "structure"
+                ].items():
                     formatted = format_variable(
-                        specs, variable_name, item, struct_name=None)
+                        specs, variable_name, item, struct_name=None
+                    )
                     variables[variable][index][variable_name] = formatted
 
             # The second loop formats the main variables
-            for variable_name, specs in variables_specification[variable]['main'].items():
-                formatted = format_variable(
-                    specs, variable_name, variables, variable)
+            for variable_name, specs in variables_specification[variable][
+                "main"
+            ].items():
+                formatted = format_variable(specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
 
-        elif variable[0:6] == 'person':
+        elif variable[0:6] == "person":
             for variable_name, specs in variables_specification[variable].items():
-                formatted = format_variable(
-                    specs, variable_name, variables, variable)
+                formatted = format_variable(specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
 
         else:
             formatted = format_variable(
-                variables_specification[variable], variable, variables, struct_name=None)
+                variables_specification[variable], variable, variables, struct_name=None
+            )
             variables[variable] = formatted
 
     variables.update(extra_variables)

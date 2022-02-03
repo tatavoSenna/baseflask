@@ -6,23 +6,38 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from config import init_dotenv
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, environment, select_autoescape
 import click
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+import os
 
 db = SQLAlchemy()
-migrate = Migrate(compare_type=True,)
+migrate = Migrate(
+    compare_type=True,
+)
 ma = Marshmallow()
 aws_auth = AWSCognitoAuthentication()
 jinja_env = Environment(
-    loader=PackageLoader('app', 'templates'),
-    autoescape=select_autoescape(['html', 'xml'])
+    loader=PackageLoader("app", "templates"),
+    autoescape=select_autoescape(["html", "xml"]),
 )
 
+
 def bad_request(e):
-    return jsonify({'error': e.description}), 400
+    return jsonify({"error": e.description}), 400
 
 
 def create_app():
+    env_tag = os.environ.get("ENVIRONMENT_TAG")
+    if env_tag and env_tag != "local":
+        sentry_sdk.init(
+            dsn=os.environ.get("SENTRY_DSN"),
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=1.0 if env_tag == "develop" else 0.7,
+            environment=env_tag,
+        )
+
     app = Flask(__name__, instance_relative_config=False)
 
     if app.config["ENV"] != "production":
@@ -68,6 +83,9 @@ def create_app():
 
     @app.route("/", methods=["GET"])
     def welcome():
+        with sentry_sdk.configure_scope() as scope:
+            if scope.transaction:
+                scope.transaction.sampled = False
         return "Welcome to Doing.law API"
 
     from .scripts.blueprint import scripts_bp

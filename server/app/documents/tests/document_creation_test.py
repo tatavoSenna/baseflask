@@ -37,7 +37,6 @@ def document_template():
 
         # builds the variables field of the document template model
         for field in fields:
-            print(field)
             if field.get("variable", None):
                 variables[field["variable"]["name"]] = field["variable"]
 
@@ -163,8 +162,6 @@ def test_creation_of_docx_document_with_number_field_with_doc_display_style(
     assert upload_filled_docx_to_documents_args[2] == ".docx"
 
 
-
-
 @patch("app.documents.controllers.RemoteDocument.download_docx_from_template")
 @patch("app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents")
 @patch("app.documents.controllers.convert_docx_to_pdf_and_save")
@@ -177,12 +174,9 @@ def test_creation_of_docx_document_with_database_field(
     user,
     document_template,
 ):
-    mock_response = [{
-        'userId': 1,
-        'id': 1,
-        'title': 'Mock Response',
-        'completed': False
-    }]
+    mock_response = [
+        {"userId": 1, "id": 1, "title": "Mock Response", "completed": False}
+    ]
 
     requests_get.return_value = Mock(ok=True)
     requests_get.return_value.json.return_value = mock_response
@@ -199,9 +193,7 @@ def test_creation_of_docx_document_with_database_field(
         },
     }
 
-    template_docx = generate_docx(
-        "{{ KEY_VALUE.TITLE }} {{ KEY_VALUE.COMPLETED }}"
-    )
+    template_docx = generate_docx("{{ KEY_VALUE.TITLE }} {{ KEY_VALUE.COMPLETED }}")
     download_docx_from_template.return_value = template_docx
 
     template = document_template(".docx", database_field)
@@ -389,8 +381,6 @@ class TestDocumentCreation:
     ):
 
         document_title = "default title"
-
-        print(test_user.company)
 
         document_txt = create_document_controller(
             test_user.id,

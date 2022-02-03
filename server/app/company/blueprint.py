@@ -10,7 +10,11 @@ from app.models.company import Company
 from app.models.user import User
 from app.serializers.user_serializers import UserSerializer
 from app.models.company import Company, Webhook
-from app.serializers.company_serializers import CompanySerializer, CompanyListSerializer, WebhookSerializer
+from app.serializers.company_serializers import (
+    CompanySerializer,
+    CompanyListSerializer,
+    WebhookSerializer,
+)
 
 from .controllers import (
     create_company_controller,
@@ -20,7 +24,7 @@ from .controllers import (
     get_download_url_controller,
     create_webhook_controller,
     get_webhook_controller,
-    assign_company_to_new_user_controller
+    assign_company_to_new_user_controller,
 )
 
 company_bp = Blueprint("company", __name__)
@@ -40,7 +44,7 @@ def save_keys(logged_user):
             company_id=logged_user["company_id"],
             docusign_integration_key=docusign_integration_key,
             docusign_secret_key=docusign_secret_key,
-            docusign_account_id=docusign_account_id
+            docusign_account_id=docusign_account_id,
         )
     except Exception as e:
         logging.exception(e)
@@ -89,15 +93,14 @@ def download_logo_url(logged_user):
 @get_local_user
 def get_company_list(logged_user):
 
-    if not logged_user['is_admin']:
-        print(logged_user)
+    if not logged_user["is_admin"]:
         return {}, 403
 
     try:
-        page = int(request.args.get(
-            "page", current_app.config['PAGE_DEFAULT']))
-        per_page = int(request.args.get(
-            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+        page = int(request.args.get("page", current_app.config["PAGE_DEFAULT"]))
+        per_page = int(
+            request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
+        )
         search_param = str(request.args.get("search", ""))
     except:
         abort(400, "invalid parameters")
@@ -141,7 +144,7 @@ def create_company(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def change_company(logged_user):
-    if not logged_user['is_admin']:
+    if not logged_user["is_admin"]:
         return {}, 403
 
     user = User.query.filter_by(id=logged_user["id"]).first()
@@ -162,16 +165,15 @@ def change_company(logged_user):
 @get_local_user
 def get_webhook_list(logged_user):
     try:
-        page = int(request.args.get(
-            "page", current_app.config['PAGE_DEFAULT']))
-        per_page = int(request.args.get(
-            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+        page = int(request.args.get("page", current_app.config["PAGE_DEFAULT"]))
+        per_page = int(
+            request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
+        )
     except:
         abort(400, "invalid parameters")
 
-    paginated_query = (
-        Webhook.query.order_by(Webhook.webhook)
-        .paginate(page=page, per_page=per_page)
+    paginated_query = Webhook.query.order_by(Webhook.webhook).paginate(
+        page=page, per_page=per_page
     )
 
     return jsonify(
@@ -191,7 +193,7 @@ def create_webhook(logged_user):
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
 
-    company = Company.query.get(logged_user['company_id'])
+    company = Company.query.get(logged_user["company_id"])
 
     content = request.json
     url = content.get("url", None)
@@ -217,9 +219,7 @@ def delete_webhook(logged_user, webhook_id):
     db.session.delete(webhook)
     db.session.commit()
 
-    msg_JSON = {
-        "message": "Webhook deleted"
-    }
+    msg_JSON = {"message": "Webhook deleted"}
 
     return jsonify(msg_JSON), 200
 

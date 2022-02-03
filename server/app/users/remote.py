@@ -56,7 +56,11 @@ class RemoteUser:
         local_user = User.query.filter_by(sub=self.sub(), active=True).first()
         default_company = Company.query.filter_by(id="1").first()
         user_attributes = dict(
-            username=self.username(), email=self.email(), sub=self.sub(), name=self.name(), verified=False
+            username=self.username(),
+            email=self.email(),
+            sub=self.sub(),
+            name=self.name(),
+            verified=False,
         )
 
         if local_user:
@@ -76,11 +80,11 @@ class RemoteUser:
 
     def get_local(self):
         try:
-            local_user = User.query.filter_by(
-                sub=self.sub(), active=True).one()
+            local_user = User.query.filter_by(sub=self.sub(), active=True).one()
         except NoResultFound:
             logging.info(
-                f'User {self.email()} from cognito not present in database.\nCreating it on company 1.')
+                f"User {self.email()} from cognito not present in database.\nCreating it on company 1."
+            )
             local_user = self.create_local(1)  # creates the user
         local_user.email = self.email()
         db.session.add(local_user)
@@ -99,21 +103,24 @@ class RemoteUser:
             UserAttributes=[
                 {"Name": "email", "Value": email},
                 {"Name": "email_verified", "Value": "True"},
-                {"Name": "name", "Value": name}],
-            TemporaryPassword=self.generate_temp_pasword()
+                {"Name": "name", "Value": name},
+            ],
+            TemporaryPassword=self.generate_temp_pasword(),
         )
 
         try:
             response = self.client.admin_create_user(**user_attributes)
         except self.client.exceptions.UsernameExistsException:
-            logging.info(
-                f'User {email} already on cognito. Can´t create. Aborting')
-            abort(400, description='Usuário já cadastrado')
+            logging.info(f"User {email} already on cognito. Can´t create. Aborting")
+            abort(400, description="Usuário já cadastrado")
         except self.client.exceptions.InvalidPasswordException:
             logging.info(
-                f'Can´t create User {email} already on cognito with the provided password')
+                f"Can´t create User {email} already on cognito with the provided password"
+            )
             abort(
-                400, description='A senha fornecida não está de acordo com a noss politica.')
+                400,
+                description="A senha fornecida não está de acordo com a noss politica.",
+            )
 
         self.user = response.get("User")
         local_user = self.create_local(company_id)
@@ -135,21 +142,22 @@ class RemoteUser:
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
             Username=username,
-            MessageAction='RESEND',
-            TemporaryPassword=self.generate_temp_pasword()
+            MessageAction="RESEND",
+            TemporaryPassword=self.generate_temp_pasword(),
         )
         try:
             response = self.client.admin_create_user(**user_attributes)
         except Exception as e:
             logging.exception(e)
-            abort(400, description='Ocorreu um erro na solicitação.')
+            abort(400, description="Ocorreu um erro na solicitação.")
 
         return response
 
 
-def get_local_user(view = None, raise_forbidden = True):
+def get_local_user(view=None, raise_forbidden=True):
     if view is None:
         return partial(get_local_user, raise_forbidden=raise_forbidden)
+
     @wraps(view)
     def decorated(*args, **kwargs):
         user_data_from_cognito_jwt = get_cognito_claims()
@@ -177,7 +185,7 @@ def get_local_user(view = None, raise_forbidden = True):
                 "username": user.get("Username"),
                 "sub": get_new_user_attributes(user, "sub"),
                 "email": get_new_user_attributes(user, "email"),
-                "created": False
+                "created": False,
             }
             return view(current_user_known_info, *args, **kwargs)
 
@@ -195,15 +203,13 @@ def authenticated_user(view):
 
     return aws_auth.authentication_required(request_user)
 
+
 def get_new_user_attributes(user, attribute_name):
-    user_attributes = user.get("UserAttributes", False) or user.get(
-        "Attributes", []
-    )
+    user_attributes = user.get("UserAttributes", False) or user.get("Attributes", [])
     for attribute in user_attributes:
-        if ("Name" and "Value") in attribute and attribute[
-            "Name"
-        ] == attribute_name:
+        if ("Name" and "Value") in attribute and attribute["Name"] == attribute_name:
             return attribute["Value"]
+
 
 def get_cognito_claims():
     return g.cognito_claims

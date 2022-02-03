@@ -20,8 +20,7 @@ def create_user_controller(email, name, group_ids=None, company_id=None):
 
     if group_ids and groups:
         for group in groups.values():
-            db.session.add(ParticipatesOn(
-                group_id=group.id, user_id=new_user.id))
+            db.session.add(ParticipatesOn(group_id=group.id, user_id=new_user.id))
         db.session.commit()
 
     return new_user
@@ -40,11 +39,15 @@ def get_user_controller(email):
     return data
 
 
-def list_user_controller(company_id, page=1, per_page=20, search_param=''):
+def list_user_controller(company_id, page=1, per_page=20, search_param=""):
     paginated_query = (
         User.query.filter_by(company_id=company_id, active=True)
-        .filter(or_(User.name.ilike(f"%{search_param}%"),
-                    User.email.ilike(f"%{search_param}%")))
+        .filter(
+            or_(
+                User.name.ilike(f"%{search_param}%"),
+                User.email.ilike(f"%{search_param}%"),
+            )
+        )
         .order_by(User.name)
         .paginate(page=page, per_page=per_page)
     )
@@ -52,10 +55,9 @@ def list_user_controller(company_id, page=1, per_page=20, search_param=''):
     return paginated_query
 
 
-def list_group_controller(company_id, page=1, per_page=20, search_param=''):
+def list_group_controller(company_id, page=1, per_page=20, search_param=""):
     paginated_query = (
-        Group.query
-        .filter_by(company_id=company_id, active=True)
+        Group.query.filter_by(company_id=company_id, active=True)
         .filter(Group.name.ilike(f"%{search_param}%"))
         .order_by(Group.name)
         .paginate(page=page, per_page=per_page)
@@ -72,9 +74,11 @@ def create_group_controller(company_id, name):
 
 
 def get_group_controller(company_id, group_id):
-    group = Group.query.filter_by(
-        company_id=company_id, active=True
-    ).filter_by(id=group_id).first()
+    group = (
+        Group.query.filter_by(company_id=company_id, active=True)
+        .filter_by(id=group_id)
+        .first()
+    )
 
     return group
 
@@ -94,15 +98,18 @@ def add_user_to_group_controller(group_id, user_id):
 def list_users_on_group_controller(group_id, page=1, per_page=20, search_param=""):
 
     participations = ParticipatesOn.query.filter_by(group_id=group_id).all()
-    user_id_list = list(map(
-        lambda participation: participation.user_id, participations
-    ))
+    user_id_list = list(
+        map(lambda participation: participation.user_id, participations)
+    )
 
     paginated_query = (
-        User.query
-        .filter(User.id.in_(user_id_list))
-        .filter(or_(User.name.ilike(f"%{search_param}%"),
-                    User.email.ilike(f"%{search_param}%")))
+        User.query.filter(User.id.in_(user_id_list))
+        .filter(
+            or_(
+                User.name.ilike(f"%{search_param}%"),
+                User.email.ilike(f"%{search_param}%"),
+            )
+        )
         .order_by(User.name)
         .paginate(page=page, per_page=per_page)
     )
@@ -112,7 +119,8 @@ def list_users_on_group_controller(group_id, page=1, per_page=20, search_param="
 
 def remove_user_from_group_controller(group_id, user_id):
     participation = ParticipatesOn.query.filter_by(
-        group_id=group_id, user_id=user_id).first()
+        group_id=group_id, user_id=user_id
+    ).first()
     db.session.delete(participation)
     db.session.commit()
 

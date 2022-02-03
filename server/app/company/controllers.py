@@ -4,11 +4,14 @@ from app.models.company import Company, Webhook
 from app.models.user import User
 from .remote import RemoteCompany
 
-def save_company_keys_controller(company_id, docusign_integration_key, docusign_secret_key, docusign_account_id):
+
+def save_company_keys_controller(
+    company_id, docusign_integration_key, docusign_secret_key, docusign_account_id
+):
 
     company = Company.query.get(company_id)
 
-    company.signatures_provider = 'docusign'
+    company.signatures_provider = "docusign"
 
     if docusign_integration_key != None:
         company.docusign_integration_key = docusign_integration_key
@@ -23,11 +26,13 @@ def save_company_keys_controller(company_id, docusign_integration_key, docusign_
 
     return company
 
+
 def upload_logo_controller(company_id, logo_img):
     remote_company = RemoteCompany()
     url = remote_company.upload_logo(company_id, logo_img)
 
     return url
+
 
 def get_download_url_controller(company_id):
     remote_company = RemoteCompany()
@@ -42,9 +47,11 @@ def create_webhook_controller(company_id, webhook, pdf, docx):
     db.session.commit()
     return webhook
 
+
 def get_webhook_controller(webhook_id):
     webhook = Webhook.query.filter_by(id=webhook_id).first()
     return webhook
+
 
 def update_webhook_controller(webhook_id, url, pdf, docx):
     webhook = get_webhook_controller(webhook_id)
@@ -55,27 +62,26 @@ def update_webhook_controller(webhook_id, url, pdf, docx):
         webhook.pdf = pdf
     if docx is not None:
         webhook.docx = docx
-        
+
     db.session.add(webhook)
     db.session.commit()
 
     return webhook
 
+
 def create_company_controller(logged_user, new_company_name):
-    if logged_user['created']:
-        if not logged_user['is_admin']:
+    if logged_user["created"]:
+        if not logged_user["is_admin"]:
             return {}, 403
-    
-    company_attributes = dict(
-        name=new_company_name
-    )
+
+    company_attributes = dict(name=new_company_name)
     new_company = Company(**company_attributes)
-    
+
     db.session.add(new_company)
     db.session.commit()
-    
-    if not logged_user['created']:
-       assign_company_to_new_user_controller(logged_user, new_company.id)
+
+    if not logged_user["created"]:
+        assign_company_to_new_user_controller(logged_user, new_company.id)
     return new_company
 
 
@@ -83,7 +89,11 @@ def assign_company_to_new_user_controller(logged_user, company_id):
     local_user = User.query.filter_by(sub=logged_user["sub"], active=True).first()
     default_company = Company.query.filter_by(id="1").first()
     user_attributes = dict(
-        username=logged_user["username"], email=logged_user["email"], sub=logged_user["sub"], name=logged_user["name"], verified=False
+        username=logged_user["username"],
+        email=logged_user["email"],
+        sub=logged_user["sub"],
+        name=logged_user["name"],
+        verified=False,
     )
 
     if local_user:

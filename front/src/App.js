@@ -28,6 +28,10 @@ I18n.putVocabularies({
 		'We Emailed You': 'Confirmação de email',
 		'We Sent A Code': 'Confirmação de email',
 		Confirm: 'Confirmar',
+
+		'Invalid verification code provided, please try again.':
+			'Código de verificação inválido. Por favor tente novamente.',
+
 		'Your code is on the way. To log in, enter the code we sent you. It may take a minute to arrive.':
 			'Seu código está a caminho. Para fazer o login, digite o código que enviamos a você. Pode demorar um minuto para chegar.',
 	},

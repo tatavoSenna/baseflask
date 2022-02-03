@@ -31,18 +31,10 @@ def fetch_docusign_token(current_user, data):
     integration_key = company.docusign_integration_key
     secret_key = company.docusign_secret_key
     if integration_key == None:
-        error = (
-            {
-                "error": 404,
-                "error_description": "Company integration key not found"
-            })
+        error = {"error": 404, "error_description": "Company integration key not found"}
         return (None, None, None, None, error)
     if secret_key == None:
-        error = (
-            {
-                "error": 404,
-                "error_description": "Company secret key not found"
-            })
+        error = {"error": 404, "error_description": "Company secret key not found"}
         return (None, None, None, None, error)
 
     headers = {
@@ -51,13 +43,10 @@ def fetch_docusign_token(current_user, data):
             b64encode(
                 "{}:{}".format(integration_key, secret_key).encode("ascii")
             ).decode("ascii")
-        ),  
+        ),
     }
 
-    print(data)
-    response = requests.post(
-        "{}/token".format(oauth_url), data=data, headers=headers)
-    print(response.json())
+    response = requests.post("{}/token".format(oauth_url), data=data, headers=headers)
     access_token = response.json().get("access_token")
     refresh_token = response.json().get("refresh_token")
     expires_in = response.json().get("expires_in")

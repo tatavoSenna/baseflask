@@ -19,37 +19,34 @@ from .controllers import (
 from app.serializers.document_serializers import DocumentSerializer
 
 
-d4sign_bp = Blueprint('d4sign', __name__)
+d4sign_bp = Blueprint("d4sign", __name__)
 
 
-@d4sign_bp.route('/company-info', methods=['GET'])
+@d4sign_bp.route("/company-info", methods=["GET"])
 @authenticated_user
 def d4sign_get_company_info(user):
     payload = request.json
 
-    company_id = payload['company_id']
-    
-    control = d4sign_get_company_info_controller(
-        user=user,
-        company_id=company_id
-    )
-    
-    status_code = control.pop('status_code')
+    company_id = payload["company_id"]
+
+    control = d4sign_get_company_info_controller(user=user, company_id=company_id)
+
+    status_code = control.pop("status_code")
     response_payload = jsonify(control)
 
     return response_payload, status_code
 
 
-@d4sign_bp.route('/company-info', methods=['PUT'])
+@d4sign_bp.route("/company-info", methods=["PUT"])
 @authenticated_user
 def d4sign_update_company_info(user):
     payload = request.json
 
-    company_id = payload['company_id']
-    d4sign_api_token = payload.get('d4sign_api_token')
-    d4sign_api_cryptkey = payload.get('d4sign_api_cryptkey')
-    d4sign_api_hmac_secret = payload.get('d4sign_api_hmac_secret')
-    d4sign_safe_name = payload.get('d4sign_safe_name')
+    company_id = payload["company_id"]
+    d4sign_api_token = payload.get("d4sign_api_token")
+    d4sign_api_cryptkey = payload.get("d4sign_api_cryptkey")
+    d4sign_api_hmac_secret = payload.get("d4sign_api_hmac_secret")
+    d4sign_safe_name = payload.get("d4sign_safe_name")
 
     control = d4sign_update_company_info_controller(
         user=user,
@@ -57,70 +54,71 @@ def d4sign_update_company_info(user):
         d4sign_api_token=d4sign_api_token,
         d4sign_api_cryptkey=d4sign_api_cryptkey,
         d4sign_api_hmac_secret=d4sign_api_hmac_secret,
-        d4sign_safe_name=d4sign_safe_name
+        d4sign_safe_name=d4sign_safe_name,
     )
-    
-    status_code = control.pop('status_code')
+
+    status_code = control.pop("status_code")
     response_payload = jsonify(control)
 
     return response_payload, status_code
 
 
-@d4sign_bp.route('/upload-and-send-document-for-signing/', methods=['POST'])
+@d4sign_bp.route("/upload-and-send-document-for-signing/", methods=["POST"])
 @authenticated_user
 def d4sign_upload_and_send_document_for_signing(user):
     payload = request.json
-    
-    document_id = payload['document_id']
+
+    document_id = payload["document_id"]
 
     document, control = d4sign_upload_and_send_document_for_signing_controller(
-        user=user,
-        document_id=document_id
+        user=user, document_id=document_id
     )
 
-    if control['status_code'] not in [200, 202]:
-        status_code = control.pop('status_code')
+    if control["status_code"] not in [200, 202]:
+        status_code = control.pop("status_code")
         response_payload = jsonify(control)
 
         return response_payload, status_code
-    
+
     return jsonify(DocumentSerializer().dump(document))
 
 
-@d4sign_bp.route('/document-webhook/<hmac_sha256>/', methods=['POST'])
+@d4sign_bp.route("/document-webhook/<hmac_sha256>/", methods=["POST"])
 def d4sign_document_webhook(hmac_sha256):
     payload = request.form
 
-    d4sign_document_uuid = payload['uuid']
-    type_post = payload['type_post']
-    signer_email = payload.get('email', '')
+    d4sign_document_uuid = payload["uuid"]
+    type_post = payload["type_post"]
+    signer_email = payload.get("email", "")
 
     document = Document.query.filter_by(
         d4sign_document_uuid=d4sign_document_uuid
     ).first()
 
     if document is None:
-        return jsonify({
-            'message': f'Document with d4sign_document_uuid '
-                       f'<{d4sign_document_uuid}> not found'
-        }), 404
+        return (
+            jsonify(
+                {
+                    "message": f"Document with d4sign_document_uuid "
+                    f"<{d4sign_document_uuid}> not found"
+                }
+            ),
+            404,
+        )
 
     hmac_secret = document.company.d4sign_api_hmac_secret
     hmac_sha256_valid = generate_hmac_sha256(
-        hmac_secret=hmac_secret,
-        document_uuid=d4sign_document_uuid
+        hmac_secret=hmac_secret, document_uuid=d4sign_document_uuid
     )
 
     if hmac_sha256 != hmac_sha256_valid:
-        return {'message': 'HMAC not valid'}, 401
+        return {"message": "HMAC not valid"}, 401
 
     control = d4sign_document_webhook_controller(
-        document=document,
-        type_post=type_post,
-        signer_email=signer_email
+        document=document, type_post=type_post, signer_email=signer_email
     )
-    
-    status_code = control.pop('status_code')
+
+    status_code = control.pop("status_code")
     response_payload = jsonify(control)
 
     return response_payload, status_code
