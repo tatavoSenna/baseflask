@@ -13,7 +13,7 @@ class Config(object):
     CONVERTAPI_SECRET_KEY = os.environ.get("CONVERTAPI_SECRET_KEY")
 
     SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
-    
+
     HTMLTOPDF_API_URL = os.environ.get("HTMLTOPDF_API_URL")
 
     AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION")
@@ -21,10 +21,9 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_COGNITO_DOMAIN = os.environ.get("AWS_COGNITO_DOMAIN")
     AWS_COGNITO_USER_POOL_ID = os.environ.get("AWS_COGNITO_USER_POOL_ID")
-    AWS_COGNITO_USER_POOL_CLIENT_ID = os.environ.get(
-        "AWS_COGNITO_USER_POOL_CLIENT_ID")
-    AWS_COGNITO_USER_POOL_CLIENT_SECRET = 'dummyvalue'
-    AWS_COGNITO_REDIRECT_URL = 'dummyvalue'
+    AWS_COGNITO_USER_POOL_CLIENT_ID = os.environ.get("AWS_COGNITO_USER_POOL_CLIENT_ID")
+    AWS_COGNITO_USER_POOL_CLIENT_SECRET = "dummyvalue"
+    AWS_COGNITO_REDIRECT_URL = "dummyvalue"
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
     AWS_S3_DOCUMENTS_ROOT = "documents"
     AWS_S3_TEMPLATES_ROOT = "templates"

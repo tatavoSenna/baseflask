@@ -1,0 +1,89 @@
+.header {
+	position: absolute;
+	width: 100%;
+	animation-name: header-fadein;
+	animation-duration: 1s;
+}
+
+@keyframes header-fadein {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.base-layout {
+	height: 100%;
+	background: #f0f2f5;
+}
+
+.layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.content {
+	background: transparent;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	margin: 0;
+	min-width: 50%;
+	max-width: 98%;
+	height: 100%;
+}
+
+.greeting {
+	flex: none;
+	text-align: center;
+}
+
+.instructions {
+	flex: none;
+	text-align: center;
+}
+
+.form-card {
+	width: 24rem;
+	height: 11rem;
+	max-width: 100%;
+	background-color: var(--amplify-colors-background-primary);
+	box-shadow: var(--amplify-shadows-medium);
+	margin-top: 18px;
+	overflow: hidden;
+
+	border-color: var(--amplify-components-tabs-item-active-border-color);
+	border-width: var(--amplify-components-tabs-border-width) 0 0 0;
+	border-style: var(--amplify-components-tabs-item-border-style);
+
+	animation-name: form-fadein;
+	animation-duration: 0.55s;
+}
+
+@keyframes form-fadein {
+	from {
+		height: 0rem;
+		margin-bottom: 131px;
+	}
+	to {
+		height: 11rem;
+		margin-bottom: 0px;
+	}
+}
+
+.form-card-content {
+	align-content: var(--amplify-components-flex-align-content);
+	align-items: var(--amplify-components-flex-align-items);
+	display: flex;
+	flex-direction: column;
+	flex-wrap: var(--amplify-components-flex-flex-wrap);
+	grid-gap: var(--amplify-components-flex-gap);
+	justify-content: var(--amplify-components-flex-justify-content);
+	padding: var(--amplify-space-medium) var(--amplify-space-large);
+}

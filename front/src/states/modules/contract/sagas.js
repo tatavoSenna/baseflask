@@ -43,19 +43,18 @@ function* loginSaga({ payload = {} }) {
 	if (parent) {
 		url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&folder=${parent}`
 	}
-	if(order_by && order)
-	{
+	if (order_by && order) {
 		url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&order_by=${order_by}&order=${order}`
-		if(parent){
+		if (parent) {
 			url = `/documents/?per_page=${perPage}&page=${page}&search=${search}&folder=${parent}&order_by=${order_by}&order=${order}`
 		}
 	}
 	try {
 		let { data } = yield call(api.get, url)
-		if(parent){
+		if (parent) {
 			data.parent = parent
 		}
-		if(order && order_by){
+		if (order && order_by) {
 			data.order_by = order_by
 			data.order = order
 		}

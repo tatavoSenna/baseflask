@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 import { Layout, Typography, Spin } from 'antd'
 import { getUserProfile } from '~/states/modules/session'
-import MainLayout from '~/components/mainLayout'
 
 function Home() {
 	const { Content } = Layout
@@ -33,7 +32,8 @@ function Home() {
 					padding: 24,
 					margin: 0,
 					minHeight: 280,
-					width: '50%',
+					minWidth: '50%',
+					maxWidth: '98%',
 					height: '50%',
 				}}>
 				<Title
@@ -41,7 +41,7 @@ function Home() {
 						flex: 'none',
 						textAlign: 'center',
 					}}>
-					Bem vindo a Lawing!
+					Bem vindo à Lawing!
 				</Title>
 				<Text
 					level={4}

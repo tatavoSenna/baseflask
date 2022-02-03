@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from datetime import date
 
 from app.models.documents import Document, DocumentTemplate
-from app.documents.controllers import(
+from app.documents.controllers import (
     get_document_controller,
     create_new_version_controller,
     save_signers_controller,
@@ -20,11 +20,11 @@ from app.documents.controllers import(
     fill_signing_date_controller,
     delete_document_controller,
     get_pdf_download_url_controller,
-    change_variables_controller
+    change_variables_controller,
+    edit_document_workflow_controller,
 )
-from app.serializers.document_serializers import (
-    DocumentListSerializer
-)
+from app.serializers.document_serializers import DocumentListSerializer
+from app.serializers.document_serializers import DocumentListSerializer
 
 
 def test_retrieve_document():
@@ -43,11 +43,14 @@ def test_retrieve_document_jsonb_fields():
     user_id = 115
     workflow = [{"workflow": "step 1 step 2"}]
     variables = [{"variable1": 5121}]
-    versions = [{"description": "Version 0",
-                 "email": "teste@gmail.com",
-                 "created_at": "2020-10-3 21: 00: 00",
-                 "id": "0"
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "email": "teste@gmail.com",
+            "created_at": "2020-10-3 21: 00: 00",
+            "id": "0",
+        }
+    ]
     signers = [{"name": "Joelma"}]
     current_step = "primeiro"
 
@@ -60,7 +63,7 @@ def test_retrieve_document_jsonb_fields():
         variables=variables,
         versions=versions,
         signers=signers,
-        current_step=current_step
+        current_step=current_step,
     )
     retrieved_document = get_document_controller(document.id)
 
@@ -82,21 +85,16 @@ def test_document_list_serializer():
             "3485": {
                 "next_node": None,
             },
-            "5521": {
-                "next_node": "3485",
-                "title": "Passo atual"
-            }
+            "5521": {"next_node": "3485", "title": "Passo atual"},
         },
-        "current_node": "5521"
+        "current_node": "5521",
     }
     company = factories.CompanyFactory(id=company_id)
     user = factories.UserFactory(
-        id=user_id, name='Pedro', email='testemail@gmail.com', company=company)
-    document = factories.DocumentFactory(
-        company=company, user=user, workflow=workflow)
-    query = (
-        Document.query.filter_by(company_id=company_id).first()
+        id=user_id, name="Pedro", email="testemail@gmail.com", company=company
     )
+    document = factories.DocumentFactory(company=company, user=user, workflow=workflow)
+    query = Document.query.filter_by(company_id=company_id).first()
     test_info = DocumentListSerializer(many=False).dump(query)
     assert test_info["user"]["name"] == "Pedro"
     assert test_info["user"]["email"] == "testemail@gmail.com"
@@ -113,39 +111,44 @@ def test_update_document_signers():
                     "label": "",
                     "variable": "CONTRATANTE_ASSINANTE_1_NOME",
                     "type": "text",
-                                "value": "Nome"
+                    "value": "Nome",
                 },
                 {
                     "label": "",
                     "variable": "CONTRATANTE_ASSINANTE_1_EMAIL",
                     "type": "email",
-                                "value": "Email"
-                }
+                    "value": "Email",
+                },
             ],
             "anchor": [
                 {
                     "anchor_string": "CONTRATANTE",
                     "name_variable": "concessionaries",
                     "anchor_x_offset": "-0.5",
-                    "anchor_y_offset": "-0.4"
+                    "anchor_y_offset": "-0.4",
                 }
-            ]
+            ],
         }
     ]
 
-    signers_info = {"CONTRATANTE_ASSINANTE_1_NOME": "Luiz Senna",
-                    "CONTRATANTE_ASSINANTE_1_EMAIL": "luiz.senna@parafernalia.net.br"
-                    }
+    signers_info = {
+        "CONTRATANTE_ASSINANTE_1_NOME": "Luiz Senna",
+        "CONTRATANTE_ASSINANTE_1_EMAIL": "luiz.senna@parafernalia.net.br",
+    }
     variables = {"CONTRATANTE_RAZAO_SOCIAL": "sdjiaowaowj"}
     document = factories.DocumentFactory(
-        id=document_id, signers=signers_empty, variables=variables)
+        id=document_id, signers=signers_empty, variables=variables
+    )
     retrieved_document = save_signers_controller(document_id, signers_info)
 
-    assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_NOME'] == "Luiz Senna"
-    assert retrieved_document.variables['CONTRATANTE_ASSINANTE_1_EMAIL'] == "luiz.senna@parafernalia.net.br"
+    assert retrieved_document.variables["CONTRATANTE_ASSINANTE_1_NOME"] == "Luiz Senna"
+    assert (
+        retrieved_document.variables["CONTRATANTE_ASSINANTE_1_EMAIL"]
+        == "luiz.senna@parafernalia.net.br"
+    )
 
 
-@ patch('app.documents.controllers.send_email_controller')
+@patch("app.documents.controllers.send_email_controller")
 def test_email_change_document_workflow_status(status_change_email_mock):
     document_id = 72
     group1 = factories.GroupFactory(id=15)
@@ -172,31 +175,33 @@ def test_email_change_document_workflow_status(status_change_email_mock):
                 "responsible_group": "15",
                 "responsible_users": [32],
                 "title": "Análise Diretoria",
-            }
+            },
         },
-        "current_node": "5521"
+        "current_node": "5521",
     }
 
-    sender_email = 'leon@lawing.com.br'
-    status = 'Análise Diretoria'
-    title = 'Documento de teste'
+    sender_email = "leon@lawing.com.br"
+    status = "Análise Diretoria"
+    title = "Documento de teste"
 
     email_list = []
-    email_list.append('teste1@gmail.com')
+    email_list.append("teste1@gmail.com")
 
-    document = factories.DocumentFactory(
-        id=document_id, workflow=workflow, title=title)
+    document = factories.DocumentFactory(id=document_id, workflow=workflow, title=title)
 
     participant1 = factories.ParticipatesOnFactory(group=group1, user=user1)
     participant2 = factories.ParticipatesOnFactory(group=group2, user=user1)
     participant3 = factories.ParticipatesOnFactory(group=group2, user=user2)
     participant4 = factories.ParticipatesOnFactory(group=group2, user=user3)
 
-    workflow_status_change_email_controller(
-        document_id, title)
+    workflow_status_change_email_controller(document_id, title)
 
     status_change_email_mock.assert_called_once_with(
-        'leon@lawing.com.br', email_list, f'O Documento {title} mudou para o status {status}.', title, 'd-d869f27633274db3810abaa3b60f1833'
+        "leon@lawing.com.br",
+        email_list,
+        f"O Documento {title} mudou para o status {status}.",
+        title,
+        "d-d869f27633274db3810abaa3b60f1833",
     )
 
 
@@ -205,24 +210,25 @@ def test_create_new_document_version():
     user_id = 115
     user_email = "teste@gmail.com"
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
-    versions = [{"description": "Version 0",
-                 "email": "aaa@gmail.com",
-                 "created_at": current_date,
-                 "id": "0",
-                 "comments": None
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "email": "aaa@gmail.com",
+            "created_at": current_date,
+            "id": "0",
+            "comments": None,
+        }
+    ]
 
     company = factories.CompanyFactory(id=company_id)
-    user = factories.UserFactory(
-        id=user_id, email=user_email, company=company)
+    user = factories.UserFactory(id=user_id, email=user_email, company=company)
     document = factories.DocumentFactory(
         company=company,
         user=user,
         versions=versions,
     )
 
-    create_new_version_controller(
-        document.id, "teste", user.email, "New comment")
+    create_new_version_controller(document.id, "teste", user.email, "New comment")
     retrieved_document = get_document_controller(document.id)
     new_version = retrieved_document.versions[0]
 
@@ -233,23 +239,24 @@ def test_create_new_document_version():
     assert new_version["comments"] == "New comment"
 
 
-@ patch('app.documents.controllers.RemoteDocument.download_text_from_documents')
+@patch("app.documents.controllers.RemoteDocument.download_text_from_documents")
 def test_download_document_text(download_document_text_mock):
-    versions = [{"description": "Version 0",
-                 "email": "aaa@gmail.com",
-                 "created_at": "test",
-                 "id": "0"
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "email": "aaa@gmail.com",
+            "created_at": "test",
+            "id": "0",
+        }
+    ]
     document = factories.DocumentFactory(id=1, versions=versions)
     version_id = document.versions[0]["id"]
 
     textfile = download_document_text_controller(document.id, version_id)
-    download_document_text_mock.assert_called_once_with(
-        document, version_id
-    )
+    download_document_text_mock.assert_called_once_with(document, version_id)
 
 
-@ patch('app.documents.controllers.RemoteDocument.upload_filled_text_to_documents')
+@patch("app.documents.controllers.RemoteDocument.upload_filled_text_to_documents")
 def test_upload_document_text(upload_document_text_mock):
 
     document = factories.DocumentFactory(id=1)
@@ -257,8 +264,7 @@ def test_upload_document_text(upload_document_text_mock):
     document_text = "test text"
     upload_document_text_controller(document.id, document_text)
     upload_document_text_mock.assert_called_once_with(
-        document,
-        bytearray(document_text, encoding='utf8')
+        document, bytearray(document_text, encoding="utf8")
     )
 
 
@@ -267,32 +273,27 @@ def test_change_document_status_next():
     user_id = 115
     workflow = {
         "nodes": {
-            "544": {
-                "next_node": "5521",
-                "changed_by": "",
-                "title": "step1"
-            },
+            "544": {"next_node": "5521", "changed_by": "", "title": "step1"},
             "3485": {
                 "next_node": None,
                 "changed_by": "",
                 "title": "step3",
-                "deadline": 1
+                "deadline": 1,
             },
-            "5521": {
-                "next_node": "3485",
-                "changed_by": "",
-                "title": "step2"
-            }
+            "5521": {"next_node": "3485", "changed_by": "", "title": "step2"},
         },
-        "current_node": "5521"
+        "current_node": "5521",
     }
 
     variables = [{"variable1": 5121}]
-    versions = [{"description": "Version 0",
-                 "user": user_id,
-                 "created_at": "2020-10-3 21: 00: 00",
-                 "id": "0"
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "user": user_id,
+            "created_at": "2020-10-3 21: 00: 00",
+            "id": "0",
+        }
+    ]
     signers = [{"name": "Joelma"}]
     current_step = "primeiro"
 
@@ -305,18 +306,22 @@ def test_change_document_status_next():
         variables=variables,
         versions=versions,
         signers=signers,
-        current_step=current_step
+        current_step=current_step,
     )
     # call the controller to change status from '5521' to '3485'
-    retrieved_document, status = next_status_controller(document.id, 'joao')
+    retrieved_document, status = next_status_controller(document.id, "joao")
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "3485"
-    assert retrieved_document.workflow['nodes']['5521']['changed_by'] == "joao"
+    assert retrieved_document.workflow["nodes"]["5521"]["changed_by"] == "joao"
     assert retrieved_document.current_step == "step3"
-    assert datetime.strptime(retrieved_document.workflow["nodes"]["3485"]["due_date"],
-                             '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert retrieved_document.due_date.day == (
-        datetime.today() + timedelta(days=1)).day
+    assert (
+        datetime.strptime(
+            retrieved_document.workflow["nodes"]["3485"]["due_date"],
+            "%Y-%m-%d %H:%M:%S.%f",
+        ).day
+        == (datetime.today() + timedelta(days=1)).day
+    )
+    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
 
 
 def test_change_document_status_previous():
@@ -328,28 +333,23 @@ def test_change_document_status_previous():
                 "next_node": "5521",
                 "changed_by": "",
                 "title": "step1",
-                "deadline": 1
+                "deadline": 1,
             },
-            "3485": {
-                "next_node": None,
-                "changed_by": "",
-                "title": "step3"
-            },
-            "5521": {
-                "next_node": "3485",
-                "changed_by": "",
-                "title": "step2"
-            }
+            "3485": {"next_node": None, "changed_by": "", "title": "step3"},
+            "5521": {"next_node": "3485", "changed_by": "", "title": "step2"},
         },
-        "current_node": "5521"
+        "current_node": "5521",
     }
 
     variables = [{"variable1": 5121}]
-    versions = [{"description": "Version 0",
-                 "email": "teste@gmail.com",
-                 "created_at": "2020-10-3 21: 00: 00",
-                 "id": "0"
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "email": "teste@gmail.com",
+            "created_at": "2020-10-3 21: 00: 00",
+            "id": "0",
+        }
+    ]
     signers = [{"name": "Joelma"}]
     current_step = "primeiro"
 
@@ -362,132 +362,194 @@ def test_change_document_status_previous():
         variables=variables,
         versions=versions,
         signers=signers,
-        current_step=current_step
+        current_step=current_step,
     )
     # call the controller to change status from '5521' to '544'
     retrieved_document, status = previous_status_controller(document.id)
     # check if status was changed to the expected one
     assert retrieved_document.workflow["current_node"] == "544"
     assert retrieved_document.current_step == "step1"
-    assert datetime.strptime(retrieved_document.workflow["nodes"]["544"]["due_date"],
-                             '%Y-%m-%d %H:%M:%S.%f').day == (datetime.today() + timedelta(days=1)).day
-    assert retrieved_document.due_date.day == (
-        datetime.today() + timedelta(days=1)).day
+    assert (
+        datetime.strptime(
+            retrieved_document.workflow["nodes"]["544"]["due_date"],
+            "%Y-%m-%d %H:%M:%S.%f",
+        ).day
+        == (datetime.today() + timedelta(days=1)).day
+    )
+    assert retrieved_document.due_date.day == (datetime.today() + timedelta(days=1)).day
 
 
-@ patch('app.documents.controllers.RemoteDocument.download_signed_document')
+@patch("app.documents.controllers.RemoteDocument.download_signed_document")
 def test_download_signed_document(download_document_mock):
     document_id = 72
     document = factories.DocumentFactory(id=document_id)
 
     url = get_download_url_controller(document)
 
-    download_document_mock.assert_called_once_with(
-        document
-    )
+    download_document_mock.assert_called_once_with(document)
 
 
-@ patch('app.documents.controllers.RemoteDocument.download_pdf_document')
+@patch("app.documents.controllers.RemoteDocument.download_pdf_document")
 def test_download_pdf_document(download_pdf_mock):
     document_id = 77
     document = factories.DocumentFactory(id=document_id)
 
     url = get_pdf_download_url_controller(document, 0)
 
-    download_pdf_mock.assert_called_once_with(
-        document, 0
-    )
+    download_pdf_mock.assert_called_once_with(document, 0)
 
 
-@ patch('app.documents.controllers.fill_text_with_variables')
+@patch("app.documents.controllers.fill_text_with_variables")
 def test_fill_signing_date(fill_signing_date_mock):
     company_id = 144
     company = factories.CompanyFactory(id=company_id)
-    user = factories.UserFactory(
-        company=company
-    )
+    user = factories.UserFactory(company=company)
     doc_variables = {"RANDOM_INFO": "info"}
     document = factories.DocumentFactory(
-        company=company,
-        user=user,
-        variables=doc_variables,
-        text_type=".txt"
+        company=company, user=user, variables=doc_variables, text_type=".txt"
     )
     text = "texto qualquer"
     date_today = date.today()
-    signing_date = json.dumps(date.today().strftime(
-        '%d/%m/%Y'), default=str).replace('"', " ")
+    signing_date = json.dumps(date.today().strftime("%d/%m/%Y"), default=str).replace(
+        '"', " "
+    )
     variable = {"CURRENT_DATE": signing_date}
 
     fill_signing_date_controller(document, text)
-    fill_signing_date_mock.assert_called_once_with(
-        text, variable
-    )
+    fill_signing_date_mock.assert_called_once_with(text, variable)
     assert document.variables["SIGN_DATE"] == signing_date
 
 
-@ patch('app.documents.controllers.RemoteDocument.delete_document')
-@ patch('app.documents.controllers.RemoteDocument.delete_signed_document')
+@patch("app.documents.controllers.RemoteDocument.delete_document")
+@patch("app.documents.controllers.RemoteDocument.delete_signed_document")
 def test_delete_document(delete_document_mock, delete_signed_document_mock):
     document = factories.DocumentFactory(id=73, signed=True)
     ret_document = get_document_controller(document.id)
     delete_document_controller(ret_document)
 
     assert get_document_controller(73) == None
-    delete_document_mock.assert_called_once_with(
-        ret_document
-    )
-    delete_signed_document_mock.assert_called_once_with(
-        ret_document
-    )
+    delete_document_mock.assert_called_once_with(ret_document)
+    delete_signed_document_mock.assert_called_once_with(ret_document)
 
 
-@ patch('app.documents.controllers.update_variables')
+@patch("app.documents.controllers.update_variables")
 def test_change_document_variables(update_variables_mock):
     company = factories.CompanyFactory(id=17)
-    user = factories.UserFactory(
-        company=company, email="testemail@gmail.com"
-    )
+    user = factories.UserFactory(company=company, email="testemail@gmail.com")
 
     workflow = {
         "nodes": {
-            "544": {
-                "next_node": "5521",
-                "changed_by": ""
-            },
-            "3485": {
-                "next_node": None,
-                "changed_by": ""
-            },
-            "5521": {
-                "next_node": "3485",
-                "changed_by": ""
-            }
+            "544": {"next_node": "5521", "changed_by": ""},
+            "3485": {"next_node": None, "changed_by": ""},
+            "5521": {"next_node": "3485", "changed_by": ""},
         },
         "current_node": "544",
-        "created_by": ""
+        "created_by": "",
     }
 
-    versions = [{"description": "Version 0",
-                 "email": "teste@gmail.com",
-                 "created_at": "2020-10-3 21: 00: 00",
-                 "id": "0"
-                 }]
+    versions = [
+        {
+            "description": "Version 0",
+            "email": "teste@gmail.com",
+            "created_at": "2020-10-3 21: 00: 00",
+            "id": "0",
+        }
+    ]
 
     document_template_docx = factories.DocumentTemplateFactory(
         id=66, company=company, company_id=17, workflow=workflow, text_type=".docx"
     )
     variables = {"variable_teste": "aaa"}
     document = factories.DocumentFactory(
-        id=333, company=company, document_template_id=66, user_id=user.id, variables=variables, versions=versions)
+        id=333,
+        company=company,
+        document_template_id=66,
+        user_id=user.id,
+        variables=variables,
+        versions=versions,
+    )
 
     new_variables = {"variable_teste": "bbb"}
     change_variables_controller(
-        document, new_variables, "testemail@gmail.com", variables)
+        document, new_variables, "testemail@gmail.com", variables
+    )
     update_variables_mock.assert_called_with(
         document, document_template_docx, 17, new_variables
     )
 
     document = Document.query.filter_by(id=333).first()
     assert document.variables == variables
-    assert document.versions[0]["id"] == '1'
+    assert document.versions[0]["id"] == "1"
+
+
+def test_edit_document_workflow_controller():
+    document = factories.DocumentFactory()
+    user1 = factories.UserFactory(id=1, name="João", email="email1")
+    user2 = factories.UserFactory(id=2, name="da", email="email2")
+    user3 = factories.UserFactory(id=3, name="Silva", email="email3")
+    group1 = factories.GroupFactory(id=1, name="group1")
+    group2 = factories.GroupFactory(id=2, name="group2")
+    group3 = factories.GroupFactory(id=3, name="group3")
+
+    workflow = {
+        "nodes": {
+            "544": {
+                "next_node": "5521",
+                "due_date": "2021-09-20 11:35:38.387630",
+                "responsible_users": [
+                    {"id": "1", "name": "João"},
+                    {"id": "2", "name": "da"},
+                    {"id": "3", "name": "Silva"},
+                ],
+                "responsible_group": {"id": "1", "name": "group1"},
+            },
+            "3485": {
+                "next_node": None,
+                "due_date": "2021-09-20 11:35:38.387630",
+                "responsible_users": [
+                    {"id": "1", "name": "João"},
+                    {"id": "2", "name": "da"},
+                    {"id": "3", "name": "Silva"},
+                ],
+                "responsible_group": {"id": "1", "name": "group1"},
+            },
+            "5521": {
+                "next_node": "3485",
+                "title": "Passo atual",
+                "due_date": "2021-09-20 11:35:38.387630",
+                "responsible_users": [
+                    {"id": "1", "name": "João"},
+                    {"id": "2", "name": "da"},
+                    {"id": "3", "name": "Silva"},
+                ],
+                "responsible_group": {"id": "1", "name": "group1"},
+            },
+        },
+        "current_node": "5521",
+    }
+    document.workflow = workflow
+    edited_step = {
+        "due_date": "2021-09-20 11:35:38.387630",
+        "responsible_users": [
+            {"id": "2", "name": "João"},
+            {"id": "1", "name": "da"},
+            {"id": "3", "name": "Silva"},
+        ],
+        "responsible_group": {"id": "2", "name": "group2"},
+    }
+
+    document = edit_document_workflow_controller(document, edited_step)
+    print(document.workflow)
+
+    assert document.workflow["nodes"]["5521"]["responsible_users"] == [
+        {"id": "2", "name": "da", "email": "email2"},
+        {"id": "3", "name": "Silva", "email": "email3"},
+    ]
+    assert document.workflow["nodes"]["5521"]["responsible_group"] == {
+        "id": "3",
+        "name": "group3",
+    }
+
+    assert document.due_date == datetime.strptime(
+        edited_step["due_date"], "%Y-%m-%d %H:%M:%S.%f"
+    )

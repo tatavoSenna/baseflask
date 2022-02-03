@@ -15,6 +15,9 @@ aws cloudformation create-stack \
         ParameterKey=ApiLBCertificate,ParameterValue= \
         ParameterKey=AppCertificate,ParameterValue= \
         ParameterKey=FlaskSecretKey,ParameterValue= \
+        ParameterKey=EnvironmentTag,ParameterValue=production \
+        ParameterKey=BackEndSentryDSN,ParameterValue= \
+        ParameterKey=FrontEndSentryDSN,ParameterValue= \
     --capabilities CAPABILITY_IAM \
     --profile lawing
 

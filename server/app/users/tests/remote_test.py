@@ -16,7 +16,7 @@ fake = Faker()
 email = fake.email()
 sub = fake.uuid4()
 username = fake.slug()
-name = 'Nome Sobrenome'
+name = "Nome Sobrenome"
 token = "eyJraWQiOiJpTjJtSFwvTmdHOTQwRE"
 user_attributes = {
     "Username": username,
@@ -26,7 +26,7 @@ user_attributes = {
         {"Name": "phone_number_verified", "Value": "true"},
         {"Name": "phone_number", "Value": "+5521997655616"},
         {"Name": "email", "Value": email},
-        {"Name": "name", "Value": name}
+        {"Name": "name", "Value": name},
     ],
 }
 
@@ -98,13 +98,13 @@ def test_get_local_creates_user(session):
     assert local_user.email == email
     assert local_user.name == name
 
-@patch('app.users.remote.get_cognito_claims')
-def test_get_local_user(cognito_claims_mock, session):
 
+@patch("app.users.remote.get_cognito_claims")
+def test_get_local_user(cognito_claims_mock, session):
     @get_local_user()
     def raise_forbidden_true_test(local_user):
         return local_user
-    
+
     assert raise_forbidden_true_test() == ({}, 403)
 
     company_id = 123
@@ -126,7 +126,7 @@ def test_get_local_user(cognito_claims_mock, session):
         "is_admin": searched_user.is_admin,
         "company_id": searched_user.company_id,
         "email": searched_user.email,
-        "sub": searched_user.sub
+        "sub": searched_user.sub,
     }
 
     cognito_claims_mock.return_value = user_info

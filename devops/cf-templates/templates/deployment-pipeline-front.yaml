@@ -1,7 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
 
-
 Parameters:
   GitHubRepo:
     Type: String
@@ -30,7 +29,7 @@ Parameters:
 
   UserPoolId:
     Type: String
-  
+
   UserPoolClientId:
     Type: String
 
@@ -39,7 +38,12 @@ Parameters:
 
   SignUpOn:
     Type: String
-  
+
+  EnvironmentTag:
+    Type: String
+
+  FrontEndSentryDSN:
+    Type: String
 
 Resources:
   CodeBuildServiceRole:
@@ -92,14 +96,14 @@ Resources:
                 Effect: Allow
                 Action:
                   - logs:*
-              - Resource: '*'
+              - Resource: "*"
                 Effect: Allow
                 Action:
                   - codepipeline:AcknowledgeJob
                   - codepipeline:GetJobDetails
                   - codepipeline:PollForJobs
                   - codepipeline:PutJobFailureResult
-                  - codepipeline:PutJobSuccessResult     
+                  - codepipeline:PutJobSuccessResult
               - Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}
                 Effect: Allow
                 Action:
@@ -116,7 +120,7 @@ Resources:
           import boto3
           import time
           import os
-          
+
           def lambda_handler(event, context):
               allFiles = ['/*']
               client = boto3.client('cloudfront')
@@ -142,47 +146,47 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
 
   CodePipelineServiceRole:
-      Type: AWS::IAM::Role
-      Properties:
-        Path: /
-        AssumeRolePolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service: codepipeline.amazonaws.com
-              Action: sts:AssumeRole
-        Policies:
-          - PolicyName: root
-            PolicyDocument:
-              Version: 2012-10-17
-              Statement:
-                - Resource:
-                    - !Sub arn:aws:s3:::${ArtifactBucket}/*
-                  Effect: Allow
-                  Action:
-                    - s3:PutObject
-                    - s3:GetObject
-                    - s3:GetObjectVersion
-                    - s3:GetBucketVersioning
-                - Resource: "*"
-                  Effect: Allow
-                  Action:
-                    - codebuild:StartBuild
-                    - codebuild:BatchGetBuilds
-                    - iam:PassRole
-                - Resource:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - iam:PassRole
+              - Resource:
                   - !Sub arn:aws:s3:::${AppBucket}/*
-                  Effect: Allow
-                  Action:
-                    - s3:PutObject
-                    - s3:GetObject
-                    - s3:PutObjectAcl
-                - Resource:
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:PutObjectAcl
+              - Resource:
                   - !GetAtt CacheInvalidatorLambda.Arn
-                  Effect: Allow
-                  Action:
-                    - lambda:InvokeFunction
+                Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
 
   ArtifactBucket:
     Type: AWS::S3::Bucket
@@ -219,20 +223,20 @@ Resources:
             Value: production
           - Name: REACT_APP_API_URL
             Value: !Join
-              - ''
-              - - 'https://'
+              - ""
+              - - "https://"
                 - !Ref ApiDomainName
           - Name: REACT_APP_BASE_URL
-            Value:  !Join
-              - ''
-              - - 'https://'
+            Value: !Join
+              - ""
+              - - "https://"
                 - !Ref AppDomainName
           - Name: REACT_APP_DOCUSIGN_REDIRECT_URL
             Value: !Join
-            - ''
-            - - 'https://'
-              - !Ref AppDomainName
-              - '/docusign-token'
+              - ""
+              - - "https://"
+                - !Ref AppDomainName
+                - "/docusign-token"
           - Name: REACT_APP_DOCUSIGN_OAUTH_URL
             Value: https://account.docusign.com/oauth
           - Name: REACT_APP_AWS_REGION
@@ -245,6 +249,12 @@ Resources:
             Value: !Ref IdentityPoolId
           - Name: REACT_APP_SIGNUP_ON
             Value: !Ref SignUpOn
+          - Name: REACT_APP_ENVIRONMENT_TAG
+            Value: !Ref EnvironmentTag
+          - Name: REACT_APP_SENTRY_DSN
+            Value: !Ref FrontEndSentryDSN
+          - Name: NODE_OPTIONS
+            Value: --max-old-space-size=8192
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
@@ -290,30 +300,29 @@ Resources:
               RunOrder: 1
         - Name: Deploy
           Actions:
-              - Name: Deploy
-                ActionTypeId:
-                  Category: Deploy
-                  Owner: AWS
-                  Version: 1
-                  Provider: S3
-                Configuration:
-                  BucketName: !Ref AppBucket
-                  Extract: true
-                InputArtifacts:
-                  - Name: ReactAppBuild
-                RunOrder: 1
-              - Name: InvalidateCloudFront
-                ActionTypeId:
-                  Category: Invoke
-                  Owner: AWS
-                  Version: 1
-                  Provider: Lambda
-                Configuration:
-                  FunctionName: !Ref CacheInvalidatorLambda
-                InputArtifacts:
-                  - Name: ReactAppBuild
-                RunOrder: 1
-
+            - Name: Deploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: S3
+              Configuration:
+                BucketName: !Ref AppBucket
+                Extract: true
+              InputArtifacts:
+                - Name: ReactAppBuild
+              RunOrder: 1
+            - Name: InvalidateCloudFront
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CacheInvalidatorLambda
+              InputArtifacts:
+                - Name: ReactAppBuild
+              RunOrder: 1
 
 Outputs:
   PipelineUrl:

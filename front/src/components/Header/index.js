@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { func, bool } from 'prop-types'
+import { func, bool, string } from 'prop-types'
 import {
 	UI_AUTH_CHANNEL,
 	AUTH_STATE_CHANGE_EVENT,
@@ -29,7 +29,7 @@ import styles from './index.module.scss'
 
 const { Text } = Typography
 
-function Head({ handleCollapsed, isCollapsed, isWeb }) {
+function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
 	const { name: username, signatures_provider } = useSelector(
 		({ session }) => session
 	)
@@ -59,7 +59,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 	return (
 		<Header
 			style={{ display: 'flex', justifyContent: 'flex-end' }}
-			className={classNames(styles.siteLayout)}>
+			className={classNames(styles.siteLayout, className)}>
 			<div
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
@@ -70,7 +70,7 @@ function Head({ handleCollapsed, isCollapsed, isWeb }) {
 							<Space size={10}>
 								<Avatar>
 									<Text style={{ color: '#333' }}>
-										{username ? username.substring(0, 1) : null}
+										{username ? username.substring(0, 1) : username}
 									</Text>
 								</Avatar>
 								<Text style={{ color: '#333' }}>{username}</Text>
@@ -88,10 +88,12 @@ Head.propTypes = {
 	handleCollapsed: func.isRequired,
 	isCollapsed: bool.isRequired,
 	isWeb: bool,
+	className: string,
 }
 
 Head.deafultProps = {
 	isWeb: true,
+	className: '',
 }
 
 export default Head

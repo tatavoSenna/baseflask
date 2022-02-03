@@ -278,7 +278,6 @@ const Tabs = ({
 	)
 
 	const version = () => {
-		const bolder = true
 		const disableButton = !(
 			text !== textUpdate.text &&
 			!blockVersion &&
@@ -304,8 +303,10 @@ const Tabs = ({
 				)}
 
 				<StyledMenu
-					onClick={(item) => isItNotDocX && handleVersion(item.key)}
-					docxverification={isItNotDocX}
+					onClick={(item) =>
+						isItNotDocX ? handleVersion(item.key) : undefined
+					}
+					docxverification={isItNotDocX ? 'true' : undefined}
 					selectedKeys={[versionId]}
 					mode="vertical">
 					{versions.map((item) => (
@@ -319,29 +320,27 @@ const Tabs = ({
 								isItNotDocX ? 'withBordeTop' : 'withoutBorderTop'
 							}>
 							{isItNotDocX ? (
-								<>
+								<ContainerDiv>
 									<ContainerIcon>
-										<StyledText
-											boldertext={bolder && 'bolder'}
-											style={{ fontSize: 14 }}>
+										<StyledText style={{ fontSize: 14 }}>
 											{item.description}
 										</StyledText>
 									</ContainerIcon>
 
 									<StyledText style={{ display: 'block', padding: '5px 0' }}>
-										Por:{' '}
-										<StyledText boldertext={bolder && 'bolder'}>
-											{item.email}
-										</StyledText>
+										Por: <StyledText>{item.email}</StyledText>
 									</StyledText>
-								</>
+								</ContainerDiv>
 							) : (
-								<ContainerIcon>
+								<ContainerIcon
+									changeopacity={
+										item.id === Object.keys(versions)[versions.length - 1]
+											? 'true'
+											: 'otherversion'
+									}>
 									<StyledText style={{ padding: '0 0 5px', fontSize: 14 }}>
 										Por:{' '}
-										<StyledText
-											boldertext={bolder && 'bolder'}
-											style={{ fontSize: 14 }}>
+										<StyledText style={{ fontSize: 14 }}>
 											{item.email}
 										</StyledText>
 									</StyledText>
@@ -356,9 +355,16 @@ const Tabs = ({
 									)}
 								</ContainerIcon>
 							)}
-							<StyledText>
+							<StyledText
+								changeopacity={
+									!isItNotDocX
+										? item.id === Object.keys(versions)[versions.length - 1]
+											? 'true'
+											: 'otherversion'
+										: undefined
+								}>
 								Data:{' '}
-								<StyledText boldertext={bolder && 'bolder'}>
+								<StyledText>
 									{moment(item.created_at).format('DD/MM/YYYY')}
 								</StyledText>
 							</StyledText>
@@ -768,8 +774,8 @@ const StyledMenu = styled(Menu)`
 	}
 
 	*:hover {
-		${(props) =>
-			props.docxverification ? `cursor: pointer;` : `cursor: default;`}
+		cursor: ${(props) =>
+			props.docxverification === 'true' ? `pointer` : `default`};
 	}
 `
 
@@ -778,11 +784,13 @@ const StyledText = styled(Text)`
 	line-height: 2;
 	color: #000;
 	opacity: 0.65;
-	${(props) =>
-		props.boldertext === 'bolder' &&
-		`
-		font-weight: 700;
-	`}
+
+	opacity: ${(props) => props.changeopacity === 'true' && 1};
+	font-weight: ${(props) => props.changeopacity === 'true' && 700};
+
+	* {
+		opacity: ${(props) => props.changeopacity === 'true' && 1};
+	}
 `
 
 const ItemContainer = styled(Menu.Item)`
@@ -793,21 +801,22 @@ const ItemContainer = styled(Menu.Item)`
 	background-color: #ffffff !important;
 	border: solid #cccccc;
 
-	${(props) =>
-		props.propsbordertop === 'withBorderTop'
-			? `border-width: 1px 0 !important;`
-			: `border-width: 0 0 1px !important;`}
-	${(props) =>
+	border-width: ${(props) =>
+		props.propsbordertop === 'withBorderTop' ? `1px 0` : `0 0 1px`} !important;
+	border-width: ${(props) =>
+		props.propsbordertop === 'withoutBorderTop'
+			? `0 0 1px`
+			: `1px 0`} !important;
+
+	padding: ${(props) =>
 		props.propsdifferentpadding === 'regularPadding'
-			? `padding: 70px 5px !important;`
-			: `padding: 60px 5px !important;`}
+			? `70px 5px`
+			: `60px 5px`} !important;
+
 	* {
-		${(props) =>
-			props.propscolor === 'selected' &&
-			`
-				color: #0099ff !important;
-				opacity: 1;
-			`}
+		color: ${(props) =>
+			props.propscolor === 'selected' && `#0099ff`} !important;
+		opacity: ${(props) => props.propscolor === 'selected' && `1`};
 	}
 `
 
@@ -815,6 +824,18 @@ const ContainerIcon = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+
+	* {
+		font-weight: ${(props) =>
+			props.changeopacity === 'true' ? 700 : 500} !important;
+		opacity: ${(props) => props.changeopacity === 'true' && 1};
+	}
+`
+
+const ContainerDiv = styled.div`
+	* {
+		font-weight: 700 !important;
+	}
 `
 
 const DownloadIcon = styled(DownloadOutlined)`

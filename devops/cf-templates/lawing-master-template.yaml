@@ -1,10 +1,8 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
 
-
 Description: >
   lawing api infrastructure and ci.
-
 
 Parameters:
   LaunchType:
@@ -33,38 +31,41 @@ Parameters:
     Description: The database name
     Default: lawingdb
     Type: String
-    MinLength: '1'
-    MaxLength: '64'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
       characters.
   DBUser:
     Description: The database admin account username
     Type: String
-    MinLength: '1'
-    MaxLength: '16'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
       characters.
   DBPassword:
-    NoEcho: 'true'
+    NoEcho: "true"
     Description: The database admin account password
     Type: String
-    MinLength: '8'
-    MaxLength: '41'
-    AllowedPattern: '[a-zA-Z0-9]*'
+    MinLength: "8"
+    MaxLength: "41"
+    AllowedPattern: "[a-zA-Z0-9]*"
     ConstraintDescription: must contain only alphanumeric characters.
 
   MetabaseDBName:
     Description: The metabase database name
     Default: metabase
     Type: String
-    MinLength: '1'
-    MaxLength: '64'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription:
+      must begin with a letter and contain only alphanumeric
       characters.
-      
+
   GitHubUser:
     Type: String
     Description: The repository owner.
@@ -118,7 +119,7 @@ Parameters:
   D4SignApiURL:
     Type: String
     Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1
-  
+
   SignUpOn:
     Type: String
     Description: Set to true to enable the sign up form on the frontend
@@ -126,7 +127,20 @@ Parameters:
       - true
       - false
     Default: "true"
-  
+
+  EnvironmentTag:
+    Type: String
+    Description: Tag to differentiate develop and production environments for sentry.
+
+  BackEndSentryDSN:
+    NoEcho: true
+    Type: String
+    Description: Sentry api key for the backend.
+
+  FrontEndSentryDSN:
+    NoEcho: true
+    Type: String
+    Description: Sentry api key for the frontend.
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -174,7 +188,6 @@ Metadata:
           - APIDomainName
 
 Resources:
-
   UserPool:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -182,7 +195,6 @@ Resources:
       Parameters:
         AuthName: !Ref AWS::StackName
         AppDomainName: !Ref AppDomainName
-
 
   Database:
     Type: AWS::CloudFormation::Stack
@@ -235,7 +247,8 @@ Resources:
         UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
         IdentityPoolId: !GetAtt UserPool.Outputs.IdentityPoolId
         SignUpOn: !Ref SignUpOn
-
+        EnvironmentTag: !Ref EnvironmentTag
+        FrontEndSentryDSN: !Ref FrontEndSentryDSN
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
@@ -273,11 +286,13 @@ Resources:
         UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
         AppDomainName: !Ref AppDomainName
         ApiDomainName: !Ref ApiDomainName
-        DocumentsBucket:  !GetAtt DocumentBucket.Outputs.DocumentsBucket
+        DocumentsBucket: !GetAtt DocumentBucket.Outputs.DocumentsBucket
         FlaskSecretKey: !Ref FlaskSecretKey
         ConvertApiSecretKey: !Ref ConvertApiSecretKey
         SendGridApiKey: !Ref SendGridApiKey
         D4SignApiURL: !Ref D4SignApiURL
+        EnvironmentTag: !Ref EnvironmentTag
+        BackEndSentryDSN: !Ref BackEndSentryDSN
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
@@ -286,14 +301,14 @@ Resources:
       Parameters:
         AppDomainName: !Ref AppDomainName
         AppCertificate: !Ref AppCertificate
-        AppBucketName: !Sub 'lawing-${AWS::StackName}-app'
+        AppBucketName: !Sub "lawing-${AWS::StackName}-app"
 
   DocumentBucket:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/documents_s3.yaml"
       Parameters:
-        DocumentsBucketName: !Sub '${AWS::StackName}-lawing-documents'
+        DocumentsBucketName: !Sub "${AWS::StackName}-lawing-documents"
 
   Metabase:
     Type: AWS::CloudFormation::Stack
@@ -309,5 +324,3 @@ Resources:
         MBDBHost: !GetAtt Database.Outputs.DatabaseAddress
         MBDBUser: !Ref DBUser
         MBDBPassword: !Ref DBPassword
-
-

@@ -13,15 +13,13 @@ class ParticipatesOnSerializer(ma.SQLAlchemyAutoSchema):
     active = ma.Function(lambda obj: obj.group.active)
 
     class Meta:
-        exclude = (
-            "id",
-        )
+        exclude = ("id",)
         model = ParticipatesOn
 
 
 class UserSerializer(ma.SQLAlchemyAutoSchema):
     participates_on = ma.Nested(ParticipatesOnSerializer, many=True)
-    signatures_provider = ma.Method('get_signatures_provider')
+    signatures_provider = ma.Method("get_signatures_provider")
 
     class Meta:
         exclude = (

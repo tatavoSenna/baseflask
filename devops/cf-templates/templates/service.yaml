@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-
 Parameters:
   Cluster:
     Type: String
@@ -29,33 +28,28 @@ Parameters:
     Type: String
 
   AppDomainName:
-      Type: String
-      Description:
-        The front end domain. The api needs this to build the callback url to the cognito hosted ui
+    Type: String
+    Description: The front end domain. The api needs this to build the callback url to the cognito hosted ui
 
   ApiDomainName:
-      Type: String
-      Description:
-        The api domain. The api needs this to build the callback url to the cognito hosted ui
+    Type: String
+    Description: The api domain. The api needs this to build the callback url to the cognito hosted ui
 
   CognitoUserPool:
     Type: String
-    Description:
-      The user pool the api will use for authentication
+    Description: The user pool the api will use for authentication
 
   CognitoUserPoolDomain:
     Type: String
-    Description:
-      The Cognito hosted ui domain basename. The api needs it to build the hosted ui domain.
+    Description: The Cognito hosted ui domain basename. The api needs it to build the hosted ui domain.
 
   UserPoolClient:
     Type: String
-    Description:
-      The user pool app client  
+    Description: The user pool app client
 
   DocumentsBucket:
     Type: String
-    
+
   FlaskSecretKey:
     Type: String
 
@@ -68,11 +62,18 @@ Parameters:
   D4SignApiURL:
     Type: String
 
+  EnvironmentTag:
+    Type: String
+    Description: The tag used to differentiate between develop and production environments on sentry.
+
+  BackEndSentryDSN:
+    Type: String
+    Description: Sentry api key for the backend.
+
 Conditions:
-  Fargate: !Equals [ !Ref LaunchType, "Fargate" ]
+  Fargate: !Equals [!Ref LaunchType, "Fargate"]
 
-  EC2: !Equals [ !Ref LaunchType, "EC2" ]
-
+  EC2: !Equals [!Ref LaunchType, "EC2"]
 
 Resources:
   TaskExecutionRole:
@@ -88,7 +89,7 @@ Resources:
               Service: ecs-tasks.amazonaws.com
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-            
+
   TaskRole:
     Type: AWS::IAM::Role
     Properties:
@@ -105,7 +106,7 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Resource: 
+              - Resource:
                   - !Sub arn:aws:s3:::${DocumentsBucket}/*
                   - !Sub arn:aws:s3:::${DocumentsBucket}
                 Effect: Allow
@@ -122,7 +123,6 @@ Resources:
                 Effect: Allow
                 Action:
                   - sns:Publish
-
 
   LogGroup:
     Type: AWS::Logs::LogGroup
@@ -166,10 +166,10 @@ Resources:
     Properties:
       Family: !Sub ${AWS::StackName}-lawing-api
       RequiresCompatibilities:
-        - !If [ Fargate, "FARGATE", "EC2" ]
+        - !If [Fargate, "FARGATE", "EC2"]
       Memory: 512
       Cpu: 256
-      NetworkMode: !If [ Fargate, "awsvpc", "bridge" ]
+      NetworkMode: !If [Fargate, "awsvpc", "bridge"]
       ExecutionRoleArn: !Ref TaskExecutionRole
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
@@ -183,40 +183,44 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
           Environment:
-          - Name: AWS_COGNITO_DOMAIN
-            Value: !Join
-            - ''
-            - - 'https://'
-              - !Ref CognitoUserPoolDomain
-              - '-lawing.auth.'
-              - !Ref AWS::Region
-              - '.amazoncognito.com'
-          - Name: AWS_COGNITO_USER_POOL_ID
-            Value: !Ref CognitoUserPool
-          - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
-            Value: !Ref UserPoolClient
-          - Name: SQLALCHEMY_TRACK_MODIFICATIONS
-            Value: 'False'
-          - Name: SECRET_KEY
-            Value: !Ref FlaskSecretKey
-          - Name: SQLALCHEMY_DATABASE_URI
-            Value: !Ref DatabaseConnectionString
-          - Name: DOCUSIGN_OAUTH_URI
-            Value: https://account.docusign.com/oauth
-          - Name: DOCUSIGN_WEBHOOK_URL
-            Value: !Sub '${ApiDomainName}/docusign/signed'
-          - Name: AWS_S3_DOCUMENTS_BUCKET
-            Value: !Ref DocumentsBucket
-          - Name: CONVERTAPI_SECRET_KEY
-            Value: !Ref ConvertApiSecretKey
-          - Name: SENDGRID_API_KEY
-            Value: !Ref SendGridApiKey
-          - Name: SNS_NEWDOCUMENT_ARN
-            Value: !ImportValue SNSNewDocumentARN
-          - Name: D4SIGN_API_URL
-            Value: !Ref D4SignApiURL
-          - Name: D4SIGN_API_DOCUMENT_WEBHOOK_URL
-            Value: !Sub 'https://${ApiDomainName}/d4sign/document-webhook'
+            - Name: AWS_COGNITO_DOMAIN
+              Value: !Join
+                - ""
+                - - "https://"
+                  - !Ref CognitoUserPoolDomain
+                  - "-lawing.auth."
+                  - !Ref AWS::Region
+                  - ".amazoncognito.com"
+            - Name: AWS_COGNITO_USER_POOL_ID
+              Value: !Ref CognitoUserPool
+            - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
+              Value: !Ref UserPoolClient
+            - Name: SQLALCHEMY_TRACK_MODIFICATIONS
+              Value: "False"
+            - Name: SECRET_KEY
+              Value: !Ref FlaskSecretKey
+            - Name: SQLALCHEMY_DATABASE_URI
+              Value: !Ref DatabaseConnectionString
+            - Name: DOCUSIGN_OAUTH_URI
+              Value: https://account.docusign.com/oauth
+            - Name: DOCUSIGN_WEBHOOK_URL
+              Value: !Sub "${ApiDomainName}/docusign/signed"
+            - Name: AWS_S3_DOCUMENTS_BUCKET
+              Value: !Ref DocumentsBucket
+            - Name: CONVERTAPI_SECRET_KEY
+              Value: !Ref ConvertApiSecretKey
+            - Name: SENDGRID_API_KEY
+              Value: !Ref SendGridApiKey
+            - Name: SNS_NEWDOCUMENT_ARN
+              Value: !ImportValue SNSNewDocumentARN
+            - Name: D4SIGN_API_URL
+              Value: !Ref D4SignApiURL
+            - Name: D4SIGN_API_DOCUMENT_WEBHOOK_URL
+              Value: !Sub "https://${ApiDomainName}/d4sign/document-webhook"
+            - Name: ENVIRONMENT_TAG
+              Value: !Ref EnvironmentTag
+            - Name: SENTRY_DSN
+              Value: !Ref BackEndSentryDSN
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000
@@ -226,4 +230,4 @@ Resources:
 
 Outputs:
   Service:
-    Value: !If [ Fargate, !Ref FargateService, !Ref EC2Service ]
+    Value: !If [Fargate, !Ref FargateService, !Ref EC2Service]

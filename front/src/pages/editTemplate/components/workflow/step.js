@@ -1,82 +1,54 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { object, array, number } from 'prop-types'
+import { array, number, func, object } from 'prop-types'
 import { Form, Input, InputNumber, Select, Checkbox, Typography } from 'antd'
 import {
-	editTemplateStepInfo,
 	editTemplateStepRemove,
 	editTemplateMove,
 } from '~/states/modules/editTemplate'
 import DragDropCard from '~/components/dragDropCard'
 import Delete from '~/components/deleteConfirm'
 
-const { Option } = Select
-var groupSelect = null
-
 const { Text } = Typography
 
-const Step = ({ node, groups, users, index }) => {
+const Step = ({
+	form,
+	node,
+	index,
+	loadGroups,
+	groupOptions,
+	loadUsers,
+	usersOptions,
+	updateStep,
+}) => {
 	const dispatch = useDispatch()
+	const titleFormItemName = `description_${index}`
+	const responsibleGroupFormItemName = `group_${index}`
+	const responsibleUsersFormItemName = `users_${index}`
+	const deadlineFormItemName = `deadline${index}`
 
-	const groupsChildren = []
-	groups.map((item) =>
-		groupsChildren.push(<Option key={item.id}>{item.name}</Option>)
-	)
+	const [expire, setExpire] = useState(!(node.deadline === 0))
 
-	const listUsers = (value) => {
-		const list = []
-		users.map((user) => {
-			user.groups.map((group) => {
-				if (group.group_id === parseInt(value)) {
-					list.push(
-						<Option key={user.key} value={user.id}>
-							{user.email}
-						</Option>
-					)
-				}
-				return list
-			})
-			return list
+	const updateResponsibleGroup = (event) => {
+		const responsible_group = event ? event : null
+		updateStep(index, { responsible_group, responsible_users: [] })
+		form.setFieldsValue({
+			[responsibleUsersFormItemName]: [],
 		})
-		return list
 	}
 
-	const usersList = listUsers(node.responsible_group)
-	const [usersChildren, setUsersChildren] = useState(usersList)
-
-	const [expire, setExpire] = useState(
-		!(node.deadline === undefined || node.deadline === null)
-	)
-
-	const onChangeExpire = (e) => {
-		if (e) {
-			updateStepInfo(1, index, 'deadline')
-			setExpire(true)
-		} else {
-			updateStepInfo(null, index, 'deadline')
-			setExpire(false)
-		}
-	}
-
-	const updateStepInfo = (e, index, name) => {
-		if (name === 'title') {
-			const value = e.target.value
-			dispatch(editTemplateStepInfo({ value, index, name }))
-		} else if (name === 'responsible_group') {
-			let value = e
-			setUsersChildren(listUsers(value))
-			dispatch(editTemplateStepInfo({ value, index, name }))
-			dispatch(
-				editTemplateStepInfo({ value: '', index, name: 'responsible_users' })
-			)
-		} else {
-			const value = e
-			dispatch(editTemplateStepInfo({ value, index, name }))
-		}
+	const updateNodeProperty = (propertyName, propertyValue) => {
+		updateStep(index, { [propertyName]: propertyValue })
 	}
 
 	const handleRemoveStep = () => {
 		dispatch(editTemplateStepRemove({ index }))
+		form.setFieldsValue({
+			[titleFormItemName]: '',
+			[responsibleGroupFormItemName]: null,
+			[responsibleUsersFormItemName]: [],
+			[deadlineFormItemName]: 0,
+		})
 	}
 
 	return (
@@ -89,11 +61,15 @@ const Step = ({ node, groups, users, index }) => {
 					marginBottom: '24px',
 				}}>
 				<Form.Item
-					name={`description_${index}`}
+					name={titleFormItemName}
 					label="Descrição"
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					onChange={(e) => updateStepInfo(e, index, 'title')}>
-					<Input value={node.title} />
+					initialValue={node.title}>
+					<Input
+						onChange={(event) => {
+							updateNodeProperty('title', event.target.value)
+						}}
+					/>
 				</Form.Item>
 				<Delete
 					handle={() => handleRemoveStep()}
@@ -101,57 +77,61 @@ const Step = ({ node, groups, users, index }) => {
 				/>
 			</div>
 			<Form.Item
-				name={`group_${index}`}
+				name={responsibleGroupFormItemName}
 				label="Grupo"
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
+				initialValue={node.responsible_group}>
 				<Select
-					value={node.responsible_group}
-					ref={(select) => (groupSelect = select)}
 					allowClear
 					style={{ width: '100%' }}
 					placeholder="Selecione o grupo"
-					onChange={(e) => updateStepInfo(e, index, 'responsible_group')}
-					onSelect={() => groupSelect.blur()}
-					onDeselect={() => groupSelect.blur()}>
-					{groupsChildren}
-				</Select>
+					options={groupOptions}
+					onFocus={() => loadGroups(node.responsible_group)}
+					onChange={updateResponsibleGroup}
+				/>
 			</Form.Item>
 			<Form.Item
-				name={`users_${index}`}
+				name={responsibleUsersFormItemName}
 				label="Responsáveis"
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
+				initialValue={node.responsible_users}>
 				<Select
-					value={node.responsible_users}
-					ref={(select) => (groupSelect = select)}
 					mode="multiple"
-					allowClear
 					showSearch
-					optionFilterProp="children"
-					placeholder="Selecione o responsável"
-					onChange={(e) => updateStepInfo(e, index, 'responsible_users')}
-					onSelect={() => groupSelect.blur()}
-					onDeselect={() => groupSelect.blur()}>
-					{usersChildren}
-				</Select>
+					placeholder="Selecione os responsáveis"
+					onChange={(event) => updateNodeProperty('responsible_users', event)}
+					onFocus={() => loadUsers(index)}
+					options={usersOptions}
+				/>
 			</Form.Item>
 			<div style={{ display: 'flex', marginBottom: '10px' }}>
 				<Checkbox
 					checked={expire}
-					onChange={(e) => onChangeExpire(e.target.checked)}>
+					onChange={(event) => {
+						const has_deadline = event.target.checked
+						setExpire(event.target.checked)
+						updateNodeProperty('deadline', has_deadline ? 1 : 0)
+						form.setFieldsValue({
+							[deadlineFormItemName]: 1,
+						})
+					}}>
 					Prazo de validade{expire && ':'}
 				</Checkbox>
 				{expire && (
 					<>
 						<Form.Item
-							name={`deadline_${index}`}
+							name={deadlineFormItemName}
 							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-							style={{ position: 'relative', bottom: '5px', margin: 0 }}>
+							style={{ position: 'relative', bottom: '5px', margin: 0 }}
+							initialValue={node.deadline}>
 							<InputNumber
 								value={node.deadline}
 								min={1}
 								size="small"
 								style={{ width: '60px', marginRight: '5px' }}
-								onChange={(e) => updateStepInfo(e, index, 'deadline')}
+								onChange={(event) => {
+									updateNodeProperty('deadline', event)
+								}}
 							/>
 						</Form.Item>
 						<Text>dia{node.deadline !== 1 && 's'}</Text>
@@ -165,10 +145,14 @@ const Step = ({ node, groups, users, index }) => {
 export default Step
 
 Step.propTypes = {
+	form: object,
 	node: object,
-	groups: array,
-	users: array,
 	index: number,
+	loadGroups: func,
+	groupOptions: array,
+	loadUsers: func,
+	usersOptions: array,
+	updateStep: func,
 }
 
 Step.defaultProps = {

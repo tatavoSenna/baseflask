@@ -25,8 +25,7 @@ class CustomException(Exception):
 @get_local_user
 def docusign_token(current_user):
     authorization_code = request.args.get("code")
-    data = {"grant_type": "authorization_code",
-            "code": "{}".format(authorization_code)}
+    data = {"grant_type": "authorization_code", "code": "{}".format(authorization_code)}
 
     try:
         (
@@ -41,8 +40,7 @@ def docusign_token(current_user):
             msg = error["error_description"]
             raise CustomException(code, msg)
         set_user_token(
-            current_user.get(
-                "id"), access_token, refresh_token, token_obtain_date
+            current_user.get("id"), access_token, refresh_token, token_obtain_date
         )
         status_code = 500 if error else 200
     except CustomException as e:
@@ -67,35 +65,37 @@ Normally works only 30 days after creation
 def docusign_refresh_token(current_user):
     data = {"grant_type": "refresh_token", "refresh_token": "{}".format("")}
     (access_token, refresh_token, token_obtain_date) = fetch_docusign_token(
-        current_user, data)
+        current_user, data
+    )
     set_user_token(
         current_user.get("id"), access_token, refresh_token, token_obtain_date
     )
     return {"success": True}
 
 
-@docusign_bp.route('signed', methods=['POST'])
+@docusign_bp.route("signed", methods=["POST"])
 def docusign_follow_up():
     xml = BeautifulSoup(request.data, "xml")
     envelope_id = xml.EnvelopeStatus.EnvelopeID.string
     envelope_status = xml.EnvelopeStatus.Status.string
     timezone_offset = int(xml.TimeZoneOffset.string)
     # check if envelope is done signing
-    if envelope_status == 'Completed':
+    if envelope_status == "Completed":
         document_bytes = xml.DocumentPDFs.DocumentPDF.PDFBytes.string
-        update_envelope_status(docusign_id=envelope_id,
-                               document_bytes=document_bytes)
+        update_envelope_status(docusign_id=envelope_id, document_bytes=document_bytes)
     # for every signer update his status
-    for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all('RecipientStatus'):
+    for signer_status in xml.EnvelopeStatus.RecipientStatuses.find_all(
+        "RecipientStatus"
+    ):
         signing_time = None
         status = signer_status.Status.string
-        if status == 'Completed':
+        if status == "Completed":
             signing_time = signer_status.Signed.string
         update_signer_status(
             docusign_id=envelope_id,
             email=signer_status.Email.string,
             status=status,
             signing_time=signing_time,
-            timezone_offset=timezone_offset
+            timezone_offset=timezone_offset,
         )
-    return ('Ok', 200)
+    return ("Ok", 200)

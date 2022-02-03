@@ -64,7 +64,25 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		return <img src={logoSmall} alt="logo" className={styles.logo} />
 	}
 
-	const [collapse, setCollapse] = useState(false)
+	// initial state for window width
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+	// using useEffect for always get windows width when the user change it
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth)
+		}
+
+		// the 'resize' event is always shot when the user change the view
+		window.addEventListener('resize', handleResize)
+		// cleaning the eventListener
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
+
+	const handleCollapseDynamic = () => {
+		// if window width if minor and equal to 1200
+		return windowWidth <= 1200 ? true : false
+	}
 
 	return (
 		<>
@@ -72,12 +90,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 				<Sider
 					className={styles.sider}
 					trigger={null}
-					breakpoint="xl"
-					onCollapse={(collapsed) => {
-						setCollapse(collapsed)
-					}}>
+					collapsed={handleCollapseDynamic()}
+					collapsible>
 					<div className={styles.logoWrapper}>
-						{collapse ? (
+						{handleCollapseDynamic() ? (
 							<img
 								src={logoSmall}
 								alt="logo"

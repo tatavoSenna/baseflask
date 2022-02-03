@@ -19,12 +19,16 @@ import {
 	getTemplateDownload,
 	getTemplateDownloadSuccess,
 	getTemplateDownloadFailure,
+	getGroupsUsers,
+	getGroupsUsersSuccess,
+	getGroupsUsersFailure,
 } from '.'
 
 export default function* rootSaga() {
 	yield takeEvery(getTemplateDetail, getTemplateDetailSaga)
 	yield takeEvery(editTemplateRequest, editTemplateSaga)
 	yield takeEvery(getTemplateDownload, getTemplateDownloadSaga)
+	yield takeEvery(getGroupsUsers, getGroupsUsersSaga)
 }
 
 function* getTemplateDetailSaga({ payload = {} }) {
@@ -47,6 +51,7 @@ function* getTemplateDetailSaga({ payload = {} }) {
 			)
 		)
 	} catch (error) {
+		console.log(error)
 		yield put(getTemplateDetailFailure(error))
 	}
 }
@@ -129,9 +134,8 @@ function* editTemplateSaga({ payload = {} }) {
 						const type = Array.isArray(field.main)
 							? field.main[0].type
 							: field.main.type
-						variablesObj[
-							`${type}_${pageIndex}_${fieldIndex}`
-						] = structuredVariable(field)
+						variablesObj[`${type}_${pageIndex}_${fieldIndex}`] =
+							structuredVariable(field)
 					} else {
 						variablesObj[field.name] = extractName(field)
 					}
@@ -241,5 +245,28 @@ function* getTemplateDownloadSaga({ payload = {} }) {
 			updateKey: 'downloadTemplate',
 		})
 		yield put(getTemplateDownloadFailure(error))
+	}
+}
+
+function* getGroupsUsersSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Carregando usuários do grupo...',
+		updateKey: 'getGroupsUsers',
+	})
+	const groupId = payload
+	try {
+		const { data } = yield call(api.get, `groups/${groupId}/users`)
+		yield put(getGroupsUsersSuccess({ groupId, data }))
+		successMessage({
+			content: `Usuários do grupo carregados com sucesso`,
+			updateKey: 'getGroupsUsers',
+		})
+	} catch (error) {
+		console.log(error)
+		yield put(getGroupsUsersFailure())
+		errorMessage({
+			content: 'Falha ao carregar usuários do grupo.',
+			updateKey: 'getGroupsUsers',
+		})
 	}
 }

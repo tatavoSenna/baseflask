@@ -36,6 +36,10 @@ const initialState = {
 		},
 		variables: [[]],
 	},
+	groupsUsers: {
+		loading: false,
+		data: {},
+	},
 	error: null,
 	loading: false,
 	docPosted: false,
@@ -105,13 +109,14 @@ const { actions, reducer } = createSlice({
 					variables: addVariable(state.data.variables, payload),
 				}),
 			}),
-		editTemplateFieldRemove: (state, { payload }) =>
-			extend(state, {
+		editTemplateFieldRemove: (state, { payload }) => {
+			return extend(state, {
 				data: extend(state.data, {
 					form: removeField(state.data.form, payload),
 					variables: removeVariable(state.data.variables, payload),
 				}),
-			}),
+			})
+		},
 		editTemplateStepInfo: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
@@ -225,6 +230,25 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				docPosted: payload,
 			}),
+		getGroupsUsers: (state, { payload }) => {
+			const { groupsUsers } = state
+			groupsUsers.loading = true
+			extend(state, {
+				groupsUsers,
+			})
+		},
+		getGroupsUsersSuccess: (state, { payload }) => {
+			const { groupId, data } = payload
+			const { groupsUsers } = state
+			groupsUsers.data[groupId] = data.users
+			groupsUsers.loading = false
+			extend(state, { groupsUsers })
+		},
+		getGroupsUsersFailure: (state) => {
+			const { groupsUsers } = state
+			groupsUsers.loading = false
+			extend(state, { groupsUsers })
+		},
 	},
 })
 
@@ -258,6 +282,9 @@ export const {
 	getTemplateDownloadSuccess,
 	getTemplateDownloadFailure,
 	setDocPosted,
+	getGroupsUsers,
+	getGroupsUsersSuccess,
+	getGroupsUsersFailure,
 } = actions
 
 export { default as editTemplateSaga } from './sagas'

@@ -21,5 +21,8 @@ aws cloudformation update-stack \
         ParameterKey=SendGridApiKey,UsePreviousValue=true \
         ParameterKey=D4SignApiURL,UsePreviousValue=true \
         ParameterKey=SignUpOn,ParameterValue=true \
+        ParameterKey=EnvironmentTag,ParameterValue=develop \
+        ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
+        ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \
     --profile \
         lawing-dev

@@ -21,8 +21,8 @@ function* getGroupListSaga() {
 	const url = '/groups'
 	try {
 		const { data } = yield call(api.get, url)
-		const groupList = selectAllGroups(data.groups)
-		yield put(getGroupListSuccess(groupList))
+		const groupsList = selectAllGroups(data.groups)
+		yield put(getGroupListSuccess(groupsList))
 	} catch {}
 }
 

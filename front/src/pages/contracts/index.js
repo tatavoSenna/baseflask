@@ -52,12 +52,8 @@ const Contracts = () => {
 		order_by,
 	} = useSelector(({ contract }) => contract)
 
-	const {
-		showFolderModal,
-		newFolder,
-		accessFolders,
-		moveFolderModal,
-	} = useSelector(({ folder }) => folder)
+	const { showFolderModal, newFolder, accessFolders, moveFolderModal } =
+		useSelector(({ folder }) => folder)
 
 	const { data: models } = useSelector(({ model }) => model)
 
@@ -151,11 +147,17 @@ const Contracts = () => {
 		dispatch(listContract({ parent: folder.id }))
 		dispatch(setChooseFolder(folder))
 	}
-	
+
 	const sortTable = (parameter) => {
 		var currentOrder
-		order == "ascend" ? currentOrder = "descend" : order == "descend" ? currentOrder = null : currentOrder = "ascend"
-		parameter != order_by ? currentOrder = "ascend" : currentOrder = currentOrder 
+		order == 'ascend'
+			? (currentOrder = 'descend')
+			: order == 'descend'
+			? (currentOrder = null)
+			: (currentOrder = 'ascend')
+		parameter != order_by
+			? (currentOrder = 'ascend')
+			: (currentOrder = currentOrder)
 		dispatch(listContract({ parent, order_by: parameter, order: currentOrder }))
 	}
 

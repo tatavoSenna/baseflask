@@ -9,44 +9,48 @@ repo.config_writer().set_value("user", "name", "lawing ci").release()
 repo.config_writer().set_value("user", "email", "dev@lawing.com.br").release()
 
 
-if environ.get('CI', None):
-    gl = gitlab.Gitlab('https://gitlab.com/', private_token = environ['CI_GITLAB_TOKEN'])
-    lawing_project = gl.projects.get(environ['CI_PROJECT_ID'])
-    repo.remotes.origin.set_url(f'https://oauth2:{environ["CI_GITLAB_TOKEN"]}@gitlab.com/lawing2/lawing_server.git')
+if environ.get("CI", None):
+    gl = gitlab.Gitlab("https://gitlab.com/", private_token=environ["CI_GITLAB_TOKEN"])
+    lawing_project = gl.projects.get(environ["CI_PROJECT_ID"])
+    repo.remotes.origin.set_url(
+        f'https://oauth2:{environ["CI_GITLAB_TOKEN"]}@gitlab.com/lawing2/lawing_server.git'
+    )
 else:
-    gl = gitlab.Gitlab.from_config('lawing')
+    gl = gitlab.Gitlab.from_config("lawing")
     lawing_project = gl.projects.get(17627914)
+
 
 def fetch_branches():
     for remote in repo.remotes:
         remote.fetch()
 
+
 def staging_checkout():
-    print('preparing Stage branch')
+    print("preparing Stage branch")
     try:
-        repo.git.checkout('Stage')
+        repo.git.checkout("Stage")
     except:
-        repo.git.checkout('-b','Stage')
-    
-    repo.git.reset('--hard', 'origin/dev')
+        repo.git.checkout("-b", "Stage")
+
+    repo.git.reset("--hard", "origin/dev")
 
 
 def merge_into_staging():
-    
+
     fetch_branches()
 
     staging_checkout()
 
-    mrs = lawing_project.mergerequests.list(state='opened')
+    mrs = lawing_project.mergerequests.list(state="opened")
     for mr in mrs:
-        print(f'Analisando {mr.title}')
+        print(f"Analisando {mr.title}")
         print(mr.draft)
         if not mr.draft:
-            print(f'Mergando {mr.title}')
+            print(f"Mergando {mr.title}")
             source_branch = mr.source_branch
-            repo.git.merge(f'origin/{source_branch}')
-            
-    repo.git.push('--set-upstream', 'origin', repo.active_branch, force=True)
+            repo.git.merge(f"origin/{source_branch}")
+
+    repo.git.push("--set-upstream", "origin", repo.active_branch, force=True)
 
     for mr in mrs:
         try:
@@ -58,6 +62,5 @@ def merge_into_staging():
             pass
         mr.save()
 
-        
-merge_into_staging()
 
+merge_into_staging()

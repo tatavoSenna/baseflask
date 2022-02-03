@@ -39,7 +39,7 @@ function* getCompanyListSaga({ payload = {} }) {
 		const { data } = yield call(api.get, url)
 		yield put(getCompanyListSuccess(data))
 	} catch (error) {
-		yield put(getCompanyListFailure(error))
+		yield put(getCompanyListFailure({ error }))
 	}
 }
 
@@ -61,11 +61,15 @@ function* addCompanySaga() {
 		yield put(addCompanySuccess())
 		yield put(getCompanyList())
 	} catch (error) {
+		let content =
+			error.response.data?.error ??
+			error.response.data?.message ??
+			'Falha ao criar empresa'
 		errorMessage({
-			content: error.response.data.error,
+			content,
 			updateKey: 'addCompany',
 		})
-		yield put(addCompanyFailure(error))
+		yield put(addCompanyFailure({ error }))
 	}
 	yield put(resetNewCompany())
 }
@@ -94,6 +98,6 @@ function* changeUserCompanySaga({ payload = {} }) {
 			content: error.response.data.error,
 			updateKey: 'changeUserCompany',
 		})
-		yield put(changeUserCompanyFailure(error))
+		yield put(changeUserCompanyFailure({ error }))
 	}
 }

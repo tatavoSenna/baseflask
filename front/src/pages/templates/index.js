@@ -21,9 +21,12 @@ import MainLayout from '~/components/mainLayout'
 const Templates = () => {
 	const dispatch = useDispatch()
 	const history = useHistory()
-	const { data: templates, loading, pages, showModal } = useSelector(
-		({ template }) => template
-	)
+	const {
+		data: templates,
+		loading,
+		pages,
+		showModal,
+	} = useSelector(({ template }) => template)
 
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))

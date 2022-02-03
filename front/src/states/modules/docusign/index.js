@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	loading: false,
 	error: null,
+	token: null,
 }
 
 const { actions, reducer } = createSlice({
@@ -17,6 +18,7 @@ const { actions, reducer } = createSlice({
 		setDocusignSuccess: (state, { payload }) =>
 			extend(state, {
 				loading: false,
+				token: payload,
 			}),
 		setDocusignFailure: (state, { payload }) =>
 			extend(state, {

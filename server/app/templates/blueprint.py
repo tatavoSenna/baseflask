@@ -19,7 +19,7 @@ from .controllers import (
     upload_file_to_template_controller,
     download_template_text_controller,
     get_document_upload_url,
-    template_status_controller
+    template_status_controller,
 )
 
 
@@ -36,7 +36,7 @@ def create_template(current_user):
     content = request.json
     name = content.get("title", None)
     if name == None:
-        abort(400, 'Missing template name')
+        abort(400, "Missing template name")
     form = content.get("form", None)
     workflow = content.get("workflow", None)
     signers = content.get("signers", None)
@@ -47,13 +47,18 @@ def create_template(current_user):
     variables = content.get("variables", None)
 
     document_template_id = create_template_controller(
-        company_id, user_id, name, form, workflow, signers, template_text, text_type, variables)
-
-    return jsonify(
-        {
-            "id": document_template_id
-        }
+        company_id,
+        user_id,
+        name,
+        form,
+        workflow,
+        signers,
+        template_text,
+        text_type,
+        variables,
     )
+
+    return jsonify({"id": document_template_id})
 
 
 @templates_bp.route("/<int:template_id>", methods=["PATCH"])
@@ -75,7 +80,17 @@ def edit_template(current_user, template_id):
     user_id = current_user["id"]
 
     document_template_id = edit_template_controller(
-        company_id, user_id, template_id, name, form, workflow, signers, template_text, text_type, variables)
+        company_id,
+        user_id,
+        template_id,
+        name,
+        form,
+        workflow,
+        signers,
+        template_text,
+        text_type,
+        variables,
+    )
 
     return jsonify({"id": document_template_id})
 
@@ -85,8 +100,7 @@ def edit_template(current_user, template_id):
 @get_local_user
 def get_template_detail(current_user, template_id):
     try:
-        template = get_template_controller(
-            current_user["company_id"], template_id)
+        template = get_template_controller(current_user["company_id"], template_id)
         if not template:
             abort(404, "Template not Found")
     except Exception:
@@ -100,10 +114,11 @@ def get_template_detail(current_user, template_id):
 def get_template_text(current_user, template_id):
     try:
         textfile = download_template_text_controller(
-            current_user["company_id"], template_id)
+            current_user["company_id"], template_id
+        )
     except Exception:
         abort(404, "Template not Found")
-    return jsonify(textfile.decode('utf-8'))
+    return jsonify(textfile.decode("utf-8"))
 
 
 @templates_bp.route("/")
@@ -111,10 +126,10 @@ def get_template_text(current_user, template_id):
 @get_local_user
 def get_template_list(current_user):
     try:
-        page = int(request.args.get(
-            "page", current_app.config['PAGE_DEFAULT']))
-        per_page = int(request.args.get(
-            "per_page", current_app.config['PER_PAGE_DEFAULT']))
+        page = int(request.args.get("page", current_app.config["PAGE_DEFAULT"]))
+        per_page = int(
+            request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
+        )
         search_param = str(request.args.get("search", ""))
     except:
         abort(400, "invalid parameters")
@@ -131,7 +146,9 @@ def get_template_list(current_user):
             "page": paginated_query.page,
             "per_page": paginated_query.per_page,
             "total": paginated_query.total,
-            "items": DocumentTemplateListSerializer(many=True).dump(paginated_query.items),
+            "items": DocumentTemplateListSerializer(many=True).dump(
+                paginated_query.items
+            ),
         }
     )
 
@@ -142,8 +159,8 @@ def get_template_list(current_user):
 def delete_document_template(current_user, document_template_id):
     try:
         document_template = get_template_controller(
-            current_user["company_id"],
-            document_template_id)
+            current_user["company_id"], document_template_id
+        )
         if document_template == None:
             raise Exception
     except Exception:
@@ -151,10 +168,11 @@ def delete_document_template(current_user, document_template_id):
     try:
         delete_template_controller(document_template)
     except Exception:
-        abort(400, "The document template could not be deleted, there are documents linked to it")
-    msg_JSON = {
-        "message": "The document template was deleted"
-    }
+        abort(
+            400,
+            "The document template could not be deleted, there are documents linked to it",
+        )
+    msg_JSON = {"message": "The document template was deleted"}
 
     return jsonify(msg_JSON), 200
 
@@ -163,40 +181,35 @@ def delete_document_template(current_user, document_template_id):
 @aws_auth.authentication_required
 @get_local_user
 def upload_file_to_template(current_user, document_template_id):
-    uploaded_file = request.files['file']
+    uploaded_file = request.files["file"]
     filename = secure_filename(uploaded_file.filename)
 
     if filename == "":
-        abort(400, 'Missing file')
+        abort(400, "Missing file")
 
     file_root, file_ext = os.path.splitext(filename)
 
     document_template = get_template_controller(
-        current_user["company_id"],
-        document_template_id
+        current_user["company_id"], document_template_id
     )
     if document_template is None:
         abort(404, "Template not found")
 
     if file_ext != document_template.text_type:
-        abort(400, 'File extension not accepted')
+        abort(400, "File extension not accepted")
 
     upload_file_to_template_controller(
-        uploaded_file, filename, file_root, document_template_id)
-
-    return jsonify(
-        {
-            "message": "Successfully upload file to document template"
-        }
+        uploaded_file, filename, file_root, document_template_id
     )
+
+    return jsonify({"message": "Successfully upload file to document template"})
 
 
 @templates_bp.route("/<int:document_template_id>/getupload", methods=["GET"])
 @aws_auth.authentication_required
 @get_local_user
 def get_upload(current_user, document_template_id):
-    template = get_template_controller(
-        current_user["company_id"], document_template_id)
+    template = get_template_controller(current_user["company_id"], document_template_id)
     if not template:
         abort(404, "Template not found")
     if template.filename is None:
@@ -204,12 +217,9 @@ def get_upload(current_user, document_template_id):
     try:
         doc_url = get_document_upload_url(template)
     except Exception:
-        logging.exception(
-            "Could not get download url")
+        logging.exception("Could not get download url")
         abort(400, "Could not get download url")
-    response = {
-        "download_url": doc_url
-    }
+    response = {"download_url": doc_url}
     return jsonify(response)
 
 
@@ -217,8 +227,7 @@ def get_upload(current_user, document_template_id):
 @aws_auth.authentication_required
 @get_local_user
 def set_published(current_user, document_template_id):
-    template = get_template_controller(
-        current_user["company_id"], document_template_id)
+    template = get_template_controller(current_user["company_id"], document_template_id)
     if not request.is_json:
         return abort(404, "Accepts only content-type json.")
     if not template:
@@ -228,7 +237,6 @@ def set_published(current_user, document_template_id):
     company_id = current_user["company_id"]
     user_id = current_user["id"]
 
-    template_id = template_status_controller(
-        company_id, user_id, template.id, status)
+    template_id = template_status_controller(company_id, user_id, template.id, status)
 
     return jsonify({"id": template_id, "status": status})

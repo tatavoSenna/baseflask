@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
 	loading: false,
+	loaded: false,
 	groupsList: [],
 	showGroupModal: false,
 	newGroup: {
@@ -14,14 +15,18 @@ const { actions, reducer } = createSlice({
 	name: 'groups',
 	initialState,
 	reducers: {
+		clearGroupsData: (state) => extend(state, initialState),
 		getGroupList: (state) =>
 			extend(state, {
 				loading: true,
+				loaded: false,
+				groupsList: [],
 			}),
 		getGroupListSuccess: (state, { payload }) =>
 			extend(state, {
 				loading: false,
-				groupList: payload,
+				loaded: true,
+				groupsList: payload,
 			}),
 		updateNewGroup: (state, { payload }) =>
 			extend(state, {
@@ -52,6 +57,7 @@ export const {
 	setShowGroupModal,
 	updateNewGroup,
 	resetNewGroup,
+	clearGroupsData,
 } = actions
 
 export { default as groupsSaga } from './sagas'

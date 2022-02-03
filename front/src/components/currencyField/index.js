@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { string, shape, object, func, number, bool } from 'prop-types'
-import { Form, InputNumber } from 'antd'
+import { Form, Input } from 'antd'
 import InfoField from '~/components/infoField'
+import formatCurrency from './formatCurrency'
 
-const locale = 'pt-br'
+const defaultConfig = {
+	locale: 'pt-BR',
+	formats: {
+		number: {
+			BRL: {
+				style: 'currency',
+				currency: 'BRL',
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			},
+		},
+	},
+}
 
 const CurrencyField = ({
 	pageFieldsData,
@@ -11,6 +24,18 @@ const CurrencyField = ({
 	onChange,
 	inputValue,
 	disabled,
+	config,
+	currency,
+	max,
+	autoFocus,
+	autoSelect,
+	autoReset,
+	onChangeCurrency,
+	onBlur,
+	onFocus,
+	onKeyPress,
+	value,
+	defaultValue,
 }) => {
 	const { label, variable, type, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
@@ -21,51 +46,149 @@ const CurrencyField = ({
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
 
-	const currencyFormatter = (selectedCurrOpt) => (value) => {
-		return new Intl.NumberFormat(locale, {
-			style: 'currency',
-			currency: selectedCurrOpt.split('::')[1],
-		}).format(value)
+	const inputRef = useCallback(
+		(node) => {
+			const isActive = node === document.activeElement
+
+			if (node && autoFocus && !isActive) {
+				node.focus()
+			}
+		},
+		[autoFocus]
+	)
+
+	const [maskedValue, setMaskedValue] = useState('0')
+
+	// to prevent a malformed config object
+	const safeConfig = useMemo(
+		() => () => {
+			const {
+				formats: {
+					number: {
+						[currency]: { maximumFractionDigits },
+					},
+				},
+			} = config
+
+			const finalConfig = {
+				...defaultConfig,
+				...config,
+			}
+
+			// at the moment this prevents problems when converting numbers
+			// with zeroes in-between, otherwise 205 would convert to 25.
+			finalConfig.formats.number[currency].minimumFractionDigits =
+				maximumFractionDigits
+
+			return finalConfig
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		},
+		[currency, config]
+	)
+
+	const clean = (number) => {
+		if (typeof number === 'number') {
+			return number
+		}
+
+		// strips everything that is not a number (positive or negative)
+		return Number(number.toString().replace(/[^0-9-]/g, ''))
 	}
 
-	const currencyParser = (val) => {
-		try {
-			// for when the input gets clears
-			if (typeof val === 'string' && !val.length) {
-				val = '0.0'
+	const normalizeValue = (number) => {
+		const {
+			formats: {
+				number: {
+					[currency]: { maximumFractionDigits },
+				},
+			},
+		} = safeConfig()
+		let safeNumber = number
+
+		if (typeof number === 'string') {
+			safeNumber = clean(number)
+
+			if (safeNumber % 1 !== 0) {
+				safeNumber = safeNumber.toFixed(maximumFractionDigits)
 			}
+		} else {
+			// all input numbers must be a float point (for the cents portion). This is a fallback in case of integer ones.
+			safeNumber = Number.isInteger(number)
+				? Number(number) * 10 ** maximumFractionDigits
+				: number.toFixed(maximumFractionDigits)
+		}
 
-			// detecting and parsing between comma and dot
-			var group = new Intl.NumberFormat(locale).format(1111).replace(/1/g, '')
-			var decimal = new Intl.NumberFormat(locale).format(1.1).replace(/1/g, '')
-			var reversedVal = val.replace(new RegExp('\\' + group, 'g'), '')
-			reversedVal = reversedVal.replace(new RegExp('\\' + decimal, 'g'), '.')
-			//  => 1232.21 €
+		// divide it by 10 power the maximum fraction digits.
+		return clean(safeNumber) / 10 ** maximumFractionDigits
+	}
 
-			// removing everything except the digits and dot
-			reversedVal = reversedVal.replace(/[^0-9.]/g, '')
-			//  => 1232.21
+	const calculateValues = (inputFieldValue) => {
+		const value = normalizeValue(inputFieldValue)
+		const maskedValue = formatCurrency(value, safeConfig(), currency)
 
-			// appending digits properly
-			const digitsAfterDecimalCount = (reversedVal.split('.')[1] || []).length
-			const needsDigitsAppended = digitsAfterDecimalCount > 2
+		return [value, maskedValue]
+	}
 
-			if (needsDigitsAppended) {
-				reversedVal = reversedVal * Math.pow(10, digitsAfterDecimalCount - 2)
-			}
+	const updateValues = (value) => {
+		const [calculatedValue, calculatedMaskedValue] = calculateValues(value)
 
-			return Number.isNaN(reversedVal) ? 0 : reversedVal
-		} catch (error) {
-			console.error(error)
+		if (!max || calculatedValue <= max) {
+			setMaskedValue(calculatedMaskedValue)
+
+			return [calculatedValue, calculatedMaskedValue]
+		} else {
+			return [normalizeValue(maskedValue), maskedValue]
 		}
 	}
 
-	const currency = 'BRAZIL::BRL'
+	const handleChange = (event) => {
+		event.preventDefault()
+
+		const [value, maskedValue] = updateValues(event.target.value)
+
+		if (maskedValue) {
+			onChangeCurrency(event, value, maskedValue)
+		}
+	}
+
+	const handleBlur = (event) => {
+		const [value, maskedValue] = updateValues(event.target.value)
+
+		if (autoReset) {
+			calculateValues(0)
+		}
+
+		if (maskedValue) {
+			onBlur(event, value, maskedValue)
+		}
+	}
+
+	const handleFocus = (event) => {
+		if (autoSelect) {
+			event.target.select()
+		}
+
+		const [value, maskedValue] = updateValues(event.target.value)
+
+		if (maskedValue) {
+			onFocus(event, value, maskedValue)
+		}
+	}
+
+	const handleKeyUp = (event) => onKeyPress(event, event.key, event.keyCode)
+
+	useEffect(() => {
+		const currentValue = value || defaultValue || 0
+		const [, maskedValue] = calculateValues(currentValue)
+
+		setMaskedValue(maskedValue)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currency, value, defaultValue, config])
 
 	return (
 		<Form.Item
 			key={name}
-			name={list !== undefined ? [list, name] : name}
+			// name={list !== undefined ? [list, name] : name}
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
@@ -88,13 +211,13 @@ const CurrencyField = ({
 			}
 			colon={false}
 			initialValue={!inputValue ? '' : Number(inputValue)}>
-			<InputNumber
-				min={0}
-				placeholder=""
-				formatter={currencyFormatter(currency)}
-				parser={currencyParser}
-				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
-				disabled={disabled}
+			<Input
+				ref={inputRef}
+				value={maskedValue}
+				onChange={handleChange}
+				onBlur={handleBlur}
+				onFocus={handleFocus}
+				onKeyUp={handleKeyUp}
 			/>
 		</Form.Item>
 	)
@@ -111,11 +234,32 @@ CurrencyField.propTypes = {
 	onChange: func,
 	inputValue: number,
 	disabled: bool,
+	defaultValue: number,
+	value: number,
+	max: number,
+	currency: string.isRequired,
+	config: shape().isRequired,
+	autoFocus: bool.isRequired,
+	autoSelect: bool.isRequired,
+	autoReset: bool.isRequired,
+	onChangeCurrency: func.isRequired,
+	onBlur: func.isRequired,
+	onFocus: func.isRequired,
+	onKeyPress: func.isRequired,
 }
 
 CurrencyField.defaultProps = {
 	className: {},
-	onChange: () => null,
+	currency: 'BRL',
+	value: 0,
+	config: defaultConfig,
+	autoFocus: false,
+	autoSelect: false,
+	autoReset: false,
+	onChangeCurrency: (f) => f,
+	onBlur: (f) => f,
+	onFocus: (f) => f,
+	onKeyPress: (f) => f,
 }
 
 export default CurrencyField

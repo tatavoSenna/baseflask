@@ -40,7 +40,7 @@ const EditTemplate = () => {
 	const [editTitle, setEditTitle] = useState(false)
 	const [inputsFilled, setInputsFilled] = useState({
 		form: edit,
-		workflow: edit,
+		workflow: true,
 		text: edit,
 		signers: edit,
 	})
@@ -164,15 +164,6 @@ const EditTemplate = () => {
 			})
 		})
 
-		data.workflow.nodes.forEach((node, index) =>
-			form.setFieldsValue({
-				[`description_${index}`]: node.title,
-				[`group_${index}`]: node.responsible_group,
-				[`users_${index}`]: node.responsible_users,
-				[`deadline_${index}`]: node.deadline,
-			})
-		)
-
 		data.signers.parties.forEach((party, partyIndex) => {
 			form.setFieldsValue({
 				[`party_${partyIndex}`]: party.partyTitle,
@@ -182,12 +173,12 @@ const EditTemplate = () => {
 					[`title_${partyIndex}_${signerIndex}`]: signer.title,
 					[`name_${partyIndex}_${signerIndex}`]: signer.fields[0].variable,
 					[`email_${partyIndex}_${signerIndex}`]: signer.fields[1].variable,
-					[`anchor_${partyIndex}_${signerIndex}`]: signer.anchor[0]
-						.anchor_string,
-					[`x_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
-						.anchor_x_offset,
-					[`y_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
-						.anchor_y_offset,
+					[`anchor_${partyIndex}_${signerIndex}`]:
+						signer.anchor[0].anchor_string,
+					[`x_offset_${partyIndex}_${signerIndex}`]:
+						signer.anchor[0].anchor_x_offset,
+					[`y_offset_${partyIndex}_${signerIndex}`]:
+						signer.anchor[0].anchor_y_offset,
 				})
 			})
 		})
@@ -276,13 +267,7 @@ const EditTemplate = () => {
 							hideRequiredMark
 							onFinish={onSubmit}>
 							{current === 'form' && <TemplateForm data={data.form} />}
-							{current === 'workflow' && (
-								<Workflow
-									data={data.workflow}
-									inputsFilled={inputsFilled}
-									setInputsFilled={setInputsFilled}
-								/>
-							)}
+							{current === 'workflow' && <Workflow form={form} />}
 							{current === 'text' && (
 								<Text
 									data={data.text}

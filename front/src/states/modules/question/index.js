@@ -2,8 +2,9 @@ import { extend } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	data: {},
-	visible: {},
+	data: [],
+	visible: [],
+	currentPage: 0,
 	error: null,
 	loading: false,
 }
@@ -25,6 +26,12 @@ const { actions, reducer } = createSlice({
 				data: data.form,
 				error: null,
 				loading: false,
+				currentPage: 0,
+				visible: data.form.map((page) => {
+					return page.fields.map((field) => {
+						return !field.condition
+					})
+				}),
 			})
 		},
 		listQuestionFailure: (state, { payload }) =>
@@ -32,28 +39,117 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
-		listVisible: (state, { payload }) =>
-			extend(state, {
-				visible: payload.questions.map((page) => {
-					return page.fields.map((field) => {
-						return !field.condition
-					})
-				}),
-			}),
-		updateVisible: (state, { payload }) =>
-			extend(state, {
-				visible: state.visible.map((page, index) => {
-					if (index === payload.pageIndex) {
-						return page.map((field, index) => {
-							if (index === payload.fieldIndex) {
-								return payload.value
+		updateVisible: (state, { payload }) => {
+			const compareCondition = (condition, input) => {
+				const { operator, value } = condition
+
+				let comparison
+				switch (operator) {
+					case '>':
+						comparison = input > value
+						break
+					case '>=':
+						comparison = input >= value
+						break
+					case '<':
+						comparison = input < value
+						break
+					case '<=':
+						comparison = input <= value
+						break
+					case '=':
+						// If value is an array, OR logic is applied
+						if (typeof value === 'object') {
+							value.forEach((item) => {
+								if (input === item) {
+									comparison = true
+								}
+							})
+						} else {
+							comparison = input === value
+						}
+						break
+					default:
+						comparison = false
+						break
+				}
+
+				return comparison
+			}
+
+			let { form, input, fieldIndex, pageIndex } = payload
+			let variableName
+
+			if (typeof input !== 'undefined') {
+				let pageFieldsData = state.data[pageIndex].fields
+
+				// This 'if' is here so templates whose variables are not objects still work
+				if (typeof pageFieldsData[fieldIndex].variable === 'string') {
+					variableName = pageFieldsData[fieldIndex].variable
+				} else {
+					variableName = pageFieldsData[fieldIndex].variable.name
+				}
+			}
+
+			let visible = [...state.visible].map((pageFieldsVisible) => [
+				...pageFieldsVisible,
+			])
+
+			state.data.forEach((page, pageIndex) =>
+				page.fields.forEach((field, fieldIndex) => {
+					if (field.condition) {
+						let conditions = Array.isArray(field.condition)
+							? field.condition
+							: [field.condition]
+
+						let comparison = conditions.map((condition) => {
+							let value
+							if (condition.variable === variableName) {
+								value = input
+							} else {
+								value = form.getFieldValue(condition.variable)
 							}
-							return field
+							return compareCondition(condition, value)
 						})
+						visible[pageIndex][fieldIndex] = comparison.every((i) => i === true)
 					}
-					return page
-				}),
-			}),
+				})
+			)
+
+			return { ...state, visible }
+		},
+		nextPage: (state) => {
+			let next = state.currentPage + 1
+			if (next >= state.visible.length) return
+
+			// Skip empty form pages
+			if (Array.isArray(state.visible)) {
+				while (
+					next < state.visible.length - 1 &&
+					state.visible[next].every((fieldVisible) => fieldVisible === false)
+				) {
+					next++
+				}
+			}
+
+			extend(state, { currentPage: next })
+		},
+		previousPage: (state) => {
+			let next = state.currentPage - 1
+			if (next < 0) return
+
+			// Skip empty form pages
+			if (Array.isArray(state.visible)) {
+				while (
+					next > 0 &&
+					state.visible[next].every((fieldVisible) => fieldVisible === false)
+				) {
+					next--
+				}
+			}
+
+			extend(state, { currentPage: next })
+		},
 		setResetQuestion: (state) => {
 			extend(state, {
 				data: {},
@@ -72,8 +168,9 @@ export const {
 	listQuestion,
 	listQuestionSuccess,
 	listQuestionFailure,
-	listVisible,
 	updateVisible,
+	nextPage,
+	previousPage,
 	setResetQuestion,
 } = actions
 

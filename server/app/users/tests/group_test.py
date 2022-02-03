@@ -3,7 +3,7 @@ from app.users.controllers import (
     list_group_controller,
     create_group_controller,
     get_group_controller,
-    delete_group_controller
+    delete_group_controller,
 )
 from app.models.user import Group
 
@@ -16,7 +16,7 @@ def add_n_random_groups(n, company):
 def test_create_and_retrieve_group():
     company_id = 1
     company = factories.CompanyFactory(id=company_id)
-    name = 'Dept'
+    name = "Dept"
 
     group = create_group_controller(company.id, name)
     retrieved_group = get_group_controller(company.id, group.id)
@@ -78,19 +78,18 @@ def test_retrieve_specific_groups():
 
     factories.GroupFactory(
         company=company,
-        name='tester1',
+        name="tester1",
     )
     factories.GroupFactory(
         company=company,
-        name='tester2',
+        name="tester2",
     )
 
     paginated_query1 = list_group_controller(company.id)
-    paginated_query2 = list_group_controller(company.id, search_param='')
-    paginated_query3 = list_group_controller(company.id, search_param='Mamão')
-    paginated_query4 = list_group_controller(company.id, search_param='téstẽr')
-    paginated_query5 = list_group_controller(
-        company.id, search_param='tEsTeR2')
+    paginated_query2 = list_group_controller(company.id, search_param="")
+    paginated_query3 = list_group_controller(company.id, search_param="Mamão")
+    paginated_query4 = list_group_controller(company.id, search_param="téstẽr")
+    paginated_query5 = list_group_controller(company.id, search_param="tEsTeR2")
 
     assert paginated_query1.total == 2
     assert paginated_query2.total == 2
