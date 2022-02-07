@@ -19,8 +19,15 @@ const PersonField = ({
 	pageIndex,
 	fieldIndex,
 }) => {
-	const { label, variable, type, fields, id, info, person_type } =
-		pageFieldsData
+	const {
+		label,
+		variable,
+		type,
+		fields,
+		id,
+		info,
+		person_type,
+	} = pageFieldsData
 	const fixedPerson = person_type === 'legal' ? 'Jurídica' : 'Física'
 	const objName = `person_${pageIndex}_${fieldIndex}`
 	const isObj = typeof variable === 'object'

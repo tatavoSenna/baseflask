@@ -77,8 +77,9 @@ const CurrencyField = ({
 
 			// at the moment this prevents problems when converting numbers
 			// with zeroes in-between, otherwise 205 would convert to 25.
-			finalConfig.formats.number[currency].minimumFractionDigits =
-				maximumFractionDigits
+			finalConfig.formats.number[
+				currency
+			].minimumFractionDigits = maximumFractionDigits
 
 			return finalConfig
 			// eslint-disable-next-line react-hooks/exhaustive-deps

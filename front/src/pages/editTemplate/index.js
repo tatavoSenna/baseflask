@@ -173,12 +173,12 @@ const EditTemplate = () => {
 					[`title_${partyIndex}_${signerIndex}`]: signer.title,
 					[`name_${partyIndex}_${signerIndex}`]: signer.fields[0].variable,
 					[`email_${partyIndex}_${signerIndex}`]: signer.fields[1].variable,
-					[`anchor_${partyIndex}_${signerIndex}`]:
-						signer.anchor[0].anchor_string,
-					[`x_offset_${partyIndex}_${signerIndex}`]:
-						signer.anchor[0].anchor_x_offset,
-					[`y_offset_${partyIndex}_${signerIndex}`]:
-						signer.anchor[0].anchor_y_offset,
+					[`anchor_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_string,
+					[`x_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_x_offset,
+					[`y_offset_${partyIndex}_${signerIndex}`]: signer.anchor[0]
+						.anchor_y_offset,
 				})
 			})
 		})

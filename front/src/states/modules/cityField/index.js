@@ -26,8 +26,11 @@ const { actions, reducer } = createSlice({
 	},
 })
 
-export const { getCityField, getCityFieldSuccess, getCityFieldFailure } =
-	actions
+export const {
+	getCityField,
+	getCityFieldSuccess,
+	getCityFieldFailure,
+} = actions
 
 export { default as cityFieldSaga } from './sagas'
 

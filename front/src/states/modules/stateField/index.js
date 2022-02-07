@@ -26,8 +26,11 @@ const { actions, reducer } = createSlice({
 	},
 })
 
-export const { getStateField, getStateFieldSuccess, getStateFieldFailure } =
-	actions
+export const {
+	getStateField,
+	getStateFieldSuccess,
+	getStateFieldFailure,
+} = actions
 
 export { default as stateFieldSaga } from './sagas'
 

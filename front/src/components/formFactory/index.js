@@ -27,11 +27,9 @@ const layout = {
 const FormFactory = ({ token, initialValues }) => {
 	const dispatch = useDispatch()
 
-	const {
-		data: questions,
-		visible,
-		currentPage,
-	} = useSelector(({ question }) => question)
+	const { data: questions, visible, currentPage } = useSelector(
+		({ question }) => question
+	)
 
 	const history = useHistory()
 	const [form] = Form.useForm()
