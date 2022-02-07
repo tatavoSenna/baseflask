@@ -52,8 +52,12 @@ const Contracts = () => {
 		order_by,
 	} = useSelector(({ contract }) => contract)
 
-	const { showFolderModal, newFolder, accessFolders, moveFolderModal } =
-		useSelector(({ folder }) => folder)
+	const {
+		showFolderModal,
+		newFolder,
+		accessFolders,
+		moveFolderModal,
+	} = useSelector(({ folder }) => folder)
 
 	const { data: models } = useSelector(({ model }) => model)
 

@@ -78,8 +78,9 @@ const Editor = ({ text, onUpdateText, block }) => {
 					<div className={classNames(styles.ckEditorEditable)}>
 						<CKEditor
 							onInit={(editor) => {
-								const toolbarContainer =
-									document.querySelector('#toolbar-container')
+								const toolbarContainer = document.querySelector(
+									'#toolbar-container'
+								)
 								toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 							}}
 							editor={DecoupledDocumentEditor}

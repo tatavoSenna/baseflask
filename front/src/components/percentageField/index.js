@@ -11,8 +11,18 @@ const PercentageField = ({
 	first,
 	disabled,
 }) => {
-	const { label, variable, type, id, info, list, min, max, decimals, step } =
-		pageFieldsData
+	const {
+		label,
+		variable,
+		type,
+		id,
+		info,
+		list,
+		min,
+		max,
+		decimals,
+		step,
+	} = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname

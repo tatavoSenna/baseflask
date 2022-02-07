@@ -4,6 +4,7 @@ before_script:
 
 stages:
   - black
+  - eslint
   - staging
 
 black:
@@ -12,6 +13,20 @@ black:
   script:
     - pip3 install black
     - black --check ./server
+  only:
+    - merge_requests
+
+eslint:
+  stage: eslint
+  image: node:latest
+  allow_failure: false
+  script:
+    - cd front
+    - yarn add node-sass
+    - yarn add eslint --dev
+    - yarn add eslint-config-react-app -D \
+      eslint-plugin-prettier
+    - yarn run eslint .
   only:
     - merge_requests
 

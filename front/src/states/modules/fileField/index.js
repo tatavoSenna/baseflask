@@ -27,8 +27,11 @@ const { actions, reducer } = createSlice({
 	},
 })
 
-export const { fileUploadRequest, fileUploadSuccess, fileUploadFailure } =
-	actions
+export const {
+	fileUploadRequest,
+	fileUploadSuccess,
+	fileUploadFailure,
+} = actions
 
 export { default as fileFieldSaga } from './sagas'
 

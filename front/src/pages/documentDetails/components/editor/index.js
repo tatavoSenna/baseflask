@@ -17,8 +17,9 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 
 		init() {
 			const usersPlugin = this.editor.plugins.get('Users')
-			const commentsRepositoryPlugin =
-				this.editor.plugins.get('CommentsRepository')
+			const commentsRepositoryPlugin = this.editor.plugins.get(
+				'CommentsRepository'
+			)
 
 			for (let user of userList) {
 				usersPlugin.addUser(user)
@@ -143,8 +144,9 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 						)}
 						<CKEditor
 							onInit={(editor) => {
-								const toolbarContainer =
-									document.querySelector('#toolbar-container')
+								const toolbarContainer = document.querySelector(
+									'#toolbar-container'
+								)
 								if (toolbarContainer) {
 									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 								}
@@ -152,8 +154,9 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 							editor={DecoupledDocumentEditor}
 							config={editorConfiguration}
 							onChange={(event, editor) => {
-								const commentsRepository =
-									editor.plugins.get('CommentsRepository')
+								const commentsRepository = editor.plugins.get(
+									'CommentsRepository'
+								)
 								const commentThreadsData = commentsRepository.getCommentThreads(
 									{
 										skipNotAttached: true,
