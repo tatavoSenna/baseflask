@@ -2,12 +2,6 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { func, bool, string } from 'prop-types'
 import {
-	UI_AUTH_CHANNEL,
-	AUTH_STATE_CHANGE_EVENT,
-	AuthState,
-} from '@aws-amplify/ui-components'
-import { Auth, Hub } from 'aws-amplify'
-import {
 	Layout,
 	Menu,
 	Dropdown,
@@ -15,11 +9,7 @@ import {
 	Typography,
 	Space /*, Badge*/,
 } from 'antd'
-import {
-	ArrowLeftOutlined,
-	ArrowRightOutlined,
-	DownOutlined,
-} from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 
 import { classNames } from '~/utils'
 import { connectDocusign } from '~/states/modules/integrations'

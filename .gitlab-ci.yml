@@ -26,7 +26,7 @@ eslint:
     - yarn add eslint --dev
     - yarn add eslint-config-react-app -D \
       eslint-plugin-prettier
-    - yarn run eslint .
+    - yarn run eslint . --max-warnings=0
   only:
     - merge_requests
 

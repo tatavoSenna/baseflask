@@ -154,14 +154,12 @@ const Contracts = () => {
 
 	const sortTable = (parameter) => {
 		var currentOrder
-		order == 'ascend'
+		order === 'ascend'
 			? (currentOrder = 'descend')
-			: order == 'descend'
+			: order === 'descend'
 			? (currentOrder = null)
 			: (currentOrder = 'ascend')
-		parameter != order_by
-			? (currentOrder = 'ascend')
-			: (currentOrder = currentOrder)
+		if (parameter !== order_by) currentOrder = 'ascend'
 		dispatch(listContract({ parent, order_by: parameter, order: currentOrder }))
 	}
 

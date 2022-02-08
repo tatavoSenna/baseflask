@@ -8,7 +8,7 @@ import {
 	Divider,
 	Steps as StepsAntd,
 } from 'antd'
-import { UserOutlined, DownloadOutlined } from '@ant-design/icons'
+import { DownloadOutlined } from '@ant-design/icons'
 
 import {
 	array,
@@ -634,28 +634,6 @@ const Tabs = ({
 				</Form.Item>
 			</div>
 		</ScrollContent>
-	)
-
-	const downloads = () => (
-		<div>
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'left',
-					marginTop: 20,
-				}}>
-				<Form.Item {...tailLayout}>
-					<Button
-						key="download"
-						type="primary"
-						className={styles.button}
-						onClick={downloadDocument}
-						disabled={loadingSign}>
-						Download do documento word
-					</Button>
-				</Form.Item>
-			</div>
-		</div>
 	)
 
 	return (

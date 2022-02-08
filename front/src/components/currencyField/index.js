@@ -37,7 +37,7 @@ const CurrencyField = ({
 	value,
 	defaultValue,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
