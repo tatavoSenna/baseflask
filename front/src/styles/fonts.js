@@ -1,4 +1,4 @@
-export default {
+const fonts = {
 	sans: {
 		name: '"Open Sans"',
 		large: '40px',
@@ -8,3 +8,5 @@ export default {
 		bold: 700,
 	},
 }
+
+export default fonts

@@ -1,4 +1,4 @@
-export default {
+const colors = {
 	white: '#fff',
 	black: '#000',
 	ice: '#f6f6f6',
@@ -13,3 +13,5 @@ export default {
 	highlightYellow: '#ffff99',
 	transparent: 'transparent',
 }
+
+export default colors

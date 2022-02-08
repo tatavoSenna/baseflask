@@ -97,7 +97,7 @@ const ContractModal = ({
 					<AutoComplete
 						options={options}
 						placeholder="Selecione o modelo"
-						style={{ width: '100%' }}
+						//style={{ width: '100%' }}
 						onSelect={(value, item) => setModelId(item.id)}
 						onSearch={onSearch}
 						style={{ width: '90%' }}
