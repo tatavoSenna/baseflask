@@ -1,3 +1,4 @@
+from ast import For
 import random
 import secrets
 import logging
@@ -9,6 +10,7 @@ import boto3
 from flask import g, current_app, abort, request
 from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
+from werkzeug.exceptions import Forbidden
 
 from app import db, aws_auth
 from app.models.user import User
@@ -174,7 +176,7 @@ def get_local_user(view=None, raise_forbidden=True):
             return view(serialized_user, *args, **kwargs)
         except:
             if raise_forbidden:
-                return {}, 403
+                raise Forbidden(description="Forbidden")
             client = boto3.client("cognito-idp")
             user = client.get_user(
                 AccessToken=cognito_utils.extract_access_token(request.headers)
