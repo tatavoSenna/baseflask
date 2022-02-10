@@ -324,7 +324,7 @@ const Tabs = ({
 									</ContainerIcon>
 
 									<StyledText style={{ display: 'block', padding: '5px 0' }}>
-										Por: <StyledText>{item.email}</StyledText>
+										Por: <StyledText>{item.created_by}</StyledText>
 									</StyledText>
 								</ContainerDiv>
 							) : (

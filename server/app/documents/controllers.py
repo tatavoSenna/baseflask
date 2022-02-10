@@ -88,6 +88,7 @@ def create_document_controller(
 
     # Specify version 0 to create Document object
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
+    current_user = User.query.filter_by(id=user_id).first()
     version = [
         {
             "description": "Version 0",
@@ -95,6 +96,7 @@ def create_document_controller(
             "created_at": current_date,
             "id": "0",
             "comments": None,
+            "created_by": current_user.name,
         }
     ]
     # Get workflow from the template and update it
@@ -286,6 +288,7 @@ def save_signers_controller(document_id, signers_variables):
 
 def create_new_version_controller(document_id, description, user_email, comments):
     document = Document.query.filter_by(id=document_id).first()
+    current_user = User.query.filter_by(email=user_email).first()
     versions = document.versions
     current_version = int(versions[0]["id"])
     new_version = current_version + 1
@@ -296,6 +299,7 @@ def create_new_version_controller(document_id, description, user_email, comments
         "created_at": current_date,
         "id": str(new_version),
         "comments": comments,
+        "created_by": current_user.name,
     }
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
@@ -501,6 +505,7 @@ def change_variables_controller(document, new_variables, email, variables):
     document_template = DocumentTemplate.query.filter_by(
         id=document.document_template_id
     ).first()
+    current_user = User.query.filter_by(email=email)
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     versions = document.versions
     current_version = int(versions[0]["id"])
@@ -511,6 +516,7 @@ def change_variables_controller(document, new_variables, email, variables):
         "created_at": current_date,
         "id": str(new_version),
         "comments": "",
+        "created_by": current_user.name,
     }
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
