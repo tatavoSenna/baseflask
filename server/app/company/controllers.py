@@ -3,6 +3,7 @@ from app import db
 from app.models.company import Company, Webhook
 from app.models.user import User
 from .remote import RemoteCompany
+from werkzeug.exceptions import BadRequest, Forbidden
 
 
 def save_company_keys_controller(
@@ -72,7 +73,12 @@ def update_webhook_controller(webhook_id, url, pdf, docx):
 def create_company_controller(logged_user, new_company_name):
     if logged_user["created"]:
         if not logged_user["is_admin"]:
-            return {}, 403
+            raise Forbidden(description="Only admin users can create new companies")
+
+    company = Company.query.filter_by(name=new_company_name).first()
+
+    if company:
+        raise BadRequest(description="Company already exists")
 
     company_attributes = dict(name=new_company_name)
     new_company = Company(**company_attributes)

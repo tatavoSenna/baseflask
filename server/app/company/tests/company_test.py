@@ -20,6 +20,7 @@ from flask import current_app
 from unittest.mock import patch
 import copy
 from faker import Faker
+from werkzeug.exceptions import Forbidden, BadRequest
 
 
 def test_save_keys():
@@ -148,9 +149,8 @@ def test_create_company_by_non_admin_user(session):
         "is_admin": False,
     }
 
-    response = create_company_controller(created_non_admin_user, company_name)
-
-    assert response == ({}, 403)
+    with pytest.raises(Forbidden):
+        create_company_controller(created_non_admin_user, company_name)
 
 
 def test_create_company_by_admin_user(session):
@@ -174,6 +174,26 @@ def test_create_company_by_admin_user(session):
     assert company.name == company_name
     assert response == company
     assert company.id > 0
+
+
+def test_create_company_already_exists(session):
+    fake = Faker()
+
+    company_name = "Test company"
+
+    created_admin_user = {
+        "name": "Test User 1",
+        "username": fake.slug(),
+        "sub": fake.uuid4(),
+        "email": fake.email(),
+        "created": True,
+        "is_admin": True,
+    }
+
+    create_company_controller(created_admin_user, company_name)
+
+    with pytest.raises(BadRequest):
+        create_company_controller(created_admin_user, company_name)
 
 
 def test_assign_company_to_new_user(session):

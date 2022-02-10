@@ -3,6 +3,7 @@ import logging
 from sqlalchemy import desc
 from flask import request, Blueprint, jsonify, current_app, abort
 from sqlalchemy.sql.expression import false
+from werkzeug.exceptions import BadRequest
 
 from app import aws_auth, db
 from app.users.remote import get_local_user
@@ -128,12 +129,7 @@ def create_company(logged_user):
     content = request.json
     company_name = content.get("company_name", None)
     if not company_name:
-        return jsonify({"message": "Didn't receive a new company name"}), 400
-
-    company = Company.query.filter_by(name=company_name).first()
-
-    if company:
-        return jsonify({"message": "Company already exists"}), 400
+        raise BadRequest(description="Didn't receive a new company name")
 
     new_company = create_company_controller(logged_user, company_name)
 

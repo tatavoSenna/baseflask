@@ -4,6 +4,7 @@ import pytest
 import botocore.session
 
 from faker import Faker
+from werkzeug.exceptions import Forbidden
 
 from app.models import User, Company
 from app.test import factories
@@ -105,7 +106,8 @@ def test_get_local_user(cognito_claims_mock, session):
     def raise_forbidden_true_test(local_user):
         return local_user
 
-    assert raise_forbidden_true_test() == ({}, 403)
+    with pytest.raises(Forbidden):
+        raise_forbidden_true_test()
 
     company_id = 123
     company = factories.CompanyFactory(id=company_id)
