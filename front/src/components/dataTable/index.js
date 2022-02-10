@@ -58,7 +58,12 @@ const DataTable = ({
 						onChangePageNumber({ page, perPage, search }),
 					locale: { items_per_page: '' },
 				}}
-				locale={{ emptyText: <Empty description={placeholderNoData} /> }}
+				locale={{
+					emptyText: <Empty description={placeholderNoData} />,
+					triggerAsc: 'Clique para ordenar ascendente',
+					triggerDesc: 'Clique para ordenar descendente',
+					cancelSort: 'Clique para cancelar ordenação',
+				}}
 				loading={loading}
 			/>
 		</>
