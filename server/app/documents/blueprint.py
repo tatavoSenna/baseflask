@@ -138,7 +138,7 @@ def get_document_list(current_user):
         }
 
         if order_by == "template":
-            paginated_query = paginated_query.join(Document.template)
+            paginated_query = paginated_query.outerjoin(Document.template)
 
         if order_by == "username":
             paginated_query = paginated_query.join(Document.user)
