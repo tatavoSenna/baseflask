@@ -36,8 +36,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 
 	const { is_admin } = useSelector(({ session }) => session)
 
+	const { accessFolders } = useSelector(({ folder }) => folder)
+
 	const handleFolderRowBack = () => {
-		dispatch(setInitialFolder())
+		if (accessFolders.length !== 0) {
+			dispatch(setInitialFolder())
+		}
 	}
 
 	function handleGoTo(path) {

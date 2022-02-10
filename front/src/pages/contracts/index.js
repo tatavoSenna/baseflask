@@ -164,8 +164,10 @@ const Contracts = () => {
 	}
 
 	const handleInitialFolder = () => {
-		dispatch(listContract())
-		dispatch(setInitialFolder())
+		if (accessFolders.length !== 0) {
+			dispatch(listContract())
+			dispatch(setInitialFolder())
+		}
 	}
 
 	const handleFolderRowBack = (index) => {
@@ -220,6 +222,7 @@ const Contracts = () => {
 					listContract({ parent: accessFolders[accessFolders.length - 1].id })
 			  )
 	}, [dispatch, accessFolders])
+
 	return (
 		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>

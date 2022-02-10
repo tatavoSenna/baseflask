@@ -306,19 +306,15 @@ const Tabs = ({
 					onClick={(item) =>
 						isItNotDocX ? handleVersion(item.key) : undefined
 					}
-					docxverification={isItNotDocX ? 'true' : undefined}
+					$docxverification={isItNotDocX}
 					selectedKeys={[versionId]}
 					mode="vertical">
 					{versions.map((item) => (
 						<ItemContainer
 							key={item.id}
-							propscolor={item.id === versionId ? 'selected' : undefined}
-							propsdifferentpadding={
-								isItNotDocX ? 'regularPadding' : 'smallPadding'
-							}
-							propsbordertop={
-								isItNotDocX ? 'withBordeTop' : 'withoutBorderTop'
-							}>
+							$propscolor={item.id === versionId}
+							$propsdifferentpadding={isItNotDocX}
+							$propsbordertop={isItNotDocX}>
 							{isItNotDocX ? (
 								<ContainerDiv>
 									<ContainerIcon>
@@ -333,10 +329,8 @@ const Tabs = ({
 								</ContainerDiv>
 							) : (
 								<ContainerIcon
-									changeopacity={
+									$changeopacity={
 										item.id === Object.keys(versions)[versions.length - 1]
-											? 'true'
-											: 'otherversion'
 									}>
 									<StyledText style={{ padding: '0 0 5px', fontSize: 14 }}>
 										Por:{' '}
@@ -356,10 +350,10 @@ const Tabs = ({
 								</ContainerIcon>
 							)}
 							<StyledText
-								changeopacity={
+								$changeopacity={
 									!isItNotDocX
 										? item.id === Object.keys(versions)[versions.length - 1]
-											? 'true'
+											? true
 											: 'otherversion'
 										: undefined
 								}>
@@ -753,7 +747,7 @@ const StyledMenu = styled(Menu)`
 
 	*:hover {
 		cursor: ${(props) =>
-			props.docxverification === 'true' ? `pointer` : `default`};
+			props.$docxverification === true ? `pointer` : `default`};
 	}
 `
 
@@ -763,11 +757,11 @@ const StyledText = styled(Text)`
 	color: #000;
 	opacity: 0.65;
 
-	opacity: ${(props) => props.changeopacity === 'true' && 1};
-	font-weight: ${(props) => props.changeopacity === 'true' && 700};
+	opacity: ${(props) => props.$changeopacity === true && `1`};
+	font-weight: ${(props) => props.$changeopacity === true && `700`};
 
 	* {
-		opacity: ${(props) => props.changeopacity === 'true' && 1};
+		opacity: ${(props) => props.$changeopacity === true && `1`};
 	}
 `
 
@@ -780,21 +774,18 @@ const ItemContainer = styled(Menu.Item)`
 	border: solid #cccccc;
 
 	border-width: ${(props) =>
-		props.propsbordertop === 'withBorderTop' ? `1px 0` : `0 0 1px`} !important;
+		props.$propsbordertop === true ? `1px 0` : `0 0 1px`} !important;
 	border-width: ${(props) =>
-		props.propsbordertop === 'withoutBorderTop'
-			? `0 0 1px`
-			: `1px 0`} !important;
+		props.$propsbordertop === false ? `0 0 1px` : `1px 0`} !important;
 
 	padding: ${(props) =>
-		props.propsdifferentpadding === 'regularPadding'
+		props.$propsdifferentpadding === false
 			? `70px 5px`
 			: `60px 5px`} !important;
 
 	* {
-		color: ${(props) =>
-			props.propscolor === 'selected' && `#0099ff`} !important;
-		opacity: ${(props) => props.propscolor === 'selected' && `1`};
+		color: ${(props) => props.$propscolor && `#0099ff`};
+		opacity: ${(props) => props.$propscolor && `1`};
 	}
 `
 
@@ -805,8 +796,8 @@ const ContainerIcon = styled.div`
 
 	* {
 		font-weight: ${(props) =>
-			props.changeopacity === 'true' ? 700 : 500} !important;
-		opacity: ${(props) => props.changeopacity === 'true' && 1};
+			props.$changeopacity === true ? `700` : `500`} !important;
+		opacity: ${(props) => props.$changeopacity === true && `1`};
 	}
 `
 

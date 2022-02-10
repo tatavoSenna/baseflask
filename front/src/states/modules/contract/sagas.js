@@ -58,6 +58,7 @@ function* loginSaga({ payload = {} }) {
 			data.order_by = order_by
 			data.order = order
 		}
+
 		yield put(listContractSuccess(data))
 	} catch (error) {
 		yield put(listContractFailure(error))
