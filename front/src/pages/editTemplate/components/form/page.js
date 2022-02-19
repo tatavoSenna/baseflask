@@ -16,7 +16,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 	const fieldTypes = (
 		<Menu onClick={(value) => handleAddField(value.key)}>
 			<Menu.Item key="text">Texto</Menu.Item>
-			<Menu.Item key="text_area">Área de texto</Menu.Item>
+			<Menu.Item key="text_area">Parágrafo</Menu.Item>
 			<Menu.Item key="number">Número</Menu.Item>
 			<Menu.Item key="cpf">CPF</Menu.Item>
 			<Menu.Item key="cnpj">CNPJ</Menu.Item>
@@ -34,7 +34,6 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
-			<Menu.Item key="text_area">Área de texto</Menu.Item>
 			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
 			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
