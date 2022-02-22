@@ -4,7 +4,120 @@ import { createGlobalStyle } from 'styled-components'
 import colors from './colors'
 import fonts from './fonts'
 
+import RobotoThin from '../assets/fonts/roboto/Roboto-Thin.ttf'
+import RobotoThinItalic from '../assets/fonts/roboto/Roboto-ThinItalic.ttf'
+
+import RobotoLight from '../assets/fonts/roboto/Roboto-Light.ttf'
+import RobotoLightItalic from '../assets/fonts/roboto/Roboto-LightItalic.ttf'
+
+import RobotoRegular from '../assets/fonts/roboto/Roboto-Regular.ttf'
+import RobotoItalic from '../assets/fonts/roboto/Roboto-Italic.ttf'
+
+import RobotoMedium from '../assets/fonts/roboto/Roboto-Medium.ttf'
+import RobotoMediumItalic from '../assets/fonts/roboto/Roboto-MediumItalic.ttf'
+
+import RobotoBold from '../assets/fonts/roboto/Roboto-Bold.ttf'
+import RobotoBoldItalic from '../assets/fonts/roboto/Roboto-BoldItalic.ttf'
+
+import RobotoBlack from '../assets/fonts/roboto/Roboto-Black.ttf'
+import RobotoBlackItalic from '../assets/fonts/roboto/Roboto-BlackItalic.ttf'
+
 const GlobalStyle = createGlobalStyle`
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoThin}) format('truetype');
+    font-weight: ${fonts.roboto.thin};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoThinItalic}) format('truetype');
+    font-weight: ${fonts.roboto.thin};
+    font-style: italic;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoLight}) format('truetype');
+    font-weight: ${fonts.roboto.light};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoLightItalic}) format('truetype');
+    font-weight: ${fonts.roboto.light};
+    font-style: italic;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoRegular}) format('truetype');
+    font-weight: ${fonts.roboto.regular};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoItalic}) format('truetype');
+    font-weight: ${fonts.roboto.regular};
+    font-style: italic;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoMedium}) format('truetype');
+    font-weight: ${fonts.roboto.medium};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoMediumItalic}) format('truetype');
+    font-weight: ${fonts.roboto.medium};
+    font-style: italic;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoBold}) format('truetype');
+    font-weight: ${fonts.roboto.bold};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoBoldItalic}) format('truetype');
+    font-weight: ${fonts.roboto.bold};
+    font-style: italic;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoBlack}) format('truetype');
+    font-weight: ${fonts.roboto.black};
+    font-style: normal;
+  }
+
+  @font-face{
+    font-family: ${fonts.roboto.name};
+    src: local(${fonts.roboto.name}),
+      url(${RobotoBlackItalic}) format('truetype');
+    font-weight: ${fonts.roboto.black};
+    font-style: italic;
+  }
 
 	#root {
 		height: 100%;
@@ -46,7 +159,6 @@ const GlobalStyle = createGlobalStyle`
   }
 
   html {
-    font-size: 16px;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
 		height: 100%;
@@ -54,10 +166,12 @@ const GlobalStyle = createGlobalStyle`
 
   body {
 		height: 100%;
-    color: ${colors.black};
-    font-family: ${fonts.sans.name}, sans-serif;
+    color: ${colors.black};	
+    font-family: ${fonts.roboto.name};
+    font-weight: ${fonts.roboto.regular};
     margin: 0;
     background-color: ${colors.white};
+    font-size: 16px;
   }
 
   a {
