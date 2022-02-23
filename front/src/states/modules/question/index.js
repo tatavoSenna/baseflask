@@ -5,6 +5,7 @@ const initialState = {
 	data: [],
 	visible: [],
 	currentPage: 0,
+	lastPage: 0,
 	error: null,
 	loading: false,
 }
@@ -27,6 +28,7 @@ const { actions, reducer } = createSlice({
 				error: null,
 				loading: false,
 				currentPage: 0,
+				lastPage: data.form.length - 1,
 				visible: data.form.map((page) => {
 					return page.fields.map((field) => {
 						return !field.condition
@@ -116,16 +118,23 @@ const { actions, reducer } = createSlice({
 				})
 			)
 
-			return { ...state, visible }
+			let lastPage = state.data.length - 1
+			while (
+				visible[lastPage].every((fieldVisible) => fieldVisible === false)
+			) {
+				lastPage--
+			}
+
+			return { ...state, visible, lastPage }
 		},
 		nextPage: (state) => {
 			let next = state.currentPage + 1
-			if (next >= state.visible.length) return
+			if (next > state.lastPage) return
 
 			// Skip empty form pages
 			if (Array.isArray(state.visible)) {
 				while (
-					next < state.visible.length - 1 &&
+					next < state.lastPage &&
 					state.visible[next].every((fieldVisible) => fieldVisible === false)
 				) {
 					next++
@@ -152,7 +161,7 @@ const { actions, reducer } = createSlice({
 		},
 		setResetQuestion: (state) => {
 			extend(state, {
-				data: {},
+				data: [],
 				error: null,
 				loading: false,
 				parent: null,

@@ -45,12 +45,13 @@ function InputFactory({
 
 	// Call updateVisible after first render, so the default values are considered for visibility
 	useEffect(() => {
-		dispatch(
-			updateVisible({
-				form,
-			})
-		)
-	}, [dispatch, form])
+		if (typeof form !== 'undefined')
+			dispatch(
+				updateVisible({
+					form,
+				})
+			)
+	}, [dispatch, form, currentFormStep])
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional, initialValue, variable } = pageFieldsData[i]
