@@ -194,6 +194,7 @@ def get_local_user(view=None, raise_forbidden=True):
             return view(current_user_known_info, *args, **kwargs)
         except Exception as e:
             capture_exception(e)
+            raise e
 
     return decorated
 
