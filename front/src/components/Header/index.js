@@ -1,15 +1,8 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { func, bool, string } from 'prop-types'
-import {
-	Layout,
-	Menu,
-	Dropdown,
-	Avatar,
-	Typography,
-	Space /*, Badge*/,
-} from 'antd'
-import { DownOutlined } from '@ant-design/icons'
+import { Layout, Menu, Dropdown, Avatar, Typography } from 'antd'
+import { DownOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
 import { classNames } from '~/utils'
 import { connectDocusign } from '~/states/modules/integrations'
@@ -30,6 +23,13 @@ function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
 		dispatch(connectDocusign())
 	}
 
+	const handleExternalRedirect = () => {
+		window.open(
+			'https://www.youtube.com/channel/UCarjXS9zL3-xJqHI5JsidFw',
+			'_blank'
+		)
+	}
+
 	function getMenu() {
 		return (
 			<Menu style={{ zIndex: 1 }}>
@@ -47,28 +47,23 @@ function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
 
 	const { Header } = Layout
 	return (
-		<Header
-			style={{ display: 'flex', justifyContent: 'flex-end' }}
-			className={classNames(styles.siteLayout, className)}>
+		<Header className={classNames(styles.siteLayout, className)}>
 			<div
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
 				})}>
-				<Space size={48}>
-					<Space size={12}>
-						<Dropdown overlay={() => getMenu()}>
-							<Space size={10}>
-								<Avatar>
-									<Text style={{ color: '#333' }}>
-										{username ? username.substring(0, 1) : username}
-									</Text>
-								</Avatar>
-								<Text style={{ color: '#333' }}>{username}</Text>
-								<DownOutlined />
-							</Space>
-						</Dropdown>
-					</Space>
-				</Space>
+				<div className={styles['iconsHeader']} onClick={handleExternalRedirect}>
+					<QuestionCircleOutlined />
+				</div>
+				<Dropdown overlay={getMenu}>
+					<div className={styles['dropDownProfile']}>
+						<Avatar>
+							<Text>{username ? username.substring(0, 1) : username}</Text>
+						</Avatar>
+						<Text>{username}</Text>
+						<DownOutlined />
+					</div>
+				</Dropdown>
 			</div>
 		</Header>
 	)
