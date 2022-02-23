@@ -17,6 +17,5 @@ try:
         envelope_id="99e42f47-0250-4222-b5e7-ebe12a06928e",
         recipient_id="6669ff8e-6bc6-4d17-9481-88687a5dd928",
     )
-    print(envelope)
 except Exception as e:
     print(e)

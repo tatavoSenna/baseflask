@@ -1,7 +1,3 @@
-before_script:
-  - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-  - python3 get-pip.py
-
 stages:
   - black
   - eslint
@@ -12,11 +8,14 @@ black:
   stage: black
   allow_failure: false
   script:
+    - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    - python3 get-pip.py
     - pip3 install black
     - black --check ./server
-  only:
-    changes:
-      - .py
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "**/*.py"
 
 eslint:
   stage: eslint
@@ -29,21 +28,16 @@ eslint:
     - yarn add eslint-config-react-app -D \
       eslint-plugin-prettier
     - yarn run eslint . --max-warnings=0
-  only:
-    changes:
-      - .js
-
-test:
-  stage: test
-  allow_failure: false
-  script:
-    - cd server
-    - docker exec -it server_app_1 /bih/sh
-    - pytest
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "**/*.js"
 
 merge_into_staging:
   stage: staging
   script:
+    - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    - python3 get-pip.py
     - pip3 install GitPython
     - pip3 install --upgrade python-gitlab
     - python3 ./devops/staging.py
