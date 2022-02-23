@@ -1,8 +1,11 @@
 .siteLayout {
 	background: #fff;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	padding: 0 24px;
+	* {
+		align-items: center;
+	}
 }
 
 .mobile {
@@ -11,9 +14,9 @@
 }
 
 .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
+	font-size: 18px;
+	line-height: 64px;
+	cursor: pointer;
 	transition: color 0.1s;
 	&:hover {
 		color: #1890ff;
@@ -26,9 +29,31 @@
 	background-color: #fff;
 	display: flex;
 	justify-content: space-between;
+}
+
+.iconsHeader {
+	font-size: 32px;
+
+	display: flex;
 	align-items: center;
-	&:hover {
+
+	> * {
+		margin: 0 10px 0 0;
+	}
+	*:hover {
 		color: #1890ff;
+	}
+}
+
+.dropDownProfile {
+	display: flex;
+	align-items: center;
+	> * {
+		margin: 0 10px 0 0;
+	}
+
+	* {
+		color: #333;
 	}
 }
 
