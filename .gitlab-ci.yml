@@ -5,6 +5,7 @@ before_script:
 stages:
   - black
   - eslint
+  - test
   - staging
 
 black:
@@ -14,7 +15,8 @@ black:
     - pip3 install black
     - black --check ./server
   only:
-    - merge_requests
+    changes:
+      - .py
 
 eslint:
   stage: eslint
@@ -28,7 +30,16 @@ eslint:
       eslint-plugin-prettier
     - yarn run eslint . --max-warnings=0
   only:
-    - merge_requests
+    changes:
+      - .js
+
+test:
+  stage: test
+  allow_failure: false
+  script:
+    - cd server
+    - docker exec -it server_app_1 /bih/sh
+    - pytest
 
 merge_into_staging:
   stage: staging

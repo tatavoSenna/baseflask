@@ -1,4 +1,3 @@
-from this import d
 from app import db
 from app.models.company import Company, Webhook
 from app.models.user import User
