@@ -11,6 +11,7 @@ from flask import g, current_app, abort, request
 from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
 from werkzeug.exceptions import Forbidden
+from sentry_sdk import capture_exception, set_context
 
 from app import db, aws_auth
 from app.models.user import User
@@ -167,6 +168,7 @@ def get_local_user(view=None, raise_forbidden=True):
             user_model_instance = User.query.filter_by(
                 sub=user_data_from_cognito_jwt["sub"]
             ).one()
+            set_context("user", {"id": user_model_instance})
             if not user_model_instance.verified:
                 user_model_instance.verified = True
                 db.session.add(user_model_instance)
@@ -174,7 +176,7 @@ def get_local_user(view=None, raise_forbidden=True):
             serialized_user = UserSerializer().dump(user_model_instance)
             serialized_user["created"] = True
             return view(serialized_user, *args, **kwargs)
-        except:
+        except NoResultFound:
             if raise_forbidden:
                 raise Forbidden(description="Forbidden")
             client = boto3.client("cognito-idp")
@@ -190,6 +192,8 @@ def get_local_user(view=None, raise_forbidden=True):
                 "created": False,
             }
             return view(current_user_known_info, *args, **kwargs)
+        except Exception as e:
+            capture_exception(e)
 
     return decorated
 
