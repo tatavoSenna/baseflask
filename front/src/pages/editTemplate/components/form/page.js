@@ -49,6 +49,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			variable: {
 				name: '',
 			},
+			initialValue: '',
 		}
 
 		switch (type) {

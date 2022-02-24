@@ -24,7 +24,7 @@ const layout = {
 	},
 }
 
-const FormFactory = ({ token, initialValues }) => {
+const FormFactory = ({ token, initialValues = {} }) => {
 	const dispatch = useDispatch()
 
 	const { data: questions, visible, currentPage, lastPage } = useSelector(
