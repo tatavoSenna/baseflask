@@ -33,9 +33,13 @@ const BankField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select showSearch={true} disabled={disabled} filterOption={filterText}>
+			<Select
+				showSearch={true}
+				disabled={disabled}
+				filterOption={filterText}
+				onChange={onChange}>
 				{bank.names.map((option, index) => (
-					<Select.Option key={index} value={option} onChange={onChange}>
+					<Select.Option key={index} value={option}>
 						{option}
 					</Select.Option>
 				))}

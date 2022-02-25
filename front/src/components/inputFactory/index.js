@@ -71,7 +71,7 @@ function InputFactory({
 		}
 		const first = i === 0
 
-		let onchange = (selector) =>
+		let onchange = (selector = (e) => e) =>
 			conditional
 				? (e) =>
 						dispatch(
@@ -144,7 +144,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -156,7 +156,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -168,7 +168,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -180,7 +180,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -192,7 +192,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -204,7 +204,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -216,7 +216,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -228,7 +228,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -240,7 +240,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -252,7 +252,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -264,7 +264,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -276,7 +276,7 @@ function InputFactory({
 						className={visible[i] ? undefined : styles.hidden}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.checked)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -308,6 +308,7 @@ function InputFactory({
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={visible[i] ? undefined : styles.hidden}
+						onChange={onchange()}
 					/>
 				)
 				break

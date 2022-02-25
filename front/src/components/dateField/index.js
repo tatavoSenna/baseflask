@@ -26,14 +26,18 @@ const DateField = ({
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			initialValue={inputValue !== '' ? moment(inputValue) : ''}
 			colon={false}>
-			<DatePicker format={'DD-MM-YYYY'} placeholder={''} disabled={disabled} />
+			<DatePicker
+				format={'DD-MM-YYYY'}
+				placeholder={''}
+				disabled={disabled}
+				onChange={onChange}
+			/>
 		</Form.Item>
 	)
 }

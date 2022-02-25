@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, array, object, number, bool } from 'prop-types'
+import { string, shape, array, object, number, bool, func } from 'prop-types'
 import { Form, Slider } from 'antd'
 import InfoField from '~/components/infoField'
 
-const SliderField = ({ pageFieldsData, className, inputValue, disabled }) => {
+const SliderField = ({
+	pageFieldsData,
+	className,
+	onChange,
+	inputValue,
+	disabled,
+}) => {
 	const { label, variable, type, options, id, info, list } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
@@ -17,7 +23,12 @@ const SliderField = ({ pageFieldsData, className, inputValue, disabled }) => {
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Slider min={options[0]} max={options[1]} disabled={disabled}></Slider>
+			<Slider
+				min={options[0]}
+				max={options[1]}
+				disabled={disabled}
+				onChange={onChange}
+			/>
 		</Form.Item>
 	)
 }
@@ -31,6 +42,7 @@ SliderField.propTypes = {
 		info: string,
 	}).isRequired,
 	className: object,
+	onChange: func,
 	inputValue: number,
 	disabled: bool,
 }

@@ -37,7 +37,6 @@ const EmailField = ({
 			label={returnLabel()}
 			type={type}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden && [
@@ -48,6 +47,7 @@ const EmailField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Input
+				onChange={onChange}
 				autoFocus={first}
 				placeholder={placeHolderRequirement}
 				disabled={disabled}

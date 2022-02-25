@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { string, shape, object } from 'prop-types'
+import { string, shape, object, func } from 'prop-types'
 import { Form, Upload, message, Modal, Input } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
-const ImageField = ({ pageFieldsData, className }) => {
+const ImageField = ({ pageFieldsData, className, onChange }) => {
 	const { label, variable, info } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const [fileList, setFileList] = useState('')
@@ -56,6 +56,7 @@ const ImageField = ({ pageFieldsData, className }) => {
 					listType="picture-card"
 					multiple={false}
 					beforeUpload={beforeUpload}
+					onChange={onChange}
 					onPreview={() => setVisible(true)}
 					onRemove={() => setFileList([])}>
 					{fileList.length === 0 && uploadButton}
@@ -82,6 +83,7 @@ ImageField.propTypes = {
 		variable: object.isRequired,
 		info: string,
 	}).isRequired,
+	onChange: func,
 	className: string,
 }
 

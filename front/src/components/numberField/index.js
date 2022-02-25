@@ -37,7 +37,6 @@ const NumberField = ({
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
@@ -53,6 +52,7 @@ const NumberField = ({
 				step={step ? step : undefined}
 				decimalSeparator=","
 				disabled={disabled}
+				onChange={onChange}
 			/>
 		</Form.Item>
 	)
