@@ -7,7 +7,14 @@ import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import { Spin } from 'antd'
 
-const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
+const Editor = ({
+	text,
+	onUpdateText,
+	block,
+	versionLoading,
+	comments,
+	title,
+}) => {
 	const { userList } = useSelector(({ users }) => users)
 	const loggedUser = useSelector(({ session }) => session)
 	class CommentsIntegration {
@@ -100,7 +107,19 @@ const Editor = ({ text, onUpdateText, block, versionLoading, comments }) => {
 		extraPlugins: [CommentsIntegration],
 		exportPdf: {
 			stylesheets: ['EDITOR_STYLES'],
-			fileName: `documento.pdf`,
+			fileName: title,
+			converterOptions: {
+				format: 'A4',
+				margin_top: '12.7mm',
+				margin_bottom: '12.5mm',
+				margin_right: '12.7mm',
+				margin_left: '12.5mm',
+				page_orientation: 'portrait',
+			},
+		},
+		exportWord: {
+			stylesheets: ['EDITOR_STYLES'],
+			fileName: title,
 			converterOptions: {
 				format: 'A4',
 				margin_top: '12.7mm',
@@ -182,6 +201,7 @@ Editor.propTypes = {
 	block: bool,
 	versionLoading: bool,
 	comments: array,
+	title: string,
 }
 
 export default Editor

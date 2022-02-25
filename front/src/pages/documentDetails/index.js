@@ -199,6 +199,7 @@ const DocumentDetails = () => {
 									version_id !== data.versions[0].id
 								}
 								versionLoading={loadingVersion}
+								title={data.title}
 							/>
 						)}
 
