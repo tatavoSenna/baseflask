@@ -28,7 +28,6 @@ const CnpjField = ({
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden && [
@@ -48,6 +47,7 @@ const CnpjField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<MaskedInput
+				onChange={onChange}
 				autoFocus={first}
 				mask="11.111.111/1111-11"
 				placeholder=""

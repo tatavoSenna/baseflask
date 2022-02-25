@@ -69,7 +69,6 @@ const CurrencyField = ({
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden && [
@@ -95,6 +94,7 @@ const CurrencyField = ({
 				parser={currencyParser}
 				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
 				disabled={disabled}
+				onChange={onChange}
 			/>
 		</Form.Item>
 	)

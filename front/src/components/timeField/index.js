@@ -26,7 +26,6 @@ const TimeField = ({
 			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
 			className={className}
-			onChange={onChange}
 			hasFeedback
 			rules={
 				!hidden &&
@@ -51,6 +50,7 @@ const TimeField = ({
 				placeholder=""
 				style={{ width: '39.2%' }}
 				disabled={disabled}
+				onChange={onChange}
 			/>
 		</Form.Item>
 	)
@@ -70,7 +70,7 @@ TimeField.propTypes = {
 }
 
 TimeField.defaultProps = {
-	className: {},
+	className: '',
 	onChange: () => null,
 }
 
