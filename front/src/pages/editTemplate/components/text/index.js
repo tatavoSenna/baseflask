@@ -66,6 +66,7 @@ const Text = ({
 						allowedTypes={[
 							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 						]}
+						allowedExtensions={['docx']}
 						removeDoc={removeDoc}
 					/>
 
