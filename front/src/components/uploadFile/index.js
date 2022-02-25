@@ -6,6 +6,7 @@ import { UploadOutlined } from '@ant-design/icons'
 const Uploader = ({
 	textButton,
 	allowedTypes,
+	allowedExtensions,
 	multiple,
 	max,
 	fileList,
@@ -13,14 +14,9 @@ const Uploader = ({
 	removeDoc,
 }) => {
 	const beforeUpload = (file) => {
-		let allowed = false
-
-		allowedTypes.map((item) => {
-			if (file.type === item) {
-				allowed = true
-			}
-			return true
-		})
+		let allowed =
+			allowedTypes.includes(file.type) ||
+			allowedExtensions.includes(file.name.split('.').pop().toLowerCase())
 
 		if (!allowed) {
 			message.error(`${file.name} inválido`)
@@ -59,6 +55,7 @@ const Uploader = ({
 Uploader.propTypes = {
 	textButton: string,
 	allowedTypes: array,
+	allowedExtensions: array,
 	multiple: bool,
 	max: number,
 	fileList: array,
@@ -69,6 +66,7 @@ Uploader.propTypes = {
 Uploader.defaultProps = {
 	textButton: 'Arquivo de texto',
 	allowedTypes: [],
+	allowedExtensions: [],
 	fileList: [],
 	multiple: false,
 	max: 1,
