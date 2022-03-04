@@ -483,73 +483,59 @@ def test_change_document_variables(update_variables_mock):
 
 
 def test_edit_document_workflow_controller():
-    document = factories.DocumentFactory()
-    user1 = factories.UserFactory(id=1, name="João", email="email1")
-    user2 = factories.UserFactory(id=2, name="da", email="email2")
-    user3 = factories.UserFactory(id=3, name="Silva", email="email3")
-    group1 = factories.GroupFactory(id=1, name="group1")
-    group2 = factories.GroupFactory(id=2, name="group2")
-    group3 = factories.GroupFactory(id=3, name="group3")
 
+    document = factories.DocumentFactory()
+
+    user1 = factories.UserFactory()
+    user2 = factories.UserFactory()
+    user3 = factories.UserFactory()
+    group1 = factories.GroupFactory()
+    group2 = factories.GroupFactory()
+    group3 = factories.GroupFactory()
+    factories.ParticipatesOnFactory(group=group1, user=user1)
+    factories.ParticipatesOnFactory(group=group2, user=user2)
+    factories.ParticipatesOnFactory(group=group3, user=user3)
+
+    current_step = "3485"
     workflow = {
         "nodes": {
             "544": {
-                "next_node": "5521",
-                "due_date": "2021-09-20 11:35:38.387630",
+                "next_node": current_step,
+                "due_date": "2021-09-20T11:35:38.387630",
                 "responsible_users": [
-                    {"id": "1", "name": "João"},
-                    {"id": "2", "name": "da"},
-                    {"id": "3", "name": "Silva"},
+                    {"id": user1.id, "email": user1.email, "name": user1.name},
                 ],
-                "responsible_group": {"id": "1", "name": "group1"},
+                "responsible_group": {"id": group1.id, "name": group1.name},
             },
-            "3485": {
+            current_step: {
                 "next_node": None,
-                "due_date": "2021-09-20 11:35:38.387630",
+                "due_date": "2021-09-20T11:35:38.387630",
                 "responsible_users": [
-                    {"id": "1", "name": "João"},
-                    {"id": "2", "name": "da"},
-                    {"id": "3", "name": "Silva"},
+                    {"id": user2.id, "email": user2.email, "name": user2.name}
                 ],
-                "responsible_group": {"id": "1", "name": "group1"},
-            },
-            "5521": {
-                "next_node": "3485",
-                "title": "Passo atual",
-                "due_date": "2021-09-20 11:35:38.387630",
-                "responsible_users": [
-                    {"id": "1", "name": "João"},
-                    {"id": "2", "name": "da"},
-                    {"id": "3", "name": "Silva"},
-                ],
-                "responsible_group": {"id": "1", "name": "group1"},
+                "responsible_group": {"id": group2.id, "name": group2.name},
             },
         },
-        "current_node": "5521",
     }
+
     document.workflow = workflow
-    edited_step = {
-        "due_date": "2021-09-20 11:35:38.387630",
-        "responsible_users": [
-            {"id": "2", "name": "João"},
-            {"id": "1", "name": "da"},
-            {"id": "3", "name": "Silva"},
-        ],
-        "responsible_group": {"id": "2", "name": "group2"},
-    }
+    document.current_step = current_step
 
-    document = edit_document_workflow_controller(document, edited_step)
-    print(document.workflow)
+    new_group = {"id": group3.id, "name": group3.name}
+    new_responsible_users = [{"id": user3.id, "email": user3.email, "name": user3.name}]
+    new_due_date = "2021-09-20T11:35:38.387630"
 
-    assert document.workflow["nodes"]["5521"]["responsible_users"] == [
-        {"id": "2", "name": "da", "email": "email2"},
-        {"id": "3", "name": "Silva", "email": "email3"},
-    ]
-    assert document.workflow["nodes"]["5521"]["responsible_group"] == {
-        "id": "3",
-        "name": "group3",
-    }
-
-    assert document.due_date == datetime.strptime(
-        edited_step["due_date"], "%Y-%m-%d %H:%M:%S.%f"
+    document = edit_document_workflow_controller(
+        document,
+        new_group=new_group,
+        new_responsible_users=new_responsible_users,
+        new_due_date=new_due_date,
     )
+
+    assert (
+        document.workflow["nodes"][current_step]["responsible_users"]
+        == new_responsible_users
+    )
+    assert document.workflow["nodes"][current_step]["responsible_group"] == new_group
+    assert document.workflow["nodes"][current_step]["due_date"] == new_due_date
+    assert document.due_date == datetime.fromisoformat(new_due_date)

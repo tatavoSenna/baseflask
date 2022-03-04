@@ -505,7 +505,7 @@ def change_variables_controller(document, new_variables, email, variables):
     document_template = DocumentTemplate.query.filter_by(
         id=document.document_template_id
     ).first()
-    current_user = User.query.filter_by(email=email)
+    current_user = User.query.filter_by(email=email).first()
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     versions = document.versions
     current_version = int(versions[0]["id"])
@@ -531,11 +531,11 @@ def change_variables_controller(document, new_variables, email, variables):
 def edit_document_workflow_controller(
     document,
     new_group: dict = None,
-    new_responsible_users: dict = None,
+    new_responsible_users: list = None,
     new_due_date: str = None,
 ):
     new_workflow = copy.deepcopy(document.workflow)
-    current_node = new_workflow["current_node"]
+    current_node = document.current_step
     new_node = new_workflow["nodes"][current_node]
 
     if new_group and new_group.get("id", None):
