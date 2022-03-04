@@ -12,28 +12,22 @@ import styles from './index.module.scss'
 const layout = {
 	labelCol: {
 		xs: { span: 24 },
-		sm: { span: 24 },
-		md: { span: 8 },
-		lg: { span: 8 },
-	},
-	wrapperCol: {
-		xs: { span: 24 },
-		sm: { span: 24 },
-		md: { span: 12 },
-		lg: { span: 12 },
+		md: { span: 20 },
+		xl: { span: 16 },
 	},
 }
 
 const FormFactory = ({ token, initialValues = {} }) => {
 	const dispatch = useDispatch()
 
-	const { data: questions, visible, currentPage, lastPage } = useSelector(
+	const { data: questions, visible, currentPage } = useSelector(
 		({ question }) => question
 	)
 
 	const history = useHistory()
 	const [form] = Form.useForm()
-	const isLastPage = currentPage === lastPage
+	const lastPage = questions.length
+	const isLastPage = currentPage + 1 === lastPage
 	const pageFieldsData = questions[currentPage]
 
 	function handleGoTo(path) {
@@ -61,75 +55,68 @@ const FormFactory = ({ token, initialValues = {} }) => {
 	}
 
 	return (
-		<div>
-			{pageFieldsData && (
-				<PageHeader className={styles.title}>{pageFieldsData.title}</PageHeader>
-			)}
-			<Form
-				{...layout}
-				style={{ width: '100%' }}
-				form={form}
-				layout="horizontal"
-				hideRequiredMark
-				onFinish={onSubmit}>
-				{pageFieldsData && (
-					<InputFactory
-						data={pageFieldsData.fields}
-						visible={visible[currentPage]}
-						form={form}
-						initialValues={initialValues}
-						currentFormStep={currentPage}
-					/>
+		<div className={styles['grid-container']}>
+			<div className={styles['grid-col']}>
+				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+					<PageHeader className={styles.title}>
+						{pageFieldsData.title}
+					</PageHeader>
 				)}
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'flex-end',
-						alignSelf: 'center',
-						paddingLeft: '20%',
-						paddingRight: '20%',
-					}}>
-					{pageFieldsData && (
-						<div
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								width: 350,
-								minWidth: '50%',
-								maxWidth: '100%',
-							}}>
-							<Form.Item>
-								<Button
-									type="default"
-									htmlType="button"
-									className={styles.button}
-									onClick={() => {
-										handleGoTo('/')
-									}}>
-									Cancelar
-								</Button>
-							</Form.Item>
+				<Form
+					{...layout}
+					style={{ width: '100%' }}
+					form={form}
+					layout="vertical"
+					hideRequiredMark
+					onFinish={onSubmit}
+					className={styles['form']}>
+					{pageFieldsData && pageFieldsData.fields.length > 0 && (
+						<div className={styles['inputs']}>
+							<InputFactory
+								data={pageFieldsData.fields}
+								visible={visible[currentPage]}
+								form={form}
+								initialValues={initialValues}
+								currentFormStep={currentPage}
+							/>
+						</div>
+					)}
 
-							<Form.Item>
-								{true && currentPage > 0 && (
+					{pageFieldsData && pageFieldsData.fields.length > 0 && (
+						<div className={styles['grid-row-buttons']}>
+							<Form.Item className={styles['button-cancel']}>
+								{true && currentPage > 0 ? (
 									<Button
+										block
 										type="default"
 										htmlType="button"
 										className={styles.button}
 										onClick={onPrevious}>
 										Anterior
 									</Button>
+								) : (
+									<Button
+										block
+										type="default"
+										htmlType="button"
+										className={styles.button}
+										onClick={() => {
+											handleGoTo('/')
+										}}>
+										Cancelar
+									</Button>
 								)}
 							</Form.Item>
-							{lastPage > 0 && (
-								<Typography className={styles.text}>
-									{currentPage + 1} de {lastPage + 1}
+
+							{lastPage > 1 && (
+								<Typography className={styles['text']}>
+									{currentPage + 1} de {lastPage}
 								</Typography>
 							)}
-							<Form.Item>
+
+							<Form.Item className={styles['button-submit']}>
 								<Button
+									block
 									type="primary"
 									className={styles.button}
 									htmlType="submit">
@@ -138,8 +125,8 @@ const FormFactory = ({ token, initialValues = {} }) => {
 							</Form.Item>
 						</div>
 					)}
-				</div>
-			</Form>
+				</Form>
+			</div>
 		</div>
 	)
 }
