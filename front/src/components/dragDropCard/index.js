@@ -1,23 +1,25 @@
 import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useDrag, useDrop } from 'react-dnd'
-import { Card, Indicator } from './styles'
+import { Container, Card, Handle, Indicator } from './styles'
 import PropTypes from 'prop-types'
 
 const DragDropCard = ({ children, index, listIndex, move, name, style }) => {
 	const dispatch = useDispatch()
-	const ref = useRef()
-	const [top, setTop] = useState(false)
-	const [bottom, setBottom] = useState(false)
+	const dragRef = useRef()
+	const dropRef = useRef()
 
-	const [{ isDragging }, dragRef] = useDrag({
+	const [topActive, setTop] = useState(false)
+	const [bottomActive, setBottom] = useState(false)
+
+	const [{ isDragging }, drag, preview] = useDrag({
 		item: { type: 'CARD', index: index },
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
 	})
 
-	const [{ isOver }, dropRef] = useDrop({
+	const [{ isOver }, drop] = useDrop({
 		accept: 'CARD',
 		collect: (monitor) => ({
 			isOver: monitor.isOver(),
@@ -47,24 +49,29 @@ const DragDropCard = ({ children, index, listIndex, move, name, style }) => {
 		},
 	})
 
-	if (!isOver && top === true) {
+	if (!isOver && topActive === true) {
 		setTop(false)
 	}
 
-	if (!isOver && bottom === true) {
+	if (!isOver && bottomActive === true) {
 		setBottom(false)
 	}
 
-	dragRef(dropRef(ref))
+	drag(dragRef)
+	drop(dropRef)
+	preview(dropRef)
 
 	return (
-		<>
-			<Indicator top={top} />
-			<Card ref={ref} isDragging={isDragging} style={style}>
-				{children}
-			</Card>
-			<Indicator bottom={bottom} />
-		</>
+		<div ref={dropRef}>
+			<Indicator top active={topActive} />
+			<Container>
+				<Card isDragging={isDragging} style={style}>
+					{children}
+				</Card>
+				<Handle ref={dragRef} />
+			</Container>
+			<Indicator bottom active={bottomActive} />
+		</div>
 	)
 }
 

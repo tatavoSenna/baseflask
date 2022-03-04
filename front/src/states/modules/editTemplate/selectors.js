@@ -1,6 +1,6 @@
 import { extend } from 'lodash'
 import update from 'immutability-helper'
-import { errorMessage, successMessage } from '~/services/messager'
+import { successMessage } from '~/services/messager'
 
 const formatWorkflowNodes = (workflowNodes) => {
 	const workflowNodesList = []
@@ -78,21 +78,14 @@ export const selectForm = (form, payload) => {
 		})
 		return newForm
 	} else if (payload.name === 'field') {
-		try {
-			const fieldJSON = JSON.parse(payload.value)
-			successMessage({
-				content: 'Campo salvo com sucesso.',
-			})
-			return update(form, {
-				[payload.pageIndex]: {
-					fields: { [payload.fieldIndex]: { $set: fieldJSON } },
-				},
-			})
-		} catch {
-			errorMessage({
-				content: 'Não foi possível salvar o campo. Insira JSON válido.',
-			})
-		}
+		successMessage({
+			content: 'Campo salvo com sucesso.',
+		})
+		return update(form, {
+			[payload.pageIndex]: {
+				fields: { [payload.fieldIndex]: { $set: payload.value } },
+			},
+		})
 	}
 }
 
@@ -296,26 +289,26 @@ export const removeVariable = (variables, payload) => {
 
 export const selectVariable = (variables, payload) => {
 	if (payload.name === 'field') {
-		const fieldJSON = JSON.parse(payload.value)
-		if (fieldJSON.type !== 'separator') {
+		const field = payload.value
+		if (field.type !== 'separator') {
 			let variable = {}
 
-			if (fieldJSON.structure) {
+			if (field.structure) {
 				let structure
-				if (Array.isArray(fieldJSON.structure)) {
+				if (Array.isArray(field.structure)) {
 					structure = []
-					fieldJSON.structure.forEach((field) => {
+					field.structure.forEach((field) => {
 						structure.push(field.variable)
 					})
 				} else {
-					structure = fieldJSON.structure.variable
+					structure = field.structure.variable
 				}
 				variable = {
 					structure: structure,
-					main: fieldJSON.variable,
+					main: field.variable,
 				}
 			} else {
-				variable = fieldJSON.variable
+				variable = field.variable
 			}
 			const newVariables = update(variables, {
 				[payload.pageIndex]: { [payload.fieldIndex]: { $set: variable } },
