@@ -100,7 +100,7 @@ def test_get_local_creates_user(session):
     assert local_user.name == name
 
 
-@patch("app.users.remote.get_cognito_claims")
+@patch("app.users.remote.get_cognito_claims", return_value={"sub": None})
 def test_get_local_user(cognito_claims_mock, session):
     @get_local_user()
     def raise_forbidden_true_test(local_user):

@@ -18,9 +18,9 @@ def format_workflow_responsible_group(group: dict) -> dict:
     Returns:
         dict: The formatted dict
     """
-    group = Group.query.filter_by(id=group["id"]).first()
+    group = Group.query.filter_by(id=int(group["id"])).first()
     if group:
-        return {"id": str(group.id), "name": group.name}
+        return {"id": group.id, "name": group.name}
     else:
         raise ResponsibleGroupNotFound
 
@@ -30,7 +30,7 @@ def format_workflow_responsible_users(users: list, group: dict) -> list:
 
     Args:
         users_ids (list): The list of the ids of the responsible users
-        group_id (str): The id of the group. The function checks if all users belong to the group.
+        group_id (int): The id of the group. The function checks if all users belong to the group.
 
     Raises:
         ResponsibleUserNotFound: At least one of the users ids in the list do not exist
@@ -39,7 +39,7 @@ def format_workflow_responsible_users(users: list, group: dict) -> list:
     Returns:
         dict: The formatted responsible users list
     """
-    users_ids = [user["id"] for user in users]
+    users_ids = [int(user["id"]) for user in users]
     users = User.query.filter(User.id.in_(users_ids)).all()
     if len(users) == len(users_ids):
         responsible_users = []
