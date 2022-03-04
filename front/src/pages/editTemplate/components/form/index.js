@@ -52,7 +52,7 @@ const WrapTabNode = DropTarget('DND_NODE', cardTarget, (connect) => ({
 	}))(TabNode)
 )
 
-const DraggableTabs = (props) => {
+const DraggableTabs = ({ setCurrent, ...props }) => {
 	const dispatch = useDispatch()
 
 	const moveTabNode = (dragKey, hoverKey) => {
@@ -60,11 +60,11 @@ const DraggableTabs = (props) => {
 	}
 
 	const onChange = (e) => {
-		props.setCurrent(e)
+		setCurrent(e)
 	}
 
-	const renderTabBar = (props, DefaultTabBar) => (
-		<DefaultTabBar {...props}>
+	const renderTabBar = (filteredProps, DefaultTabBar) => (
+		<DefaultTabBar {...filteredProps}>
 			{(node) => (
 				<WrapTabNode key={node.key} index={node.key} moveTabNode={moveTabNode}>
 					{node}

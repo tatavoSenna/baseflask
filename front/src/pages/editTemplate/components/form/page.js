@@ -8,7 +8,7 @@ import {
 	editTemplateFieldAdd,
 	editTemplateFormInfo,
 } from '~/states/modules/editTemplate'
-import Field from './field'
+import JSONField from './fields/jsonField'
 
 const Page = ({ pageIndex, data, handleRemovePage }) => {
 	const dispatch = useDispatch()
@@ -208,15 +208,24 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			{!data.fields.length ? (
 				<Empty description="Sem Campos" style={{ marginBottom: '1rem' }} />
 			) : (
-				data.fields.map((field, fieldIndex) => (
-					<Field
-						key={fieldIndex}
-						data={field}
-						pageIndex={pageIndex}
-						fieldIndex={fieldIndex}
-						updateFormInfo={updateFormInfo}
-					/>
-				))
+				data.fields.map((field, fieldIndex) => {
+					let key =
+						typeof field !== 'undefined'
+							? `${field?.label ?? ''}_${field?.type ?? ''}_${
+									field?.variable?.name ?? ''
+							  }`
+							: fieldIndex
+
+					return (
+						<JSONField
+							key={key}
+							data={field}
+							pageIndex={pageIndex}
+							fieldIndex={fieldIndex}
+							updateFormInfo={updateFormInfo}
+						/>
+					)
+				})
 			)}
 			<Dropdown overlay={fieldTypes} trigger="click">
 				<Button
