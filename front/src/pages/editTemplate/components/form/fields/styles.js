@@ -15,6 +15,7 @@ export const Title = styled(Typography.Title)`
 export const Panel = styled(Collapse.Panel)`
 	&& .ant-collapse-header {
 		align-items: center;
+		display: flex;
 	}
 
 	&&& .ant-collapse-content-box {
