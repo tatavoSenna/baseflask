@@ -30,13 +30,14 @@ const FieldCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 				<Panel
 					key={0}
 					header={
-						<>
+						<div
+							style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
 							<div style={{ margin: '0px 6px 0px 5px' }}>{icon}</div>
 							<Divider type="vertical" />
 							<Title level={5} $filled={!!data.label}>
 								{data.label || type}
 							</Title>
-						</>
+						</div>
 					}
 					extra={
 						<Delete
