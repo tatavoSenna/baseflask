@@ -63,8 +63,8 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 		setCurrent(e)
 	}
 
-	const renderTabBar = (filteredProps, DefaultTabBar) => (
-		<DefaultTabBar {...filteredProps}>
+	const renderTabBar = (props, DefaultTabBar) => (
+		<DefaultTabBar {...props}>
 			{(node) => (
 				<WrapTabNode key={node.key} index={node.key} moveTabNode={moveTabNode}>
 					{node}
@@ -86,7 +86,7 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 			fields: [],
 		}
 		dispatch(editTemplatePageAdd({ newPage }))
-		props.setCurrent(`${props.data.length}`)
+		setCurrent(`${props.data.length}`)
 	}
 
 	return (
