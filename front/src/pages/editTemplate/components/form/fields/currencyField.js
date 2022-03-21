@@ -8,13 +8,11 @@ import {
 	currencyParser,
 } from 'components/currencyField/currencyUtils'
 
-const CurrencyField = (props) => {
+export const CurrencyField = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
 	const [valid, setValid] = useState(false)
-
-	const parser = currencyParser()
 
 	return (
 		<Field
@@ -41,15 +39,9 @@ const CurrencyField = (props) => {
 					</FormItem>
 
 					<FormItem label="Valor inicial" $labelWidth={'17%'}>
-						<InputNumber
-							min={0}
-							placeholder=""
-							formatter={currencyFormatter()}
-							parser={parser}
-							style={{ width: '100%', currency: 'BRL', style: 'currency' }}
-							onBlur={(e) => update({ initialValue: parser(e.target.value) })}
+						<CurrencyInput
+							onBlur={(v) => update({ initialValue: v })}
 							defaultValue={data.initialValue}
-							autoComplete="off"
 						/>
 					</FormItem>
 				</div>
@@ -62,11 +54,32 @@ const CurrencyField = (props) => {
 	)
 }
 
-export default CurrencyField
-
 CurrencyField.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
 	updateFormInfo: func,
+}
+
+export const CurrencyInput = ({ defaultValue, onBlur, style = {} }) => {
+	const parser = currencyParser()
+
+	return (
+		<InputNumber
+			min={0}
+			placeholder=""
+			formatter={currencyFormatter()}
+			parser={parser}
+			style={{ width: '100%', currency: 'BRL', style: 'currency', ...style }}
+			onBlur={(e) => onBlur(Number(parser(e.target.value)))}
+			defaultValue={defaultValue}
+			autoComplete="off"
+		/>
+	)
+}
+
+CurrencyInput.propTypes = {
+	defaultValue: number,
+	onBlur: func,
+	style: object,
 }

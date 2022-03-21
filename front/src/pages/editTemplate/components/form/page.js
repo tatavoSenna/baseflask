@@ -10,7 +10,7 @@ import {
 } from '~/states/modules/editTemplate'
 import JSONField from './fields/jsonField'
 import TextField from './fields/textField'
-import CurrencyField from './fields/currencyField'
+import { CurrencyField } from './fields/currencyField'
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()

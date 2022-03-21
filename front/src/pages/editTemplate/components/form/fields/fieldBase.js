@@ -9,10 +9,10 @@ import {
 	bool,
 	oneOfType,
 } from 'prop-types'
-import { Form, Input, Select, Button, AutoComplete } from 'antd'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { Input, Select } from 'antd'
 import { FieldCard } from './fieldCard'
 import { ThinDivider, ValidatedSelect } from './styles'
+import { FieldConditional } from './fieldConditional'
 
 const Field = ({
 	data,
@@ -29,18 +29,6 @@ const Field = ({
 	updateFormInfo,
 }) => {
 	const variableNames = variables.map((x) => x?.name)
-
-	const variableOptions = variableNames
-		.filter((x, i, arr) => arr.indexOf(x) === i) // Checks unique
-		.filter((x) => x && x !== data?.variable?.name)
-		.map((x) => ({ value: x }))
-
-	const conditions =
-		'condition' in data
-			? Array.isArray(data.condition)
-				? data.condition
-				: [data.condition]
-			: []
 
 	const [validVariableName, setValidVariableName] = useState(false)
 	const [validVariableStyle, setValidVariableStyle] = useState(false)
@@ -65,23 +53,6 @@ const Field = ({
 	}, [data, variableNames, displayStyles, onValidate])
 
 	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
-
-	const addCondition = () => {
-		let newCondition = { variable: '', operator: '=', value: '' }
-		update({ condition: [...conditions, newCondition] })
-	}
-	const removeCondition = (index) => {
-		update({ condition: conditions.filter((x, i) => i !== index) })
-	}
-
-	const updateCondition = (property, value, index) =>
-		update({
-			condition: [
-				...conditions.slice(0, index),
-				{ ...conditions[index], [property]: value },
-				...conditions.slice(index + 1),
-			],
-		})
 
 	const updateVariable = (property, value) => {
 		update({
@@ -141,71 +112,9 @@ const Field = ({
 				<>
 					<ThinDivider orientation="left">Condicionais</ThinDivider>
 
-					<div>
-						{conditions.map((condition, i) => (
-							<div
-								key={condition.variable + i}
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'space-between',
-									marginBottom: '8px',
-								}}>
-								<Input.Group compact>
-									<AutoComplete
-										placeholder="Variável"
-										style={{
-											width: '44%',
-										}}
-										options={variableOptions}
-										defaultValue={condition?.variable}
-										filterOption={(inputValue, option) =>
-											option.value
-												.toUpperCase()
-												.indexOf(inputValue.toUpperCase()) !== -1
-										}
-										onBlur={(e) =>
-											updateCondition('variable', e.target.value, i)
-										}
-									/>
-
-									<Select
-										placeholder=""
-										style={{ width: '11%', textAlign: 'center' }}
-										defaultValue={condition?.operator}
-										onChange={(v) => updateCondition('operator', v, i)}>
-										<Select.Option value="=">=</Select.Option>
-										<Select.Option value=">">&gt;</Select.Option>
-										<Select.Option value=">=">&gt;=</Select.Option>
-										<Select.Option value="<">&lt;</Select.Option>
-										<Select.Option value="<=">&lt;=</Select.Option>
-									</Select>
-
-									<Input
-										placeholder="Valor"
-										style={{ width: '45%' }}
-										defaultValue={condition?.value}
-										onBlur={(e) => updateCondition('value', e.target.value, i)}
-									/>
-								</Input.Group>
-
-								<MinusCircleOutlined
-									onClick={() => removeCondition(i)}
-									style={{ padding: '0 0 0 10px' }}
-								/>
-							</div>
-						))}
-
-						<Form.Item>
-							<Button
-								type="dashed"
-								onClick={() => addCondition()}
-								block
-								icon={<PlusOutlined />}>
-								Adicionar condicional
-							</Button>
-						</Form.Item>
-					</div>
+					<FieldConditional
+						{...{ data, variables, pageIndex, fieldIndex, updateFormInfo }}
+					/>
 				</>
 			) : null}
 		</FieldCard>
