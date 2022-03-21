@@ -34,6 +34,7 @@ from bs4 import BeautifulSoup
 from app import jinja_env
 import convertapi
 import sys, traceback
+from werkzeug.exceptions import Unauthorized
 
 from app.documents.formatters.variables_formatter import (
     format_variables,
@@ -75,6 +76,11 @@ def create_document_controller(
     # Get document template from the database using template_id and company_id
     document_template = DocumentTemplate.query.get(document_template_id)
     document_company = Company.query.filter_by(id=company_id).first()
+
+    if document_company.remaining_documents <= 0:
+        raise Unauthorized(
+            description="You have reached the document limit offered by your plan"
+        )
 
     # Transforms received variables into specified variables with the current date
     current_date_dict = get_current_date_dict()

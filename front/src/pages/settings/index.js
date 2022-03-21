@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Menu, PageHeader, Layout } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
 	DeploymentUnitOutlined,
+	EditOutlined,
 } from '@ant-design/icons'
+import { useLocation } from 'react-router-dom'
 
 import BreadCrumb from '~/components/breadCrumb'
 import CompanyConfiguration from './components/companyConfiguration'
@@ -13,10 +16,18 @@ import Integration from './components/integration'
 
 import styles from './index.module.scss'
 import MainLayout from '~/components/mainLayout'
+import Signature from './components/signature'
 
 const Settings = () => {
+	const { search } = useLocation()
+	const searchParams = new URLSearchParams(search)
+
 	const [breadCrumpCurrent, setBC] = useState('Empresa')
-	const [current, setCurrent] = useState('companyConfiguration')
+	const [current, setCurrent] = useState(
+		searchParams.get('tab') ?? 'companyConfiguration'
+	)
+
+	const { is_financial } = useSelector(({ session }) => session)
 
 	const handleNav = (e) => {
 		setCurrent(e.key)
@@ -48,11 +59,17 @@ const Settings = () => {
 					<Menu.Item key="integration" icon={<DeploymentUnitOutlined />}>
 						Integração
 					</Menu.Item>
+					{is_financial && (
+						<Menu.Item key="signature" icon={<EditOutlined />}>
+							Planos e pagamentos
+						</Menu.Item>
+					)}
 				</Menu>
 				<Layout className={styles.content}>
 					{current === 'companyConfiguration' && <CompanyConfiguration />}
 					{current === 'webhook' && <Webhook />}
 					{current === 'integration' && <Integration />}
+					{current === 'signature' && <Signature />}
 				</Layout>
 			</Layout>
 		</MainLayout>

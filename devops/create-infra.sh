@@ -15,6 +15,7 @@ aws cloudformation create-stack \
         ParameterKey=ApiLBCertificate,ParameterValue= \
         ParameterKey=AppCertificate,ParameterValue= \
         ParameterKey=FlaskSecretKey,ParameterValue= \
+        ParameterKey=StripeApiSecretKey,ParameterValue= \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,ParameterValue= \
         ParameterKey=FrontEndSentryDSN,ParameterValue= \

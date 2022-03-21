@@ -21,6 +21,7 @@ aws cloudformation update-stack \
         ParameterKey=SendGridApiKey,UsePreviousValue=true \
         ParameterKey=D4SignApiURL,UsePreviousValue=true \
         ParameterKey=SignUpOn,ParameterValue=false \
+        ParameterKey=StripeApiSecretKey,UsePreviousValue=true \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
         ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \

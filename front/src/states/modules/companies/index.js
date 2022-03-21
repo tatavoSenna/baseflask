@@ -14,6 +14,12 @@ const initialState = {
 		per_page: 0,
 		total: 0,
 	},
+	companyInfo: {
+		id: 0,
+		name: '',
+		stripeCompanyEmail: '',
+		remainingDocuments: 0,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -48,6 +54,26 @@ const { actions, reducer } = createSlice({
 				}),
 			})
 		},
+		getCompanyInfo: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getCompanyInfoSuccess: (state, { payload }) => {
+			extend(state, {
+				loading: false,
+				companyInfo: extend(state.companyInfo, {
+					id: payload.id,
+					name: payload.name,
+					stripeDocumentEmail: payload.stripe_document_email,
+					remainingDocuments: payload.remaining_documents,
+				}),
+			})
+		},
+		getCompanyInfoFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		addCompany: (state) =>
 			extend(state, {
 				loading: true,
@@ -96,6 +122,9 @@ export const {
 	getCompanyListSuccess,
 	updateNewCompany,
 	getCompanyListFailure,
+	getCompanyInfo,
+	getCompanyInfoSuccess,
+	getCompanyInfoFailure,
 	addCompany,
 	addCompanySuccess,
 	addCompanyFailure,

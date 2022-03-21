@@ -1,8 +1,13 @@
+from sqlalchemy import true
 from app import db
+import os
 from app.models.company import Company, Webhook
 from app.models.user import User
 from .remote import RemoteCompany
+import stripe
 from werkzeug.exceptions import BadRequest, Forbidden
+
+stripe.api_key = os.environ.get("STRIPE_API_SECRET_KEY")
 
 
 def save_company_keys_controller(
@@ -111,6 +116,15 @@ def assign_company_to_new_user_controller(logged_user, company_id):
                 company_id = default_company.id
         user_attributes.update(company_id=company_id)
         local_user = User(**user_attributes)
+        company = Company.query.filter_by(id=company_id).first()
+        company.stripe_company_email = local_user.email
+        local_user.is_financial = True
+        stripe.Customer.create(email=local_user.email, name=local_user.name)
+        customer = stripe.Customer.list(email=local_user.email)
+        customer_id = customer.data[0]["id"]
+        stripe.Subscription.create(
+            customer=customer_id, items=[{"price": "price_1KP85XHIZcJ4D4nayv0Sx6dc"}]
+        )
 
     db.session.add(local_user)
     db.session.commit()

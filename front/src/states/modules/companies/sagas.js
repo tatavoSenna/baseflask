@@ -10,6 +10,9 @@ import {
 	getCompanyList,
 	getCompanyListSuccess,
 	getCompanyListFailure,
+	getCompanyInfo,
+	getCompanyInfoSuccess,
+	getCompanyInfoFailure,
 	addCompany,
 	addCompanySuccess,
 	addCompanyFailure,
@@ -29,6 +32,7 @@ export default function* rootSaga() {
 	yield takeEvery(getCompanyList, getCompanyListSaga)
 	yield takeEvery(addCompany, addCompanySaga)
 	yield takeEvery(changeUserCompany, changeUserCompanySaga)
+	yield takeEvery(getCompanyInfo, getCompanyInfoSaga)
 }
 
 function* getCompanyListSaga({ payload = {} }) {
@@ -99,5 +103,14 @@ function* changeUserCompanySaga({ payload = {} }) {
 			updateKey: 'changeUserCompany',
 		})
 		yield put(changeUserCompanyFailure({ error }))
+	}
+}
+
+function* getCompanyInfoSaga({ payload }) {
+	try {
+		const { data } = yield call(api.get, `/company/info`)
+		yield put(getCompanyInfoSuccess(data))
+	} catch (error) {
+		yield put(getCompanyInfoFailure({ error }))
 	}
 }

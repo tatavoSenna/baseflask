@@ -128,6 +128,11 @@ Parameters:
       - false
     Default: "true"
 
+  StripeApiSecretKey:
+    Type: String
+    NoEcho: true
+    Description: The Stripe Secret.
+
   EnvironmentTag:
     Type: String
     Description: Tag to differentiate develop and production environments for sentry.
@@ -291,6 +296,7 @@ Resources:
         ConvertApiSecretKey: !Ref ConvertApiSecretKey
         SendGridApiKey: !Ref SendGridApiKey
         D4SignApiURL: !Ref D4SignApiURL
+        StripeApiSecretKey: !Ref StripeApiSecretKey
         EnvironmentTag: !Ref EnvironmentTag
         BackEndSentryDSN: !Ref BackEndSentryDSN
 

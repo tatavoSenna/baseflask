@@ -4,6 +4,9 @@ import { selectAllWebhooks } from './selectors'
 
 const initialState = {
 	loading: false,
+	priceId: '',
+	isCanceled: false,
+	expireAt: 0,
 	webhookList: [],
 	newWebhook: {
 		url: '',
@@ -28,6 +31,53 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		getStripePlan: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getStripePlanSuccess: (state, { payload }) =>
+			extend(state, {
+				expireAt: payload.expires_at,
+				priceId: payload.price_id,
+				isCanceled: payload.is_canceled,
+				loading: false,
+			}),
+		getStripePlanFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
+		uploadStripePlan: (state) => {
+			extend(state, {
+				loading: true,
+			})
+		},
+		uploadStripePlanSuccess: (state, { payload }) =>
+			extend(state, {
+				priceId: payload.price_id,
+				loading: false,
+			}),
+		uploadStripePlanFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
+		uploadStripePlanPortal: (state) => {
+			extend(state, {
+				loading: true,
+			})
+		},
+		uploadStripePlanPortalSuccess: (state) => {
+			extend(state, {
+				loading: false,
+			})
+		},
+		uploadStripePlanPortalFailure: (state, { payload }) => {
+			extend(state, {
+				loading: false,
+				error: payload.error,
+			})
+		},
 		saveSettings: (state) =>
 			extend(state, {
 				loading: true,
@@ -117,6 +167,15 @@ export const {
 	getSettings,
 	getSettingsSuccess,
 	getSettingsFailure,
+	getStripePlan,
+	getStripePlanSuccess,
+	getStripePlanFailure,
+	uploadStripePlan,
+	uploadStripePlanSuccess,
+	uploadStripePlanFailure,
+	uploadStripePlanPortal,
+	uploadStripePlanPortalSuccess,
+	uploadStripePlanPortalFailure,
 	saveSettings,
 	saveSettingsSuccess,
 	saveSettingsFailure,

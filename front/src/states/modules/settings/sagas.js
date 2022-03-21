@@ -12,6 +12,9 @@ import {
 	saveSettings,
 	saveSettingsSuccess,
 	saveSettingsFailure,
+	getStripePlan,
+	getStripePlanSuccess,
+	getStripePlanFailure,
 	getSettings,
 	getSettingsSuccess,
 	getSettingsFailure,
@@ -27,6 +30,12 @@ import {
 	editWebhooks,
 	editWebhooksSuccess,
 	editWebhooksFailure,
+	uploadStripePlan,
+	uploadStripePlanSuccess,
+	uploadStripePlanFailure,
+	uploadStripePlanPortal,
+	uploadStripePlanPortalSuccess,
+	uploadStripePlanPortalFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -36,6 +45,9 @@ export default function* rootSaga() {
 	yield takeEvery(saveWebhooks, saveWebhooksSaga)
 	yield takeEvery(deleteWebhooks, deleteWebhooksSaga)
 	yield takeEvery(editWebhooks, editWebhooksSaga)
+	yield takeEvery(getStripePlan, getStripePlanSaga)
+	yield takeEvery(uploadStripePlan, uploadStripePlanSaga)
+	yield takeEvery(uploadStripePlanPortal, uploadStripePlanPortalSaga)
 }
 
 function* getSettingsSaga() {
@@ -44,6 +56,37 @@ function* getSettingsSaga() {
 		yield put(getSettingsSuccess(data))
 	} catch (error) {
 		yield put(getSettingsFailure(error))
+	}
+}
+
+function* getStripePlanSaga() {
+	try {
+		const { data } = yield call(api.get, `/company/stripe_plan`)
+		yield put(getStripePlanSuccess(data))
+	} catch (error) {
+		yield put(getStripePlanFailure(error))
+	}
+}
+
+function* uploadStripePlanSaga({ payload }) {
+	try {
+		const response = yield call(api.post, `/company/checkout`, {
+			price_id: payload,
+		})
+		window.location.href = response.data.url
+		yield put(uploadStripePlanSuccess(response.data))
+	} catch (error) {
+		yield put(uploadStripePlanFailure(error))
+	}
+}
+
+function* uploadStripePlanPortalSaga() {
+	try {
+		const response = yield call(api.post, `/company/portal`)
+		window.location.href = response.data.url
+		yield put(uploadStripePlanPortalSuccess(response.data))
+	} catch (error) {
+		yield put(uploadStripePlanPortalFailure(error))
 	}
 }
 

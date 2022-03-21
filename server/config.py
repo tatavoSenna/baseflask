@@ -32,6 +32,8 @@ class Config(object):
     SNS_NEWDOCUMENT_ARN = os.environ.get("SNS_NEWDOCUMENT_ARN")
     D4SIGN_API_DOCUMENT_WEBHOOK_URL = os.environ.get("D4SIGN_API_DOCUMENT_WEBHOOK_URL")
     D4SIGN_API_URL = os.environ.get("D4SIGN_API_URL")
+    DOMAIN_URL = os.environ.get("DOMAIN_URL")
+    STRIPE_API_SECRET_KEY = os.environ.get("STRIPE_API_SECRET_KEY")
 
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20

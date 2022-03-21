@@ -32,6 +32,9 @@ class Company(db.Model):
     )  # authorizes webhook calls
     d4sign_safe_name = db.Column(db.String(255), nullable=True)
 
+    stripe_company_email = db.Column(db.String(255), nullable=True)
+    remaining_documents = db.Column(db.Integer, nullable=False, server_default="20")
+
     def __repr__(self):
         return "<Company %r>" % self.name
 
