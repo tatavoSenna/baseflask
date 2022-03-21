@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { array, string, func, any } from 'prop-types'
+import { object, string, func, any } from 'prop-types'
 import { Tabs, Empty, Button } from 'antd'
 import { DndProvider, DragSource, DropTarget } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -86,7 +86,7 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 			fields: [],
 		}
 		dispatch(editTemplatePageAdd({ newPage }))
-		setCurrent(`${props.data.length}`)
+		setCurrent(`${props.data.form.length}`)
 	}
 
 	return (
@@ -119,7 +119,7 @@ const TemplateForm = ({ data }) => {
 	const [current, setCurrent] = useState('0')
 
 	const handleRemovePage = (pageIndex) => {
-		if (pageIndex === data.length - 1) {
+		if (pageIndex === data.form.length - 1) {
 			setCurrent(`${current - 1}`)
 		}
 		dispatch(editTemplatePageRemove({ pageIndex }))
@@ -127,17 +127,21 @@ const TemplateForm = ({ data }) => {
 	return (
 		<>
 			<DraggableTabs current={current} setCurrent={setCurrent} data={data}>
-				{data.map((page, index) => (
+				{data.form.map((page, index) => (
 					<TabPane key={index} tab={page.title} closable={false}>
 						<Page
 							pageIndex={index}
-							data={data[index]}
+							data={data.form[index]}
+							variables={data.variables.reduce(
+								(a, page) => [...a, ...page],
+								[]
+							)}
 							handleRemovePage={handleRemovePage}
 						/>
 					</TabPane>
 				))}
 			</DraggableTabs>
-			{!data.length && (
+			{!data.form.length && (
 				<Empty description="Sem Páginas" style={{ marginTop: '3rem' }} />
 			)}
 		</>
@@ -147,12 +151,12 @@ const TemplateForm = ({ data }) => {
 export default TemplateForm
 
 TemplateForm.propTypes = {
-	data: array,
+	data: object,
 }
 
 DraggableTabs.propTypes = {
 	current: string,
 	setCurrent: func,
-	data: array,
+	data: object,
 	children: any,
 }
