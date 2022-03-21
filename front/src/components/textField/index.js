@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, func, bool, object } from 'prop-types'
 import { Form, Input } from 'antd'
 import InfoField from '~/components/infoField'
 
@@ -52,12 +52,12 @@ const TextField = ({
 TextField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+		variable: PropTypes.oneOfType([object, string]),
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
 	inputValue: string,
-	className: object,
+	className: string,
 	onChange: func,
 	first: bool,
 	disabled: bool,

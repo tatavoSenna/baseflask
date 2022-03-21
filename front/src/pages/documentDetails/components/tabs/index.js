@@ -24,7 +24,7 @@ import InputFactory from '~/components/inputFactory'
 import ImageField from '~/components/imageField'
 import StructuredList from './components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
-import PersonField from './components/personField'
+import PersonField from './components/docxTemplate/personField'
 
 import { ContainerTabs, ScrollContent } from './styles'
 import styles from './index.module.scss'
@@ -32,6 +32,9 @@ import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 import styled from 'styled-components'
+import PersonFieldText from './components/textTemplate/personFieldText'
+import AddressField from './components/docxTemplate/addressField'
+import AddressFieldText from './components/textTemplate/addressFieldText'
 
 moment.locale('pt-br')
 
@@ -96,78 +99,91 @@ const Tabs = ({
 	}
 
 	const textView = (item) =>
-		item.fields.map((item, index) => (
-			<div key={index}>
-				{item.hasOwnProperty('subtitle') ? (
-					<>
-						<Title level={4} style={{ marginTop: 10, fontSize: 15 }}>
-							{item.subtitle}
-						</Title>
-						{item.items.map((item_list, index) => (
-							<>
-								{Array.isArray(item_list) ? (
-									item_list.map((item, index) => (
+		item.fields.map((item, index) => {
+			switch (item.type) {
+				case 'address':
+					return <AddressFieldText data={item} key={index} />
+				case 'person':
+					return <PersonFieldText data={item} key={index} />
+				default:
+					return (
+						<div key={index}>
+							{item.hasOwnProperty('subtitle') ? (
+								<>
+									<Title level={4} style={{ marginTop: 10, fontSize: 15 }}>
+										{item.subtitle}
+									</Title>
+									{item.items.map((item_list, index) => (
 										<>
-											<Paragraph
-												style={{
-													color: '#000',
-													fontSize: 10,
-													marginBottom: 0,
-													marginLeft: '10px',
-												}}
-												key={item.label + index}>
-												{item.label}:
-											</Paragraph>
-											<Paragraph
-												style={{
-													color: '#646464',
-													fontSize: 14,
-													marginBottom: 14,
-													marginLeft: '10px',
-												}}
-												key={item.value + index}>
-												{item.value}
-											</Paragraph>
+											{Array.isArray(item_list) ? (
+												item_list.map((item, index) => (
+													<>
+														<Paragraph
+															style={{
+																color: '#000',
+																fontSize: 10,
+																marginBottom: 0,
+																marginLeft: '10px',
+															}}
+															key={item.label + index}>
+															{item.label}:
+														</Paragraph>
+														<Paragraph
+															style={{
+																color: '#646464',
+																fontSize: 14,
+																marginBottom: 14,
+																marginLeft: '10px',
+															}}
+															key={item.value + index}>
+															{item.value}
+														</Paragraph>
+													</>
+												))
+											) : (
+												<>
+													<Paragraph
+														style={{
+															color: '#000',
+															fontSize: 12,
+															marginBottom: 0,
+														}}
+														key={item_list.label + index}>
+														{item_list.label}:
+													</Paragraph>
+													<Paragraph
+														style={{
+															color: '#646464',
+															fontSize: 16,
+															marginBottom: 14,
+														}}
+														key={item_list.value + index}>
+														{item_list.value}
+													</Paragraph>
+												</>
+											)}
+											{item.items.length - 1 !== index && <Divider />}
 										</>
-									))
-								) : (
-									<>
-										<Paragraph
-											style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-											key={item_list.label + index}>
-											{item_list.label}:
-										</Paragraph>
-										<Paragraph
-											style={{
-												color: '#646464',
-												fontSize: 16,
-												marginBottom: 14,
-											}}
-											key={item_list.value + index}>
-											{item_list.value}
-										</Paragraph>
-									</>
-								)}
-								{item.items.length - 1 !== index && <Divider />}
-							</>
-						))}
-					</>
-				) : (
-					<>
-						<Paragraph
-							style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-							key={item.label + index}>
-							{item.label}:
-						</Paragraph>
-						<Paragraph
-							style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
-							key={item.value + index}>
-							{item.value}
-						</Paragraph>
-					</>
-				)}
-			</div>
-		))
+									))}
+								</>
+							) : (
+								<>
+									<Paragraph
+										style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+										key={item.label + index}>
+										{item.label}:
+									</Paragraph>
+									<Paragraph
+										style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+										key={item.value + index}>
+										{item.value}
+									</Paragraph>
+								</>
+							)}
+						</div>
+					)
+			}
+		})
 
 	const inputView = (item, pageIndex) => (
 		<Form
@@ -199,7 +215,13 @@ const Tabs = ({
 							</>
 						)
 					case 'person':
-						return <PersonField item={item} disabled={!isEdit} />
+						return (
+							<PersonField item={item} disabled={!isEdit} key={fieldIndex} />
+						)
+					case 'address':
+						return (
+							<AddressField item={item} disabled={!isEdit} key={fieldIndex} />
+						)
 					case 'variable_image':
 						return isEdit && <ImageField pageFieldsData={item} />
 					default:

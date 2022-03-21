@@ -11,6 +11,12 @@ from flask import Markup
 from num2words import num2words
 from babel.numbers import format_currency
 from app.documents.formatters.number_formatter import NumberFormatter
+from app.documents.formatters.person_variable_text import (
+    LegalPersonText,
+    LegalPersonTextVariable,
+    NaturalPersonText,
+    NaturalPersonTextVariable,
+)
 
 
 month_dictionary = {
@@ -159,19 +165,25 @@ def format_variables(variables, document_template_id):
             except Exception as e:
                 logging.exception(e)
 
-        elif variable_type == "person":
-            try:
-                items = variables[struct_name]
-                if items["PERSON_TYPE"] == "Física":
-                    person_type = "natural"
-                elif items["PERSON_TYPE"] == "Jurídica":
-                    person_type = "legal"
-                text_template = specs["doc_display_style"][person_type]
-                jinja_template = jinja_env.from_string(text_template)
-                filled_text = jinja_template.render(items)
-                return filled_text
-            except Exception as e:
-                logging.exception(e)
+        elif variable_type in ["person", "address"]:
+            if specs["row_template"] != "":
+                try:
+                    items = variables[struct_name]
+                    text_template = specs["row_template"]
+                    jinja_template = jinja_env.from_string(text_template)
+                    filled_text = jinja_template.render(items)
+                    return filled_text
+                except Exception as e:
+                    logging.exception(e)
+            else:
+                try:
+                    items = variables[struct_name]
+                    text_template = specs["doc_display_style"]
+                    jinja_template = jinja_env.from_string(text_template)
+                    filled_text = jinja_template.render(items)
+                    return filled_text
+                except Exception as e:
+                    logging.exception(e)
 
         elif variable_type[0:11] == "structured_":
             if specs["doc_display_style"] == "text":
@@ -183,7 +195,6 @@ def format_variables(variables, document_template_id):
                         item["INDEX"] = index + 1
                         filled_text = jinja_template.render(item)
                         rows_list.append(filled_text)
-
                     return specs["extra_style_params"]["separator"].join(rows_list)
                 except Exception as e:
                     logging.exception(e)
@@ -221,7 +232,6 @@ def format_variables(variables, document_template_id):
         return variables
 
     extra_variables = {}
-
     for variable in variables:
         if not variable in variables_specification:
             continue
@@ -245,7 +255,7 @@ def format_variables(variables, document_template_id):
                 formatted = format_variable(specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
 
-        elif variable[0:6] == "person":
+        elif "person" in variable or "address" in variable:
             for variable_name, specs in variables_specification[variable].items():
                 formatted = format_variable(specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
@@ -258,3 +268,51 @@ def format_variables(variables, document_template_id):
 
     variables.update(extra_variables)
     return variables
+
+
+def create_text_variable(variables):
+    text_variable = {}
+    new_dict = variables
+    for value in variables:
+        if "person" in value:
+            items = variables[value]
+            if items["PERSON_TYPE"] == "legal_person":
+                person_text_variable = LegalPersonTextVariable
+                person_text = LegalPersonText
+            else:
+                person_text_variable = NaturalPersonTextVariable
+                person_text = NaturalPersonText
+
+            for key, v in items.items():
+                if key in ["VARIABLE_NAME", "PERSON_TYPE"]:
+                    continue
+                jinja_template = jinja_env.from_string(person_text_variable[key])
+                filled_text = jinja_template.render(items)
+                text_variable[key] = filled_text
+
+            jinja_template = jinja_env.from_string(person_text)
+            filled_text = jinja_template.render(text_variable)
+            variables[value]["TEXT"] = filled_text
+    return variables
+
+
+def transform_variables(variables):
+    new_items = {}
+    new_dict = new_items
+    for value in variables:
+        if not "person" in value and not "address" in value:
+            new_dict[value] = variables[value]
+            continue
+        items = variables[value]
+        for key, v in items.items():
+            if key == "VARIABLE_NAME":
+                continue
+            var_name = items["VARIABLE_NAME"]
+            new_var_key = f"{var_name}_{key}"
+            new_items[new_var_key] = items[key]
+
+        new_dict[value] = new_items
+
+    if new_dict == {}:
+        return variables
+    return new_dict

@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, DatePicker } from 'antd'
 import InfoField from '~/components/infoField'
 import moment from 'moment'
@@ -48,7 +48,7 @@ DateField.propTypes = {
 		variable: object.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 	onChange: func,
 	inputValue: string,
 	disabled: bool,

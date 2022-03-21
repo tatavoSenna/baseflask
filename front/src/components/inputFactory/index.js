@@ -24,6 +24,7 @@ import ImageField from '~/components/imageField'
 import PersonField from '~/components/personField'
 import StructuredList from '~/components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
+import AddressField from '~/components/addressField'
 
 import { Divider } from 'antd'
 import { useDispatch } from 'react-redux'
@@ -55,6 +56,8 @@ function InputFactory({
 
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, conditional, initialValue, variable } = pageFieldsData[i]
+		const isVisible = visible[i] ? styles['default-style'] : styles.hidden
+
 		const defaultValue = () => {
 			if (initialValues) {
 				if (variable.hasOwnProperty('name')) {
@@ -90,7 +93,7 @@ function InputFactory({
 					<RadioField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -102,7 +105,7 @@ function InputFactory({
 					<CnpjField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -115,7 +118,7 @@ function InputFactory({
 					<CpfField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -128,7 +131,7 @@ function InputFactory({
 					<EmailField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -141,7 +144,7 @@ function InputFactory({
 					<CurrencyField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -153,7 +156,7 @@ function InputFactory({
 					<DropdownField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -165,7 +168,7 @@ function InputFactory({
 					<DateField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -177,7 +180,7 @@ function InputFactory({
 					<TimeField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -189,7 +192,7 @@ function InputFactory({
 					<StateField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -201,7 +204,7 @@ function InputFactory({
 					<CheckboxField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -213,7 +216,7 @@ function InputFactory({
 					<CnaeField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -225,7 +228,7 @@ function InputFactory({
 					<CityField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -237,7 +240,7 @@ function InputFactory({
 					<SliderField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -249,7 +252,7 @@ function InputFactory({
 					<NumberField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -261,7 +264,7 @@ function InputFactory({
 					<PercentageField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -273,7 +276,7 @@ function InputFactory({
 					<BankField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange()}
@@ -286,7 +289,7 @@ function InputFactory({
 					<FileField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 					/>
 				)
 				break
@@ -295,7 +298,7 @@ function InputFactory({
 					<TextAreaField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}
@@ -307,7 +310,7 @@ function InputFactory({
 					<ImageField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						onChange={onchange()}
 					/>
 				)
@@ -317,9 +320,26 @@ function InputFactory({
 					<PersonField
 						key={i}
 						pageIndex={currentFormStep}
-						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
+						disabled={disabled}
+						inputValue={defaultValue()}
+						fieldIndex={i}
+						onChange={onchange((e) => e.target.value)}
+					/>
+				)
+				break
+			case 'address':
+				children.push(
+					<AddressField
+						key={i}
+						pageIndex={currentFormStep}
+						pageFieldsData={pageFieldsData[i]}
+						className={isVisible}
+						disabled={disabled}
+						inputValue={defaultValue()}
+						fieldIndex={i}
+						onChange={onchange((e) => e.target.value)}
 					/>
 				)
 				break
@@ -330,7 +350,7 @@ function InputFactory({
 						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 					/>
 				)
 				break
@@ -341,7 +361,7 @@ function InputFactory({
 						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						onChange={onchange((e) => e.target.value)}
 					/>
 				)
@@ -358,7 +378,7 @@ function InputFactory({
 					<TextField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
-						className={visible[i] ? undefined : styles.hidden}
+						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
 						onChange={onchange((e) => e.target.value)}

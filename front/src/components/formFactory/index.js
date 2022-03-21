@@ -9,14 +9,6 @@ import { createContractExternal } from '~/states/modules/externalContract'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
 
-const layout = {
-	labelCol: {
-		xs: { span: 24 },
-		md: { span: 20 },
-		xl: { span: 16 },
-	},
-}
-
 const FormFactory = ({ token, initialValues = {} }) => {
 	const dispatch = useDispatch()
 
@@ -55,78 +47,73 @@ const FormFactory = ({ token, initialValues = {} }) => {
 	}
 
 	return (
-		<div className={styles['grid-container']}>
-			<div className={styles['grid-col']}>
+		<div className={styles['flex-container']}>
+			{pageFieldsData && pageFieldsData.fields.length > 0 && (
+				<PageHeader className={styles.title}>{pageFieldsData.title}</PageHeader>
+			)}
+			<Form
+				style={{ width: '100%' }}
+				form={form}
+				layout="vertical"
+				hideRequiredMark
+				onFinish={onSubmit}
+				className={styles['form-container']}>
 				{pageFieldsData && pageFieldsData.fields.length > 0 && (
-					<PageHeader className={styles.title}>
-						{pageFieldsData.title}
-					</PageHeader>
+					<div className={styles['form']}>
+						<InputFactory
+							data={pageFieldsData.fields}
+							visible={visible[currentPage]}
+							form={form}
+							initialValues={initialValues}
+							currentFormStep={currentPage}
+						/>
+					</div>
 				)}
-				<Form
-					{...layout}
-					style={{ width: '100%' }}
-					form={form}
-					layout="vertical"
-					hideRequiredMark
-					onFinish={onSubmit}
-					className={styles['form']}>
-					{pageFieldsData && pageFieldsData.fields.length > 0 && (
-						<div className={styles['inputs']}>
-							<InputFactory
-								data={pageFieldsData.fields}
-								visible={visible[currentPage]}
-								form={form}
-								initialValues={initialValues}
-								currentFormStep={currentPage}
-							/>
-						</div>
-					)}
 
-					{pageFieldsData && pageFieldsData.fields.length > 0 && (
-						<div className={styles['grid-row-buttons']}>
-							<Form.Item className={styles['button-cancel']}>
-								{true && currentPage > 0 ? (
-									<Button
-										block
-										type="default"
-										htmlType="button"
-										className={styles.button}
-										onClick={onPrevious}>
-										Anterior
-									</Button>
-								) : (
-									<Button
-										block
-										type="default"
-										htmlType="button"
-										className={styles.button}
-										onClick={() => {
-											handleGoTo('/')
-										}}>
-										Cancelar
-									</Button>
-								)}
-							</Form.Item>
-
-							{lastPage > 1 && (
-								<Typography className={styles['text']}>
-									{currentPage + 1} de {lastPage}
-								</Typography>
-							)}
-
-							<Form.Item className={styles['button-submit']}>
+				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+					<div className={styles['flex-row-buttons']}>
+						<Form.Item>
+							{true && currentPage > 0 ? (
 								<Button
 									block
-									type="primary"
+									type="default"
+									htmlType="button"
 									className={styles.button}
-									htmlType="submit">
-									{isLastPage ? 'Enviar' : 'Próximo'}
+									onClick={onPrevious}>
+									Anterior
 								</Button>
-							</Form.Item>
-						</div>
-					)}
-				</Form>
-			</div>
+							) : (
+								<Button
+									block
+									type="default"
+									htmlType="button"
+									className={styles.button}
+									onClick={() => {
+										handleGoTo('/')
+									}}>
+									Cancelar
+								</Button>
+							)}
+						</Form.Item>
+
+						{lastPage > 1 && (
+							<Typography className={styles.text}>
+								{currentPage + 1} de {lastPage}
+							</Typography>
+						)}
+
+						<Form.Item>
+							<Button
+								block
+								type="primary"
+								className={styles.button}
+								htmlType="submit">
+								{isLastPage ? 'Enviar' : 'Próximo'}
+							</Button>
+						</Form.Item>
+					</div>
+				)}
+			</Form>
 		</div>
 	)
 }

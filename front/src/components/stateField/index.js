@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getStateField } from '~/states/modules/stateField'
 import { useDispatch, useSelector } from 'react-redux'
@@ -66,7 +66,7 @@ StateField.propTypes = {
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 	onChange: func,
 	inputValue: string,
 	disabled: bool,

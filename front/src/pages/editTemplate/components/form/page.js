@@ -35,6 +35,7 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
 			<Menu.Item key="person">Pessoa</Menu.Item>
+			<Menu.Item key="address">Endereço</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
 			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
 			<Menu.Item key="separator">Separador</Menu.Item>
@@ -91,9 +92,41 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				newField.variable.width = 8.0
 				break
 			case 'person':
-				newField.variable.type = 'template'
-				newField.fields = []
-				newField.person_type = ''
+				newField.variable.type = 'person'
+				newField.label = 'Autor'
+				newField.info = 'Parte autora'
+				newField.person_type = ['legal_person', 'natural_person']
+				newField.fields = [
+					'cpf',
+					'pronoun',
+					'name',
+					'cnpj',
+					'society_name',
+					'country',
+					'cep',
+					'number',
+					'street',
+					'complement',
+					'city',
+					'state',
+				]
+				newField.variable.doc_display_style = 'plain'
+				newField.variable.row_template = ''
+				break
+			case 'address':
+				newField.variable.type = 'address'
+				newField.label = 'Endereço'
+				newField.fields = [
+					'country',
+					'cep',
+					'number',
+					'street',
+					'complement',
+					'city',
+					'state',
+				]
+				newField.variable.doc_display_style = 'plain'
+				newField.variable.row_template = ''
 				break
 			case 'structured_list':
 				newField.variable.type = type

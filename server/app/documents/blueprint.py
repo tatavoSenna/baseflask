@@ -67,11 +67,15 @@ from .controllers import (
     change_variables_controller,
     create_folder_controller,
     edit_document_workflow_controller,
+    transform_variables,
 )
 
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
-from app.documents.formatters.variables_formatter import format_variables
+from app.documents.formatters.variables_formatter import (
+    format_variables,
+    create_text_variable,
+)
 
 documents_bp = Blueprint("documents", __name__)
 
@@ -624,8 +628,9 @@ def modify_document(current_user, document_id):
         abort(404, "Document not Found")
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
-
     spec_variables = copy.deepcopy(variables)
+    spec_variables = create_text_variable(variables)
+    spec_variables = transform_variables(variables)
     try:
         format_variables(spec_variables, document.document_template_id)
     except Exception as e:

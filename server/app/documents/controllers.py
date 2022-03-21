@@ -35,7 +35,11 @@ from app import jinja_env
 import convertapi
 import sys, traceback
 
-from app.documents.formatters.variables_formatter import format_variables
+from app.documents.formatters.variables_formatter import (
+    format_variables,
+    transform_variables,
+    create_text_variable,
+)
 
 
 def get_document_template_list_controller(company_id):
@@ -75,7 +79,9 @@ def create_document_controller(
     # Transforms received variables into specified variables with the current date
     current_date_dict = get_current_date_dict()
     variables = copy.deepcopy(received_variables)
-    format_variables(variables, document_template_id)
+    variables = create_text_variable(variables)
+    variables = transform_variables(variables)
+    variables = format_variables(variables, document_template_id)
     variables.update(current_date_dict)
     received_variables.update(current_date_dict)
 
@@ -155,7 +161,6 @@ def create_document_controller(
                 document_template, company_id
             )
             filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
-
             convert_docx_to_pdf_and_save(document, filled_docx_io)
             remote_document.upload_filled_docx_to_documents(
                 document, filled_docx_io, document_template.text_type

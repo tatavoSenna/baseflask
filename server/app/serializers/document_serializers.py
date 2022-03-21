@@ -183,7 +183,6 @@ def map_variables_to_form(variables, form):
 
         question_index = 0
         for question in group["fields"]:
-
             if question["type"] == "separator":
                 filled_form[-1]["fields"].append(
                     {
@@ -305,10 +304,7 @@ def map_variables_to_form(variables, form):
                     variables_obj["items"].append(item_list)
 
                 filled_form[-1]["fields"].append(variables_obj)
-            elif (
-                question["type"] == "person"
-                and variables[f"person_{group_index}_{question_index}"] in variables
-            ):
+            elif question["type"] == "person":
                 variables_obj = {
                     "subtitle": question["label"],
                     "items": [],
@@ -383,6 +379,26 @@ def map_variables_to_form(variables, form):
                         "type": question["type"],
                     }
                 )
+            elif question["type"] == "address":
+                variables_obj = {
+                    "subtitle": question["label"],
+                    "items": [],
+                    "type": question["type"],
+                    "struct_name": f"address_{group_index}_{question_index}",
+                }
+
+                for variable_name, value in variables[
+                    f"address_{group_index}_{question_index}"
+                ].items():
+                    label = variable_name.capitalize()
+                    variables_obj["items"].append(
+                        {
+                            "field_type": variable_name.lower(),
+                            "value": value,
+                            "label": label,
+                        }
+                    )
+                filled_form[-1]["fields"].append(variables_obj)
 
             question_index += 1
 

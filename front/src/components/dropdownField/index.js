@@ -50,7 +50,7 @@ DropdownField.propTypes = {
 		options: array.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
