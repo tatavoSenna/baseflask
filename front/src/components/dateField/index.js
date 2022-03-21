@@ -30,7 +30,7 @@ const DateField = ({
 			rules={
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
-			initialValue={inputValue !== '' ? moment(inputValue) : ''}
+			initialValue={inputValue !== '' ? moment(inputValue, 'DD-MM-YYYY') : ''}
 			colon={false}>
 			<DatePicker
 				format={'DD-MM-YYYY'}

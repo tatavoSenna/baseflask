@@ -12,6 +12,7 @@ import JSONField from './fields/jsonField'
 import { TextField } from './fields/textField'
 import { NumberField } from './fields/numberField'
 import { CurrencyField } from './fields/currencyField'
+import { DateField } from './fields/dateField'
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
@@ -273,6 +274,17 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					} else if (field?.type === 'number') {
 						return (
 							<NumberField
+								key={key}
+								data={field}
+								variables={variables}
+								pageIndex={pageIndex}
+								fieldIndex={fieldIndex}
+								updateFormInfo={updateFormInfo}
+							/>
+						)
+					} else if (field?.type === 'date') {
+						return (
+							<DateField
 								key={key}
 								data={field}
 								variables={variables}
