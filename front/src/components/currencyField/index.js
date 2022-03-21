@@ -2,8 +2,7 @@ import React from 'react'
 import { string, shape, object, func, number, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
-
-const locale = 'pt-br'
+import { currencyFormatter, currencyParser } from './currencyUtils'
 
 const CurrencyField = ({
 	pageFieldsData,
@@ -21,45 +20,7 @@ const CurrencyField = ({
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
 
-	const currencyFormatter = (selectedCurrOpt) => (value) => {
-		return new Intl.NumberFormat(locale, {
-			style: 'currency',
-			currency: selectedCurrOpt.split('::')[1],
-		}).format(value)
-	}
-
-	const currencyParser = (val) => {
-		try {
-			// for when the input gets clears
-			if (typeof val === 'string' && !val.length) {
-				val = '0.0'
-			}
-
-			// detecting and parsing between comma and dot
-			var group = new Intl.NumberFormat(locale).format(1111).replace(/1/g, '')
-			var decimal = new Intl.NumberFormat(locale).format(1.1).replace(/1/g, '')
-			var reversedVal = val.replace(new RegExp('\\' + group, 'g'), '')
-			reversedVal = reversedVal.replace(new RegExp('\\' + decimal, 'g'), '.')
-			//  => 1232.21 €
-
-			// removing everything except the digits and dot
-			reversedVal = reversedVal.replace(/[^0-9.]/g, '')
-			//  => 1232.21
-
-			// appending digits properly
-			const digitsAfterDecimalCount = (reversedVal.split('.')[1] || []).length
-			const needsDigitsAppended = digitsAfterDecimalCount > 2
-
-			if (needsDigitsAppended) {
-				reversedVal = reversedVal * Math.pow(10, digitsAfterDecimalCount - 2)
-			}
-
-			return Number.isNaN(reversedVal) ? 0 : reversedVal
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
+	const locale = 'pt-br'
 	const currency = 'BRAZIL::BRL'
 
 	return (
@@ -90,8 +51,8 @@ const CurrencyField = ({
 			<InputNumber
 				min={0}
 				placeholder=""
-				formatter={currencyFormatter(currency)}
-				parser={currencyParser}
+				formatter={currencyFormatter(currency, locale)}
+				parser={currencyParser(locale)}
 				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
 				disabled={disabled}
 				onChange={onChange}

@@ -3,8 +3,7 @@ import { object, func, number } from 'prop-types'
 import JSONInput from 'react-json-editor-ajrm'
 import locale from 'react-json-editor-ajrm/locale/pt'
 import { Field } from './fieldBase'
-import { FormItem } from './styles'
-import styled from 'styled-components'
+import { FormItem, TextIcon } from './styles'
 
 const JSONField = (props) => {
 	const { data, pageIndex, fieldIndex, updateFormInfo } = props
@@ -19,7 +18,7 @@ const JSONField = (props) => {
 		<Field
 			{...props}
 			type={data.type || 'JSON'}
-			icon={<Icon $error={error || !valid}>{'{}'}</Icon>}
+			icon={<TextIcon $error={error || !valid}>{'{}'}</TextIcon>}
 			variableItems={false}
 			showConditions={false}
 			displayStyles={[]}
@@ -72,12 +71,3 @@ JSONField.propTypes = {
 	fieldIndex: number,
 	updateFormInfo: func,
 }
-
-const Icon = styled.h1`
-	user-select: none;
-	font-size: 24px;
-	font-family: monospace;
-	font-weight: bold;
-	margin: -12px 0px -10px 0px;
-	color: ${(props) => (props.$error ? '#ff4d4f' : '#52c41a')};
-`
