@@ -24,6 +24,7 @@ const initialState = {
 			{
 				title: '',
 				fields: [],
+				ids: [],
 			},
 		],
 		workflow: {

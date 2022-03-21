@@ -266,7 +266,7 @@ const EditTemplate = () => {
 							layout="horizontal"
 							hideRequiredMark
 							onFinish={onSubmit}>
-							{current === 'form' && <TemplateForm data={data.form} />}
+							{current === 'form' && <TemplateForm data={data} />}
 							{current === 'workflow' && <Workflow form={form} />}
 							{current === 'text' && (
 								<Text

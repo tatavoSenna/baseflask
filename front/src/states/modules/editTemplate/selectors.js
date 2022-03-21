@@ -1,6 +1,7 @@
 import { extend } from 'lodash'
 import update from 'immutability-helper'
 import { successMessage } from '~/services/messager'
+import { v4 as uuidv4 } from 'uuid'
 
 const formatWorkflowNodes = (workflowNodes) => {
 	const workflowNodesList = []
@@ -29,8 +30,10 @@ export const selectEdit = (data, payload) => {
 		partiesList.push(party)
 	}
 
+	let form = payload.form
+
 	const pagesList = []
-	payload.form.forEach((page) => {
+	form.forEach((page) => {
 		const pageList = []
 		page.fields.forEach((field) => {
 			if (field?.structure) {
@@ -56,9 +59,13 @@ export const selectEdit = (data, payload) => {
 		pagesList.push(pageList)
 	})
 
+	form.forEach((page) => {
+		page.ids = page.fields.map(() => uuidv4())
+	})
+
 	const temp = extend(data, {
 		title: payload.name,
-		form: payload.form,
+		form: form,
 		text: payload.textfile,
 		workflow: extend(payload.workflow, {
 			nodes: formatWorkflowNodes(payload.workflow.nodes),
@@ -94,6 +101,7 @@ export const addField = (form, payload) => {
 		if (index === payload.pageIndex) {
 			return extend(page, {
 				fields: [...page.fields, payload.newField],
+				ids: [...page.ids, uuidv4()],
 			})
 		}
 		return page
@@ -107,6 +115,7 @@ export const removeField = (form, payload) => {
 				fields: page.fields.filter(
 					(field, index) => index !== payload.fieldIndex
 				),
+				ids: page.ids.filter((field, index) => index !== payload.fieldIndex),
 			})
 		}
 		return page
@@ -320,19 +329,28 @@ export const selectVariable = (variables, payload) => {
 }
 
 export const move = (data, payload) => {
+	const moveArrayItem = (array, from, to) => {
+		let tmpList = [...array]
+		const item = array[from]
+		tmpList.splice(from, 1)
+		tmpList.splice(to, 0, item)
+		return tmpList
+	}
 	switch (payload.name) {
 		case 'form':
 			return extend(data, {
 				form: data.form.map((page, index) => {
 					if (index === payload.listIndex) {
-						let tmpList = page.fields
-						const dragged = tmpList[payload.from]
-						tmpList.splice(payload.from, 1)
-						tmpList.splice(payload.to, 0, dragged)
-
 						return extend(page, {
-							fields: tmpList,
+							fields: moveArrayItem(page.fields, payload.from, payload.to),
+							ids: moveArrayItem(page.ids, payload.from, payload.to),
 						})
+					}
+					return page
+				}),
+				variables: data.variables.map((page, index) => {
+					if (index === payload.listIndex) {
+						return moveArrayItem(page, payload.from, payload.to)
 					}
 					return page
 				}),

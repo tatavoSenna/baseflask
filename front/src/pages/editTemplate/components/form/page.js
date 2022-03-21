@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { object, number, func } from 'prop-types'
+import { object, array, number, func } from 'prop-types'
 import { Card, Form, Input, Button, Dropdown, Menu, Empty } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import Delete from '~/components/deleteConfirm'
@@ -9,8 +9,9 @@ import {
 	editTemplateFormInfo,
 } from '~/states/modules/editTemplate'
 import JSONField from './fields/jsonField'
+import TextField from './fields/textField'
 
-const Page = ({ pageIndex, data, handleRemovePage }) => {
+const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
 
 	const fieldTypes = (
@@ -242,22 +243,31 @@ const Page = ({ pageIndex, data, handleRemovePage }) => {
 				<Empty description="Sem Campos" style={{ marginBottom: '1rem' }} />
 			) : (
 				data.fields.map((field, fieldIndex) => {
-					let key =
-						typeof field !== 'undefined'
-							? `${field?.label ?? ''}_${field?.type ?? ''}_${
-									field?.variable?.name ?? ''
-							  }`
-							: fieldIndex
+					let key = data.ids[fieldIndex]
 
-					return (
-						<JSONField
-							key={key}
-							data={field}
-							pageIndex={pageIndex}
-							fieldIndex={fieldIndex}
-							updateFormInfo={updateFormInfo}
-						/>
-					)
+					if (field?.type === 'text') {
+						return (
+							<TextField
+								key={key}
+								data={field}
+								variables={variables}
+								pageIndex={pageIndex}
+								fieldIndex={fieldIndex}
+								updateFormInfo={updateFormInfo}
+							/>
+						)
+					} else {
+						return (
+							<JSONField
+								key={key}
+								data={field}
+								variables={variables}
+								pageIndex={pageIndex}
+								fieldIndex={fieldIndex}
+								updateFormInfo={updateFormInfo}
+							/>
+						)
+					}
 				})
 			)}
 			<Dropdown overlay={fieldTypes} trigger="click">
@@ -280,6 +290,7 @@ export default Page
 
 Page.propTypes = {
 	data: object,
+	variables: array,
 	pageIndex: number,
 	handleRemovePage: func,
 }

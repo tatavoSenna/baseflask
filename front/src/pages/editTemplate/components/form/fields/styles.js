@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Form, Typography, Collapse, Divider } from 'antd'
+import { Form, Typography, Collapse, Divider, Select } from 'antd'
 
 export const Title = styled(Typography.Title)`
 	&& {
@@ -38,5 +38,11 @@ export const FormItem = styled(Form.Item)`
 
 	.ant-form-item-label {
 		width: ${(props) => props.$labelWidth};
+	}
+`
+
+export const ValidatedSelect = styled(Select)`
+	&& .ant-select-selector {
+		${(props) => (props.$error ? 'border-color: #ff4d4f' : '')}
 	}
 `
