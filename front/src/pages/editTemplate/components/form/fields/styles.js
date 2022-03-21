@@ -19,7 +19,7 @@ export const Panel = styled(Collapse.Panel)`
 	}
 
 	&&& .ant-collapse-content-box {
-		padding-top: 0;
+		padding: 0px 32px 12px;
 	}
 `
 
@@ -36,8 +36,11 @@ export const ThinDivider = styled(Divider)`
 export const FormItem = styled(Form.Item)`
 	margin-bottom: 4px;
 
+	width: ${({ $width = '100%' }) => $width};
+
 	.ant-form-item-label {
-		width: ${(props) => props.$labelWidth};
+		width: ${({ $labelWidth = '94px' }) => $labelWidth};
+		text-align: left;
 	}
 `
 
@@ -48,9 +51,17 @@ export const ValidatedSelect = styled(Select)`
 `
 
 export const TextIcon = styled.h1`
+	width: 24px;
+	text-align: center;
 	user-select: none;
 	font-size: 24px;
 	font-family: monospace;
 	margin: -12px 0px -10px 0px;
+	color: ${(props) => (props.$error ? '#ff4d4f' : '#52c41a')};
+`
+
+export const styleIconValidation = (component) => styled(component)`
+	user-select: none;
+	font-size: 24px;
 	color: ${(props) => (props.$error ? '#ff4d4f' : '#52c41a')};
 `

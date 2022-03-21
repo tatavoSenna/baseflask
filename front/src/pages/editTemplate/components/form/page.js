@@ -9,7 +9,8 @@ import {
 	editTemplateFormInfo,
 } from '~/states/modules/editTemplate'
 import JSONField from './fields/jsonField'
-import TextField from './fields/textField'
+import { TextField } from './fields/textField'
+import { NumberField } from './fields/numberField'
 import { CurrencyField } from './fields/currencyField'
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
@@ -261,6 +262,17 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					} else if (field?.type === 'currency') {
 						return (
 							<CurrencyField
+								key={key}
+								data={field}
+								variables={variables}
+								pageIndex={pageIndex}
+								fieldIndex={fieldIndex}
+								updateFormInfo={updateFormInfo}
+							/>
+						)
+					} else if (field?.type === 'number') {
+						return (
+							<NumberField
 								key={key}
 								data={field}
 								variables={variables}

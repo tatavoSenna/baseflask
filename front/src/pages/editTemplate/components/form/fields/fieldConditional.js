@@ -4,22 +4,13 @@ import { Form, Input, Select, Button, AutoComplete, Switch } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useUpdate } from './fieldBase'
 import { FormItem } from './styles'
+import { TextInput } from './textField'
+import { NumberInput } from './numberField'
 import { CurrencyInput } from './currencyField'
-
-const TextInput = ({ onBlur, ...props }) => (
-	<Input
-		{...props}
-		placeholder="Valor"
-		onBlur={(e) => onBlur(e.target.value)}
-	/>
-)
-
-TextInput.propTypes = {
-	onBlur: func,
-}
 
 const conditionalInputs = {
 	string: TextInput,
+	number: NumberInput,
 	currency: CurrencyInput,
 }
 
@@ -31,7 +22,7 @@ const FieldConditional = ({
 	updateFormInfo,
 }) => {
 	const variableNames = variables
-		.filter((x) => Object.keys(conditionalInputs).includes(x.type))
+		.filter((x) => x && Object.keys(conditionalInputs).includes(x.type))
 		.map((x) => x?.name)
 
 	const variableOptions = variableNames
@@ -68,7 +59,7 @@ const FieldConditional = ({
 
 	return (
 		<div>
-			<FormItem label="Condicional" $labelWidth={'91%'}>
+			<FormItem label="Condicional">
 				<Switch
 					defaultChecked={data.conditional}
 					onChange={(e) => update({ conditional: e })}
@@ -100,7 +91,7 @@ const FieldConditional = ({
 
 						<Select
 							placeholder=""
-							style={{ width: '11%', textAlign: 'center' }}
+							style={{ width: '12%', textAlign: 'center' }}
 							defaultValue={condition?.operator}
 							onChange={(v) => updateCondition('operator', v, i)}>
 							<Select.Option value="=">=</Select.Option>
@@ -112,15 +103,16 @@ const FieldConditional = ({
 
 						{(() => {
 							let conditionType = variables.find(
-								(x) => x.name === condition?.variable
+								(x) => x && x.name === condition?.variable
 							)?.type
 
 							conditionType =
 								conditionType in conditionalInputs ? conditionType : 'string'
 
 							return conditionalInputs[conditionType]({
-								style: { width: '45%' },
+								style: { width: '44%' },
 								defaultValue: condition.value,
+								placeholder: 'Valor',
 								onBlur: (v) => updateCondition('value', v, i),
 							})
 						})()}
@@ -128,7 +120,7 @@ const FieldConditional = ({
 
 					<MinusCircleOutlined
 						onClick={() => removeCondition(i)}
-						style={{ padding: '0 0 0 10px' }}
+						style={{ padding: '0 10px' }}
 					/>
 				</div>
 			))}

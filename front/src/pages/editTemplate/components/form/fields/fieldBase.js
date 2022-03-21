@@ -82,6 +82,7 @@ const Field = ({
 									borderColor: validVariableName ? null : '#ff4d4f',
 								}}
 								onBlur={(e) => updateVariable('name', e.target.value)}
+								autoComplete="chrome-off"
 							/>
 							<ValidatedSelect
 								placeholder="Display Style"
