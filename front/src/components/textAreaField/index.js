@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
 import InfoField from '~/components/infoField'
 
@@ -52,7 +52,7 @@ TextAreaField.propTypes = {
 		info: string,
 	}).isRequired,
 	inputValue: string,
-	className: object,
+	className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 	onChange: func,
 	first: bool,
 	disabled: bool,

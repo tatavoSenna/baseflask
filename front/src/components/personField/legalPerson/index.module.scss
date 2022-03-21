@@ -1,0 +1,44 @@
+.cnpj {
+	order: 0;
+	flex: 1 0 100%;
+}
+
+.society-name {
+	order: 1;
+	flex: 1 0 100%;
+}
+
+.country {
+	order: 3;
+	flex: 0 238px;
+}
+
+.cep {
+	order: 3;
+	flex: 1;
+}
+
+.number {
+	order: 3;
+	flex: 1;
+}
+
+.street {
+	order: 4;
+	flex: 1 0 100%;
+}
+
+.complement {
+	order: 5;
+	flex: 1 0 100%;
+}
+
+.city {
+	order: 6;
+	flex: 1;
+}
+
+.state {
+	order: 6;
+	flex: 1;
+}

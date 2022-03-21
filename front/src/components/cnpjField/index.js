@@ -64,7 +64,7 @@ CnpjField.propTypes = {
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	first: bool,
 	inputValue: string,

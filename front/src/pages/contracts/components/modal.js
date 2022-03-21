@@ -97,7 +97,6 @@ const ContractModal = ({
 					<AutoComplete
 						options={options}
 						placeholder="Selecione o modelo"
-						//style={{ width: '100%' }}
 						onSelect={(value, item) => setModelId(item.id)}
 						onSearch={onSearch}
 						style={{ width: '90%' }}
@@ -121,15 +120,17 @@ const ContractModal = ({
 							message: 'Número inválido!',
 						},
 					]}>
-					<InputNumber
-						autoFocus
-						value={maxUses}
-						min={0}
-						onChange={(e) => setUses(e)}
-					/>
-					<Tooltip placement="top" title="Selecione 0 para a url não expirar">
-						<QuestionCircleFilled style={{ marginLeft: '7px' }} />
-					</Tooltip>
+					<>
+						<InputNumber
+							autoFocus
+							value={maxUses}
+							min={0}
+							onChange={(e) => setUses(e)}
+						/>
+						<Tooltip placement="top" title="Selecione 0 para a url não expirar">
+							<QuestionCircleFilled style={{ marginLeft: '7px' }} />
+						</Tooltip>
+					</>
 				</StyledItemForm>
 
 				<NewDivider />

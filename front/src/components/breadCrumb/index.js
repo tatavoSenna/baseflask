@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, object } from 'prop-types'
+import { string, node } from 'prop-types'
 import { Breadcrumb } from 'antd'
 
 function BreadCrumb({ current, parent }) {
@@ -13,7 +13,7 @@ function BreadCrumb({ current, parent }) {
 }
 
 BreadCrumb.propTypes = {
-	current: object.isRequired,
+	current: node.isRequired,
 	parent: string,
 }
 
