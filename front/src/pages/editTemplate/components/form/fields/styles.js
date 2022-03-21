@@ -34,7 +34,7 @@ export const ThinDivider = styled(Divider)`
 `
 
 export const FormItem = styled(Form.Item)`
-	margin-bottom: 8px;
+	margin-bottom: 4px;
 
 	.ant-form-item-label {
 		width: ${(props) => props.$labelWidth};
@@ -45,4 +45,12 @@ export const ValidatedSelect = styled(Select)`
 	&& .ant-select-selector {
 		${(props) => (props.$error ? 'border-color: #ff4d4f' : '')}
 	}
+`
+
+export const TextIcon = styled.h1`
+	user-select: none;
+	font-size: 24px;
+	font-family: monospace;
+	margin: -12px 0px -10px 0px;
+	color: ${(props) => (props.$error ? '#ff4d4f' : '#52c41a')};
 `

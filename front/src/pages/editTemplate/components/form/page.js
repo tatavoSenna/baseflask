@@ -10,6 +10,7 @@ import {
 } from '~/states/modules/editTemplate'
 import JSONField from './fields/jsonField'
 import TextField from './fields/textField'
+import CurrencyField from './fields/currencyField'
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
@@ -72,6 +73,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.doc_display_style = 'commas | bullets'
 				break
 			case 'currency':
+				newField.initialValue = 0
 				newField.variable.type = 'currency'
 				newField.variable.doc_display_style = 'plain | extended'
 				break
@@ -248,6 +250,17 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					if (field?.type === 'text') {
 						return (
 							<TextField
+								key={key}
+								data={field}
+								variables={variables}
+								pageIndex={pageIndex}
+								fieldIndex={fieldIndex}
+								updateFormInfo={updateFormInfo}
+							/>
+						)
+					} else if (field?.type === 'currency') {
+						return (
+							<CurrencyField
 								key={key}
 								data={field}
 								variables={variables}
