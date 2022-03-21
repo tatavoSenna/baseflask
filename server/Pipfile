@@ -41,6 +41,7 @@ num2words = "==0.5.10"
 Babel= "==2.9.0"
 pillow = "*"
 sentry-sdk = {extras = ["flask"], version = "*"}
+stripe = "*"
 
 [requires]
 python_version = "3.8"

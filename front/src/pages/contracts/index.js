@@ -7,6 +7,7 @@ import ContractModal from './components/modal'
 import FolderModal from './components/modalFolder'
 import MoveFolderModal from './components/moveFolder'
 import LinkModal from './components/modalLink'
+import StripeModal from './components/modalStripe'
 import { getColumns } from './columns'
 import { listModel } from '~/states/modules/model'
 import {
@@ -16,7 +17,9 @@ import {
 	createLink,
 	setShowModal,
 	setShowLinkModal,
+	setShowStripeModal,
 } from '~/states/modules/contract'
+import { getCompanyInfo } from '~/states/modules/companies'
 import { listQuestion } from '~/states/modules/question'
 
 import {
@@ -46,6 +49,7 @@ const Contracts = () => {
 		pages,
 		showModal,
 		showLinkModal,
+		showStripeModal,
 		link,
 		parent,
 		order,
@@ -59,9 +63,17 @@ const Contracts = () => {
 		moveFolderModal,
 	} = useSelector(({ folder }) => folder)
 
+	const { companyInfo } = useSelector(({ companies }) => companies)
+
 	const { data: models } = useSelector(({ model }) => model)
 
-	const { is_admin } = useSelector(({ session }) => session)
+	const { is_admin, company_id, is_financial } = useSelector(
+		({ session }) => session
+	)
+
+	useEffect(() => {
+		dispatch(getCompanyInfo({ id: company_id }))
+	}, [dispatch, company_id])
 
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
@@ -124,6 +136,21 @@ const Contracts = () => {
 
 	const handleCancelLinkModal = () => {
 		dispatch(setShowLinkModal(false))
+	}
+
+	const handleCancelStripeModal = () => {
+		dispatch(setShowStripeModal(false))
+	}
+
+	const handleChooseModal = () => {
+		companyInfo['remainingDocuments'] > 0
+			? handleShowModal()
+			: dispatch(setShowStripeModal(true))
+	}
+
+	function handleGoTo(path) {
+		dispatch(setShowStripeModal(false))
+		return history.push(path)
 	}
 
 	const handleMoveFolderModal = (value) => {
@@ -276,6 +303,17 @@ const Contracts = () => {
 						showModal={showLinkModal}
 						link={link}
 					/>
+					<StripeModal
+						handleCancel={handleCancelStripeModal}
+						showModal={showStripeModal}
+						handleConfirm={handleGoTo}
+						isFinancial={is_financial}
+						modalText={
+							is_financial
+								? 'Se deseja criar um novo documento, por favor faça o upgrade de seu plano.'
+								: 'Se deseja criar um novo documento, por favor peça para o responsável financeiro de sua empresa fazer o upgrade de seu plano.'
+						}
+					/>
 					<DataTable
 						columns={getColumns(
 							handleToGo,
@@ -290,7 +328,7 @@ const Contracts = () => {
 						pages={pages}
 						onChangePageNumber={getContracts}
 						onSearch={handleSearch}
-						onClickButton={handleShowModal}
+						onClickButton={handleChooseModal}
 						textButton="Novo Documento"
 						placeholderSearch="Buscar Documento"
 						placeholderNoData={!loading ? 'Nenhum documento encontrado' : ''}

@@ -4,5 +4,6 @@ export const selectAllCompanies = (payload) =>
 			id: company.id.toString(),
 			key: company.id.toString(),
 			name: company.name,
+			remainingDocuments: company.remaining_documents,
 		}
 	})

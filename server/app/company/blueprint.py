@@ -1,12 +1,17 @@
 from os import abort
 import logging
+from re import sub
 from sqlalchemy import desc
-from flask import request, Blueprint, jsonify, current_app, abort
+from werkzeug.exceptions import BadRequest, Unauthorized
+from flask import request, Blueprint, jsonify, current_app, abort, redirect
 from sqlalchemy.sql.expression import false
-from werkzeug.exceptions import BadRequest
+import stripe
+import os
+from werkzeug.exceptions import BadRequest, NotFound
+from sentry_sdk import capture_exception
 
 from app import aws_auth, db
-from app.users.remote import get_local_user
+from app.users.remote import get_local_user, authenticated_user
 from app.models.company import Company
 from app.models.user import User
 from app.serializers.user_serializers import UserSerializer
@@ -29,6 +34,7 @@ from .controllers import (
 )
 
 company_bp = Blueprint("company", __name__)
+stripe.api_key = os.environ.get("STRIPE_API_SECRET_KEY")
 
 
 @company_bp.route("/docusign", methods=["POST"])
@@ -237,3 +243,158 @@ def edit_webhook(logged_user, webhook_id):
         abort(500, "Could not update webhook. Check if the id provided is correct.")
 
     return jsonify({"webhook": WebhookSerializer().dump(webhook)})
+
+
+# Endpoint missing authentication
+# While there is no authentication, we're using
+# the user's email provided by the frontend
+@company_bp.route("/checkout", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def create_checkout_session(logged_user):
+
+    fields = request.get_json()
+    if not "price_id" in fields:
+        raise BadRequest(description="No price id sent.")
+
+    # Get customer id based on logged user's email.
+    # User should be added to stripe's customer list upon creation,
+    # but if it isn't, add him before creating checkout session
+    if logged_user["is_financial"]:
+        try:
+            company = Company.query.get(logged_user["company_id"])
+            customer = stripe.Customer.list(email=company.stripe_company_email)
+            customer_id = customer.data[0].id
+        except Exception as e:
+            stripe.Customer.create(email=logged_user["email"], name=logged_user["name"])
+            customer = stripe.Customer.list(email=logged_user["email"])
+            customer_id = customer.data[0].id
+    else:
+        raise Unauthorized(
+            description="User is not financially responsible for the company"
+        )
+
+    # Get list of customer's subscriptions to check if there is an active subscription,
+    # if there is, redirect customer to portal instead of checkout
+    subscription_list = stripe.Subscription.list(customer=customer_id, status="active")
+    active_subscription = (
+        subscription_list["data"][0]["id"]
+        if "data" in subscription_list and len(subscription_list["data"]) > 0
+        else None
+    )
+
+    # The customer doesn't have an active subscription
+    if not active_subscription:
+        try:
+            price = stripe.Price.retrieve(
+                fields["price_id"],
+            )
+
+            checkout_session = stripe.checkout.Session.create(
+                line_items=[
+                    {
+                        "price": price["id"],
+                        "quantity": 1,
+                    },
+                ],
+                customer=customer_id,
+                mode="subscription",
+                success_url="https://"
+                + os.environ.get("DOMAIN_URL")
+                + "/settings?session_id={CHECKOUT_SESSION_ID}",
+                cancel_url="https://" + os.environ.get("DOMAIN_URL") + "/settings",
+            )
+            return jsonify({"url": checkout_session.url}), 201
+        except Exception as e:
+            capture_exception(e)
+            return "An error occurred on Stripe.", 400
+    # The customer has an active subscription
+    else:
+        return_url = "https://" + os.environ.get("DOMAIN_URL") + "/settings"
+
+        portal_session = stripe.billing_portal.Session.create(
+            customer=customer_id,
+            return_url=return_url,
+        )
+        return jsonify({"url": portal_session.url}), 201
+
+
+@company_bp.route("/portal", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def customer_portal(logged_user):
+
+    customer = stripe.Customer.list(email=logged_user["email"])
+    try:
+        customer_id = customer.data[0].id
+    except Exception as e:
+        return "No customer on stripe with given email", 403
+
+    return_url = "https://" + os.environ.get("DOMAIN_URL") + "/settings"
+
+    portal_session = stripe.billing_portal.Session.create(
+        customer=customer_id,
+        return_url=return_url,
+    )
+    return jsonify({"url": portal_session.url}), 201
+
+
+@company_bp.route("/stripe_plan", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_user_stripe_plan(logged_user):
+    try:
+        customer = stripe.Customer.list(email=logged_user["email"])
+        customer_id = customer.data[0].id
+    except Exception as e:
+        return (
+            jsonify({"price_id": None, "expires_at": None, "is_canceled": False}),
+            200,
+        )
+
+    subscription_list = stripe.Subscription.list(customer=customer_id, status="active")
+    active_subscription = (
+        subscription_list["data"][0]["id"]
+        if "data" in subscription_list and len(subscription_list["data"]) > 0
+        else None
+    )
+
+    if not active_subscription:
+        return (
+            jsonify({"price_id": None, "expires_at": None, "is_canceled": False}),
+            200,
+        )
+    else:
+        price_id = subscription_list["data"][0]["items"]["data"][0]["price"]["id"]
+        is_canceled = (
+            True if subscription_list["data"][0]["canceled_at"] is not None else False
+        )
+        return (
+            jsonify(
+                {
+                    "price_id": price_id,
+                    "expires_at": subscription_list["data"][0]["current_period_end"],
+                    "is_canceled": is_canceled,
+                }
+            ),
+            200,
+        )
+
+
+@company_bp.route("/info", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_company_info(logged_user):
+    try:
+        company = Company.query.filter_by(id=logged_user["company_id"]).first()
+
+        company_info = {
+            "id": company.id,
+            "name": company.name,
+            "stripe_company_email": company.stripe_company_email,
+            "remaining_documents": company.remaining_documents,
+        }
+
+        return company_info
+    except:
+        raise NotFound(description="Company not found")

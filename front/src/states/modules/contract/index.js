@@ -7,6 +7,7 @@ const initialState = {
 	data: [],
 	showModal: false,
 	showLinkModal: false,
+	showStripeModal: false,
 	link: '',
 	pages: {
 		page: 0,
@@ -115,6 +116,10 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				showLinkModal: payload,
 			}),
+		setShowStripeModal: (state, { payload }) =>
+			extend(state, {
+				showStripeModal: payload,
+			}),
 	},
 })
 
@@ -134,6 +139,7 @@ export const {
 	viewContract,
 	setShowModal,
 	setShowLinkModal,
+	setShowStripeModal,
 } = actions
 
 export { default as contractSaga } from './sagas'

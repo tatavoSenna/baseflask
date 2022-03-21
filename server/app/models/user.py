@@ -19,6 +19,9 @@ class User(db.Model):
     )
     active = db.Column(db.Boolean, default=True, nullable=True)
     verified = db.Column(db.Boolean, default=True, nullable=True)
+    is_financial = db.Column(
+        db.Boolean, default=False, nullable=True, server_default="false"
+    )
 
     # Belongs to
     company = db.relationship("Company", back_populates="users")
