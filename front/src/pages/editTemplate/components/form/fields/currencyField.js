@@ -22,7 +22,7 @@ export const CurrencyField = (props) => {
 			onValidate={setValid}
 			formItems={
 				<div>
-					<FormItem label="Título" $labelWidth={'17%'}>
+					<FormItem label="Título">
 						<Input
 							onBlur={(e) => update({ label: e.target.value })}
 							defaultValue={data.label}
@@ -30,7 +30,7 @@ export const CurrencyField = (props) => {
 						/>
 					</FormItem>
 
-					<FormItem label="Descrição" $labelWidth={'17%'}>
+					<FormItem label="Descrição">
 						<Input
 							onBlur={(e) => update({ info: e.target.value })}
 							defaultValue={data.info}
@@ -38,7 +38,7 @@ export const CurrencyField = (props) => {
 						/>
 					</FormItem>
 
-					<FormItem label="Valor inicial" $labelWidth={'17%'}>
+					<FormItem label="Valor inicial">
 						<CurrencyInput
 							onBlur={(v) => update({ initialValue: v })}
 							defaultValue={data.initialValue}
