@@ -5,12 +5,7 @@ import { CalendarOutlined } from '@ant-design/icons'
 
 import { Field, useUpdate } from './fieldBase'
 import { FormItem, styleIconValidation } from './styles'
-import moment from 'moment'
-
-const validateDate = (s, format = 'DD-MM-YYYY') => {
-	let date = moment(s, format)
-	return date.isValid() ? date : ''
-}
+import { validateDate } from 'utils'
 
 export const DateField = (props) => {
 	const { data } = props

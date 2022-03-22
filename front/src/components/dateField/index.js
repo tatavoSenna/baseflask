@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, DatePicker } from 'antd'
 import InfoField from '~/components/infoField'
-import moment from 'moment'
+import { validateDate } from 'utils'
 
 const DateField = ({
 	pageFieldsData,
@@ -30,7 +30,7 @@ const DateField = ({
 			rules={
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
-			initialValue={inputValue !== '' ? moment(inputValue, 'DD-MM-YYYY') : ''}
+			initialValue={validateDate(inputValue)}
 			colon={false}>
 			<DatePicker
 				format={'DD-MM-YYYY'}
