@@ -7,6 +7,11 @@ import { Field, useUpdate } from './fieldBase'
 import { FormItem, styleIconValidation } from './styles'
 import moment from 'moment'
 
+const validateDate = (s, format = 'DD-MM-YYYY') => {
+	let date = moment(s, format)
+	return date.isValid() ? date : ''
+}
+
 export const DateField = (props) => {
 	const { data } = props
 
@@ -42,11 +47,7 @@ export const DateField = (props) => {
 							placeholder=""
 							format={'DD-MM-YYYY'}
 							onBlur={(e) => update({ initialValue: e.target.value })}
-							defaultValue={
-								data.initialValue !== ''
-									? moment(data.initialValue, 'DD-MM-YYYY')
-									: ''
-							}
+							defaultValue={validateDate(data.initialValue)}
 						/>
 					</FormItem>
 				</div>
