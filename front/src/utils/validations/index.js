@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const validateCPF = (cpf) => {
 	cpf = cpf.replace(/[^\d]+/g, '')
 	if (
@@ -82,4 +84,9 @@ export const validateTime = (time) => {
 	if (time.substring(0, 2) > '24') return false
 	if (time.substring(3, 5) > '59') return false
 	return true
+}
+
+export const validateDate = (s, format = 'DD-MM-YYYY') => {
+	let date = moment(s, format)
+	return date.isValid() ? date : ''
 }
