@@ -89,7 +89,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 									htmlType="button"
 									className={styles.button}
 									onClick={() => {
-										handleGoTo('/')
+										token ? handleGoTo('/') : handleGoTo('/documents')
 									}}>
 									Cancelar
 								</Button>
