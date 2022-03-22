@@ -122,9 +122,11 @@ def assign_company_to_new_user_controller(logged_user, company_id):
         stripe.Customer.create(email=local_user.email, name=local_user.name)
         customer = stripe.Customer.list(email=local_user.email)
         customer_id = customer.data[0]["id"]
-        stripe.Subscription.create(
-            customer=customer_id, items=[{"price": "price_1KP85XHIZcJ4D4nayv0Sx6dc"}]
-        )
+        if os.environ.get("ENVIRONMENT_TAG") == "production":
+            price_id = "price_1Kfv9LHIZcJ4D4nawRSfC6t6"
+        else:
+            price_id = "price_1KP85XHIZcJ4D4nayv0Sx6dc"
+        stripe.Subscription.create(customer=customer_id, items=[{"price": price_id}])
 
     db.session.add(local_user)
     db.session.commit()
