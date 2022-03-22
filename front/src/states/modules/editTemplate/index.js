@@ -82,7 +82,10 @@ const { actions, reducer } = createSlice({
 		editTemplatePageAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
-					form: [...state.data.form, payload.newPage],
+					form: [
+						...state.data.form,
+						{ ...initialState.data.form[0], ...payload.newPage },
+					],
 					variables: [...state.data.variables, []],
 				}),
 			}),
