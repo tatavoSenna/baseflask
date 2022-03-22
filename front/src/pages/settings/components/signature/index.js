@@ -27,6 +27,8 @@ const Signature = () => {
 	const [thisPrice, setThisPrice] = useState(priceId)
 	const [currentPlan, setCurrentPlan] = useState({})
 
+	const envTag = process.env.REACT_APP_ENVIRONMENT_TAG
+
 	useEffect(() => {
 		dispatch(getStripePlan())
 		setCurrentPlan(findPlan(priceId))
@@ -38,7 +40,10 @@ const Signature = () => {
 
 	const handleSubmitStripe = (e) => {
 		e.preventDefault()
-		if (thisPrice !== 'price_1KP85XHIZcJ4D4nayv0Sx6dc') {
+		if (
+			thisPrice !== 'price_1KP85XHIZcJ4D4nayv0Sx6dc' ||
+			thisPrice !== 'price_1Kfv9LHIZcJ4D4nawRSfC6t6'
+		) {
 			dispatch(uploadStripePlan(thisPrice))
 		}
 	}
@@ -64,7 +69,10 @@ const Signature = () => {
 		return
 	}
 
-	const freePlan = findPlan('price_1KP85XHIZcJ4D4nayv0Sx6dc')
+	const freePlan =
+		envTag && envTag === 'production'
+			? findPlan('price_1Kfv9LHIZcJ4D4nawRSfC6t6')
+			: findPlan('price_1KP85XHIZcJ4D4nayv0Sx6dc')
 	const activePlan = findPlan(priceId)
 
 	return (
