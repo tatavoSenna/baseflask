@@ -382,6 +382,7 @@ def download(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def next_document_status(current_user, document_id):
+    # temp
     try:
         if current_user["name"] == None:
             user = current_user["email"]
