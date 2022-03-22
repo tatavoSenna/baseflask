@@ -1,3 +1,5 @@
+const envTag = process.env.REACT_APP_ENVIRONMENT_TAG
+
 const plans = [
 	{
 		payment: 'month',
@@ -9,7 +11,10 @@ const plans = [
 		},
 		selected: false,
 		price: null,
-		value: 'price_1KP85XHIZcJ4D4nayv0Sx6dc',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv9LHIZcJ4D4nawRSfC6t6'
+				: 'price_1KP85XHIZcJ4D4nayv0Sx6dc',
 	},
 	{
 		payment: 'month',
@@ -22,7 +27,10 @@ const plans = [
 			d4sign: 'Integração com d4sign',
 		},
 		selected: false,
-		value: 'price_1KP83oHIZcJ4D4na4K1VSAmQ',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv9PHIZcJ4D4naroreR2dr'
+				: 'price_1KP83oHIZcJ4D4na4K1VSAmQ',
 		price: 'R$ 150',
 	},
 	{
@@ -36,7 +44,10 @@ const plans = [
 			d4sign: 'Integração com d4sign',
 		},
 		selected: false,
-		value: 'price_1KRHaBHIZcJ4D4naBNvrq4ya',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv99HIZcJ4D4naoCHG2P7W'
+				: 'price_1KRHaBHIZcJ4D4naBNvrq4ya',
 		price: 'R$ 250',
 	},
 	{
@@ -49,7 +60,10 @@ const plans = [
 		},
 		selected: false,
 		price: null,
-		value: 'price_1KP85XHIZcJ4D4nayv0Sx6dc',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv9LHIZcJ4D4nawRSfC6t6'
+				: 'price_1KP85XHIZcJ4D4nayv0Sx6dc',
 	},
 	{
 		payment: 'year',
@@ -62,7 +76,10 @@ const plans = [
 			d4sign: 'Integração com d4sign',
 		},
 		selected: false,
-		value: 'price_1KP83oHIZcJ4D4nadQJ7UpZW',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv9PHIZcJ4D4naQzMyhsDc'
+				: 'price_1KP83oHIZcJ4D4nadQJ7UpZW',
 		price: 'R$ 1.500',
 	},
 	{
@@ -76,7 +93,10 @@ const plans = [
 			d4sign: 'Integração com d4sign',
 		},
 		selected: false,
-		value: 'price_1KRHaBHIZcJ4D4nat4kzntJD',
+		value:
+			envTag && envTag === 'production'
+				? 'price_1Kfv99HIZcJ4D4naJmmRPBn7'
+				: 'price_1KRHaBHIZcJ4D4nat4kzntJD',
 		price: 'R$ 2.500',
 	},
 ]
