@@ -25,6 +25,7 @@ eslint:
     - cd front
     - yarn add node-sass
     - yarn add eslint --dev
+    - yarn add eslint-config-react-app -D
     - yarn add -D prettier eslint-plugin-prettier eslint-config-prettier
     - yarn run eslint . --max-warnings=0
   rules:
