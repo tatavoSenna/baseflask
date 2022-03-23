@@ -26,7 +26,8 @@ const DataTable = ({
 					display: 'flex',
 					gap: '6px',
 					margin: '24px 0',
-				}}>
+				}}
+			>
 				<Search
 					placeholder={placeholderSearch}
 					onSearch={(search) => onSearch({ page: 1, perPage: 10, search })}

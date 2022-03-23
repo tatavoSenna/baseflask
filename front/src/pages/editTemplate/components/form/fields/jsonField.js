@@ -26,7 +26,8 @@ const JSONField = (props) => {
 			formItems={
 				<FormItem
 					name={`field_${pageIndex}_${fieldIndex}`}
-					style={{ marginBottom: '0px', cursor: 'text' }}>
+					style={{ marginBottom: '0px', cursor: 'text' }}
+				>
 					<JSONInput
 						id={`json_${pageIndex}_${fieldIndex}`}
 						onBlur={(e) => {

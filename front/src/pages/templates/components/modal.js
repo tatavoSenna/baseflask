@@ -18,10 +18,12 @@ const TemplateModal = ({ handleCreate, handleCancel, showModal }) => {
 					key="criar"
 					onClick={() => handleCreate(title)}
 					form="newTemplateForm"
-					disabled={!title}>
+					disabled={!title}
+				>
 					Criar
 				</Button>,
-			]}>
+			]}
+		>
 			<Form form={form} id="newTemplateForm">
 				<Form.Item label="Novo Template"></Form.Item>
 				<Form.Item label="Título" name="title">

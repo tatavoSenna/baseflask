@@ -11,18 +11,8 @@ const NumberField = ({
 	first,
 	disabled,
 }) => {
-	const {
-		label,
-		variable,
-		type,
-		id,
-		info,
-		list,
-		min,
-		max,
-		decimals,
-		step,
-	} = pageFieldsData
+	const { label, variable, type, id, info, list, min, max, decimals, step } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -42,7 +32,8 @@ const NumberField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : Number(inputValue)}>
+			initialValue={!inputValue ? '' : Number(inputValue)}
+		>
 			<InputNumber
 				autoFocus={first}
 				placeholder=""

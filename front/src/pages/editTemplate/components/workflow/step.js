@@ -59,12 +59,14 @@ const Step = ({
 					justifyContent: 'space-between',
 					height: '32px',
 					marginBottom: '24px',
-				}}>
+				}}
+			>
 				<Form.Item
 					name={titleFormItemName}
 					label="Descrição"
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					initialValue={node.title}>
+					initialValue={node.title}
+				>
 					<Input
 						onChange={(event) => {
 							updateNodeProperty('title', event.target.value)
@@ -80,7 +82,8 @@ const Step = ({
 				name={responsibleGroupFormItemName}
 				label="Grupo"
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-				initialValue={node.responsible_group}>
+				initialValue={node.responsible_group}
+			>
 				<Select
 					allowClear
 					style={{ width: '100%' }}
@@ -94,7 +97,8 @@ const Step = ({
 				name={responsibleUsersFormItemName}
 				label="Responsáveis"
 				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-				initialValue={node.responsible_users}>
+				initialValue={node.responsible_users}
+			>
 				<Select
 					mode="multiple"
 					showSearch
@@ -114,7 +118,8 @@ const Step = ({
 						form.setFieldsValue({
 							[deadlineFormItemName]: 1,
 						})
-					}}>
+					}}
+				>
 					Prazo de validade{expire && ':'}
 				</Checkbox>
 				{expire && (
@@ -123,7 +128,8 @@ const Step = ({
 							name={deadlineFormItemName}
 							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
 							style={{ position: 'relative', bottom: '5px', margin: 0 }}
-							initialValue={node.deadline}>
+							initialValue={node.deadline}
+						>
 							<InputNumber
 								value={node.deadline}
 								min={1}

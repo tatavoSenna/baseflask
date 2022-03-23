@@ -45,7 +45,8 @@ const CpfField = ({
 				]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
+			initialValue={!inputValue ? '' : inputValue}
+		>
 			<MaskedInput
 				onChange={onChange}
 				autoFocus={first}

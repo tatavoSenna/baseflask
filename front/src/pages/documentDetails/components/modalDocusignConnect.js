@@ -26,10 +26,12 @@ const ConnectDocusignModal = ({ handleCancel, showModal }) => {
 								process.env.REACT_APP_DOCUSIGN_REDIRECT_URL
 						)
 					}
-					form="connectDocusignModalForm">
+					form="connectDocusignModalForm"
+				>
 					Sim
 				</Button>,
-			]}>
+			]}
+		>
 			<Form form={form} id="connectDocusignModalForm">
 				<Title level={4}>{'Atenção'}</Title>
 				<Divider />

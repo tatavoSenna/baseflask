@@ -25,7 +25,8 @@ export function getColumns(handleDeleteWebhook, handleEditWebhook) {
 									record.docx ? record.pdf : false,
 									record.url
 								)
-							}>
+							}
+						>
 							Word
 						</Checkbox>
 						<Checkbox
@@ -37,7 +38,8 @@ export function getColumns(handleDeleteWebhook, handleEditWebhook) {
 									record.pdf ? false : true,
 									record.url
 								)
-							}>
+							}
+						>
 							PDF
 						</Checkbox>
 					</div>

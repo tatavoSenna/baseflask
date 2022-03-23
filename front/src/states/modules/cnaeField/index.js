@@ -26,11 +26,8 @@ const { actions, reducer } = createSlice({
 	},
 })
 
-export const {
-	getCnaeField,
-	getCnaeFieldSuccess,
-	getCnaeFieldFailure,
-} = actions
+export const { getCnaeField, getCnaeFieldSuccess, getCnaeFieldFailure } =
+	actions
 
 export { default as cnaeFieldSaga } from './sagas'
 

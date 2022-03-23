@@ -12,9 +12,11 @@ import styles from './index.module.scss'
 const FormFactory = ({ token, initialValues = {} }) => {
 	const dispatch = useDispatch()
 
-	const { data: questions, visible, currentPage } = useSelector(
-		({ question }) => question
-	)
+	const {
+		data: questions,
+		visible,
+		currentPage,
+	} = useSelector(({ question }) => question)
 
 	const history = useHistory()
 	const [form] = Form.useForm()
@@ -57,7 +59,8 @@ const FormFactory = ({ token, initialValues = {} }) => {
 				layout="vertical"
 				hideRequiredMark
 				onFinish={onSubmit}
-				className={styles['form-container']}>
+				className={styles['form-container']}
+			>
 				{pageFieldsData && pageFieldsData.fields.length > 0 && (
 					<div className={styles['form']}>
 						<InputFactory
@@ -79,7 +82,8 @@ const FormFactory = ({ token, initialValues = {} }) => {
 									type="default"
 									htmlType="button"
 									className={styles.button}
-									onClick={onPrevious}>
+									onClick={onPrevious}
+								>
 									Anterior
 								</Button>
 							) : (
@@ -90,7 +94,8 @@ const FormFactory = ({ token, initialValues = {} }) => {
 									className={styles.button}
 									onClick={() => {
 										token ? handleGoTo('/') : handleGoTo('/documents')
-									}}>
+									}}
+								>
 									Cancelar
 								</Button>
 							)}
@@ -107,7 +112,8 @@ const FormFactory = ({ token, initialValues = {} }) => {
 								block
 								type="primary"
 								className={styles.button}
-								htmlType="submit">
+								htmlType="submit"
+							>
 								{isLastPage ? 'Enviar' : 'Próximo'}
 							</Button>
 						</Form.Item>

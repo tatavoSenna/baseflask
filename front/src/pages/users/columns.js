@@ -45,7 +45,8 @@ export function getColumns({
 							<Button
 								icon={<SyncOutlined />}
 								onClick={() => handleResendInvite(record.email)}
-								style={{}}>
+								style={{}}
+							>
 								Reenviar convite
 							</Button>
 						)}

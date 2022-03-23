@@ -20,7 +20,8 @@ function Home() {
 				alignItems: 'center',
 				justifyContent: 'center',
 				height: '100%',
-			}}>
+			}}
+		>
 			<Content
 				style={{
 					background: 'transparent',
@@ -35,12 +36,14 @@ function Home() {
 					minWidth: '50%',
 					maxWidth: '98%',
 					height: '50%',
-				}}>
+				}}
+			>
 				<Title
 					style={{
 						flex: 'none',
 						textAlign: 'center',
-					}}>
+					}}
+				>
 					Bem vindo à Lawing!
 				</Title>
 				<Text
@@ -48,7 +51,8 @@ function Home() {
 					style={{
 						flex: 'none',
 						textAlign: 'center',
-					}}>
+					}}
+				>
 					por favor aguarde enquanto carregamos seus dados
 				</Text>
 				<Spin

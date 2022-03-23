@@ -10,7 +10,8 @@ const StructuredList = ({ item, disabled }) => {
 		<>
 			<Title
 				level={4}
-				style={{ marginTop: 10, marginBottom: '24px', fontSize: 15 }}>
+				style={{ marginTop: 10, marginBottom: '24px', fontSize: 15 }}
+			>
 				{item.subtitle}
 			</Title>
 			<Form.Item hasFeedback colon={false}>

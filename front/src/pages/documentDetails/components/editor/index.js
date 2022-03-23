@@ -24,9 +24,8 @@ const Editor = ({
 
 		init() {
 			const usersPlugin = this.editor.plugins.get('Users')
-			const commentsRepositoryPlugin = this.editor.plugins.get(
-				'CommentsRepository'
-			)
+			const commentsRepositoryPlugin =
+				this.editor.plugins.get('CommentsRepository')
 
 			for (let user of userList) {
 				usersPlugin.addUser(user)
@@ -141,11 +140,13 @@ const Editor = ({
 				margin: 5,
 				// minWidth: 600,
 				width: '60%',
-			}}>
+			}}
+		>
 			<div className={classNames(styles.documentEditor)}>
 				<div
 					id="toolbar-container"
-					className={classNames(styles.documentEditorToolbar)}></div>
+					className={classNames(styles.documentEditorToolbar)}
+				></div>
 				<div className={classNames(styles.documentEditorEditableContainer)}>
 					<div className={classNames(styles.ckEditorEditable)}>
 						{versionLoading && (
@@ -157,15 +158,15 @@ const Editor = ({
 									background: '#fff',
 									alignItems: 'center',
 									justifyContent: 'center',
-								}}>
+								}}
+							>
 								<Spin spinning={versionLoading} />
 							</div>
 						)}
 						<CKEditor
 							onInit={(editor) => {
-								const toolbarContainer = document.querySelector(
-									'#toolbar-container'
-								)
+								const toolbarContainer =
+									document.querySelector('#toolbar-container')
 								if (toolbarContainer) {
 									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 								}
@@ -173,9 +174,8 @@ const Editor = ({
 							editor={DecoupledDocumentEditor}
 							config={editorConfiguration}
 							onChange={(event, editor) => {
-								const commentsRepository = editor.plugins.get(
-									'CommentsRepository'
-								)
+								const commentsRepository =
+									editor.plugins.get('CommentsRepository')
 								const commentThreadsData = commentsRepository.getCommentThreads(
 									{
 										skipNotAttached: true,

@@ -23,14 +23,17 @@ const NewVersionModal = ({
 					key="criar"
 					onClick={() => handleCreate(form)}
 					form="newVersionForm"
-					disabled={!description}>
+					disabled={!description}
+				>
 					Criar
 				</Button>,
-			]}>
+			]}
+		>
 			<Form
 				form={form}
 				id="newVersionForm"
-				onChange={() => handleDescription(form)}>
+				onChange={() => handleDescription(form)}
+			>
 				<Form.Item label="Nova versão"></Form.Item>
 				<Form.Item label="Descrição" name="description">
 					<Input value={description} />

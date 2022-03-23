@@ -22,7 +22,8 @@ const StripeModal = ({
 							</Button>,
 							<Button
 								key="update"
-								onClick={() => handleConfirm('/settings?tab=signature')}>
+								onClick={() => handleConfirm('/settings?tab=signature')}
+							>
 								Alterar plano
 							</Button>,
 					  ]
@@ -31,7 +32,8 @@ const StripeModal = ({
 								Cancelar
 							</Button>,
 					  ]
-			}>
+			}
+		>
 			<p>{modalText}</p>
 		</Modal>
 	)

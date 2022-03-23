@@ -1,424 +1,412 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-	  "title": "Lawing",
-	  "description": "It´s necessary the Bearer Token to test the endpoints.",
-	  "version": "0.1"
+		"title": "Lawing",
+		"description": "It´s necessary the Bearer Token to test the endpoints.",
+		"version": "0.1"
 	},
-	"servers": [
-	],
+	"servers": [],
 	"paths": {
-	  "/documents/": {
-		"get": {
-		  "tags": [
-			"Documents"
-		  ],
-		  "summary": "fetch documents and folders",
-		  "description": "fetch documents and folders Fetch documents and folders",
-		  "parameters": [
-			{
-			  "name": "search",
-			  "in": "query",
-			  "description": "A search term. The response will contain only documents and folders that contains this term on their name.",
-			  "required": false,
-			  "style": "form",
-			  "explode": true,
-			  "schema": {
-				"type": "string"
-			  }
+		"/documents/": {
+			"get": {
+				"tags": ["Documents"],
+				"summary": "fetch documents and folders",
+				"description": "fetch documents and folders Fetch documents and folders",
+				"parameters": [
+					{
+						"name": "search",
+						"in": "query",
+						"description": "A search term. The response will contain only documents and folders that contains this term on their name.",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "folder",
+						"in": "query",
+						"description": "The id of a folder. Fetches only documents and folders that are inside ( direct children ) that folder.",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "Which page to fetch.",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "per_page",
+						"in": "query",
+						"description": "Number of items per page.",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "is_folder",
+						"in": "query",
+						"description": "If true Fetch only folders, if ommited or false fetches folders and files.",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid input"
+					}
+				},
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			},
-			{
-			  "name": "folder",
-			  "in": "query",
-			  "description": "The id of a folder. Fetches only documents and folders that are inside ( direct children ) that folder.",
-			  "required": false,
-			  "style": "form",
-			  "explode": true,
-			  "schema": {
-				"type": "string"
-			  }
-			},
-			{
-			  "name": "page",
-			  "in": "query",
-			  "description": "Which page to fetch.",
-			  "required": false,
-			  "style": "form",
-			  "explode": true,
-			  "schema": {
-				"type": "integer"
-			  }
-			},
-			{
-			  "name": "per_page",
-			  "in": "query",
-			  "description": "Number of items per page.",
-			  "required": false,
-			  "style": "form",
-			  "explode": true,
-			  "schema": {
-				"type": "integer"
-			  }
-			},
-			{
-			  "name": "is_folder",
-			  "in": "query",
-			  "description": "If true Fetch only folders, if ommited or false fetches folders and files.",
-			  "required": false,
-			  "style": "form",
-			  "explode": true,
-			  "schema": {
-				"type": "boolean"
-			  }
+			"post": {
+				"tags": ["Documents"],
+				"summary": "Create a new document from a template",
+				"description": "Creates a new document by filling a template with variables from the payload.",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/documents_body"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "The document was successfully created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/documentDetail"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
-		  ],
-		  "responses": {
-			"200": {
-			  "description": "successful operation"
-			},
-			"400": {
-			  "description": "Invalid input"
-			}
-		  },
-		  "security": [
-			{
-			  "bearerAuth": []
-			}
-		  ]
 		},
-		"post": {
-		  "tags": [
-			"Documents"
-		  ],
-		  "summary": "Create a new document from a template",
-		  "description": "Creates a new document by filling a template with variables from the payload.",
-		  "requestBody": {
-			"content": {
-			  "application/json": {
-				"schema": {
-				  "$ref": "#/components/schemas/documents_body"
-				}
-			  }
-			},
-			"required": true
-		  },
-		  "responses": {
-			"200": {
-			  "description": "The document was successfully created",
-			  "content": {
-				"application/json": {
-				  "schema": {
-					"$ref": "#/components/schemas/documentDetail"
-				  }
-				}
-			  }
+		"/documents/{document_id}": {
+			"get": {
+				"tags": ["Documents"],
+				"summary": "Fetch document details",
+				"description": "Returns a single document",
+				"parameters": [
+					{
+						"name": "document_id",
+						"in": "path",
+						"description": "ID of document to return",
+						"required": true,
+						"style": "simple",
+						"explode": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/documentDetail"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid ID supplied"
+					},
+					"404": {
+						"description": "Document not found"
+					}
+				},
+				"security": [
+					{
+						"Bearer": []
+					}
+				]
 			}
-		  },
-		  "security": [
-			{
-			  "bearerAuth": []
+		},
+		"/documents/move": {
+			"post": {
+				"tags": ["Documents"],
+				"summary": "Move the document to another folder",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"405": {
+						"description": "Invalid input"
+					}
+				},
+				"security": [
+					{
+						"Bearer": []
+					}
+				]
 			}
-		  ]
 		}
-	  },
-	  "/documents/{document_id}": {
-		"get": {
-		  "tags": [
-			"Documents"
-		  ],
-		  "summary": "Fetch document details",
-		  "description": "Returns a single document",
-		  "parameters": [
-			{
-			  "name": "document_id",
-			  "in": "path",
-			  "description": "ID of document to return",
-			  "required": true,
-			  "style": "simple",
-			  "explode": false,
-			  "schema": {
-				"type": "integer",
-				"format": "int64"
-			  }
-			}
-		  ],
-		  "responses": {
-			"200": {
-			  "description": "successful operation",
-			  "content": {
-				"application/json": {
-				  "schema": {
-					"$ref": "#/components/schemas/documentDetail"
-				  }
-				}
-			  }
-			},
-			"400": {
-			  "description": "Invalid ID supplied"
-			},
-			"404": {
-			  "description": "Document not found"
-			}
-		  },
-		  "security": [
-			{
-			  "Bearer": []
-			}
-		  ]
-		}
-	  },
-	  "/documents/move": {
-		"post": {
-		  "tags": [
-			"Documents"
-		  ],
-		  "summary": "Move the document to another folder",
-		  "requestBody": {
-			"content": {
-			  "application/json": {
-				"schema": {
-				  "type": "object"
-				}
-			  }
-			}
-		  },
-		  "responses": {
-			"200": {
-			  "description": "successful operation"
-			},
-			"405": {
-			  "description": "Invalid input"
-			}
-		  },
-		  "security": [
-			{
-			  "Bearer": []
-			}
-		  ]
-		}
-	  }
 	},
 	"components": {
-	  "schemas": {
-		"documentDetail": {
-		  "type": "object",
-		  "properties": {
-			"id": {
-			  "type": "integer"
-			},
-			"title": {
-			  "type": "string"
-			},
-			"company_id": {
-			  "type": "string"
-			},
-			"created_at": {
-			  "type": "string",
-			  "format": "date-time"
-			},
-			"document_template_id": {
-			  "type": "string"
-			},
-			"parent_id": {
-			  "type": "string",
-			  "description": "The id of the parent folder."
-			},
-			"info": {
-			  "type": "array",
-			  "description": "An array of fields to display the document variables in human readable format",
-			  "items": {
-				"type": "object"
-			  }
-			},
-			"is_folder": {
-			  "type": "boolean",
-			  "description": "If item is a document or folder"
-			},
-			"current_step": {
-			  "type": "string",
-			  "description": "The step of the workflow the document is currently on."
-			},
-			"nome_contrato": {
-			  "type": "string"
-			},
-			"data_assinatura": {
-			  "type": "string",
-			  "format": "date-time"
-			},
-			"data_final_contrato": {
-			  "type": "string"
-			},
-			"data_inicio_contrato": {
-			  "type": "string"
-			},
-			"valor_contrato": {
-			  "type": "float"
-			},
-			"envelope": {
-			  "type": "string",
-			  "description": "The envelop id of the document on docusign"
-			},
-			"sent": {
-			  "type": "boolean",
-			  "description": "Document has been sent to signature"
-			},
-			"signed": {
-			  "type": "boolean",
-			  "description": "true if all requested signers have signed the document, and the signing process has been completed."
-			},
-			"signers": {
-			  "type": "array",
-			  "description": "List of signers to be informed to Docusign when requesting signatures",
-			  "items": {
-				"type": "object"
-			  }
-			},
-			"text_type": {
-			  "type": "string",
-			  "description": "The type of text. Lawing can genrate text for ckeditor (.txt) or a word document (.docs).",
-			  "enum": [
-				".txt",
-				".docx"
-			  ]
-			},
-			"user": {
-			  "type": "object",
-			  "description": "The user who created the document"
-			},
-			"variables": {
-			  "type": "object",
-			  "description": "The variables to fill in the slots in the document. The properties of this objects varies from document to document."
-			},
-			"versions": {
-			  "type": "array",
-			  "description": "Every time a user changes something in the document a new version is created. This property lists the history of versions.",
-			  "items": {
-				"$ref": "#/components/schemas/documentDetail_versions"
-			  }
-			},
-			"workflow": {
-			  "$ref": "#/components/schemas/documentDetail_workflow"
-			}
-		  },
-		  "description": "The document detail schema."
-		},
-		"documents_body": {
-		  "oneOf": [
-			{
-			  "type": "object",
-			  "properties": {
-				"title": {
-				  "type": "string"
+		"schemas": {
+			"documentDetail": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"title": {
+						"type": "string"
+					},
+					"company_id": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"document_template_id": {
+						"type": "string"
+					},
+					"parent_id": {
+						"type": "string",
+						"description": "The id of the parent folder."
+					},
+					"info": {
+						"type": "array",
+						"description": "An array of fields to display the document variables in human readable format",
+						"items": {
+							"type": "object"
+						}
+					},
+					"is_folder": {
+						"type": "boolean",
+						"description": "If item is a document or folder"
+					},
+					"current_step": {
+						"type": "string",
+						"description": "The step of the workflow the document is currently on."
+					},
+					"nome_contrato": {
+						"type": "string"
+					},
+					"data_assinatura": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"data_final_contrato": {
+						"type": "string"
+					},
+					"data_inicio_contrato": {
+						"type": "string"
+					},
+					"valor_contrato": {
+						"type": "float"
+					},
+					"envelope": {
+						"type": "string",
+						"description": "The envelop id of the document on docusign"
+					},
+					"sent": {
+						"type": "boolean",
+						"description": "Document has been sent to signature"
+					},
+					"signed": {
+						"type": "boolean",
+						"description": "true if all requested signers have signed the document, and the signing process has been completed."
+					},
+					"signers": {
+						"type": "array",
+						"description": "List of signers to be informed to Docusign when requesting signatures",
+						"items": {
+							"type": "object"
+						}
+					},
+					"text_type": {
+						"type": "string",
+						"description": "The type of text. Lawing can genrate text for ckeditor (.txt) or a word document (.docs).",
+						"enum": [".txt", ".docx"]
+					},
+					"user": {
+						"type": "object",
+						"description": "The user who created the document"
+					},
+					"variables": {
+						"type": "object",
+						"description": "The variables to fill in the slots in the document. The properties of this objects varies from document to document."
+					},
+					"versions": {
+						"type": "array",
+						"description": "Every time a user changes something in the document a new version is created. This property lists the history of versions.",
+						"items": {
+							"$ref": "#/components/schemas/documentDetail_versions"
+						}
+					},
+					"workflow": {
+						"$ref": "#/components/schemas/documentDetail_workflow"
+					}
 				},
-				"parent": {
-				  "type": "integer",
-				  "description": "Id of the parent folder of the new document | folder"
-				},
-				"is_folder": {
-				  "type": "boolean"
+				"description": "The document detail schema."
+			},
+			"documents_body": {
+				"oneOf": [
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string"
+							},
+							"parent": {
+								"type": "integer",
+								"description": "Id of the parent folder of the new document | folder"
+							},
+							"is_folder": {
+								"type": "boolean"
+							}
+						}
+					},
+					{
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string"
+							},
+							"parent": {
+								"type": "integer",
+								"description": "Id of the parent folder of the new document | folder"
+							},
+							"is_folder": {
+								"type": "boolean"
+							},
+							"document_template": {
+								"type": "integer",
+								"description": "Id of the template to use to create the document"
+							},
+							"variables": {
+								"type": "object",
+								"description": "Properites depend on the variables from the template"
+							}
+						}
+					}
+				]
+			},
+			"documentDetail_versions": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"description": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string",
+						"description": "Email of the user who created the document",
+						"format": "email"
+					},
+					"comments": {
+						"description": "Comments from ckeditor"
+					}
 				}
-			  }
 			},
-			{
-			  "type": "object",
-			  "properties": {
-				"title": {
-				  "type": "string"
-				},
-				"parent": {
-				  "type": "integer",
-				  "description": "Id of the parent folder of the new document | folder"
-				},
-				"is_folder": {
-				  "type": "boolean"
-				},
-				"document_template": {
-				  "type": "integer",
-				  "description": "Id of the template to use to create the document"
-				},
-				"variables": {
-				  "type": "object",
-				  "description": "Properites depend on the variables from the template"
+			"documentDetail_workflow_steps": {
+				"type": "object",
+				"properties": {
+					"step": {
+						"type": "string",
+						"description": "Number of the step. Acts as an step id, unique inside this workflow."
+					},
+					"changed_by": {
+						"type": "string"
+					},
+					"color": {
+						"type": "string"
+					},
+					"group": {
+						"type": "string",
+						"description": "Id of the group responsible for the document on this step"
+					},
+					"responsible_users": {
+						"type": "array",
+						"description": "User ids of the people responsible for the document on this step",
+						"items": {
+							"type": "string"
+						}
+					}
 				}
-			  }
+			},
+			"documentDetail_workflow": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"changed_by": {
+						"type": "string"
+					},
+					"current_step": {
+						"type": "string"
+					},
+					"steps": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/documentDetail_workflow_steps"
+						}
+					}
+				}
 			}
-		  ]
 		},
-		"documentDetail_versions": {
-		  "type": "object",
-		  "properties": {
-			"id": {
-			  "type": "string"
-			},
-			"created_at": {
-			  "type": "string",
-			  "format": "date-time"
-			},
-			"description": {
-			  "type": "string"
-			},
-			"email": {
-			  "type": "string",
-			  "description": "Email of the user who created the document",
-			  "format": "email"
-			},
-			"comments": {
-			  "description": "Comments from ckeditor"
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer"
 			}
-		  }
-		},
-		"documentDetail_workflow_steps": {
-		  "type": "object",
-		  "properties": {
-			"step": {
-			  "type": "string",
-			  "description": "Number of the step. Acts as an step id, unique inside this workflow."
-			},
-			"changed_by": {
-			  "type": "string"
-			},
-			"color": {
-			  "type": "string"
-			},
-			"group": {
-			  "type": "string",
-			  "description": "Id of the group responsible for the document on this step"
-			},
-			"responsible_users": {
-			  "type": "array",
-			  "description": "User ids of the people responsible for the document on this step",
-			  "items": {
-				"type": "string"
-			  }
-			}
-		  }
-		},
-		"documentDetail_workflow": {
-		  "type": "object",
-		  "properties": {
-			"title": {
-			  "type": "string"
-			},
-			"changed_by": {
-			  "type": "string"
-			},
-			"current_step": {
-			  "type": "string"
-			},
-			"steps": {
-			  "type": "array",
-			  "items": {
-				"$ref": "#/components/schemas/documentDetail_workflow_steps"
-			  }
-			}
-		  }
 		}
-	  },
-	  "securitySchemes": {
-		"bearerAuth": {
-		  "type": "http",
-		  "scheme": "bearer"
-		}
-	  }
 	}
-  }
+}
