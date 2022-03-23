@@ -23,7 +23,6 @@ eslint:
   allow_failure: false
   script:
     - cd front
-    - yarn add node-sass
     - yarn add -D prettier eslint-plugin-prettier eslint-config-prettier
     - yarn prettier --check .
   rules:
