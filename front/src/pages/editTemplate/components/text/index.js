@@ -38,11 +38,13 @@ const Text = ({
 				flexDirection: 'column',
 				flexWrap: 'wrap',
 				paddingBottom: 50,
-			}}>
+			}}
+		>
 			<div
 				style={{
 					display: 'flex',
-				}}>
+				}}
+			>
 				<Switch
 					checked={checked}
 					disabled={files.length > 0 || data}
@@ -57,7 +59,8 @@ const Text = ({
 				<div
 					style={{
 						display: 'flex',
-					}}>
+					}}
+				>
 					<Uploader
 						setFileList={(files) => {
 							updateFile(files)

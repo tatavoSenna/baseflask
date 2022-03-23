@@ -9,7 +9,8 @@ const FormPortal = ({ onSubmitStripe, priceId }) => {
 				disabled={priceId === null ? true : false}
 				id="checkout-and-portal-button"
 				type="primary"
-				htmlType="submit">
+				htmlType="submit"
+			>
 				Gerenciar assinara
 			</Button>
 		</form>

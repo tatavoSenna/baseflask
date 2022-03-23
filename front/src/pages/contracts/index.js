@@ -56,12 +56,8 @@ const Contracts = () => {
 		order_by,
 	} = useSelector(({ contract }) => contract)
 
-	const {
-		showFolderModal,
-		newFolder,
-		accessFolders,
-		moveFolderModal,
-	} = useSelector(({ folder }) => folder)
+	const { showFolderModal, newFolder, accessFolders, moveFolderModal } =
+		useSelector(({ folder }) => folder)
 
 	const { companyInfo } = useSelector(({ companies }) => companies)
 
@@ -237,7 +233,8 @@ const Contracts = () => {
 		<Breadcrumb.Item
 			key={index}
 			className={styles.breadcrumbs}
-			onClick={() => handleFolderRowBack(index)}>
+			onClick={() => handleFolderRowBack(index)}
+		>
 			{folder ? folder.title : null}
 		</Breadcrumb.Item>
 	))
@@ -257,7 +254,8 @@ const Contracts = () => {
 					<Breadcrumb>
 						<Breadcrumb.Item
 							onClick={handleInitialFolder}
-							className={styles.breadcrumbs}>
+							className={styles.breadcrumbs}
+						>
 							Documentos
 						</Breadcrumb.Item>
 						{accessFolders.length ? listFolders : null}

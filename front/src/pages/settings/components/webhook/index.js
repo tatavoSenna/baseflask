@@ -77,14 +77,16 @@ function Webhook() {
 					maxWidth: '800px',
 					width: '100%',
 					background: 'white',
-				}}>
+				}}
+			>
 				<Title style={{ marginBottom: 30 }} level={4}>
 					{'Criar novo webhook'}
 				</Title>
 				<Form
 					form={form}
 					id="webhookForm"
-					onChange={() => handleNewWebhook(form)}>
+					onChange={() => handleNewWebhook(form)}
+				>
 					<Form.Item label="Novo Webhook" name="webhook">
 						<Input value={newWebhook.url} />
 					</Form.Item>
@@ -98,7 +100,8 @@ function Webhook() {
 						style={{
 							display: 'flex',
 							justifyContent: 'flex-end',
-						}}>
+						}}
+					>
 						<Form.Item>
 							<Button
 								type="primary"
@@ -108,7 +111,8 @@ function Webhook() {
 								onClick={() => {
 									handleSaveWebhooks(form)
 								}}
-								disabled={!newWebhook.url}>
+								disabled={!newWebhook.url}
+							>
 								Adicionar
 							</Button>
 						</Form.Item>
@@ -121,7 +125,8 @@ function Webhook() {
 					width: '100%',
 					background: 'white',
 					marginTop: '50px',
-				}}>
+				}}
+			>
 				<Title style={{ marginBottom: 30 }} level={4}>
 					{'Webhooks Criados'}
 				</Title>

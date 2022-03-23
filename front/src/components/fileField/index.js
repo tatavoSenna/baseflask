@@ -28,7 +28,8 @@ const FileField = ({ pageFieldsData }) => {
 		<Form.Item
 			key={`fileField_${id}`}
 			label={<InfoField label={label} info={info} />}
-			colon={false}>
+			colon={false}
+		>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Dragger
 					action={(file) => handleFileUpload(file)}
@@ -39,12 +40,14 @@ const FileField = ({ pageFieldsData }) => {
 							setEmpty(true)
 						}
 					}}
-					style={{ width: '365px' }}>
+					style={{ width: '365px' }}
+				>
 					{empty ? (
 						<>
 							<p
 								className="ant-upload-drag-icon"
-								style={{ fontSize: '20px', margin: '0 0 0 0' }}>
+								style={{ fontSize: '20px', margin: '0 0 0 0' }}
+							>
 								<InboxOutlined />
 							</p>
 							<span style={{ fontSize: '13px', color: '#7a7a7a' }}>
@@ -55,7 +58,8 @@ const FileField = ({ pageFieldsData }) => {
 						<>
 							<p
 								className="ant-upload-drag-icon"
-								style={{ fontSize: '20px', margin: '0 0 0 0' }}>
+								style={{ fontSize: '20px', margin: '0 0 0 0' }}
+							>
 								<LoadingOutlined style={{ fontSize: 40 }} spin />
 							</p>
 							<span style={{ fontSize: '13px', color: '#7a7a7a' }}>
@@ -74,7 +78,8 @@ const FileField = ({ pageFieldsData }) => {
 									fontSize: '13px',
 									marginTop: '.5rem',
 									color: '#7a7a7a',
-								}}>
+								}}
+							>
 								Extração das variáveis falhou
 							</span>
 						</>
@@ -90,7 +95,8 @@ const FileField = ({ pageFieldsData }) => {
 									fontSize: '13px',
 									marginTop: '.2rem',
 									color: '#7a7a7a',
-								}}>
+								}}
+							>
 								Variáveis extraídas com sucesso
 							</span>
 						</>
@@ -101,7 +107,8 @@ const FileField = ({ pageFieldsData }) => {
 					title={
 						'O arquivo enviado terá suas informações extraídas automaticamente e inseridas no documento criado.'
 					}
-					style={{ fontSize: '16px', fontWeight: 'bold' }}>
+					style={{ fontSize: '16px', fontWeight: 'bold' }}
+				>
 					<QuestionCircleTwoTone
 						style={{ fontSize: '22px', marginLeft: '.7rem' }}
 					/>

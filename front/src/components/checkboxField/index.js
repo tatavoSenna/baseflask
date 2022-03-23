@@ -25,7 +25,8 @@ const CheckboxField = ({
 			colon={false}
 			initialValue={
 				!inputValue ? '' : Array.isArray(inputValue) ? inputValue : [inputValue]
-			}>
+			}
+		>
 			<Checkbox.Group disabled={disabled} onChange={onChange}>
 				{options.map((option, index) => (
 					<Checkbox key={index} value={option.value}>

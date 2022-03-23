@@ -222,20 +222,23 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				maxWidth: '40rem',
 				boxShadow: '0 1px 4px 0 rgba(192, 208, 230, 0.8)',
 				borderRadius: '5px',
-			}}>
+			}}
+		>
 			<div
 				style={{
 					display: 'flex',
 					justifyContent: 'space-between',
 					alignItems: 'center',
 					marginBottom: '24px',
-				}}>
+				}}
+			>
 				<Form.Item
 					name={`title_${pageIndex}`}
 					label="Título"
 					style={{ width: '50%', margin: '0 0 0 8px' }}
 					onChange={(e) => updateFormInfo(e.target.value, 'title', pageIndex)}
-					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
+					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
+				>
 					<Input autoFocus value={data.title} />
 				</Form.Item>
 				<Delete
@@ -314,7 +317,8 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					style={{
 						display: 'inline-block',
 						float: 'right',
-					}}>
+					}}
+				>
 					Novo Campo
 					<DownOutlined />
 				</Button>

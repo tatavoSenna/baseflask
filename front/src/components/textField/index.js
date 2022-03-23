@@ -43,7 +43,8 @@ const TextField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
+			initialValue={!inputValue ? '' : inputValue}
+		>
 			<Input autoFocus={first} placeholder={placeholder} disabled={disabled} />
 		</Form.Item>
 	)

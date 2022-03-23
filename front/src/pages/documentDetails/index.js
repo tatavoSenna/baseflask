@@ -128,7 +128,8 @@ const DocumentDetails = () => {
 		<Breadcrumb.Item
 			key={index}
 			className={styles.breadcrumbs}
-			onClick={() => handleFolderRowBack(index)}>
+			onClick={() => handleFolderRowBack(index)}
+		>
 			{folder ? folder.title : null}
 		</Breadcrumb.Item>
 	))
@@ -144,7 +145,8 @@ const DocumentDetails = () => {
 					<Breadcrumb>
 						<Breadcrumb.Item
 							onClick={handleInitialFolder}
-							className={styles.breadcrumbs}>
+							className={styles.breadcrumbs}
+						>
 							Documentos
 						</Breadcrumb.Item>
 						{accessFolders.length ? listFolders : null}
@@ -178,13 +180,15 @@ const DocumentDetails = () => {
 							flexWrap: 'wrap',
 							height: 'calc(100vh - 155px)',
 							overflowY: 'hidden',
-						}}>
+						}}
+					>
 						{file ? (
 							<div
 								style={{
 									display: 'flex',
 									width: '60%',
-								}}>
+								}}
+							>
 								<PdfReader url={file} />
 							</div>
 						) : (

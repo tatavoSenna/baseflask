@@ -29,10 +29,12 @@ const FolderModal = ({
 					key="criar"
 					onClick={() => handleNew(form)}
 					form="newFolderForm"
-					disabled={!newFolder.title}>
+					disabled={!newFolder.title}
+				>
 					Criar
 				</Button>,
-			]}>
+			]}
+		>
 			<Form form={form} id="newFolderForm" onChange={() => handleUpdate(form)}>
 				<Form.Item label="Nova Pasta"></Form.Item>
 				<Form.Item label="Título" name="title">

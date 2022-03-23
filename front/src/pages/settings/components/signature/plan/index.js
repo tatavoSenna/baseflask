@@ -76,7 +76,8 @@ const Plan = ({
 						onClick={() => onChangePrice(value)}
 						type="primary"
 						htmlType="submit"
-						disabled={selected ? true : false}>
+						disabled={selected ? true : false}
+					>
 						{selected ? 'Plano atual' : 'Assinar'}
 					</Button>
 				</form>

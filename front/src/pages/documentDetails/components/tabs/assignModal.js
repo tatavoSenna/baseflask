@@ -19,7 +19,8 @@ const AssignModal = ({ handleAssign, handleCancel, showModal, signers }) => {
 				<Button key="salvar" type="primary" htmlType="submit" form="assignForm">
 					Salvar
 				</Button>,
-			]}>
+			]}
+		>
 			<Form
 				form={form}
 				id="assignForm"
@@ -28,7 +29,8 @@ const AssignModal = ({ handleAssign, handleCancel, showModal, signers }) => {
 				onFinish={() => {
 					handleCancel()
 					handleAssign(form)
-				}}>
+				}}
+			>
 				<Title level={2} style={{ textAlign: 'center', color: '#999999' }}>
 					{'Assinaturas'}
 				</Title>
@@ -53,7 +55,8 @@ const AssignModal = ({ handleAssign, handleCancel, showModal, signers }) => {
 								fontWeight: 400,
 								paddingTop: 20,
 								paddingBottom: 10,
-							}}>
+							}}
+						>
 							{item.title}
 						</Title>
 						{InputFactory(item.fields)}

@@ -22,7 +22,8 @@ const SliderField = ({
 			className={className}
 			type={type}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
+			initialValue={!inputValue ? '' : inputValue}
+		>
 			<Slider
 				min={options[0]}
 				max={options[1]}

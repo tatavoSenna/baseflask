@@ -60,20 +60,23 @@ const Party = ({ signers, partyIndex, title }) => {
 				marginBottom: '1rem',
 				boxShadow: '0 1px 4px 0 rgba(192, 208, 230, 0.8)',
 				borderRadius: '5px',
-			}}>
+			}}
+		>
 			<div
 				style={{
 					display: 'flex',
 					justifyContent: 'space-between',
 					alignItems: 'center',
 					marginBottom: '24px',
-				}}>
+				}}
+			>
 				<Form.Item
 					name={`party_${partyIndex}`}
 					label="Parte"
 					style={{ width: '50%', margin: '0 0 0 8px' }}
 					onChange={(e) => updateSignerInfo(e, partyIndex, 0, 'partyTitle')}
-					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
+					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
+				>
 					<Input value={title} />
 				</Form.Item>
 				<Delete
@@ -101,7 +104,8 @@ const Party = ({ signers, partyIndex, title }) => {
 				style={{
 					display: 'inline-block',
 					float: 'right',
-				}}>
+				}}
+			>
 				Novo Assinante
 			</Button>
 		</Card>

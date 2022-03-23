@@ -47,7 +47,8 @@ const CurrencyField = ({
 				]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : Number(inputValue)}>
+			initialValue={!inputValue ? '' : Number(inputValue)}
+		>
 			<InputNumber
 				min={0}
 				placeholder=""

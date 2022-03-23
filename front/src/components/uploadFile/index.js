@@ -44,7 +44,8 @@ const Uploader = ({
 			fileList={fileList}
 			multiple={multiple}
 			beforeUpload={beforeUpload}
-			onRemove={onRemove}>
+			onRemove={onRemove}
+		>
 			<Button icon={<UploadOutlined />} disabled={max === fileList.length}>
 				{textButton}
 			</Button>

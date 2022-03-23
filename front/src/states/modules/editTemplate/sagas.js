@@ -134,9 +134,8 @@ function* editTemplateSaga({ payload = {} }) {
 						const type = Array.isArray(field.main)
 							? field.main[0].type
 							: field.main.type
-						variablesObj[
-							`${type}_${pageIndex}_${fieldIndex}`
-						] = structuredVariable(field)
+						variablesObj[`${type}_${pageIndex}_${fieldIndex}`] =
+							structuredVariable(field)
 					} else {
 						variablesObj[field.name] = extractName(field)
 					}

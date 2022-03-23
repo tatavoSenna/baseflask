@@ -51,7 +51,8 @@ function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
 			<div
 				className={classNames(styles.profile, {
 					[styles.profileMobile]: !isWeb,
-				})}>
+				})}
+			>
 				<div className={styles['iconsHeader']} onClick={handleExternalRedirect}>
 					<QuestionCircleOutlined />
 				</div>
