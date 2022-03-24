@@ -165,26 +165,6 @@ def format_variables(variables, document_template_id):
             except Exception as e:
                 logging.exception(e)
 
-        elif variable_type in ["person", "address"]:
-            if specs["row_template"] != "":
-                try:
-                    items = variables[struct_name]
-                    text_template = specs["row_template"]
-                    jinja_template = jinja_env.from_string(text_template)
-                    filled_text = jinja_template.render(items)
-                    return filled_text
-                except Exception as e:
-                    logging.exception(e)
-            else:
-                try:
-                    items = variables[struct_name]
-                    text_template = specs["doc_display_style"]
-                    jinja_template = jinja_env.from_string(text_template)
-                    filled_text = jinja_template.render(items)
-                    return filled_text
-                except Exception as e:
-                    logging.exception(e)
-
         elif variable_type[0:11] == "structured_":
             if specs["doc_display_style"] == "text":
                 try:
@@ -256,9 +236,7 @@ def format_variables(variables, document_template_id):
                 extra_variables[variable_name] = formatted
 
         elif "person" in variable or "address" in variable:
-            for variable_name, specs in variables_specification[variable].items():
-                formatted = format_variable(specs, variable_name, variables, variable)
-                extra_variables[variable_name] = formatted
+            continue
 
         else:
             formatted = format_variable(

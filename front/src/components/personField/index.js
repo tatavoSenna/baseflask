@@ -33,14 +33,13 @@ const PersonField = ({
 	fieldIndex,
 	onChange,
 }) => {
-	const { label, variable, type, fields, id, person_type, initialValue } =
-		pageFieldsData
+	const { label, variable, type, fields, id, person_type } = pageFieldsData
 
 	const objName = `person_${pageIndex}_${fieldIndex}`
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const [person, setPerson] = useState(initialValue)
+	const [person, setPerson] = useState('')
 
 	return (
 		<Form.Item
@@ -110,7 +109,6 @@ PersonField.propTypes = {
 		fields: array,
 		type: string.isRequired,
 		person_type: array,
-		initialValue: string,
 	}).isRequired,
 	className: string,
 	pageIndex: number,
