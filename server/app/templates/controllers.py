@@ -17,6 +17,8 @@ def create_template_controller(
 ):
     for node in workflow["nodes"]:
         responsible_group = workflow["nodes"][node]["responsible_group"]
+        if type(responsible_group) is str:
+            responsible_group = {"id": responsible_group}
         workflow["nodes"][node][
             "responsible_group"
         ] = format_workflow_responsible_group(responsible_group)
@@ -65,6 +67,8 @@ def edit_template_controller(
 
     for node in workflow["nodes"]:
         responsible_group = workflow["nodes"][node]["responsible_group"]
+        if type(responsible_group) is str:
+            responsible_group = {"id": responsible_group}
         workflow["nodes"][node][
             "responsible_group"
         ] = format_workflow_responsible_group(responsible_group)
