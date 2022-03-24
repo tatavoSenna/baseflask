@@ -60,15 +60,19 @@ const { actions, reducer } = createSlice({
 						comparison = input <= value
 						break
 					case '=':
+					case '!=':
+						const compare =
+							operator === '=' ? (a, b) => a === b : (a, b) => a !== b
+
 						// If value is an array, OR logic is applied
 						if (typeof value === 'object') {
 							value.forEach((item) => {
-								if (input === item) {
+								if (compare(input, item)) {
 									comparison = true
 								}
 							})
 						} else {
-							comparison = input === value
+							comparison = compare(input, value)
 						}
 						break
 					default:
