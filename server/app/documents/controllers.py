@@ -411,7 +411,7 @@ def previous_status_controller(document_id):
 
 
 def document_creation_email_controller(title, company_id):
-    company_users = User.query.filter_by(company_id=company_id)
+    company_users = User.query.filter_by(company_id=company_id, active=True)
     email_list = []
     for user in company_users:
         email_list.append(user.email)
