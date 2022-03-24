@@ -138,8 +138,8 @@ const Editor = ({
 		<div
 			style={{
 				margin: 5,
-				// minWidth: 600,
 				width: '60%',
+				height: 'calc(100% - 5px)',
 			}}>
 			<div className={classNames(styles.documentEditor)}>
 				<div

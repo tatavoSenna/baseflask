@@ -139,7 +139,7 @@ const DocumentDetails = () => {
 
 	return (
 		<MainLayout>
-			<Layout style={{ padding: '0', background: '#fff' }}>
+			<Layout style={{ padding: '0', background: '#fff', width: '100%' }}>
 				<PageHeader>
 					<Breadcrumb>
 						<Breadcrumb.Item
