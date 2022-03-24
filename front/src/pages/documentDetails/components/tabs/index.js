@@ -659,7 +659,7 @@ const Tabs = ({
 				flexDirection: 'column',
 				padding: 24,
 				margin: 5,
-				height: '100%',
+				height: 'calc(100% - 5px)',
 				width: '35%',
 				background: '#fff',
 				alignItems: 'center',
@@ -675,19 +675,19 @@ const Tabs = ({
 				style={{
 					width: '100%',
 				}}>
-				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="1">
+				<Menu.Item style={{ textAlign: 'center' }} key="1">
 					Info
 				</Menu.Item>
-				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="2">
+				<Menu.Item style={{ textAlign: 'center' }} key="2">
 					Versões
 				</Menu.Item>
 				{steps.length > 0 && (
-					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="3">
+					<Menu.Item style={{ textAlign: 'center' }} key="3">
 						Workflow
 					</Menu.Item>
 				)}
 				{signers.length > 0 && (
-					<Menu.Item style={{ width: 100, textAlign: 'center' }} key="4">
+					<Menu.Item style={{ textAlign: 'center' }} key="4">
 						Assinantes
 					</Menu.Item>
 				)}
