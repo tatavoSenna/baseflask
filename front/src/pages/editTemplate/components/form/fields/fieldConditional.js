@@ -95,6 +95,7 @@ const FieldConditional = ({
 							defaultValue={condition?.operator}
 							onChange={(v) => updateCondition('operator', v, i)}>
 							<Select.Option value="=">=</Select.Option>
+							<Select.Option value="!=">!=</Select.Option>
 							<Select.Option value=">">&gt;</Select.Option>
 							<Select.Option value=">=">&gt;=</Select.Option>
 							<Select.Option value="<">&lt;</Select.Option>
