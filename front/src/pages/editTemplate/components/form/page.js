@@ -99,7 +99,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			case 'person':
 				newField.variable.type = 'person'
 				newField.label = 'Autor'
-				newField.info = 'Parte autora'
 				newField.person_type = ['legal_person', 'natural_person']
 				newField.fields = [
 					'cpf',
@@ -115,8 +114,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'city',
 					'state',
 				]
-				newField.variable.doc_display_style = 'plain'
-				newField.variable.row_template = ''
+
+				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'address':
 				newField.variable.type = 'address'
@@ -130,8 +130,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'city',
 					'state',
 				]
-				newField.variable.doc_display_style = 'plain'
-				newField.variable.row_template = ''
+
+				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'structured_list':
 				newField.variable.type = type
