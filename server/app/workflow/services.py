@@ -39,7 +39,13 @@ def format_workflow_responsible_users(users: list, group: dict) -> list:
     Returns:
         dict: The formatted responsible users list
     """
-    users_ids = [int(user) for user in users]
+    if len(users) > 0 and type(users[0]) is dict:
+        users_ids = []
+        for u in users:
+            if "id" in u:
+                users_ids.append(u["id"])
+    else:
+        users_ids = [int(user) for user in users]
     users = User.query.filter(User.id.in_(users_ids)).all()
     if len(users) == len(users_ids):
         responsible_users = []
