@@ -33,28 +33,24 @@ const Integrations = () => {
 					width: '100%',
 					background: 'white',
 				}}
-				loading={loading}
-			>
+				loading={loading}>
 				<Title style={{ marginBottom: 30 }} level={4}>
 					{'Integração com Docusign'}
 				</Title>
 				<Form
 					form={form}
 					id="integrationForm"
-					onFinish={saveIntegrationDocusign}
-				>
+					onFinish={saveIntegrationDocusign}>
 					<Form.Item
 						label="ID da conta"
 						name="docusign_account_id"
-						rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					>
+						rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 						<Input value="" />
 					</Form.Item>
 					<Form.Item
 						label="Chave de integração da API"
 						name="docusign_integration_key"
-						rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-					>
+						rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 						<Input value="" />
 					</Form.Item>
 					<Form.Item label="Chave secreta da API" name="docusign_secret_key">
@@ -71,8 +67,7 @@ const Integrations = () => {
 						style={{
 							display: 'flex',
 							justifyContent: 'flex-end',
-						}}
-					>
+						}}>
 						<Form.Item>
 							<Button type="primary" htmlType="submit" form="integrationForm">
 								Salvar

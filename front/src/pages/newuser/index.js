@@ -87,8 +87,7 @@ function NewUser() {
 								isFullWidth={true}
 								disabled={companyName.length === 0}
 								variation="primary"
-								onClick={handleAdd}
-							>
+								onClick={handleAdd}>
 								{loading ? (
 									<LoadingOutlined
 										twoToneColor="#40a9ff"

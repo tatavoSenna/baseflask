@@ -73,8 +73,7 @@ const Signers = ({ data, setInputsFilled, inputsFilled }) => {
 				size="large"
 				type="dashed"
 				onClick={() => handleAddParty()}
-				style={{ height: '4rem', marginBottom: '1rem' }}
-			>
+				style={{ height: '4rem', marginBottom: '1rem' }}>
 				Nova Parte
 			</Button>
 		</div>

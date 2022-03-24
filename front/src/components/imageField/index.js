@@ -44,8 +44,7 @@ const ImageField = ({ pageFieldsData, className, onChange }) => {
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			colon={false}
-			value={fileList.length > 0 ? fileList[0].url : ''}
-		>
+			value={fileList.length > 0 ? fileList[0].url : ''}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Input
 					name={'input'}
@@ -59,16 +58,14 @@ const ImageField = ({ pageFieldsData, className, onChange }) => {
 					beforeUpload={beforeUpload}
 					onChange={onChange}
 					onPreview={() => setVisible(true)}
-					onRemove={() => setFileList([])}
-				>
+					onRemove={() => setFileList([])}>
 					{fileList.length === 0 && uploadButton}
 				</Upload>
 				<Modal
 					visible={visible}
 					title={fileList.length > 0 ? fileList[0].name : ''}
 					footer={null}
-					onCancel={() => setVisible(false)}
-				>
+					onCancel={() => setVisible(false)}>
 					<img
 						alt="imagem"
 						style={{ width: '100%' }}

@@ -18,16 +18,14 @@ const Tabs = () => {
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
-			}}
-		>
+			}}>
 			<div
 				style={{
 					padding: 10,
 					width: '100%',
 					display: 'flex',
 					flexDirection: 'column',
-				}}
-			></div>
+				}}></div>
 		</div>
 	)
 }

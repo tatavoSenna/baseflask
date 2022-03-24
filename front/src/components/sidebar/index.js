@@ -95,8 +95,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 					className={styles.sider}
 					trigger={null}
 					collapsed={handleCollapseDynamic()}
-					collapsible
-				>
+					collapsible>
 					<div className={styles.logoWrapper}>
 						{handleCollapseDynamic() ? (
 							<img
@@ -115,8 +114,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 					<Menu
 						className={styles.menu}
 						mode="inline"
-						defaultSelectedKeys={['1']}
-					>
+						defaultSelectedKeys={['1']}>
 						<Menu.Item
 							key="/"
 							onClick={() => {
@@ -128,8 +126,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 									className={styles.icons}
 									style={{ fontSize: 18 }}
 								/>
-							}
-						>
+							}>
 							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
 						</Menu.Item>
 						<Menu.Item
@@ -140,8 +137,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 									style={{ fontSize: 18 }}
 								/>
 							}
-							onClick={() => handleGoTo('/users')}
-						>
+							onClick={() => handleGoTo('/users')}>
 							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
 						</Menu.Item>
 						<Menu.Item
@@ -152,15 +148,13 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 									style={{ fontSize: 18 }}
 								/>
 							}
-							onClick={() => handleGoTo('/templates')}
-						>
+							onClick={() => handleGoTo('/templates')}>
 							<Tooltip className={styles.tooltip}>Templates</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="settings"
 							icon={<SettingOutlined />}
-							onClick={() => handleGoTo('/settings')}
-						>
+							onClick={() => handleGoTo('/settings')}>
 							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
 						</Menu.Item>
 						{is_admin && (
@@ -172,8 +166,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 										style={{ fontSize: 18 }}
 									/>
 								}
-								onClick={() => handleGoTo('/companies')}
-							>
+								onClick={() => handleGoTo('/companies')}>
 								<Tooltip className={styles.tooltip}>Empresas</Tooltip>
 							</Menu.Item>
 						)}
@@ -186,8 +179,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 										style={{ fontSize: 18 }}
 									/>
 								}
-								onClick={() => handleGoTo('/docs')}
-							>
+								onClick={() => handleGoTo('/docs')}>
 								<Tooltip className={styles.tooltip}>Docs</Tooltip>
 							</Menu.Item>
 						)}
@@ -206,44 +198,38 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						backgroundColor: '#001529',
 					}}
 					theme="light"
-					className={styles.sidebar}
-				>
+					className={styles.sidebar}>
 					<div className={styles.logoWrapper}>
 						<img src={logoBlack} alt="logo" className={styles.logo} />
 					</div>
 					<Menu
 						defaultSelectedKeys={[`${pathname.split('/')[1] || '/'}`]}
-						mode="inline"
-					>
+						mode="inline">
 						<Menu.Item
 							key="/"
 							onClick={() => {
 								handleFolderRowBack()
 								handleGoTo('/')
 							}}
-							icon={<FolderOpenOutlined />}
-						>
+							icon={<FolderOpenOutlined />}>
 							Documentos
 						</Menu.Item>
 						<Menu.Item
 							key="users"
 							icon={<TeamOutlined />}
-							onClick={() => handleGoTo('/users')}
-						>
+							onClick={() => handleGoTo('/users')}>
 							Usuários
 						</Menu.Item>
 						<Menu.Item
 							key="templates"
 							icon={<LayoutOutlined />}
-							onClick={() => handleGoTo('/templates')}
-						>
+							onClick={() => handleGoTo('/templates')}>
 							Templates
 						</Menu.Item>
 						<Menu.Item
 							key="settings"
 							icon={<SettingOutlined />}
-							onClick={() => handleGoTo('/settings')}
-						>
+							onClick={() => handleGoTo('/settings')}>
 							Configurações
 						</Menu.Item>
 					</Menu>

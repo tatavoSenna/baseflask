@@ -16,8 +16,7 @@ function Delete({ companyName, handleDelete, disabled }) {
 				<Popconfirm
 					disabled={disabled}
 					title="Deseja deletar permanentemente esta empresa?"
-					onConfirm={() => handleDelete(companyName)}
-				>
+					onConfirm={() => handleDelete(companyName)}>
 					<DeleteOutlined
 						style={{ fontSize: '20px', color: disabled ? 'lightgray' : 'red' }}
 					/>

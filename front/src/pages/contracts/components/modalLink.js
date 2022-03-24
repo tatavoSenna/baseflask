@@ -15,8 +15,7 @@ const LinkModal = ({ handleOk, showModal, link }) => {
 				<Button key="ok" onClick={handleOk} form="LinkForm">
 					OK
 				</Button>,
-			]}
-		>
+			]}>
 			<Form form={form} id="LinkForm">
 				<Form.Item label="Novo Link Documento"></Form.Item>
 				<Form.Item label="Link">
@@ -27,8 +26,7 @@ const LinkModal = ({ handleOk, showModal, link }) => {
 							display: 'inline-block',
 							width: 'calc(90% - 8px)',
 							margin: '0 5px 0 0',
-						}}
-					>
+						}}>
 						<Input value={link} disabled />
 					</Form.Item>
 					<Tooltip title={title}>

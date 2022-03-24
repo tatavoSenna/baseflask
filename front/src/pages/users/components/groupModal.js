@@ -23,12 +23,10 @@ const GroupModal = ({
 					key="criar"
 					onClick={() => handleCreate(form)}
 					form="newGroupForm"
-					disabled={!newGroup.name}
-				>
+					disabled={!newGroup.name}>
 					Criar
 				</Button>,
-			]}
-		>
+			]}>
 			<Form form={form} id="newGroupForm" onChange={() => handleNewGroup(form)}>
 				<Form.Item label="Novo Grupo"></Form.Item>
 				<Form.Item label="Nome" name="name">

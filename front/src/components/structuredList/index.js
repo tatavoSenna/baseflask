@@ -22,8 +22,7 @@ const StructuredList = ({
 			onChange={onChange}
 			hasFeedback
 			type={type}
-			colon={false}
-		>
+			colon={false}>
 			<Card>
 				<Form.List name={`structured_list_${pageIndex}_${fieldIndex}`}>
 					{(fields, { add, remove }) => {
@@ -46,8 +45,7 @@ const StructuredList = ({
 										type="dashed"
 										onClick={() => add()}
 										block
-										icon={<PlusOutlined />}
-									>
+										icon={<PlusOutlined />}>
 										Adicionar Campo
 									</Button>
 								</Form.Item>

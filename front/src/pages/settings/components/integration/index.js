@@ -52,8 +52,7 @@ const Integration = () => {
 				width: '100%',
 				background: 'white',
 			}}
-			loading={loading}
-		>
+			loading={loading}>
 			<Docusign
 				checkDocusign={checkDocusign}
 				onCheckDocusign={onCheckDocusign}

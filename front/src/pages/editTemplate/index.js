@@ -221,34 +221,29 @@ const EditTemplate = () => {
 					onClick={handleNav}
 					selectedKeys={[current]}
 					mode="horizontal"
-					style={{ display: 'flex' }}
-				>
+					style={{ display: 'flex' }}>
 					<Menu.Item
 						key="form"
 						className={!inputsFilled.form ? styles.empty : undefined}
-						icon={<FormOutlined />}
-					>
+						icon={<FormOutlined />}>
 						Formulário
 					</Menu.Item>
 					<Menu.Item
 						key="workflow"
 						className={!inputsFilled.workflow ? styles.empty : undefined}
-						icon={<NodeIndexOutlined />}
-					>
+						icon={<NodeIndexOutlined />}>
 						Workflow
 					</Menu.Item>
 					<Menu.Item
 						key="text"
 						className={!inputsFilled.text ? styles.empty : undefined}
-						icon={<FileTextOutlined />}
-					>
+						icon={<FileTextOutlined />}>
 						Texto
 					</Menu.Item>
 					<Menu.Item
 						key="signers"
 						className={!inputsFilled.signers ? styles.empty : undefined}
-						icon={<TeamOutlined />}
-					>
+						icon={<TeamOutlined />}>
 						Assinantes
 					</Menu.Item>
 				</Menu>
@@ -258,8 +253,7 @@ const EditTemplate = () => {
 					type="primary"
 					htmlType="submit"
 					className={styles.button}
-					disabled={!Object.values(inputsFilled).every(Boolean)}
-				>
+					disabled={!Object.values(inputsFilled).every(Boolean)}>
 					Enviar
 				</Button>
 				<Layout className={styles.content}>
@@ -271,8 +265,7 @@ const EditTemplate = () => {
 							form={form}
 							layout="horizontal"
 							hideRequiredMark
-							onFinish={onSubmit}
-						>
+							onFinish={onSubmit}>
 							{current === 'form' && <TemplateForm data={data} />}
 							{current === 'workflow' && <Workflow form={form} />}
 							{current === 'text' && (

@@ -69,13 +69,11 @@ const Editor = ({ text, onUpdateText, block }) => {
 		<div
 			style={{
 				margin: 5,
-			}}
-		>
+			}}>
 			<div className={classNames(styles.documentEditor)}>
 				<div
 					id="toolbar-container"
-					className={classNames(styles.documentEditorToolbar)}
-				></div>
+					className={classNames(styles.documentEditorToolbar)}></div>
 				<div className={classNames(styles.documentEditorEditableContainer)}>
 					<div className={classNames(styles.ckEditorEditable)}>
 						<CKEditor

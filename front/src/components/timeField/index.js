@@ -44,8 +44,7 @@ const TimeField = ({
 				]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}
-		>
+			initialValue={!inputValue ? '' : inputValue}>
 			<MaskedInput
 				mask="11:11"
 				placeholder=""

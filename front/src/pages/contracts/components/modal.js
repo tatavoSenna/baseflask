@@ -48,8 +48,7 @@ const ContractModal = ({
 				display: 'flex',
 				flexDirection: 'row',
 				justifyContent: 'flex-end',
-			}}
-		>
+			}}>
 			<Button key="cancelar" onClick={handleCancel}>
 				Cancelar
 			</Button>
@@ -63,8 +62,7 @@ const ContractModal = ({
 						: handleCreate({ title, modelId })
 				}
 				form="newContractForm"
-				disabled={!(title && modelId)}
-			>
+				disabled={!(title && modelId)}>
 				Criar
 			</Button>
 		</div>
@@ -75,8 +73,7 @@ const ContractModal = ({
 			visible={showModal}
 			closable={false}
 			destroyOnClose={true}
-			footer={null}
-		>
+			footer={null}>
 			<Form form={form} id="newContractForm">
 				<Title
 					level={4}
@@ -84,8 +81,7 @@ const ContractModal = ({
 						color: 'rgba(0, 0, 0, 0.45)',
 						textAlign: 'center',
 						marginBottom: 0,
-					}}
-				>
+					}}>
 					Novo Documento
 				</Title>
 				<NewDivider />
@@ -109,8 +105,7 @@ const ContractModal = ({
 				<StyledItemForm>
 					<Checkbox
 						onChange={(e) => setChecked(e.target.checked)}
-						checked={checked}
-					>
+						checked={checked}>
 						Criar URL externa
 					</Checkbox>
 				</StyledItemForm>
@@ -124,8 +119,7 @@ const ContractModal = ({
 							min: 0,
 							message: 'Número inválido!',
 						},
-					]}
-				>
+					]}>
 					<>
 						<InputNumber
 							autoFocus

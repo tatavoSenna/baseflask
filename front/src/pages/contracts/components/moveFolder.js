@@ -88,8 +88,7 @@ const MoveFolderModal = ({
 			<Button
 				key="move"
 				disabled={moveUnable}
-				onClick={() => handleMoveButton()}
-			>
+				onClick={() => handleMoveButton()}>
 				Mover
 			</Button>,
 		]
@@ -102,15 +101,13 @@ const MoveFolderModal = ({
 			destroyOnClose={true}
 			afterClose={handleResetFolder}
 			title={`Selecione um novo diretório para ${chosenMoveRow.title}`}
-			footer={buttonDisplay()}
-		>
+			footer={buttonDisplay()}>
 			<div
 				style={{
 					display: 'flex',
 					justifyContent: 'center',
 					marginTop: 10,
-				}}
-			>
+				}}>
 				<Spin spinning={!folders.length && loading} />
 				{!folders.length && !loading ? (
 					<Empty

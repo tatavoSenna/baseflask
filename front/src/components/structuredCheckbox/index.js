@@ -38,8 +38,7 @@ const StructuredCheckbox = ({
 			hasFeedback
 			type={type}
 			initialValue={selected}
-			colon={false}
-		>
+			colon={false}>
 			<Checkbox.Group>
 				<Card>
 					{options.map((option, index) => {
@@ -62,8 +61,7 @@ const StructuredCheckbox = ({
 										disabled={disabled}
 										onChange={(value) =>
 											updateVisible(value.target.checked, index)
-										}
-									>
+										}>
 										{option.label}
 									</Checkbox>
 								</Row>

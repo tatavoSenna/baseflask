@@ -62,7 +62,8 @@
 		"useTabs": true,
 		"semi": false,
 		"singleQuote": true,
-		"trailingComma": "es5"
+		"trailingComma": "es5",
+		"bracketSameLine": true
 	},
 	"jest": {
 		"setupFilesAfterEnv": [

@@ -95,8 +95,7 @@ const Field = ({
 										: 'plain'
 								}
 								onChange={(v) => updateVariable('doc_display_style', v)}
-								$error={!validVariableStyle}
-							>
+								$error={!validVariableStyle}>
 								{displayStyles.map(({ value, name }, i) => (
 									<Select.Option value={value} key={i}>
 										{name}

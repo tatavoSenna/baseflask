@@ -49,8 +49,7 @@ const Settings = () => {
 					onClick={handleNav}
 					selectedKeys={[current]}
 					mode="horizontal"
-					style={{ display: 'flex' }}
-				>
+					style={{ display: 'flex' }}>
 					<Menu.Item key="companyConfiguration" icon={<FormOutlined />}>
 						Configurações da Empresa
 					</Menu.Item>

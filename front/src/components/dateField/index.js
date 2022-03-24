@@ -31,8 +31,7 @@ const DateField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			initialValue={validateDate(inputValue)}
-			colon={false}
-		>
+			colon={false}>
 			<DatePicker
 				format={'DD-MM-YYYY'}
 				placeholder={''}

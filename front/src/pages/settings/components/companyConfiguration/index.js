@@ -23,8 +23,7 @@ const CompanyConfiguration = () => {
 				maxWidth: '800px',
 				width: '100%',
 				background: 'white',
-			}}
-		>
+			}}>
 			<Title style={{ marginBottom: 30 }} level={4}>
 				{'Configurações da Empresa'}
 			</Title>
@@ -41,8 +40,7 @@ const CompanyConfiguration = () => {
 								logo = e.target.result
 							}
 							return false
-						}}
-					>
+						}}>
 						<Button icon={<UploadOutlined />}>Upload</Button>
 					</Upload>
 				</Form.Item>
@@ -50,8 +48,7 @@ const CompanyConfiguration = () => {
 					style={{
 						display: 'flex',
 						justifyContent: 'flex-end',
-					}}
-				>
+					}}>
 					<Button type="primary" htmlType="submit" onClick={saveSettingsLogo}>
 						Salvar
 					</Button>

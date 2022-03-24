@@ -125,8 +125,7 @@ const Tabs = ({
 																marginBottom: 0,
 																marginLeft: '10px',
 															}}
-															key={item.label + index}
-														>
+															key={item.label + index}>
 															{item.label}:
 														</Paragraph>
 														<Paragraph
@@ -136,8 +135,7 @@ const Tabs = ({
 																marginBottom: 14,
 																marginLeft: '10px',
 															}}
-															key={item.value + index}
-														>
+															key={item.value + index}>
 															{item.value}
 														</Paragraph>
 													</>
@@ -150,8 +148,7 @@ const Tabs = ({
 															fontSize: 12,
 															marginBottom: 0,
 														}}
-														key={item_list.label + index}
-													>
+														key={item_list.label + index}>
 														{item_list.label}:
 													</Paragraph>
 													<Paragraph
@@ -160,8 +157,7 @@ const Tabs = ({
 															fontSize: 16,
 															marginBottom: 14,
 														}}
-														key={item_list.value + index}
-													>
+														key={item_list.value + index}>
 														{item_list.value}
 													</Paragraph>
 												</>
@@ -174,14 +170,12 @@ const Tabs = ({
 								<>
 									<Paragraph
 										style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
-										key={item.label + index}
-									>
+										key={item.label + index}>
 										{item.label}:
 									</Paragraph>
 									<Paragraph
 										style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
-										key={item.value + index}
-									>
+										key={item.value + index}>
 										{item.value}
 									</Paragraph>
 								</>
@@ -199,8 +193,7 @@ const Tabs = ({
 			onFinish={(values) => {
 				onChangeVariables(values)
 				setIsEdit(false)
-			}}
-		>
+			}}>
 			{item.fields.map((item, fieldIndex) => {
 				switch (item.type) {
 					case 'structured_list':
@@ -210,8 +203,7 @@ const Tabs = ({
 							<>
 								<Title
 									level={4}
-									style={{ marginTop: 10, marginBottom: '20px', fontSize: 15 }}
-								>
+									style={{ marginTop: 10, marginBottom: '20px', fontSize: 15 }}>
 									{item.subtitle}
 								</Title>
 								<StructuredCheckbox
@@ -253,16 +245,14 @@ const Tabs = ({
 				display: 'flex',
 				justifyContent: 'center',
 				marginTop: 10,
-			}}
-		>
+			}}>
 			<Form.Item {...tailLayout}>
 				{!isEdit && (
 					<Button
 						key="edit"
 						className={styles.button}
 						onClick={() => setIsEdit(true)}
-						disabled={loadingSign}
-					>
+						disabled={loadingSign}>
 						Editar
 					</Button>
 				)}
@@ -271,8 +261,7 @@ const Tabs = ({
 						key="cancel"
 						className={styles.button}
 						onClick={() => setIsEdit(false)}
-						disabled={loadingSign}
-					>
+						disabled={loadingSign}>
 						Cancelar
 					</Button>
 				)}
@@ -282,8 +271,7 @@ const Tabs = ({
 						type="primary"
 						htmlType="submit"
 						form="infoForm"
-						disabled={loadingSign}
-					>
+						disabled={loadingSign}>
 						Salvar
 					</Button>
 				)}
@@ -299,8 +287,7 @@ const Tabs = ({
 						<Title
 							key={index}
 							level={4}
-							style={{ marginTop: 20, fontSize: 18 }}
-						>
+							style={{ marginTop: 20, fontSize: 18 }}>
 							{item.title}
 						</Title>
 						{textType === '.docx' ? inputView(item, index) : textView(item)}
@@ -324,15 +311,13 @@ const Tabs = ({
 			<ScrollContent>
 				{isItNotDocX && (
 					<div
-						style={{ display: 'flex', justifyContent: 'left', paddingTop: 20 }}
-					>
+						style={{ display: 'flex', justifyContent: 'left', paddingTop: 20 }}>
 						<Form.Item>
 							<Button
 								type="primary"
 								htmlType="button"
 								onClick={() => onClickUpdate(textUpdate)}
-								disabled={disableButton}
-							>
+								disabled={disableButton}>
 								Criar nova versão
 							</Button>
 						</Form.Item>
@@ -345,15 +330,13 @@ const Tabs = ({
 					}
 					$docxverification={isItNotDocX}
 					selectedKeys={[versionId]}
-					mode="vertical"
-				>
+					mode="vertical">
 					{versions.map((item) => (
 						<ItemContainer
 							key={item.id}
 							$propscolor={item.id === versionId}
 							$propsdifferentpadding={isItNotDocX}
-							$propsbordertop={isItNotDocX}
-						>
+							$propsbordertop={isItNotDocX}>
 							{isItNotDocX ? (
 								<ContainerDiv>
 									<ContainerIcon>
@@ -370,8 +353,7 @@ const Tabs = ({
 								<ContainerIcon
 									$changeopacity={
 										item.id === Object.keys(versions)[versions.length - 1]
-									}
-								>
+									}>
 									<StyledText style={{ padding: '0 0 5px', fontSize: 14 }}>
 										Por:{' '}
 										<StyledText style={{ fontSize: 14 }}>
@@ -396,8 +378,7 @@ const Tabs = ({
 											? true
 											: 'otherversion'
 										: undefined
-								}
-							>
+								}>
 								Data:{' '}
 								<StyledText>
 									{moment(item.created_at).format('DD/MM/YYYY')}
@@ -458,8 +439,7 @@ const Tabs = ({
 								verifyPastDue(dateNow(), date)
 									? { fontWeight: 'bold', color: 'red' }
 									: { fontWeight: 'bold' }
-							}
-						>
+							}>
 							{date}
 						</span>
 						<br />
@@ -511,8 +491,7 @@ const Tabs = ({
 					margin: 5,
 					minHeight: 200,
 					background: '#fff',
-				}}
-			>
+				}}>
 				<StepsAntd
 					style={{
 						marginTop: '5%',
@@ -521,8 +500,7 @@ const Tabs = ({
 					progressDot
 					direction="vertical"
 					current={current}
-					labelPlacement="vertical"
-				>
+					labelPlacement="vertical">
 					{steps.map((item, index) => (
 						<Step
 							style={{
@@ -539,8 +517,7 @@ const Tabs = ({
 					style={{
 						display: 'flex',
 						justifyContent: 'center',
-					}}
-				>
+					}}>
 					<Form.Item {...tailLayout}>
 						{current !== 0 && signedWorkflow !== true && (
 							<Button
@@ -548,8 +525,7 @@ const Tabs = ({
 								htmlType="button"
 								className={styles.button}
 								onClick={onClickPrevious}
-								disabled={block}
-							>
+								disabled={block}>
 								Reprovar
 							</Button>
 						)}
@@ -558,8 +534,7 @@ const Tabs = ({
 								type="primary"
 								htmlType="button"
 								onClick={onClickNext}
-								disabled={block}
-							>
+								disabled={block}>
 								Aprovar
 							</Button>
 						)}
@@ -569,8 +544,7 @@ const Tabs = ({
 								htmlType="button"
 								className={styles.button}
 								onClick={onClickDownload}
-								disabled={block}
-							>
+								disabled={block}>
 								Baixar Documento
 							</Button>
 						)}
@@ -587,24 +561,21 @@ const Tabs = ({
 					{index === 0 ? (
 						<Title
 							level={4}
-							style={{ marginTop: 30, marginBottom: 10, fontSize: 18 }}
-						>
+							style={{ marginTop: 30, marginBottom: 10, fontSize: 18 }}>
 							Parte {item.party}
 						</Title>
 					) : null}
 					{signers[index - 1] && item.party !== signers[index - 1].party ? (
 						<Title
 							level={4}
-							style={{ marginTop: 10, marginBottom: 10, fontSize: 18 }}
-						>
+							style={{ marginTop: 10, marginBottom: 10, fontSize: 18 }}>
 							Parte {item.party}
 						</Title>
 					) : null}
 					<DivContainer
 						i={index}
 						currentSigners={item.party}
-						allSigners={signers}
-					>
+						allSigners={signers}>
 						<div>
 							<Title style={{ fontSize: 18, fontWeight: 400 }}>
 								{item.title}
@@ -622,8 +593,7 @@ const Tabs = ({
 												display: 'inline',
 												marginLeft: 5,
 												fontWeight: `${!field.valueVariable ? 400 : 700}`,
-											}}
-										>
+											}}>
 											{!field.valueVariable
 												? 'Aguardando preenchimento dos dados'
 												: field.valueVariable}
@@ -642,8 +612,7 @@ const Tabs = ({
 												fontSize: 12,
 												display: 'inline',
 												marginLeft: 5,
-											}}
-										>
+											}}>
 											{item.status}
 										</Paragraph>
 									</Paragraph>
@@ -658,8 +627,7 @@ const Tabs = ({
 					display: 'flex',
 					justifyContent: 'right',
 					marginTop: 10,
-				}}
-			>
+				}}>
 				<Form.Item {...tailLayout}>
 					{!signed && (
 						<Button
@@ -667,8 +635,7 @@ const Tabs = ({
 							type="primary"
 							className={styles.button}
 							onClick={() => showAssignModal(true)}
-							disabled={loadingSign}
-						>
+							disabled={loadingSign}>
 							Cadastrar
 						</Button>
 					)}
@@ -676,8 +643,7 @@ const Tabs = ({
 						<Button
 							key="assinar"
 							type="primary"
-							onClick={loadingSign ? () => {} : sentAssign}
-						>
+							onClick={loadingSign ? () => {} : sentAssign}>
 							{loadingSign ? <Spin spinning={loadingSign} /> : 'Assinar'}
 						</Button>
 					)}
@@ -698,8 +664,7 @@ const Tabs = ({
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
-			}}
-		>
+			}}>
 			<Menu
 				onClick={(e) => {
 					setVariables(false)
@@ -709,8 +674,7 @@ const Tabs = ({
 				mode="horizontal"
 				style={{
 					width: '100%',
-				}}
-			>
+				}}>
 				<Menu.Item style={{ width: 100, textAlign: 'center' }} key="1">
 					Info
 				</Menu.Item>
@@ -735,8 +699,7 @@ const Tabs = ({
 					width: '100%',
 					display: 'flex',
 					flexDirection: 'column',
-				}}
-			>
+				}}>
 				{tab(value)}
 			</div>
 		</div>

@@ -28,22 +28,19 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 			move={editTemplateMove}
 			name="signers"
 			index={signerIndex}
-			listIndex={partyIndex}
-		>
+			listIndex={partyIndex}>
 			<Form.Item
 				name={`title_${partyIndex}_${signerIndex}`}
 				label="Título"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 'title')}
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-			>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input value={data.title} />
 			</Form.Item>
 			<Form.Item
 				name={`name_${partyIndex}_${signerIndex}`}
 				label="Variável do nome"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 0)}
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-			>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={fields[0].variable}
 					style={{ textTransform: 'uppercase' }}
@@ -53,8 +50,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				name={`email_${partyIndex}_${signerIndex}`}
 				label="Variável do email"
 				onChange={(e) => updateSignerInfo(e, partyIndex, signerIndex, 1)}
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-			>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={fields[1].variable}
 					style={{ textTransform: 'uppercase' }}
@@ -67,8 +63,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 				onChange={(e) =>
 					updateSignerInfo(e, partyIndex, signerIndex, 'anchor_string')
 				}
-				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-			>
+				rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 				<Input
 					value={data.anchor[0].anchor_string}
 					style={{ textTransform: 'uppercase' }}
@@ -77,8 +72,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 			<Form.Item
 				name={`x_offset_${partyIndex}_${signerIndex}`}
 				label="Deslocamento em X"
-				help="Máx. ±10"
-			>
+				help="Máx. ±10">
 				<InputNumber
 					value={data.anchor[0].anchor_x_offset}
 					formatter={(value) => `${value} pol`}
@@ -99,8 +93,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 			<Form.Item
 				name={`y_offset_${partyIndex}_${signerIndex}`}
 				label="Deslocamento em Y"
-				help="Máx. ±10"
-			>
+				help="Máx. ±10">
 				<InputNumber
 					value={data.anchor[0].anchor_y_offset}
 					formatter={(value) => `${value} pol`}
@@ -126,8 +119,7 @@ const Signer = ({ data, partyIndex, signerIndex, updateSignerInfo }) => {
 					justifyContent: 'space-evenly',
 					alignItems: 'center',
 					margin: '25px -25px -10px -25px',
-				}}
-			>
+				}}>
 				<Badge count={signerIndex + 1} style={{ background: '#1890ff' }} />
 				<Divider
 					type="vertical"

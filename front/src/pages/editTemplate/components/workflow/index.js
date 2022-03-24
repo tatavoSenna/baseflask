@@ -175,8 +175,7 @@ const Workflow = ({ form }) => {
 				size="large"
 				type="dashed"
 				onClick={() => handleAddStep()}
-				style={{ height: '4rem', marginBottom: '1rem' }}
-			>
+				style={{ height: '4rem', marginBottom: '1rem' }}>
 				Novo Passo
 			</Button>
 		</div>

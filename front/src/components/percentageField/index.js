@@ -32,8 +32,7 @@ const PercentageField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}
-		>
+			initialValue={!inputValue ? '' : inputValue}>
 			<InputNumber
 				autoFocus={first}
 				placeholder=""

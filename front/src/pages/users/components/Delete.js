@@ -16,8 +16,7 @@ function Delete({ username, handleDelete, disabled }) {
 				<Popconfirm
 					disabled={disabled}
 					title="Deseja deletar permanentemente este usuário?"
-					onConfirm={() => handleDelete(username)}
-				>
+					onConfirm={() => handleDelete(username)}>
 					<DeleteOutlined
 						style={{ fontSize: '20px', color: disabled ? 'lightgray' : 'red' }}
 					/>

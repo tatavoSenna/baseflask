@@ -19,8 +19,7 @@ const components = {
 		return (
 			<View
 				textAlign="center"
-				padding={`${tokens.space.large} ${tokens.space.xxl} ${tokens.space.xs} ${tokens.space.xxl}`}
-			>
+				padding={`${tokens.space.large} ${tokens.space.xxl} ${tokens.space.xs} ${tokens.space.xxl}`}>
 				<Image alt="Lawing logo" src={logo} />
 			</View>
 		)
@@ -51,8 +50,7 @@ function AuthWrapper({ children }) {
 			}
 			components={components}
 			loginMechanisms={['email']}
-			signUpAttributes={['name', 'email']}
-		>
+			signUpAttributes={['name', 'email']}>
 			{({ signOut, user }) => {
 				return (
 					<LogOutContext.Provider value={signOut}>

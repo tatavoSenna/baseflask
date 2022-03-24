@@ -24,8 +24,7 @@ export const getColumns = (
 					type="link"
 					onClick={() =>
 						!row.is_folder ? handleToGo(row) : handleFolderSelect(row)
-					}
-				>
+					}>
 					{text}
 				</Button>
 			</Space>

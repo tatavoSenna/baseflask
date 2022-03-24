@@ -109,8 +109,7 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 							top: '1px',
 						}}
 					/>
-				}
-			></Tabs>
+				}></Tabs>
 		</DndProvider>
 	)
 }

@@ -45,14 +45,12 @@ const CnaeField = ({
 			}
 			type={type}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}
-		>
+			initialValue={!inputValue ? '' : inputValue}>
 			<Select
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange}
-			>
+				onChange={onChange}>
 				{cnaeDescription.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}

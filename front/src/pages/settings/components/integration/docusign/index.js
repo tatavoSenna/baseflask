@@ -32,8 +32,7 @@ const Docusign = ({
 			style={{
 				padding: '30px 0 30px 0',
 				borderTop: '1px solid #e8e8e8',
-			}}
-		>
+			}}>
 			<Checkbox
 				style={{
 					fontSize: '16px',
@@ -41,8 +40,7 @@ const Docusign = ({
 					fontWeight: '600',
 				}}
 				checked={checkDocusign}
-				onChange={onCheckDocusign}
-			>
+				onChange={onCheckDocusign}>
 				<img
 					src={logoDocusign}
 					style={{
@@ -57,22 +55,23 @@ const Docusign = ({
 			<Form
 				form={formDocu}
 				id="integrationDocusignForm"
-				onFinish={saveIntegrationDocusign}
-			>
+				onFinish={saveIntegrationDocusign}>
 				{checkDocusign ? (
 					<div style={{ marginTop: '60px' }}>
 						<Form.Item
 							label="ID da conta"
 							name="docusign_account_id"
-							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-						>
+							rules={[
+								{ required: true, message: 'Este campo é obrigatório.' },
+							]}>
 							<Input value="" />
 						</Form.Item>
 						<Form.Item
 							label="Chave de integração da API"
 							name="docusign_integration_key"
-							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-						>
+							rules={[
+								{ required: true, message: 'Este campo é obrigatório.' },
+							]}>
 							<Input value="" />
 						</Form.Item>
 						<Form.Item label="Chave secreta da API" name="docusign_secret_key">
@@ -90,14 +89,12 @@ const Docusign = ({
 							style={{
 								display: 'flex',
 								justifyContent: 'flex-end',
-							}}
-						>
+							}}>
 							<Form.Item>
 								<Button
 									type="primary"
 									htmlType="submit"
-									form="integrationDocusignForm"
-								>
+									form="integrationDocusignForm">
 									Salvar
 								</Button>
 							</Form.Item>

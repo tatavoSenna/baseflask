@@ -28,8 +28,7 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 					justifyContent: 'space-evenly',
 					alignItems: 'center',
 					margin: '25px -25px -25px -25px',
-				}}
-			>
+				}}>
 				<Badge count={name + 1} style={{ background: '#1890ff' }} />
 				<Divider
 					type="vertical"

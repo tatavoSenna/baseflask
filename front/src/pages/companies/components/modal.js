@@ -23,17 +23,14 @@ const CompanyModal = ({
 					key="criar"
 					onClick={() => handleAdd(form)}
 					form="newCompanyForm"
-					disabled={!newCompany.name}
-				>
+					disabled={!newCompany.name}>
 					Criar
 				</Button>,
-			]}
-		>
+			]}>
 			<Form
 				form={form}
 				id="newCompanyForm"
-				onChange={() => handleNewCompany(form)}
-			>
+				onChange={() => handleNewCompany(form)}>
 				<Form.Item label="Nova Empresa"></Form.Item>
 				<Form.Item label="Nome" name="name">
 					<Input value={newCompany.name} />

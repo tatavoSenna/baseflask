@@ -31,8 +31,7 @@ const RadioField = ({
 			}
 			type={type}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}
-		>
+			initialValue={!inputValue ? '' : inputValue}>
 			<Radio.Group disabled={disabled}>
 				{options.map((option, index) => (
 					<Radio key={index} value={option.value} onChange={onChange}>

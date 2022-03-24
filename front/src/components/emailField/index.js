@@ -45,8 +45,7 @@ const EmailField = ({
 				]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}
-		>
+			initialValue={!inputValue ? '' : inputValue}>
 			<Input
 				onChange={onChange}
 				autoFocus={first}

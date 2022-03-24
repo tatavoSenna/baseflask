@@ -22,8 +22,7 @@ function Docusign(props) {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-			}}
-		>
+			}}>
 			<Spin size="large" tip="loading" />
 		</Layout>
 	)

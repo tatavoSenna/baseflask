@@ -50,13 +50,11 @@ const PersonField = ({
 			className={className}
 			hasFeedback
 			colon={false}
-			style={{ marginBottom: 0 }}
-		>
+			style={{ marginBottom: 0 }}>
 			<DisplayNone>
 				<Form.Item
 					name={[objName, 'VARIABLE_NAME']}
-					initialValue={variable.name}
-				>
+					initialValue={variable.name}>
 					<></>
 				</Form.Item>
 			</DisplayNone>
@@ -65,12 +63,10 @@ const PersonField = ({
 				<Form.Item
 					name={[objName, 'PERSON_TYPE']}
 					initialValue=""
-					rules={[{ required: true, message: 'Este campo é obrigatório!' }]}
-				>
+					rules={[{ required: true, message: 'Este campo é obrigatório!' }]}>
 					<SBtnGroup
 						onChange={(value) => setPerson(value.target.value)}
-						btnProps={person}
-					>
+						btnProps={person}>
 						<SBtnRadio value={person_type[1]} onChange={onChange}>
 							Pessoa física
 						</SBtnRadio>

@@ -37,8 +37,7 @@ const UserEditModal = ({
 				<Button key="criar" onClick={handleUpdate} form="editUserForm">
 					Salvar
 				</Button>,
-			]}
-		>
+			]}>
 			<Form form={form} id="editUserForm" onChange={() => handleEditUser(form)}>
 				<Form.Item label="Editar usuário"></Form.Item>
 				<Form.Item label="Nome" name="name">
@@ -56,8 +55,7 @@ const UserEditModal = ({
 						placeholder="Selecione o grupo"
 						onChange={() => handleEditUser(form)}
 						onSelect={() => groupSelect.blur()}
-						onDeselect={() => groupSelect.blur()}
-					>
+						onDeselect={() => groupSelect.blur()}>
 						{children}
 					</Select>
 				</Form.Item>

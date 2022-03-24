@@ -35,8 +35,7 @@ const D4sign = ({
 				padding: '30px 0 30px 0',
 				borderTop: '1px solid #e8e8e8',
 				borderBottom: '1px solid #e8e8e8',
-			}}
-		>
+			}}>
 			<Checkbox
 				style={{
 					fontSize: '16px',
@@ -44,8 +43,7 @@ const D4sign = ({
 					fontWeight: '600',
 				}}
 				checked={checkD4sign}
-				onChange={onCheckD4sign}
-			>
+				onChange={onCheckD4sign}>
 				<img
 					src={logoD4sign}
 					style={{
@@ -60,15 +58,15 @@ const D4sign = ({
 			<Form
 				form={formD4}
 				id="integrationD4signForm"
-				onFinish={saveIntegrationD4sign}
-			>
+				onFinish={saveIntegrationD4sign}>
 				{checkD4sign ? (
 					<div style={{ marginTop: '60px' }}>
 						<Form.Item
 							label="Token da API"
 							name="d4sign_api_token"
-							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-						>
+							rules={[
+								{ required: true, message: 'Este campo é obrigatório.' },
+							]}>
 							<Input value="" />
 						</Form.Item>
 						<Form.Item label="Chave Crypt" name="d4sign_api_cryptkey">
@@ -95,22 +93,21 @@ const D4sign = ({
 						<Form.Item
 							label="Nome do Cofre"
 							name="d4sign_safe_name"
-							rules={[{ required: true, message: 'Este campo é obrigatório.' }]}
-						>
+							rules={[
+								{ required: true, message: 'Este campo é obrigatório.' },
+							]}>
 							<Input value="" />
 						</Form.Item>
 						<div
 							style={{
 								display: 'flex',
 								justifyContent: 'flex-end',
-							}}
-						>
+							}}>
 							<Form.Item>
 								<Button
 									type="primary"
 									htmlType="submit"
-									form="integrationD4signForm"
-								>
+									form="integrationD4signForm">
 									Salvar
 								</Button>
 							</Form.Item>

@@ -33,12 +33,10 @@ const UserModal = ({
 					key="criar"
 					onClick={() => handleCreate(form)}
 					form="newUserForm"
-					disabled={!(newUser.name && newUser.email)}
-				>
+					disabled={!(newUser.name && newUser.email)}>
 					Criar
 				</Button>,
-			]}
-		>
+			]}>
 			<Form form={form} id="newUserForm" onChange={() => handleNewUser(form)}>
 				<Form.Item label="Novo Usuário"></Form.Item>
 				<Form.Item label="Nome" name="name">
@@ -56,8 +54,7 @@ const UserModal = ({
 						placeholder="Selecione o grupo"
 						onChange={() => handleNewUser(form)}
 						onSelect={() => groupSelect.blur()}
-						onDeselect={() => groupSelect.blur()}
-					>
+						onDeselect={() => groupSelect.blur()}>
 						{children}
 					</Select>
 				</Form.Item>

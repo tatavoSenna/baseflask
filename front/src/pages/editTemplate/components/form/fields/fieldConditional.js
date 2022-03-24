@@ -73,8 +73,7 @@ const FieldConditional = ({
 						alignItems: 'center',
 						justifyContent: 'space-between',
 						marginBottom: '8px',
-					}}
-				>
+					}}>
 					<Input.Group compact>
 						<AutoComplete
 							placeholder="Variável"
@@ -94,8 +93,7 @@ const FieldConditional = ({
 							placeholder=""
 							style={{ width: '12%', textAlign: 'center' }}
 							defaultValue={condition?.operator}
-							onChange={(v) => updateCondition('operator', v, i)}
-						>
+							onChange={(v) => updateCondition('operator', v, i)}>
 							<Select.Option value="=">=</Select.Option>
 							<Select.Option value=">">&gt;</Select.Option>
 							<Select.Option value=">=">&gt;=</Select.Option>
@@ -132,8 +130,7 @@ const FieldConditional = ({
 					type="dashed"
 					onClick={() => addCondition()}
 					block
-					icon={<PlusOutlined />}
-				>
+					icon={<PlusOutlined />}>
 					Adicionar condicional
 				</Button>
 			</Form.Item>
