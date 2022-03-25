@@ -1,9 +1,4 @@
 import classNames from './classNames'
-import {
-	validateCNPJ,
-	validateCPF,
-	validateTime,
-	validateDate,
-} from './validations'
+export { classNames }
 
-export { classNames, validateCNPJ, validateCPF, validateTime, validateDate }
+export * from './validations'

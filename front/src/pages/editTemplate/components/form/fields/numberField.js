@@ -4,6 +4,7 @@ import { Input, InputNumber } from 'antd'
 import { FieldNumberOutlined } from '@ant-design/icons'
 import { Field, useUpdate } from './fieldBase'
 import { FormItem, styleIconValidation } from './styles'
+import { validateNumber } from 'utils'
 
 export const NumberField = (props) => {
 	const { data } = props
@@ -38,7 +39,9 @@ export const NumberField = (props) => {
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<FormItem label="Valor inicial" $width={'59%'}>
 							<InputNumber
-								onBlur={(e) => update({ initialValue: Number(e.target.value) })}
+								onBlur={(e) =>
+									update({ initialValue: validateNumber(e.target.value, '') })
+								}
 								defaultValue={data.initialValue}
 								precision={data.decimals || undefined}
 								step={data.step || undefined}
@@ -49,7 +52,9 @@ export const NumberField = (props) => {
 						<FormItem label="Decimais" $width={'37%'}>
 							<InputNumber
 								min={0}
-								onBlur={(e) => update({ decimals: Number(e.target.value) })}
+								onBlur={(e) =>
+									update({ decimals: validateNumber(e.target.value, '') })
+								}
 								defaultValue={data.decimals}
 								style={{ width: '100%' }}
 							/>
@@ -60,7 +65,9 @@ export const NumberField = (props) => {
 						<FormItem label="Intervalo" $width={'59%'}>
 							<Input.Group compact>
 								<InputNumber
-									onBlur={(e) => update({ min: Number(e.target.value) })}
+									onBlur={(e) =>
+										update({ min: validateNumber(e.target.value, '') })
+									}
 									defaultValue={data.min}
 									style={{
 										width: '41%',
@@ -80,7 +87,9 @@ export const NumberField = (props) => {
 									disabled
 								/>
 								<InputNumber
-									onBlur={(e) => update({ max: Number(e.target.value) })}
+									onBlur={(e) =>
+										update({ max: validateNumber(e.target.value, '') })
+									}
 									defaultValue={data.max}
 									style={{
 										width: '41%',
@@ -95,7 +104,9 @@ export const NumberField = (props) => {
 						<FormItem label="Incremento" $width={'37%'}>
 							<InputNumber
 								min={0}
-								onBlur={(e) => update({ step: Number(e.target.value) })}
+								onBlur={(e) =>
+									update({ step: validateNumber(e.target.value, '') })
+								}
 								defaultValue={data.step}
 								style={{ width: '100%' }}
 							/>
