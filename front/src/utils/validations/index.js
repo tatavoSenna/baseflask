@@ -90,3 +90,13 @@ export const validateDate = (s, format = 'DD-MM-YYYY') => {
 	let date = moment(s, format)
 	return date.isValid() ? date : ''
 }
+
+export const validateNumber = (x, invalidValue) => {
+	if (typeof x === 'number') return x
+	if (typeof x === 'string') {
+		const n = parseFloat(x)
+		return isNaN(n) ? invalidValue : n
+	}
+
+	return invalidValue
+}

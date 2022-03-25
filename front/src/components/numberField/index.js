@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
+import { validateNumber } from 'utils'
 
 const NumberField = ({
 	pageFieldsData,
@@ -20,6 +21,7 @@ const NumberField = ({
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
 	return (
 		<Form.Item
 			key={name}
@@ -32,14 +34,14 @@ const NumberField = ({
 				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : Number(inputValue)}>
+			initialValue={validateNumber(inputValue)}>
 			<InputNumber
 				autoFocus={first}
 				placeholder=""
-				min={min ? min : undefined}
-				max={max ? max : undefined}
-				precision={decimals ? decimals : undefined}
-				step={step ? step : undefined}
+				min={validateNumber(min)}
+				max={validateNumber(max)}
+				precision={validateNumber(decimals)}
+				step={validateNumber(step)}
 				decimalSeparator=","
 				disabled={disabled}
 				onChange={onChange}
