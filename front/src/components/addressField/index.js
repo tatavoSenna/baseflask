@@ -1,15 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import PropTypes, {
-	string,
-	shape,
-	array,
-	number,
-	bool,
-	object,
-	func,
-} from 'prop-types'
+import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 import { Form, Typography } from 'antd'
 import Fields from './fields'
 
@@ -18,15 +10,12 @@ const { Title } = Typography
 const AddressField = ({
 	pageFieldsData,
 	className,
-	pageIndex,
 	disabled,
 	inputValue,
-	fieldIndex,
 	onChange,
 }) => {
 	const { label, variable, type, fields, id } = pageFieldsData
 
-	const objName = `address_${pageIndex}_${fieldIndex}`
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -41,9 +30,7 @@ const AddressField = ({
 			colon={false}
 			style={{ marginBottom: 0 }}>
 			<DisplayNone>
-				<Form.Item
-					name={[objName, 'VARIABLE_NAME']}
-					initialValue={variable.name}>
+				<Form.Item name={variable.name}>
 					<></>
 				</Form.Item>
 			</DisplayNone>
@@ -51,7 +38,7 @@ const AddressField = ({
 			<AddressContainer>
 				<Fields
 					fields={fields}
-					name={objName}
+					name={variable.name}
 					disabled={disabled}
 					onChange={onChange}
 					inputValue={inputValue}
@@ -69,8 +56,6 @@ AddressField.propTypes = {
 		type: string.isRequired,
 	}).isRequired,
 	className: PropTypes.oneOfType([object, string]),
-	pageIndex: number,
-	fieldIndex: number,
 	disabled: bool,
 	inputValue: string,
 	onChange: func,

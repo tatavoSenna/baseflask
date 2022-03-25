@@ -67,7 +67,6 @@ from .controllers import (
     change_variables_controller,
     create_folder_controller,
     edit_document_workflow_controller,
-    transform_variables,
 )
 
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
@@ -382,7 +381,6 @@ def download(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def next_document_status(current_user, document_id):
-    # temp
     try:
         if current_user["name"] == None:
             user = current_user["email"]
@@ -630,8 +628,6 @@ def modify_document(current_user, document_id):
     if document.text_type != ".docx":
         abort(400, "Can only change variables of Word documents(.docx)")
     spec_variables = copy.deepcopy(variables)
-    spec_variables = create_text_variable(variables)
-    spec_variables = transform_variables(variables)
     try:
         format_variables(spec_variables, document.document_template_id)
     except Exception as e:

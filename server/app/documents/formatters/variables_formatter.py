@@ -235,7 +235,13 @@ def format_variables(variables, document_template_id):
                 formatted = format_variable(specs, variable_name, variables, variable)
                 extra_variables[variable_name] = formatted
 
-        elif "person" in variable or "address" in variable:
+        elif variables_specification[variable]["type"] == "person":
+
+            variables[variable]["TEXT"] = create_text_variable(
+                variables[variable], "person"
+            )
+
+        elif variables_specification[variable]["type"] == "address":
             continue
 
         else:
@@ -248,49 +254,23 @@ def format_variables(variables, document_template_id):
     return variables
 
 
-def create_text_variable(variables):
+def create_text_variable(variables, variable_type):
     text_variable = {}
-    new_dict = variables
-    for value in variables:
-        if "person" in value:
-            items = variables[value]
-            if items["PERSON_TYPE"] == "legal_person":
-                person_text_variable = LegalPersonTextVariable
-                person_text = LegalPersonText
-            else:
-                person_text_variable = NaturalPersonTextVariable
-                person_text = NaturalPersonText
+    filled_text = ""
+    if variable_type == "person":
+        if variables["PERSON_TYPE"] == "legal_person":
+            person_text_variable = LegalPersonTextVariable
+            person_text = LegalPersonText
+        else:
+            person_text_variable = NaturalPersonTextVariable
+            person_text = NaturalPersonText
 
-            for key, v in items.items():
-                if key in ["VARIABLE_NAME", "PERSON_TYPE"]:
-                    continue
-                jinja_template = jinja_env.from_string(person_text_variable[key])
-                filled_text = jinja_template.render(items)
-                text_variable[key] = filled_text
+        for value in variables:
+            if value in person_text_variable:
+                jinja_template = jinja_env.from_string(person_text_variable[value])
+                filled_text = jinja_template.render(variables)
+                text_variable[value] = filled_text
 
-            jinja_template = jinja_env.from_string(person_text)
-            filled_text = jinja_template.render(text_variable)
-            variables[value]["TEXT"] = filled_text
-    return variables
-
-
-def transform_variables(variables):
-    new_items = {}
-    new_dict = new_items
-    for value in variables:
-        if not "person" in value and not "address" in value:
-            new_dict[value] = variables[value]
-            continue
-        items = variables[value]
-        for key, v in items.items():
-            if key == "VARIABLE_NAME":
-                continue
-            var_name = items["VARIABLE_NAME"]
-            new_var_key = f"{var_name}_{key}"
-            new_items[new_var_key] = items[key]
-
-        new_dict[value] = new_items
-
-    if new_dict == {}:
-        return variables
-    return new_dict
+        jinja_template = jinja_env.from_string(person_text)
+        filled_text = jinja_template.render(text_variable)
+    return filled_text

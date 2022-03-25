@@ -27,8 +27,6 @@ import Text from './components/text'
 import styles from './index.module.scss'
 import MainLayout from '~/components/mainLayout'
 
-import styled from 'styled-components'
-
 const EditTemplate = () => {
 	const { data, loading, docPosted } = useSelector(
 		({ editTemplate }) => editTemplate

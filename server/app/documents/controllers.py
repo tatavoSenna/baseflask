@@ -38,7 +38,6 @@ from werkzeug.exceptions import Unauthorized
 
 from app.documents.formatters.variables_formatter import (
     format_variables,
-    transform_variables,
     create_text_variable,
 )
 
@@ -84,11 +83,6 @@ def create_document_controller(
 
     # Transforms received variables into specified variables with the current date
     current_date_dict = get_current_date_dict()
-    variables = copy.deepcopy(received_variables)
-    variables = create_text_variable(variables)
-    variables = transform_variables(variables)
-    variables = format_variables(variables, document_template_id)
-    variables.update(current_date_dict)
     received_variables.update(current_date_dict)
 
     # Get global variables
@@ -158,6 +152,9 @@ def create_document_controller(
     try:
         # Fill text with variables and upload it
         remote_document = RemoteDocument()
+        variables = copy.deepcopy(received_variables)
+        variables = format_variables(variables, document_template_id)
+        variables.update(current_date_dict)
         if document_template.text_type == ".txt":
             text_template = remote_document.download_text_from_template(document)
             filled_text = fill_text_with_variables(text_template, variables).encode()

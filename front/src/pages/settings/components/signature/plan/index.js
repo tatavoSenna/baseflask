@@ -39,7 +39,9 @@ const Plan = ({
 
 	selected = value === priceId ? true : false
 
-	const freePlan = value === 'price_1KP85XHIZcJ4D4nayv0Sx6dc'
+	const freePlan =
+		value === 'price_1KP85XHIZcJ4D4nayv0Sx6dc' ||
+		value === 'price_1Kfv9LHIZcJ4D4nawRSfC6t6'
 
 	const handleCurrentPlan = () => {
 		if ((priceId === undefined || priceId === null) && freePlan) return true
