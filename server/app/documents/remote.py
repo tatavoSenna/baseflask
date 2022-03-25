@@ -19,8 +19,6 @@ from PIL import Image
 from datetime import datetime
 from flask import current_app
 
-from app import jinja_env
-
 
 class RemoteDocument:
 

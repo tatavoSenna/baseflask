@@ -1,14 +1,6 @@
 import React, { useState } from 'react'
 
-import PropTypes, {
-	string,
-	shape,
-	array,
-	number,
-	bool,
-	object,
-	func,
-} from 'prop-types'
+import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 
 import { Form } from 'antd'
 
@@ -27,15 +19,12 @@ import NaturalPerson from './naturalPerson'
 const PersonField = ({
 	pageFieldsData,
 	className,
-	pageIndex,
 	disabled,
 	inputValue,
-	fieldIndex,
 	onChange,
 }) => {
 	const { label, variable, type, fields, id, person_type } = pageFieldsData
 
-	const objName = `person_${pageIndex}_${fieldIndex}`
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -51,16 +40,14 @@ const PersonField = ({
 			colon={false}
 			style={{ marginBottom: 0 }}>
 			<DisplayNone>
-				<Form.Item
-					name={[objName, 'VARIABLE_NAME']}
-					initialValue={variable.name}>
+				<Form.Item name={variable.name}>
 					<></>
 				</Form.Item>
 			</DisplayNone>
 			<Lebal>{label}</Lebal>
 			{person_type !== undefined && (
 				<Form.Item
-					name={[objName, 'PERSON_TYPE']}
+					name={[variable.name, 'PERSON_TYPE']}
 					initialValue=""
 					rules={[{ required: true, message: 'Este campo é obrigatório!' }]}>
 					<SBtnGroup
@@ -79,7 +66,7 @@ const PersonField = ({
 				{person === 'natural_person' && (
 					<NaturalPerson
 						fields={fields}
-						name={objName}
+						name={variable.name}
 						disabled={disabled}
 						onChange={onChange}
 						inputValue={inputValue}
@@ -88,7 +75,7 @@ const PersonField = ({
 				{person === 'legal_person' && (
 					<LegalPerson
 						fields={fields}
-						name={objName}
+						name={variable.name}
 						disabled={disabled}
 						onChange={onChange}
 						inputValue={inputValue}
@@ -107,12 +94,9 @@ PersonField.propTypes = {
 		label: string.isRequired,
 		variable: PropTypes.oneOfType([object, string]),
 		fields: array,
-		type: string.isRequired,
 		person_type: array,
 	}).isRequired,
 	className: string,
-	pageIndex: number,
-	fieldIndex: number,
 	disabled: bool,
 	inputValue: string,
 	onChange: func,
