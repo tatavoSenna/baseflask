@@ -10,12 +10,15 @@ import { DisplayNone, StyledTitle, FlexContainer } from './styles/style'
 const PersonField = ({ item, disabled }) => {
 	const { struct_name, items, person_type } = item
 
-	const variableItem = items.find((i) => i.field_type === 'variable_name')
-
 	const FormItems = (name, value, variable) => (
-		<Form.Item name={[name, variable]} initialValue={value}>
-			<></>
-		</Form.Item>
+		<>
+			<Form.Item name={name}>
+				<></>
+			</Form.Item>
+			<Form.Item name={[name, variable]} initialValue={value}>
+				<></>
+			</Form.Item>
+		</>
 	)
 
 	return (
@@ -25,7 +28,6 @@ const PersonField = ({ item, disabled }) => {
 				<>
 					<DisplayNone>
 						{FormItems(struct_name, person_type, 'PERSON_TYPE')}
-						{FormItems(struct_name, variableItem.value, 'VARIABLE_NAME')}
 					</DisplayNone>
 					{person_type === 'natural_person' && (
 						<FlexContainer>

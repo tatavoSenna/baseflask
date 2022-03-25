@@ -18,7 +18,7 @@ NaturalPersonTextVariable = {
     "CEP": "{{ CEP }}, ",
     "COUNTRY": "{{ COUNTRY }} ",
 }
-NaturalPersonText = "{{ PRONOUN }}{{ NAME }}{{ NATIONALITY }}{{ CIVIL_STATUS }}{{ PROPERTY_REGIME }}{{ PROFESSION }}{{ INSCRIT_GENDER }}{{ RG }}{{ RG_EMISSION }}{{ RG_EMISSIONDATE }}{{ INSCRIT_GENDER }}{{ CPF }}{{ EMAIL }}{{ STREET }}{{ NUMBER }}{{ COMPLEMENT }}{{ CITY }}{{ STATE }}{{ CEP }}{{ COUNTRY }}"
+NaturalPersonText = "{{ PRONOUN }}{{ NAME }}{{ NATIONALITY }}{{ CIVIL_STATUS }}{{ PROPERTY_REGIME }}{{ PROFESSION }}{{ RG }}{{ RG_EMISSION }}{{ RG_EMISSIONDATE }}{{ CPF }}{{ EMAIL }}{{ STREET }}{{ NUMBER }}{{ COMPLEMENT }}{{ CITY }}{{ STATE }}{{ CEP }}{{ COUNTRY }}"
 
 LegalPersonTextVariable = {
     "SOCIETY_NAME": "{{ SOCIETY_NAME }}, ",
