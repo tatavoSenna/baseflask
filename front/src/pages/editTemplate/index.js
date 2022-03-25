@@ -27,6 +27,8 @@ import Text from './components/text'
 import styles from './index.module.scss'
 import MainLayout from '~/components/mainLayout'
 
+import styled from 'styled-components'
+
 const EditTemplate = () => {
 	const { data, loading, docPosted } = useSelector(
 		({ editTemplate }) => editTemplate
@@ -184,6 +186,8 @@ const EditTemplate = () => {
 		})
 	}
 
+	const disabledTitleTemplate = data.title.length < 1 || data.title[0] === ' '
+
 	return (
 		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
@@ -194,14 +198,19 @@ const EditTemplate = () => {
 							editTitle ? (
 								<>
 									<Input
-										style={{ maxWidth: '300px' }}
+										style={{
+											maxWidth: '300px',
+											borderColor: disabledTitleTemplate ? '#ff4d4f' : null,
+										}}
 										value={data.title}
 										onChange={(e) => handleEditTitle(e)}
+										placeholder="Título em branco"
 									/>
 									<Button
 										onClick={() => setEditTitle(false)}
 										icon={<CheckOutlined style={{ fontSize: '18px' }} />}
 										style={{ border: 'none', marginLeft: '5px' }}
+										disabled={disabledTitleTemplate}
 									/>
 								</>
 							) : (
@@ -253,7 +262,9 @@ const EditTemplate = () => {
 					type="primary"
 					htmlType="submit"
 					className={styles.button}
-					disabled={!Object.values(inputsFilled).every(Boolean)}>
+					disabled={
+						!Object.values(inputsFilled).every(Boolean) || disabledTitleTemplate
+					}>
 					Enviar
 				</Button>
 				<Layout className={styles.content}>
