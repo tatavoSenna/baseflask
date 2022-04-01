@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, func } from 'prop-types'
+import { array, func } from 'prop-types'
 import { Input, Button } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
@@ -69,6 +69,6 @@ export const WidgetOption = ({ options, update }) => {
 }
 
 WidgetOption.propTypes = {
-	options: object,
+	options: array,
 	update: func,
 }
