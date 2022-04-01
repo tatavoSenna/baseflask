@@ -200,6 +200,7 @@ Resources:
       Parameters:
         AuthName: !Ref AWS::StackName
         AppDomainName: !Ref AppDomainName
+        SignUpOn: !Ref SignUpOn
 
   Database:
     Type: AWS::CloudFormation::Stack
