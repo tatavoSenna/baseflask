@@ -57,7 +57,9 @@ class Document(db.Model):
     document_template_id = db.Column(
         db.Integer, db.ForeignKey("document_template.id"), nullable=True
     )
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    created_at = db.Column(
+        db.DateTime(timezone=True), nullable=False, default=datetime.utcnow()
+    )
     envelope = db.Column(db.String(255), unique=True, nullable=True)
     workflow = db.Column(JSON, nullable=True)
     variables = db.Column(JSON, nullable=True)
