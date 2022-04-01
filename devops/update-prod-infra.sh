@@ -25,5 +25,6 @@ aws cloudformation update-stack \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
         ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \
+        ParameterKey=TokenReceitaFederal,UsePreviousValue=true \
     --profile \
         lawing-prod

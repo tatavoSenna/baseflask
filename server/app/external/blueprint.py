@@ -1,10 +1,12 @@
 import logging
 import json
+import requests
 from app.documents.controllers import create_document_controller
 
 import boto3
 
-from flask import request, Blueprint, abort, jsonify
+from flask import request, Blueprint, abort, jsonify, current_app
+from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
 from app import aws_auth
 from app.serializers.document_serializers import (
@@ -125,3 +127,45 @@ def create_document_from_token():
         logging.exception("Could not create document")
         abort(400, "Could not create document")
     return jsonify(DocumentSerializer(many=False).dump(document))
+
+
+@external_bp.route("/get_cnpj", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_cnpj(current_user, cnpj):
+    if not cnpj:
+        raise BadRequest(description="Missing cnpj.")
+    bearer = current_app.config["TOKEN_RECEITA_FEDERAL"]
+    headers = {"Authorization": f"Bearer {bearer}"}
+    endpoint = f"https://h-apigateway.conectagov.estaleiro.serpro.gov.br/api-cnpj-basica/v2/basica/{cnpj}"
+
+    response = requests.get(endpoint, headers=headers)
+
+    if response.status_code != 200:
+        if type(response.content) is bytes:
+            return jsonify({"error": response.content.decode()}), response.status_code
+        else:
+            return jsonify({"error": response.content}), response.status_code
+    else:
+        return jsonify(response.json()), 200
+
+
+@external_bp.route("/get_cep", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_cep(current_user, cep):
+    if not cep:
+        raise BadRequest(description="Missing cep.")
+    bearer = current_app.config["TOKEN_RECEITA_FEDERAL"]
+    headers = {"Authorization": f"Bearer {bearer}"}
+    endpoint = f"https://h-apigateway.conectagov.estaleiro.serpro.gov.br/api-cep/v1/consulta/cep/{cep}"
+
+    response = requests.get(endpoint, headers=headers)
+
+    if response.status_code != 200:
+        if type(response.content) is bytes:
+            return jsonify({"error": response.content.decode()}), response.status_code
+        else:
+            return jsonify({"error": response.content}), response.status_code
+    else:
+        return jsonify(response.json()), 200

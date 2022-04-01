@@ -325,7 +325,8 @@ function InputFactory({
 						disabled={disabled}
 						inputValue={defaultValue()}
 						fieldIndex={i}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
+						form={form}
 					/>
 				)
 				break
