@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 
@@ -11,6 +11,7 @@ import {
 	PersonContainer,
 	AddressSeparator,
 	Lebal,
+	PersonTitle,
 } from './style'
 
 import LegalPerson from './legalPerson'
@@ -30,6 +31,12 @@ const PersonField = ({
 	const name = id !== undefined ? `${varname}_${id}` : varname
 	const [person, setPerson] = useState('')
 
+	useEffect(() => {
+		if (person_type.length === 1) {
+			setPerson(person_type[0])
+		}
+	}, [person_type])
+
 	return (
 		<Form.Item
 			key={name}
@@ -45,7 +52,7 @@ const PersonField = ({
 				</Form.Item>
 			</DisplayNone>
 			<Lebal>{label}</Lebal>
-			{person_type !== undefined && (
+			{person_type !== undefined && person_type.length > 1 ? (
 				<Form.Item
 					name={[variable.name, 'PERSON_TYPE']}
 					initialValue=""
@@ -53,13 +60,21 @@ const PersonField = ({
 					<SBtnGroup
 						onChange={(value) => setPerson(value.target.value)}
 						btnProps={person}>
-						<SBtnRadio value={person_type[1]} onChange={onChange}>
+						<SBtnRadio value="natural_person" onChange={onChange}>
 							Pessoa física
 						</SBtnRadio>
-						<SBtnRadio value={person_type[0]} onChange={onChange}>
+						<SBtnRadio value="legal_person" onChange={onChange}>
 							Pessoa jurídica
 						</SBtnRadio>
 					</SBtnGroup>
+				</Form.Item>
+			) : (
+				<Form.Item
+					name={[variable.name, 'PERSON_TYPE']}
+					initialValue={person_type[0]}>
+					<PersonTitle>
+						{person === 'natural_person' ? 'Pessoa física' : 'Pessoa jurídica'}
+					</PersonTitle>
 				</Form.Item>
 			)}
 			<PersonContainer>
