@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { object, func, number } from 'prop-types'
 import JSONInput from 'react-json-editor-ajrm'
 import locale from 'react-json-editor-ajrm/locale/pt'
-import { Field } from './fieldBase'
+import { Field, useValidation } from './fieldBase'
 import { FormItem, TextIcon } from './styles'
 
 const JSONField = (props) => {
 	const { data, pageIndex, fieldIndex, updateFormInfo } = props
 	const [error, setError] = useState(false)
-	const [valid, setValid] = useState(false)
+	const [valid, setValid] = useValidation(props)
 
 	useEffect(() => {
 		setError(false)

@@ -9,7 +9,9 @@ import {
 	bool,
 	oneOfType,
 } from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import { Input, Select } from 'antd'
+import { editTemplateFieldValid } from '~/states/modules/editTemplate'
 import { FieldCard } from './fieldCard'
 import { ThinDivider, ValidatedSelect } from './styles'
 import { FieldConditional } from './fieldConditional'
@@ -37,7 +39,8 @@ const Field = ({
 		if (data.variable) {
 			const name = data.variable.name
 			let validName =
-				name && variableNames.indexOf(name) === variableNames.lastIndexOf(name)
+				name !== '' &&
+				variableNames.indexOf(name) === variableNames.lastIndexOf(name)
 
 			const style = data.variable.doc_display_style
 			let validStyle =
@@ -137,6 +140,21 @@ Field.propTypes = {
 	onValidate: func,
 }
 
+function useValidation({ pageIndex, fieldIndex }) {
+	const dispatch = useDispatch()
+	const valid = useSelector(
+		({ editTemplate }) => editTemplate.data.form[pageIndex].valid[fieldIndex]
+	)
+
+	const setValid = (v) => {
+		if (v !== valid) {
+			dispatch(editTemplateFieldValid({ value: v, pageIndex, fieldIndex }))
+		}
+	}
+
+	return [valid, setValid]
+}
+
 function useUpdate({ data, pageIndex, fieldIndex, updateFormInfo }) {
 	const update = useCallback(
 		(diff) => {
@@ -167,4 +185,4 @@ const subObjectComparison = (a, b) => {
 	else return a === b
 }
 
-export { Field, useUpdate }
+export { Field, useValidation, useUpdate }

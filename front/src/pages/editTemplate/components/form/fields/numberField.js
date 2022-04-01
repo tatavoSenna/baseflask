@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { object, number, func } from 'prop-types'
 import { Input, InputNumber } from 'antd'
 import { FieldNumberOutlined } from '@ant-design/icons'
-import { Field, useUpdate } from './fieldBase'
+import { Field, useUpdate, useValidation } from './fieldBase'
 import { FormItem, styleIconValidation } from './styles'
 import { validateNumber } from 'utils'
 
@@ -10,7 +10,7 @@ export const NumberField = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
-	const [valid, setValid] = useState(false)
+	const [valid, setValid] = useValidation(props)
 
 	return (
 		<Field

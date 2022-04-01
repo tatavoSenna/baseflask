@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { string, object, func, array, bool } from 'prop-types'
+import { string, func, array, bool } from 'prop-types'
 import Editor from './editor'
 import Uploader from '~/components/uploadFile'
 import { Switch, Typography, Button } from 'antd'
@@ -17,7 +17,6 @@ const Text = ({
 	setChecked,
 	setDownloadButton,
 	setInputsFilled,
-	inputsFilled,
 	docPosted,
 	removeDoc,
 }) => {
@@ -30,6 +29,18 @@ const Text = ({
 		}
 		dispatch(editTemplateText({ value }))
 	}
+
+	useEffect(() => {
+		setInputsFilled((filled) => ({
+			...filled,
+			text: (() => {
+				if (data === '' && !files.length) {
+					return false
+				}
+				return true
+			})(),
+		}))
+	}, [data, files, setInputsFilled])
 
 	return (
 		<div
@@ -70,7 +81,7 @@ const Text = ({
 						removeDoc={removeDoc}
 					/>
 
-					{files.length && inputsFilled.text && docPosted ? (
+					{files.length && docPosted ? (
 						<Button
 							style={{ marginLeft: 15 }}
 							icon={<DownloadOutlined />}
@@ -98,7 +109,6 @@ Text.propTypes = {
 	setChecked: func,
 	setDownloadButton: func,
 	setInputsFilled: func,
-	inputsFilled: object,
 	docPosted: bool,
 	removeDoc: func,
 }

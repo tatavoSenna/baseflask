@@ -61,6 +61,7 @@ export const selectEdit = (data, payload) => {
 
 	form.forEach((page) => {
 		page.ids = page.fields.map(() => uuidv4())
+		page.valid = page.fields.map(() => true)
 	})
 
 	const temp = extend(data, {
@@ -102,6 +103,7 @@ export const addField = (form, payload) => {
 			return extend(page, {
 				fields: [...page.fields, payload.newField],
 				ids: [...page.ids, uuidv4()],
+				valid: [...page.valid, true],
 			})
 		}
 		return page
@@ -116,6 +118,22 @@ export const removeField = (form, payload) => {
 					(field, index) => index !== payload.fieldIndex
 				),
 				ids: page.ids.filter((field, index) => index !== payload.fieldIndex),
+				valid: page.valid.filter(
+					(field, index) => index !== payload.fieldIndex
+				),
+			})
+		}
+		return page
+	})
+}
+
+export const validField = (form, payload) => {
+	return form.map((page, index) => {
+		if (index === payload.pageIndex) {
+			return extend(page, {
+				valid: page.valid.map((value, index) =>
+					index === payload.fieldIndex ? payload.value : value
+				),
 			})
 		}
 		return page
@@ -344,6 +362,7 @@ export const move = (data, payload) => {
 						return extend(page, {
 							fields: moveArrayItem(page.fields, payload.from, payload.to),
 							ids: moveArrayItem(page.ids, payload.from, payload.to),
+							valid: moveArrayItem(page.valid, payload.from, payload.to),
 						})
 					}
 					return page
