@@ -147,11 +147,6 @@ Parameters:
     Type: String
     Description: Sentry api key for the frontend.
 
-  TokenReceitaFederal:
-    NoEcho: true
-    Type: String
-    Description: Auth bearer para fazer requests na api da Receita Federal.
-
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterLabels:
@@ -305,7 +300,6 @@ Resources:
         StripeApiSecretKey: !Ref StripeApiSecretKey
         EnvironmentTag: !Ref EnvironmentTag
         BackEndSentryDSN: !Ref BackEndSentryDSN
-        TokenReceitaFederal: !Ref TokenReceitaFederal
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

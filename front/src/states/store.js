@@ -30,7 +30,6 @@ import fileField, { fileFieldSaga } from './modules/fileField'
 import companies, { companiesSaga } from './modules/companies'
 import session, { sessionSaga } from './modules//session'
 import folder, { folderSaga } from './modules/folder'
-import legalInfo, { legalInfoSaga } from './modules/cnpjField'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -60,7 +59,6 @@ const reducers = combineReducers({
 	companies,
 	session,
 	folder,
-	legalInfo,
 })
 
 const store = configureStore({
@@ -92,7 +90,6 @@ const rootSaga = function* () {
 		companiesSaga(),
 		sessionSaga(),
 		folderSaga(),
-		legalInfoSaga(),
 	])
 }
 

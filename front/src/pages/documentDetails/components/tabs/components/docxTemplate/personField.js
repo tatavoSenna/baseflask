@@ -7,7 +7,7 @@ import LegalPerson from '~/components/personField/legalPerson'
 
 import { DisplayNone, StyledTitle, FlexContainer } from './styles/style'
 
-const PersonField = ({ item, disabled, form }) => {
+const PersonField = ({ item, disabled }) => {
 	const { struct_name, items, person_type } = item
 
 	const FormItems = (name, value, variable) => (
@@ -44,7 +44,6 @@ const PersonField = ({ item, disabled, form }) => {
 								fields={items}
 								name={struct_name}
 								disabled={disabled}
-								form={form}
 							/>
 						</FlexContainer>
 					)}
@@ -57,7 +56,6 @@ const PersonField = ({ item, disabled, form }) => {
 PersonField.propTypes = {
 	item: object,
 	disabled: bool,
-	form: object,
 }
 
 export default PersonField
