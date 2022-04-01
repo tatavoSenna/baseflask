@@ -5,6 +5,7 @@ import {
 	selectForm,
 	addField,
 	removeField,
+	validField,
 	selectStep,
 	addStep,
 	removeStep,
@@ -25,6 +26,7 @@ const initialState = {
 				title: '',
 				fields: [],
 				ids: [],
+				valid: [],
 			},
 		],
 		workflow: {
@@ -104,6 +106,7 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				data: extend(state.data, {
 					form: movePage(state.data.form, payload),
+					variables: movePage(state.data.variables, payload),
 				}),
 			}),
 		editTemplateFieldAdd: (state, { payload }) =>
@@ -121,6 +124,12 @@ const { actions, reducer } = createSlice({
 				}),
 			})
 		},
+		editTemplateFieldValid: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, {
+					form: validField(state.data.form, payload),
+				}),
+			}),
 		editTemplateStepInfo: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
@@ -268,6 +277,7 @@ export const {
 	editTemplatePageMove,
 	editTemplateFieldAdd,
 	editTemplateFieldRemove,
+	editTemplateFieldValid,
 	editTemplateStepInfo,
 	editTemplateStepAdd,
 	editTemplateStepRemove,

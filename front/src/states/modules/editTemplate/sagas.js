@@ -71,6 +71,10 @@ function* editTemplateSaga({ payload = {} }) {
 		return obj
 	}
 
+	const filteredForm = (form) => {
+		return form.map((page) => ({ fields: page.fields, title: page.title }))
+	}
+
 	const arrangedSigners = (signers) => {
 		const signersArray = []
 		signers.parties.map((party) =>
@@ -150,7 +154,7 @@ function* editTemplateSaga({ payload = {} }) {
 		try {
 			const response = yield call(api.post, '/templates/', {
 				title: data.title,
-				form: data.form,
+				form: filteredForm(data.form),
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text: data.text,
@@ -183,7 +187,7 @@ function* editTemplateSaga({ payload = {} }) {
 		try {
 			const { patch } = yield call(api.patch, `/templates/${id}`, {
 				title: data.title,
-				form: data.form,
+				form: filteredForm(data.form),
 				workflow: workflow,
 				signers: arrangedSigners(data.signers),
 				text: data.text,
