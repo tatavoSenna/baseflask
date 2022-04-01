@@ -23,6 +23,7 @@ const PersonField = ({
 	disabled,
 	inputValue,
 	onChange,
+	form,
 }) => {
 	const { label, variable, type, fields, id, person_type } = pageFieldsData
 
@@ -94,6 +95,7 @@ const PersonField = ({
 						disabled={disabled}
 						onChange={onChange}
 						inputValue={inputValue}
+						form={form}
 					/>
 				)}
 				<AddressSeparator $displayNone={person === ''}>
@@ -115,6 +117,7 @@ PersonField.propTypes = {
 	disabled: bool,
 	inputValue: string,
 	onChange: func,
+	form: object,
 }
 
 PersonField.defaultProps = {

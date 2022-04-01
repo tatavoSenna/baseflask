@@ -1,7 +1,8 @@
 import React from 'react'
 import TextField from 'components/textField'
 
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, func, number, string, object } from 'prop-types'
+import useFieldsValue from '../utils/useFieldsValue'
 
 const AddressCity = ({
 	key,
@@ -11,6 +12,8 @@ const AddressCity = ({
 	onChange,
 	disabled,
 	className,
+	form,
+	legalData,
 }) => {
 	const pageFieldsData = {
 		info: '',
@@ -23,6 +26,13 @@ const AddressCity = ({
 			doc_display_style: 'plain',
 		},
 	}
+
+	useFieldsValue(
+		form,
+		name,
+		pageFieldsData.variable.name,
+		legalData?.endereco?.municipio?.descricao
+	)
 
 	return (
 		<TextField
@@ -45,6 +55,8 @@ AddressCity.propTypes = {
 	onChange: func,
 	disabled: bool,
 	className: string,
+	legalData: object,
+	form: object,
 }
 
 export default AddressCity

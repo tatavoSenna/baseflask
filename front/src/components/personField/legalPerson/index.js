@@ -1,4 +1,12 @@
-import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import { useEffect, useState } from 'react'
+import PropTypes, {
+	array,
+	bool,
+	func,
+	number,
+	object,
+	string,
+} from 'prop-types'
 
 import LegalName from './components/legalName'
 import LegalCNPJ from './components/legalCNPJ'
@@ -10,9 +18,21 @@ import AddressComplement from '../personAddress/addressComplement'
 import AddressCity from '../personAddress/addressCity'
 import AddressState from '../personAddress/addressState'
 
+import { getLegalInfo } from 'states/modules/cnpjField'
+import { useSelector, useDispatch } from 'react-redux'
+
 import styles from './index.module.scss'
 
-const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
+const LegalPerson = ({
+	fields,
+	name,
+	disabled,
+	onChange,
+	inputValue,
+	form,
+}) => {
+	const dispatch = useDispatch()
+
 	const components = {
 		society_name: LegalName,
 		cnpj: LegalCNPJ,
@@ -37,6 +57,20 @@ const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 		styles['state'],
 	]
 
+	const [cnpj, setCnpj] = useState('')
+
+	const legalInfo = useSelector(({ legalInfo }) => legalInfo.legalInfo[cnpj])
+
+	const getCnpjValue = (e) => {
+		setCnpj(e.target.value.replace(/[^0-9]/g, ''))
+	}
+
+	useEffect(() => {
+		if (cnpj.length === 14) {
+			dispatch(getLegalInfo(cnpj))
+		}
+	}, [cnpj, dispatch])
+
 	const componentsTypes = Object.keys(components)
 
 	return fields.map((field, i) => {
@@ -47,6 +81,8 @@ const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 			inputValue,
 			onChange,
 			disabled,
+			legalData: legalInfo,
+			form,
 		}
 
 		if (typeof field === 'string') {
@@ -57,6 +93,10 @@ const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 			if (field.field_type === componentsTypes[i]) {
 				dict.inputValue = field.value
 				dict.className = classNames[i]
+				if (field.field_type === 'cnpj') {
+					dict.onChange = getCnpjValue
+				}
+
 				return components[field.field_type](dict)
 			}
 		}
@@ -71,6 +111,7 @@ LegalPerson.propTypes = {
 	disabled: bool,
 	onChange: func,
 	inputValue: string,
+	form: object,
 }
 
 export default LegalPerson

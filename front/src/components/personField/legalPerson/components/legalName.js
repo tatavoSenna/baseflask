@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes, { bool, func, number, object, string } from 'prop-types'
 
 import TextField from 'components/textField'
+import useFieldsValue from 'components/personField/utils/useFieldsValue'
 
 const LegalName = ({
 	key,
@@ -11,6 +12,8 @@ const LegalName = ({
 	onChange,
 	disabled,
 	className,
+	legalData,
+	form,
 }) => {
 	const pageFieldsData = {
 		info: '',
@@ -23,6 +26,13 @@ const LegalName = ({
 			doc_display_style: 'plain',
 		},
 	}
+
+	useFieldsValue(
+		form,
+		name,
+		pageFieldsData.variable.name,
+		legalData?.nomeEmpresarial
+	)
 
 	return (
 		<TextField
@@ -44,7 +54,9 @@ LegalName.propTypes = {
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
-	className: PropTypes.oneOfType([object, string]),
+	className: string,
+	legalData: object,
+	form: object,
 }
 
 export default LegalName

@@ -73,6 +73,10 @@ Parameters:
     Type: String
     Description: Sentry api key for the backend.
 
+  TokenReceitaFederal:
+    Type: String
+    Description: Auth bearer para fazer requests na api da Receita Federal.
+
 Conditions:
   Fargate: !Equals [!Ref LaunchType, "Fargate"]
 
@@ -228,6 +232,8 @@ Resources:
               Value: !Ref EnvironmentTag
             - Name: SENTRY_DSN
               Value: !Ref BackEndSentryDSN
+            - Name: TOKEN_RECEITA_FEDERAL
+              Value: !Ref TokenReceitaFederal
           PortMappings:
             - ContainerPort: 5000
               HostPort: 5000
