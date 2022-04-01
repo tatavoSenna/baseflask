@@ -44,6 +44,13 @@ export const FormItem = styled(Form.Item)`
 	}
 `
 
+export const ListItem = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+`
+
 export const ValidatedSelect = styled(Select)`
 	&& .ant-select-selector {
 		${(props) => (props.$error ? 'border-color: #ff4d4f' : '')}

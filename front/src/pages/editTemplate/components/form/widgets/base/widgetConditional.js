@@ -2,11 +2,11 @@ import React from 'react'
 import { object, func, number, array } from 'prop-types'
 import { Form, Input, Select, Button, AutoComplete, Switch } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { useUpdate } from './fieldBase'
-import { FormItem } from './styles'
-import { TextInput } from './textField'
-import { NumberInput } from './numberField'
-import { CurrencyInput } from './currencyField'
+import { useUpdate } from './widget'
+import { FormItem, ListItem } from './styles'
+import { TextInput } from '../textWidget'
+import { NumberInput } from '../numberWidget'
+import { CurrencyInput } from '../currencyWidget'
 
 const conditionalInputs = {
 	string: TextInput,
@@ -14,7 +14,7 @@ const conditionalInputs = {
 	currency: CurrencyInput,
 }
 
-const FieldConditional = ({
+const WidgetConditional = ({
 	data,
 	variables,
 	pageIndex,
@@ -66,14 +66,7 @@ const FieldConditional = ({
 				/>
 			</FormItem>
 			{conditions.map((condition, i) => (
-				<div
-					key={condition.variable + i}
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'space-between',
-						marginBottom: '8px',
-					}}>
+				<ListItem key={condition.variable + i}>
 					<Input.Group compact>
 						<AutoComplete
 							placeholder="Variável"
@@ -123,7 +116,7 @@ const FieldConditional = ({
 						onClick={() => removeCondition(i)}
 						style={{ padding: '0 10px' }}
 					/>
-				</div>
+				</ListItem>
 			))}
 
 			<Form.Item>
@@ -139,7 +132,7 @@ const FieldConditional = ({
 	)
 }
 
-FieldConditional.propTypes = {
+WidgetConditional.propTypes = {
 	data: object,
 	variables: array,
 	pageIndex: number,
@@ -147,4 +140,4 @@ FieldConditional.propTypes = {
 	updateFormInfo: func,
 }
 
-export { FieldConditional }
+export { WidgetConditional }

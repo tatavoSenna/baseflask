@@ -10,7 +10,7 @@ import Delete from '~/components/deleteConfirm'
 import DragDropCard from '~/components/dragDropCard'
 import { Panel, Title, ThinDivider } from './styles'
 
-const FieldCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
+const WidgetCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 	const dispatch = useDispatch()
 
 	const handleRemoveField = () => {
@@ -55,7 +55,7 @@ const FieldCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 	)
 }
 
-FieldCard.propTypes = {
+WidgetCard.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
@@ -64,4 +64,4 @@ FieldCard.propTypes = {
 	children: node.isRequired,
 }
 
-export { FieldCard }
+export { WidgetCard }
