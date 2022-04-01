@@ -19,7 +19,6 @@ aws cloudformation create-stack \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,ParameterValue= \
         ParameterKey=FrontEndSentryDSN,ParameterValue= \
-        ParameterKey=TokenReceitaFederal,ParameterValue= \
     --capabilities CAPABILITY_IAM \
     --profile lawing
 

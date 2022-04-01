@@ -44,7 +44,7 @@ LegalCNPJ.propTypes = {
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
-	className: string,
+	className: PropTypes.oneOfType([object, string]),
 }
 
 export default LegalCNPJ

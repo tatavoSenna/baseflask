@@ -25,6 +25,5 @@ aws cloudformation update-stack \
         ParameterKey=EnvironmentTag,ParameterValue=develop \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
         ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \
-        ParameterKey=TokenReceitaFederal,ParameterValue=true \
     --profile \
         lawing-dev

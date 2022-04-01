@@ -216,12 +216,7 @@ const Tabs = ({
 						)
 					case 'person':
 						return (
-							<PersonField
-								item={item}
-								form={form}
-								disabled={!isEdit}
-								key={fieldIndex}
-							/>
+							<PersonField item={item} disabled={!isEdit} key={fieldIndex} />
 						)
 					case 'address':
 						return (

@@ -34,7 +34,6 @@ class Config(object):
     D4SIGN_API_URL = os.environ.get("D4SIGN_API_URL")
     DOMAIN_URL = os.environ.get("DOMAIN_URL")
     STRIPE_API_SECRET_KEY = os.environ.get("STRIPE_API_SECRET_KEY")
-    TOKEN_RECEITA_FEDERAL = os.environ.get("TOKEN_RECEITA_FEDERAL")
 
     PAGE_DEFAULT = 1
     PER_PAGE_DEFAULT = 20
