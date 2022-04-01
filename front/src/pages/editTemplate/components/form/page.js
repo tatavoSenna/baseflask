@@ -8,11 +8,24 @@ import {
 	editTemplateFieldAdd,
 	editTemplateFormInfo,
 } from '~/states/modules/editTemplate'
-import JSONField from './fields/jsonField'
-import { TextField } from './fields/textField'
-import { NumberField } from './fields/numberField'
-import { CurrencyField } from './fields/currencyField'
-import { DateField } from './fields/dateField'
+import { JSONWidget } from './widgets/jsonWidget'
+import { TextWidget } from './widgets/textWidget'
+import { NumberWidget } from './widgets/numberWidget'
+import { CurrencyWidget } from './widgets/currencyWidget'
+import { DateWidget } from './widgets/dateWidget'
+import { EmailWidget } from './widgets/emailWidget'
+import { CheckboxWidget } from './widgets/checkboxWidget'
+import { RadioWidget } from './widgets/radioWidget'
+
+const widgets = {
+	text: TextWidget,
+	currency: CurrencyWidget,
+	number: NumberWidget,
+	date: DateWidget,
+	email: EmailWidget,
+	checkbox: CheckboxWidget,
+	radio: RadioWidget,
+}
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
@@ -248,64 +261,17 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				<Empty description="Sem Campos" style={{ marginBottom: '1rem' }} />
 			) : (
 				data.fields.map((field, fieldIndex) => {
-					let key = data.ids[fieldIndex]
-
-					if (field?.type === 'text') {
-						return (
-							<TextField
-								key={key}
-								data={field}
-								variables={variables}
-								pageIndex={pageIndex}
-								fieldIndex={fieldIndex}
-								updateFormInfo={updateFormInfo}
-							/>
-						)
-					} else if (field?.type === 'currency') {
-						return (
-							<CurrencyField
-								key={key}
-								data={field}
-								variables={variables}
-								pageIndex={pageIndex}
-								fieldIndex={fieldIndex}
-								updateFormInfo={updateFormInfo}
-							/>
-						)
-					} else if (field?.type === 'number') {
-						return (
-							<NumberField
-								key={key}
-								data={field}
-								variables={variables}
-								pageIndex={pageIndex}
-								fieldIndex={fieldIndex}
-								updateFormInfo={updateFormInfo}
-							/>
-						)
-					} else if (field?.type === 'date') {
-						return (
-							<DateField
-								key={key}
-								data={field}
-								variables={variables}
-								pageIndex={pageIndex}
-								fieldIndex={fieldIndex}
-								updateFormInfo={updateFormInfo}
-							/>
-						)
-					} else {
-						return (
-							<JSONField
-								key={key}
-								data={field}
-								variables={variables}
-								pageIndex={pageIndex}
-								fieldIndex={fieldIndex}
-								updateFormInfo={updateFormInfo}
-							/>
-						)
+					const el = field?.type in widgets ? widgets[field.type] : JSONWidget
+					const props = {
+						key: data.ids[fieldIndex],
+						data: field,
+						variables,
+						pageIndex,
+						fieldIndex,
+						updateFormInfo,
 					}
+
+					return React.createElement(el, props)
 				})
 			)}
 			<Dropdown overlay={fieldTypes} trigger="click">

@@ -12,11 +12,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Select } from 'antd'
 import { editTemplateFieldValid } from '~/states/modules/editTemplate'
-import { FieldCard } from './fieldCard'
+import { WidgetCard } from './widgetCard'
 import { ThinDivider, ValidatedSelect } from './styles'
-import { FieldConditional } from './fieldConditional'
+import { WidgetConditional } from './widgetConditional'
 
-const Field = ({
+const Widget = ({
 	data,
 	variables,
 	pageIndex,
@@ -44,9 +44,9 @@ const Field = ({
 
 			const style = data.variable.doc_display_style
 			let validStyle =
-				!style ||
+				!('doc_display_style' in data.variable) ||
 				displayStyles.map((s) => s.value).includes(style) ||
-				(displayStyles.length === 0 && !style.includes('|'))
+				(displayStyles.length === 0 && style.length > 0 && !style.includes('|'))
 
 			setValidVariableName(validName)
 			setValidVariableStyle(validStyle)
@@ -67,7 +67,7 @@ const Field = ({
 	}
 
 	return (
-		<FieldCard {...{ data, type, icon, pageIndex, fieldIndex }}>
+		<WidgetCard {...{ data, type, icon, pageIndex, fieldIndex }}>
 			<div>{formItems}</div>
 
 			{variableItems ? (
@@ -95,7 +95,7 @@ const Field = ({
 										? data.variable?.doc_display_style.includes('|')
 											? null
 											: data.variable?.doc_display_style
-										: 'plain'
+										: null
 								}
 								onChange={(v) => updateVariable('doc_display_style', v)}
 								$error={!validVariableStyle}>
@@ -116,16 +116,16 @@ const Field = ({
 				<>
 					<ThinDivider orientation="left">Condicionais</ThinDivider>
 
-					<FieldConditional
+					<WidgetConditional
 						{...{ data, variables, pageIndex, fieldIndex, updateFormInfo }}
 					/>
 				</>
 			) : null}
-		</FieldCard>
+		</WidgetCard>
 	)
 }
 
-Field.propTypes = {
+Widget.propTypes = {
 	data: object,
 	variables: array,
 	pageIndex: number,
@@ -185,4 +185,4 @@ const subObjectComparison = (a, b) => {
 	else return a === b
 }
 
-export { Field, useValidation, useUpdate }
+export { Widget, useValidation, useUpdate }

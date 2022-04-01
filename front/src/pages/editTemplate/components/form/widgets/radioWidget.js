@@ -1,21 +1,22 @@
 import React from 'react'
 import { object, number, func } from 'prop-types'
 import { Input } from 'antd'
-import { FontSizeOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined } from '@ant-design/icons'
 
-import { Field, useUpdate, useValidation } from './fieldBase'
-import { FormItem, styleIconValidation } from './styles'
+import { WidgetOption } from './base/widgetOption'
+import { Widget, useUpdate, useValidation } from './base/widget'
+import { FormItem, styleIconValidation } from './base/styles'
 
-export const TextField = (props) => {
+export const RadioWidget = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
 	const [valid, setValid] = useValidation(props)
 
 	return (
-		<Field
+		<Widget
 			{...props}
-			type={'Texto'}
+			type={'Rádio'}
 			icon={<Icon $error={!valid} />}
 			onValidate={setValid}
 			formItems={
@@ -36,21 +37,7 @@ export const TextField = (props) => {
 						/>
 					</FormItem>
 
-					<FormItem label="Placeholder">
-						<Input
-							onBlur={(e) => update({ placeholder: e.target.value })}
-							defaultValue={data.placeholder}
-							autoComplete="off"
-						/>
-					</FormItem>
-
-					<FormItem label="Valor inicial">
-						<Input.TextArea
-							onBlur={(e) => update({ initialValue: e.target.value })}
-							defaultValue={data.initialValue}
-							autoComplete="off"
-						/>
-					</FormItem>
+					<WidgetOption options={data.options} update={update} />
 				</div>
 			}
 			displayStyles={[
@@ -63,19 +50,11 @@ export const TextField = (props) => {
 	)
 }
 
-const Icon = styleIconValidation(FontSizeOutlined)
+const Icon = styleIconValidation(CheckCircleOutlined)
 
-TextField.propTypes = {
+RadioWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
 	updateFormInfo: func,
-}
-
-export const TextInput = ({ onBlur, ...props }) => (
-	<Input {...props} onBlur={(e) => onBlur(e.target.value)} />
-)
-
-TextInput.propTypes = {
-	onBlur: func,
 }

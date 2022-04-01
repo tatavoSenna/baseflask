@@ -1,21 +1,22 @@
 import React from 'react'
 import { object, number, func } from 'prop-types'
 import { Input, InputNumber } from 'antd'
-import { Field, useUpdate, useValidation } from './fieldBase'
-import { FormItem, TextIcon } from './styles'
+
+import { Widget, useUpdate, useValidation } from './base/widget'
+import { FormItem, TextIcon } from './base/styles'
 import {
 	currencyFormatter,
 	currencyParser,
 } from 'components/currencyField/currencyUtils'
 
-export const CurrencyField = (props) => {
+export const CurrencyWidget = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
 	const [valid, setValid] = useValidation(props)
 
 	return (
-		<Field
+		<Widget
 			{...props}
 			type={'Moeda'}
 			icon={<TextIcon $error={!valid}>$</TextIcon>}
@@ -54,7 +55,7 @@ export const CurrencyField = (props) => {
 	)
 }
 
-CurrencyField.propTypes = {
+CurrencyWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
