@@ -177,7 +177,7 @@ Resources:
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
         - Name: lawing-api
-          Image: 340326915472.dkr.ecr.us-east-1.amazonaws.com/dev3:3c3a167c
+          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:4e6075c8
           Essential: true
           LogConfiguration:
             LogDriver: awslogs
