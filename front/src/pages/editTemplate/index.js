@@ -46,6 +46,7 @@ const EditTemplate = () => {
 	})
 	const [files, postFiles] = useState([])
 	const [checked, setChecked] = useState(false)
+	const [title, setTitle] = useState(data.title)
 
 	const editDOCX = () => {
 		setChecked(true)
@@ -62,7 +63,8 @@ const EditTemplate = () => {
 
 	const handleEditTitle = (e) => {
 		const title = e.target.value
-		dispatch(editTemplateTitle({ title }))
+		setTitle(title)
+		dispatch(editTemplateTitle({ title: title }))
 	}
 
 	const setDownloadButton = () => {
@@ -154,7 +156,17 @@ const EditTemplate = () => {
 		})
 	}
 
-	const disabledTitleTemplate = data.title.length < 1 || data.title[0] === ' '
+	const allValueSpace = (data) => {
+		return data.trim().length === 0
+	}
+
+	const handleClickTitleButton = () => {
+		setEditTitle(false)
+		dispatch(editTemplateTitle({ title: title.trim() }))
+	}
+
+	const disabledTitleTemplate =
+		data.title.length < 1 || allValueSpace(data.title)
 
 	return (
 		<MainLayout>
@@ -170,12 +182,12 @@ const EditTemplate = () => {
 											maxWidth: '300px',
 											borderColor: disabledTitleTemplate ? '#ff4d4f' : null,
 										}}
-										value={data.title}
-										onChange={(e) => handleEditTitle(e)}
+										defaultValue={data.title}
+										onChange={handleEditTitle}
 										placeholder="Título em branco"
 									/>
 									<Button
-										onClick={() => setEditTitle(false)}
+										onClick={handleClickTitleButton}
 										icon={<CheckOutlined style={{ fontSize: '18px' }} />}
 										style={{ border: 'none', marginLeft: '5px' }}
 										disabled={disabledTitleTemplate}
