@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { node } from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import { Hub } from 'aws-amplify'
@@ -29,6 +29,13 @@ const components = {
 function AuthWrapper({ children }) {
 	const dispatch = useDispatch()
 	const history = useHistory()
+	const { search } = useLocation()
+
+	const initialState = useMemo(() => {
+		const searchParams = new URLSearchParams(search)
+		return searchParams.get('signup') === 'true' ? 'signUp' : 'signIn'
+	}, [search])
+
 	useEffect(() => {
 		Hub.listen('auth', (data) => {
 			if (data.payload.event === 'signIn') {
@@ -49,6 +56,7 @@ function AuthWrapper({ children }) {
 					: styles['amplify-nosignup']
 			}
 			components={components}
+			initialState={initialState}
 			loginMechanisms={['email']}
 			signUpAttributes={['name', 'email']}>
 			{({ signOut, user }) => {
