@@ -170,7 +170,9 @@ class D4SignAPI:
         url = f"{self.url}/documents/{document_uuid}/download"
         url = self.put_url_credentials(url)
 
-        response = requests.post(url)
+        body = {'type': 'pdf'}
+
+        response = requests.post(url, data=body)
         assert response.status_code == 200
 
         response_payload = response.json()

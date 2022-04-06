@@ -1,3 +1,5 @@
+import requests
+
 from datetime import date, datetime
 from sqlalchemy.orm.attributes import flag_modified
 from typing import Optional
@@ -505,3 +507,49 @@ def d4sign_document_webhook_controller(
             f"with d4sign_document_uuid <{d4sign_document_uuid}>"
         )
         return control
+
+
+def d4sign_update_document_file_controller(user, document) -> dict:
+    """
+    Controls updating the document's file on S3.
+    The original API file, which contains both the document and the signing certificate,
+    is downloaded from the API then uploaded to the bucket.
+    This update is meant to happen every time a new signature is added to the document.
+    """
+    control = {"status_code": 200, "message": "", "data": {}}
+
+    if document.company.signatures_provider != "d4sign":
+        control["message"] = (
+            "Signatures for this document " "are not provided through D4Sign"
+        )
+        control["status_code"] = 451
+        return control
+
+    if document.company != user.company:
+        control["message"] = "Document does not belong to this user's company"
+        control["status_code"] = 403
+        return control
+
+    d4sign_api = D4SignAPI(company=document.company)
+    document_file_download_info = d4sign_api.get_document_file_download_info(
+        document_uuid=document.d4sign_document_uuid
+    )
+    document_file_download_url = document_file_download_info['url']
+    document_file = requests.get(document_file_download_url).content
+
+    # d4sign_api_response_payload = d4sign_api.upload_document_file(
+    #     file=document_file,
+    #     filename=document_instance.title,
+    #     safe_name=document_instance.company.d4sign_safe_name,
+    #     ext=ext,
+    # )
+    #
+    # d4sign_document_uuid = d4sign_api_response_payload["uuid"]
+    # document_instance.d4sign_document_uuid = d4sign_document_uuid
+    # db.session.add(document_instance)
+    # db.session.commit()
+
+    control["message"] = "Document successfully uploaded"
+    control["data"]["d4sign_document_uuid"] = d4sign_document_uuid
+
+    return control
