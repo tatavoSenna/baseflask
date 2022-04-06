@@ -385,6 +385,8 @@ def d4sign_upload_and_send_document_for_signing_controller(
         if control["status_code"] not in [200, 202]:
             return control
 
+    d4sign_update_document_certificate_file_controller(document_model_instance)
+
     updated_document_model_instance = Document.query.get(document_id)
 
     return updated_document_model_instance, control
@@ -414,6 +416,9 @@ def d4sign_document_webhook_controller(
                 flag_modified(document, "signers")
             db.session.add(document)
             db.session.commit()
+
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Document with d4sign_document_uuid "
             f"<{d4sign_document_uuid}> finished signing"
@@ -467,6 +472,8 @@ def d4sign_document_webhook_controller(
         db.session.add(document)
         db.session.commit()
 
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Signatures for document "
             f"with d4sign_document_uuid <{d4sign_document_uuid}> "
@@ -506,6 +513,8 @@ def d4sign_document_webhook_controller(
         db.session.add(document)
         db.session.commit()
 
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Person with email {signer_email} "
             f"successfully signed the document "
@@ -521,7 +530,7 @@ def d4sign_update_document_certificate_file_controller(
     Controls updating the document's certificate file on S3.
     The full file, which contains both the document and the certificate,
     is downloaded from the D4Sign API, then the certificate is uploaded to the bucket.
-    This update is meant to happen every time a new signature is added to the document.
+    This update is meant to happen every time there is an update on the document.
     """
     control = {"status_code": 200, "message": "", "data": {}}
 
@@ -535,7 +544,7 @@ def d4sign_update_document_certificate_file_controller(
     document_pdf = PdfReader(io.BytesIO(document_file))
 
     certificate_pdf = PdfWriter()
-    certificate_pdf.addpage(document_pdf.pages[-1])  # certificate is in the last page
+    certificate_pdf.addpage(document_pdf.pages[-1])  # certificate is in the last page (always?)
     certificate_file = io.BytesIO()
     certificate_pdf.write(certificate_file)
     certificate_file = certificate_file.getvalue()
