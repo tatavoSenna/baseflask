@@ -1,8 +1,13 @@
+import io
+import boto3
 import requests
 
 from datetime import date, datetime
+from pdfrw import PdfReader, PdfWriter
 from sqlalchemy.orm.attributes import flag_modified
 from typing import Optional
+
+from flask import current_app
 
 from app import db
 from app.models import Company, Document
@@ -509,47 +514,39 @@ def d4sign_document_webhook_controller(
         return control
 
 
-def d4sign_update_document_file_controller(user, document) -> dict:
+def d4sign_update_document_certificate_file_controller(
+        document
+) -> dict:
     """
-    Controls updating the document's file on S3.
-    The original API file, which contains both the document and the signing certificate,
-    is downloaded from the API then uploaded to the bucket.
+    Controls updating the document's certificate file on S3.
+    The full file, which contains both the document and the certificate,
+    is downloaded from the D4Sign API, then the certificate is uploaded to the bucket.
     This update is meant to happen every time a new signature is added to the document.
     """
     control = {"status_code": 200, "message": "", "data": {}}
-
-    if document.company.signatures_provider != "d4sign":
-        control["message"] = (
-            "Signatures for this document " "are not provided through D4Sign"
-        )
-        control["status_code"] = 451
-        return control
-
-    if document.company != user.company:
-        control["message"] = "Document does not belong to this user's company"
-        control["status_code"] = 403
-        return control
 
     d4sign_api = D4SignAPI(company=document.company)
     document_file_download_info = d4sign_api.get_document_file_download_info(
         document_uuid=document.d4sign_document_uuid
     )
+
     document_file_download_url = document_file_download_info['url']
     document_file = requests.get(document_file_download_url).content
+    document_pdf = PdfReader(io.BytesIO(document_file))
 
-    # d4sign_api_response_payload = d4sign_api.upload_document_file(
-    #     file=document_file,
-    #     filename=document_instance.title,
-    #     safe_name=document_instance.company.d4sign_safe_name,
-    #     ext=ext,
-    # )
-    #
-    # d4sign_document_uuid = d4sign_api_response_payload["uuid"]
-    # document_instance.d4sign_document_uuid = d4sign_document_uuid
-    # db.session.add(document_instance)
-    # db.session.commit()
+    certificate_pdf = PdfWriter()
+    certificate_pdf.addpage(document_pdf.pages[-1])  # certificate is in the last page
+    certificate_file = io.BytesIO()
+    certificate_pdf.write(certificate_file)
+    certificate_file = certificate_file.getvalue()
 
-    control["message"] = "Document successfully uploaded"
-    control["data"]["d4sign_document_uuid"] = d4sign_document_uuid
+    s3_client = boto3.client('s3')
+    bucket = current_app.config['AWS_S3_DOCUMENTS_BUCKET']
+    filepath = f'{document.company.id}/certificates/{document.id}/certificate.pdf'
+    s3_client.put_object(
+        Body=certificate_file,
+        Bucket=bucket,
+        Key=filepath,
+    )
 
     return control
