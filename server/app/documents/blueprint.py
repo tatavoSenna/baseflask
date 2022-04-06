@@ -69,6 +69,9 @@ from .controllers import (
     edit_document_workflow_controller,
 )
 
+from app.d4sign.controllers import (
+    d4sign_generate_document_certificate_file_presigned_url_controller
+)
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
 from app.documents.formatters.variables_formatter import (
@@ -671,3 +674,26 @@ def edit_document_workflow(current_user, document_id):
         )
 
     return DocumentSerializer().dump(document)
+
+
+@documents_bp.route("/<int:document_id>/certificate", methods=["GET"])
+@aws_auth.authentication_required
+@get_local_user
+def get_document_certificate_file(current_user, document_id):
+    control = {"status_code": 200, "message": "", "data": {}}
+    if (document := get_document_controller(document_id)) is None:
+        control['status_code'] = 404
+        control['message'] = 'Document not Found'
+    else:
+        if document.company.signatures_provider != 'd4sign':  # feature only appliable to D4Sign for now
+            control["status_code"] = 451
+            control["message"] = (
+                "Signatures for this company are not provided through D4Sign"
+            )
+        else:
+            control = d4sign_generate_document_certificate_file_presigned_url_controller(
+                user=current_user,
+                document=document
+            )
+    status_code = control.pop("status_code")
+    return jsonify(control), status_code

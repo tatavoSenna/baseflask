@@ -571,18 +571,22 @@ def d4sign_generate_document_certificate_file_presigned_url_controller(
     control = {"status_code": 200, "message": "", "data": {}}
 
     if document.company != user.company:
-        control["message"] = "Document does not belong to this user's company"
         control["status_code"] = 403
+        control["message"] = "Document does not belong to this user's company"
         return control
 
     s3_client = boto3.client('s3')
     bucket = current_app.config['AWS_S3_DOCUMENTS_BUCKET']
     filepath = f'{document.company.id}/certificates/{document.id}/certificate.pdf'
-    presigned_url = s3_client.generate_presigned_url(
-        'get_object',
-        Params={'Bucket': bucket, 'Key': filepath},
-        ExpiresIn=180
-    )
-
-    control['data']['url'] = presigned_url
+    try:
+        presigned_url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket, 'Key': filepath},
+            ExpiresIn=180
+        )
+    except (Exception,):
+        control['status_code'] = 404
+        control['message'] = 'Certificate file not found'
+    else:
+        control['data']['url'] = presigned_url
     return control
