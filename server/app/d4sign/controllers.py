@@ -579,6 +579,10 @@ def d4sign_generate_document_certificate_file_presigned_url_controller(
     bucket = current_app.config['AWS_S3_DOCUMENTS_BUCKET']
     filepath = f'{document.company.id}/certificates/{document.id}/certificate.pdf'
     try:
+        s3_client.head_object(Bucket=bucket, Key=filepath)
+    except (Exception,):
+        d4sign_update_document_certificate_file_controller(document)
+    try:
         presigned_url = s3_client.generate_presigned_url(
             'get_object',
             Params={'Bucket': bucket, 'Key': filepath},
