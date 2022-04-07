@@ -8,6 +8,7 @@ import requests
 import logging
 from datetime import datetime, timedelta
 from datetime import date
+import pytz
 import copy
 
 from app import db
@@ -131,7 +132,7 @@ def create_document_controller(
         signers=document_template.signers,
         variables=received_variables,
         versions=version,
-        created_at=datetime.utcnow().isoformat(),
+        created_at=datetime.now().astimezone().replace(microsecond=0).isoformat(),
         title=title,
         current_step=step_name,
         document_template_id=document_template_id,
@@ -231,7 +232,7 @@ def create_folder_controller(
     document = Document(
         user_id=user_id,
         company_id=company_id,
-        created_at=datetime.utcnow().isoformat(),
+        created_at=datetime.now().astimezone().replace(microsecond=0).isoformat(),
         title=title,
         parent_id=parent_id,
         is_folder=is_folder,

@@ -70,3 +70,9 @@ export const Lebal = styled(Title)`
 	font-size: 18px !important;
 	font-weight: 500;
 `
+
+export const PersonTitle = styled.p`
+	font-size: 18px;
+	font-weight: 500;
+	margin-bottom: 0;
+`

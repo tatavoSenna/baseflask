@@ -19,8 +19,8 @@ aws cloudformation update-stack \
         ParameterKey=FlaskSecretKey,UsePreviousValue=true \
         ParameterKey=ConvertApiSecretKey,UsePreviousValue=true \
         ParameterKey=SendGridApiKey,UsePreviousValue=true \
-        ParameterKey=D4SignApiURL,UsePreviousValue=true \
-        ParameterKey=SignUpOn,ParameterValue=false \
+        ParameterKey=D4SignApiURL,ParameterValue="https://secure.d4sign.com.br/api/v1" \
+        ParameterKey=SignUpOn,ParameterValue=true \
         ParameterKey=StripeApiSecretKey,UsePreviousValue=true \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \

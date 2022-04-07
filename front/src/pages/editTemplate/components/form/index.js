@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, string, func, any } from 'prop-types'
 import { Tabs, Empty, Button } from 'antd'
@@ -114,7 +114,7 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 	)
 }
 
-const TemplateForm = ({ data }) => {
+const TemplateForm = ({ data, setInputsFilled }) => {
 	const dispatch = useDispatch()
 	const [current, setCurrent] = useState('0')
 
@@ -124,6 +124,25 @@ const TemplateForm = ({ data }) => {
 		}
 		dispatch(editTemplatePageRemove({ pageIndex }))
 	}
+
+	useEffect(() => {
+		setInputsFilled((filled) => ({
+			...filled,
+			form: (() => {
+				if (
+					data.form.length > 0 &&
+					data.form.every(
+						(page) => page.fields.filter((f) => f.variable).length > 0
+					) &&
+					data.form.every((page) => page.valid.every((v) => v))
+				) {
+					return true
+				}
+				return false
+			})(),
+		}))
+	}, [data.form, setInputsFilled])
+
 	return (
 		<>
 			<DraggableTabs current={current} setCurrent={setCurrent} data={data}>
@@ -152,6 +171,7 @@ export default TemplateForm
 
 TemplateForm.propTypes = {
 	data: object,
+	setInputsFilled: func,
 }
 
 DraggableTabs.propTypes = {

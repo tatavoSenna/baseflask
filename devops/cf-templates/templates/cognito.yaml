@@ -11,6 +11,16 @@ Parameters:
       SubDomain name sufix for the cognito ui. If you pass a domain like app.example.com
       a prefix will be added and the final domain would be auth-app.example.com
 
+  SignUpOn:
+    Type: String
+    Description:
+      True if user should be able to sign himself up, or false if only admins
+      can create accounts.
+
+Conditions:
+  OnlyAdminCanAddUsers:
+    !Equals [!Ref SignUpOn, "false"]
+
 Resources:
   # Creates a role that allows Cognito to send SNS messages
   SNSRole:
@@ -50,7 +60,8 @@ Resources:
         #ExternalId: !Sub ${AuthName}-external
         #SnsCallerArn: !GetAtt SNSRole.Arn
       AdminCreateUserConfig:
-        AllowAdminCreateUserOnly: true
+        AllowAdminCreateUserOnly:
+          !If [OnlyAdminCanAddUsers, true, false]
       Schema:
         - Name: name
           AttributeDataType: String

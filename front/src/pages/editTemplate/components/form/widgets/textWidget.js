@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { object, number, func } from 'prop-types'
 import { Input } from 'antd'
 import { FontSizeOutlined } from '@ant-design/icons'
 
-import { Field, useUpdate } from './fieldBase'
-import { FormItem, styleIconValidation } from './styles'
+import { Widget, useUpdate, useValidation } from './base/widget'
+import { FormItem, styleIconValidation } from './base/styles'
 
-export const TextField = (props) => {
+export const TextWidget = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
-	const [valid, setValid] = useState(false)
+	const [valid, setValid] = useValidation(props)
 
 	return (
-		<Field
+		<Widget
 			{...props}
 			type={'Texto'}
 			icon={<Icon $error={!valid} />}
@@ -65,7 +65,7 @@ export const TextField = (props) => {
 
 const Icon = styleIconValidation(FontSizeOutlined)
 
-TextField.propTypes = {
+TextWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,

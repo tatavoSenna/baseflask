@@ -2,20 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { object, func, number } from 'prop-types'
 import JSONInput from 'react-json-editor-ajrm'
 import locale from 'react-json-editor-ajrm/locale/pt'
-import { Field } from './fieldBase'
-import { FormItem, TextIcon } from './styles'
 
-const JSONField = (props) => {
+import { Widget, useValidation } from './base/widget'
+import { FormItem, TextIcon } from './base/styles'
+
+export const JSONWidget = (props) => {
 	const { data, pageIndex, fieldIndex, updateFormInfo } = props
 	const [error, setError] = useState(false)
-	const [valid, setValid] = useState(false)
+	const [valid, setValid] = useValidation(props)
 
 	useEffect(() => {
 		setError(false)
 	}, [fieldIndex])
 
 	return (
-		<Field
+		<Widget
 			{...props}
 			type={data.type || 'JSON'}
 			icon={<TextIcon $error={error || !valid}>{'{}'}</TextIcon>}
@@ -63,9 +64,8 @@ const JSONField = (props) => {
 		/>
 	)
 }
-export default JSONField
 
-JSONField.propTypes = {
+JSONWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,

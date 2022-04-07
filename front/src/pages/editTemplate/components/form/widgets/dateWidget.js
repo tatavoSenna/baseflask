@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { object, number, func } from 'prop-types'
 import { Input, DatePicker } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 
-import { Field, useUpdate } from './fieldBase'
-import { FormItem, styleIconValidation } from './styles'
+import { Widget, useUpdate, useValidation } from './base/widget'
+import { FormItem, styleIconValidation } from './base/styles'
 import { validateDate } from 'utils'
 
-export const DateField = (props) => {
+export const DateWidget = (props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
-	const [valid, setValid] = useState(false)
+	const [valid, setValid] = useValidation(props)
 
 	return (
-		<Field
+		<Widget
 			{...props}
 			type={'Data'}
 			icon={<Icon $error={!valid} />}
@@ -57,7 +57,7 @@ export const DateField = (props) => {
 
 const Icon = styleIconValidation(CalendarOutlined)
 
-DateField.propTypes = {
+DateWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,

@@ -42,10 +42,11 @@ const EditTemplate = () => {
 		form: edit,
 		workflow: true,
 		text: edit,
-		signers: edit,
+		signers: true,
 	})
 	const [files, postFiles] = useState([])
 	const [checked, setChecked] = useState(false)
+	const [title, setTitle] = useState(data.title)
 
 	const editDOCX = () => {
 		setChecked(true)
@@ -62,7 +63,8 @@ const EditTemplate = () => {
 
 	const handleEditTitle = (e) => {
 		const title = e.target.value
-		dispatch(editTemplateTitle({ title }))
+		setTitle(title)
+		dispatch(editTemplateTitle({ title: title }))
 	}
 
 	const setDownloadButton = () => {
@@ -120,36 +122,6 @@ const EditTemplate = () => {
 		}
 	}
 
-	// Each tab (except for signers and workflow, which are optional) has a useEffect dedicated to check if it is empty, thus determining their color
-
-	// Form tab
-	useEffect(() => {
-		setInputsFilled({
-			...inputsFilled,
-			form: (() => {
-				if (data.form.length > 0) {
-					return true
-				}
-				return false
-			})(),
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.form])
-
-	// Text tab
-	useEffect(() => {
-		setInputsFilled({
-			...inputsFilled,
-			text: (() => {
-				if (data.text === '' && !files.length) {
-					return false
-				}
-				return true
-			})(),
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data.text, files])
-
 	useEffect(() => {
 		if (Number.isInteger(id)) {
 			dispatch(getTemplateDetail({ id, editDOCX }))
@@ -184,7 +156,17 @@ const EditTemplate = () => {
 		})
 	}
 
-	const disabledTitleTemplate = data.title.length < 1 || data.title[0] === ' '
+	const allValueSpace = (data) => {
+		return data.trim().length === 0
+	}
+
+	const handleClickTitleButton = () => {
+		setEditTitle(false)
+		dispatch(editTemplateTitle({ title: title.trim() }))
+	}
+
+	const disabledTitleTemplate =
+		data.title.length < 1 || allValueSpace(data.title)
 
 	return (
 		<MainLayout>
@@ -200,12 +182,12 @@ const EditTemplate = () => {
 											maxWidth: '300px',
 											borderColor: disabledTitleTemplate ? '#ff4d4f' : null,
 										}}
-										value={data.title}
-										onChange={(e) => handleEditTitle(e)}
+										defaultValue={data.title}
+										onChange={handleEditTitle}
 										placeholder="Título em branco"
 									/>
 									<Button
-										onClick={() => setEditTitle(false)}
+										onClick={handleClickTitleButton}
 										icon={<CheckOutlined style={{ fontSize: '18px' }} />}
 										style={{ border: 'none', marginLeft: '5px' }}
 										disabled={disabledTitleTemplate}
@@ -275,7 +257,9 @@ const EditTemplate = () => {
 							layout="horizontal"
 							hideRequiredMark
 							onFinish={onSubmit}>
-							{current === 'form' && <TemplateForm data={data} />}
+							{current === 'form' && (
+								<TemplateForm data={data} setInputsFilled={setInputsFilled} />
+							)}
 							{current === 'workflow' && <Workflow form={form} />}
 							{current === 'text' && (
 								<Text
@@ -286,18 +270,11 @@ const EditTemplate = () => {
 									setChecked={setChecked}
 									setDownloadButton={setDownloadButton}
 									setInputsFilled={setInputsFilled}
-									inputsFilled={inputsFilled}
 									docPosted={docPosted}
 									removeDoc={removeDoc}
 								/>
 							)}
-							{current === 'signers' && (
-								<Signers
-									data={data.signers}
-									inputsFilled={inputsFilled}
-									setInputsFilled={setInputsFilled}
-								/>
-							)}
+							{current === 'signers' && <Signers data={data.signers} />}
 						</Form>
 					)}
 				</Layout>

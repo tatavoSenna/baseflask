@@ -9,12 +9,14 @@ import {
 	bool,
 	oneOfType,
 } from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import { Input, Select } from 'antd'
-import { FieldCard } from './fieldCard'
+import { editTemplateFieldValid } from '~/states/modules/editTemplate'
+import { WidgetCard } from './widgetCard'
 import { ThinDivider, ValidatedSelect } from './styles'
-import { FieldConditional } from './fieldConditional'
+import { WidgetConditional } from './widgetConditional'
 
-const Field = ({
+const Widget = ({
 	data,
 	variables,
 	pageIndex,
@@ -37,13 +39,14 @@ const Field = ({
 		if (data.variable) {
 			const name = data.variable.name
 			let validName =
-				name && variableNames.indexOf(name) === variableNames.lastIndexOf(name)
+				name !== '' &&
+				variableNames.indexOf(name) === variableNames.lastIndexOf(name)
 
 			const style = data.variable.doc_display_style
 			let validStyle =
-				!style ||
+				!('doc_display_style' in data.variable) ||
 				displayStyles.map((s) => s.value).includes(style) ||
-				(displayStyles.length === 0 && !style.includes('|'))
+				(displayStyles.length === 0 && style.length > 0 && !style.includes('|'))
 
 			setValidVariableName(validName)
 			setValidVariableStyle(validStyle)
@@ -64,7 +67,7 @@ const Field = ({
 	}
 
 	return (
-		<FieldCard {...{ data, type, icon, pageIndex, fieldIndex }}>
+		<WidgetCard {...{ data, type, icon, pageIndex, fieldIndex }}>
 			<div>{formItems}</div>
 
 			{variableItems ? (
@@ -92,7 +95,7 @@ const Field = ({
 										? data.variable?.doc_display_style.includes('|')
 											? null
 											: data.variable?.doc_display_style
-										: 'plain'
+										: null
 								}
 								onChange={(v) => updateVariable('doc_display_style', v)}
 								$error={!validVariableStyle}>
@@ -113,16 +116,16 @@ const Field = ({
 				<>
 					<ThinDivider orientation="left">Condicionais</ThinDivider>
 
-					<FieldConditional
+					<WidgetConditional
 						{...{ data, variables, pageIndex, fieldIndex, updateFormInfo }}
 					/>
 				</>
 			) : null}
-		</FieldCard>
+		</WidgetCard>
 	)
 }
 
-Field.propTypes = {
+Widget.propTypes = {
 	data: object,
 	variables: array,
 	pageIndex: number,
@@ -135,6 +138,21 @@ Field.propTypes = {
 	displayStyles: array,
 	updateFormInfo: func,
 	onValidate: func,
+}
+
+function useValidation({ pageIndex, fieldIndex }) {
+	const dispatch = useDispatch()
+	const valid = useSelector(
+		({ editTemplate }) => editTemplate.data.form[pageIndex].valid[fieldIndex]
+	)
+
+	const setValid = (v) => {
+		if (v !== valid) {
+			dispatch(editTemplateFieldValid({ value: v, pageIndex, fieldIndex }))
+		}
+	}
+
+	return [valid, setValid]
 }
 
 function useUpdate({ data, pageIndex, fieldIndex, updateFormInfo }) {
@@ -167,4 +185,4 @@ const subObjectComparison = (a, b) => {
 	else return a === b
 }
 
-export { Field, useUpdate }
+export { Widget, useValidation, useUpdate }
