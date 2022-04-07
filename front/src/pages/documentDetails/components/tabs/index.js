@@ -69,6 +69,7 @@ const Tabs = ({
 	onClickUpdate,
 	blockVersion,
 	versionLoading,
+	downloadButton,
 }) => {
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
@@ -647,6 +648,14 @@ const Tabs = ({
 							{loadingSign ? <Spin spinning={loadingSign} /> : 'Assinar'}
 						</Button>
 					)}
+
+					{signed && (
+						<Button key="assinar" type="primary" onClick={downloadButton}>
+							Download
+						</Button>
+					)}
+
+					{console.log('signers', signers)}
 				</Form.Item>
 			</div>
 		</ScrollContent>
@@ -735,6 +744,7 @@ Tabs.propTypes = {
 	onClickPrevious: func.isRequired,
 	onClickNext: func.isRequired,
 	onClickDownload: func.isRequired,
+	downloadButton: func,
 	block: bool,
 	signedWorkflow: bool,
 }

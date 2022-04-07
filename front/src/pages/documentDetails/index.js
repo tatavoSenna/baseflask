@@ -27,6 +27,7 @@ import {
 	downloadLink,
 	getDocumentWordDownload,
 	changeVariables,
+	getDocumentCertificate,
 } from '~/states/modules/documentDetail'
 
 import styles from '../contracts/index.module.scss'
@@ -111,6 +112,10 @@ const DocumentDetails = () => {
 
 	const onSubmitChangeVariables = (values) => {
 		dispatch(changeVariables({ id, values }))
+	}
+
+	const handleDownloadButton = () => {
+		dispatch(getDocumentCertificate({ id }))
 	}
 
 	const handleInitialFolder = () => {
@@ -234,6 +239,7 @@ const DocumentDetails = () => {
 								version_id !== data.versions[0].id
 							}
 							versionLoading={loadingVersion}
+							downloadButton={handleDownloadButton}
 						/>
 					</div>
 				)}
