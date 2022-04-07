@@ -37,7 +37,6 @@ import {
 	changeVariablesSuccess,
 	changeVariablesFailure,
 	getDocumentCertificate,
-	getDocumentCertificateSuccess,
 	getDocumentCertificateFailure,
 } from '.'
 
@@ -59,7 +58,7 @@ function* getDocumentCertificateSaga({ payload = {} }) {
 	const { id } = payload
 	try {
 		const { data } = yield call(api.get, `/documents/${id}/certificate`)
-		yield put(getDocumentCertificateSuccess(data.url))
+		window.location.href = data.url
 	} catch (error) {
 		yield put(getDocumentCertificateFailure(error))
 	}

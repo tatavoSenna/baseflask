@@ -24,7 +24,6 @@ const initialState = {
 	loadingSign: false,
 	loadingVersion: false,
 	version_id: '0',
-	documentCertificate: '',
 }
 
 const { actions, reducer } = createSlice({
@@ -34,12 +33,6 @@ const { actions, reducer } = createSlice({
 		getDocumentCertificate: (state) =>
 			extend(state, {
 				loading: true,
-				documentCertificate: '',
-			}),
-		getDocumentCertificateSuccess: (state, { payload }) =>
-			extend(state, {
-				loading: true,
-				documentCertificate: payload,
 			}),
 		getDocumentCertificateFailure: (state, { payload }) =>
 			extend(state, {
@@ -291,7 +284,6 @@ export const {
 	changeVariablesSuccess,
 	changeVariablesFailure,
 	getDocumentCertificate,
-	getDocumentCertificateSuccess,
 	getDocumentCertificateFailure,
 } = actions
 
