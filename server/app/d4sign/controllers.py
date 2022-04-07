@@ -523,9 +523,7 @@ def d4sign_document_webhook_controller(
         return control
 
 
-def d4sign_update_document_certificate_file_controller(
-        document
-) -> dict:
+def d4sign_update_document_certificate_file_controller(document) -> dict:
     """
     Controls updating the document's certificate file on S3.
     The full file, which contains both the document and the certificate,
@@ -539,19 +537,21 @@ def d4sign_update_document_certificate_file_controller(
         document_uuid=document.d4sign_document_uuid
     )
 
-    document_file_download_url = document_file_download_info['url']
+    document_file_download_url = document_file_download_info["url"]
     document_file = requests.get(document_file_download_url).content
     document_pdf = PdfReader(io.BytesIO(document_file))
 
     certificate_pdf = PdfWriter()
-    certificate_pdf.addpage(document_pdf.pages[-1])  # certificate is in the last page (always?)
+    certificate_pdf.addpage(
+        document_pdf.pages[-1]
+    )  # certificate is in the last page (always?)
     certificate_file = io.BytesIO()
     certificate_pdf.write(certificate_file)
     certificate_file = certificate_file.getvalue()
 
-    s3_client = boto3.client('s3')
-    bucket = current_app.config['AWS_S3_DOCUMENTS_BUCKET']
-    filepath = f'{document.company.id}/certificates/{document.id}/certificate.pdf'
+    s3_client = boto3.client("s3")
+    bucket = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+    filepath = f"{document.company.id}/certificates/{document.id}/certificate.pdf"
     s3_client.put_object(
         Body=certificate_file,
         Bucket=bucket,
@@ -562,8 +562,7 @@ def d4sign_update_document_certificate_file_controller(
 
 
 def d4sign_generate_document_certificate_file_presigned_url_controller(
-    user,
-    document
+    user, document
 ) -> dict:
     """
     Controls generating an accessible url for the document's certificate file.
@@ -575,22 +574,20 @@ def d4sign_generate_document_certificate_file_presigned_url_controller(
         control["message"] = "Document does not belong to this user's company"
         return control
 
-    s3_client = boto3.client('s3')
-    bucket = current_app.config['AWS_S3_DOCUMENTS_BUCKET']
-    filepath = f'{document.company.id}/certificates/{document.id}/certificate.pdf'
+    s3_client = boto3.client("s3")
+    bucket = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+    filepath = f"{document.company.id}/certificates/{document.id}/certificate.pdf"
     try:
         s3_client.head_object(Bucket=bucket, Key=filepath)
     except (Exception,):
         d4sign_update_document_certificate_file_controller(document)
     try:
         presigned_url = s3_client.generate_presigned_url(
-            'get_object',
-            Params={'Bucket': bucket, 'Key': filepath},
-            ExpiresIn=180
+            "get_object", Params={"Bucket": bucket, "Key": filepath}, ExpiresIn=180
         )
     except (Exception,):
-        control['status_code'] = 404
-        control['message'] = 'Certificate file not found'
+        control["status_code"] = 404
+        control["message"] = "Certificate file not found"
     else:
-        control['data']['url'] = presigned_url
+        control["data"]["url"] = presigned_url
     return control
