@@ -58,7 +58,8 @@ function* getDocumentCertificateSaga({ payload = {} }) {
 	const { id } = payload
 	try {
 		const { data } = yield call(api.get, `/documents/${id}/certificate`)
-		window.location.href = data.url
+		console.log(data)
+		window.location.href = data.data.url
 	} catch (error) {
 		yield put(getDocumentCertificateFailure(error))
 	}
