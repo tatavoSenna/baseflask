@@ -654,8 +654,6 @@ const Tabs = ({
 							Download
 						</Button>
 					)}
-
-					{console.log('signers', signers)}
 				</Form.Item>
 			</div>
 		</ScrollContent>
