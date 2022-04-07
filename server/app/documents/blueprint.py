@@ -37,7 +37,7 @@ from app.serializers.document_serializers import (
 )
 from app.models.documents import Document, DocumentTemplate
 from app.models.company import Company
-from app.users.remote import get_local_user
+from app.users.remote import get_local_user, authenticated_user
 from app.docusign.serializers import EnvelopeSerializer
 from app.docusign.services import get_token
 from app.models.user import User
@@ -677,8 +677,7 @@ def edit_document_workflow(current_user, document_id):
 
 
 @documents_bp.route("/<int:document_id>/certificate", methods=["GET"])
-@aws_auth.authentication_required
-@get_local_user
+@authenticated_user
 def get_document_certificate_file(current_user, document_id):
     control = {"status_code": 200, "message": "", "data": {}}
     if (document := get_document_controller(document_id)) is None:

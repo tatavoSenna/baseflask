@@ -569,7 +569,7 @@ def d4sign_generate_document_certificate_file_presigned_url_controller(
     """
     control = {"status_code": 200, "message": "", "data": {}}
 
-    if document.company != user["company_id"]:
+    if document.company != user.company:
         control["status_code"] = 403
         control["message"] = "Document does not belong to this user's company"
         return control
