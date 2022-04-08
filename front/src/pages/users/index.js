@@ -58,8 +58,10 @@ function Users() {
 	}, [])
 
 	useEffect(() => {
-		dispatch(getGroupList())
-		dispatch(getUserList())
+		if (loggedUsername !== '-') {
+			dispatch(getGroupList())
+			dispatch(getUserList())
+		}
 	}, [dispatch, loggedUsername])
 
 	const getUsers = ({ page, perPage, search }) =>

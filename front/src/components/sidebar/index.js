@@ -11,7 +11,6 @@ import {
 	IdcardOutlined,
 	FileTextOutlined,
 } from '@ant-design/icons'
-import { getUserList } from '~/states/modules/users'
 import { getSettings } from '~/states/modules/settings'
 import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
@@ -25,14 +24,9 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const { pathname } = useLocation()
-
 	useEffect(() => {
-		dispatch(getUserList())
-	}, [dispatch])
-
-	useEffect(() => {
-		dispatch(getSettings())
-	}, [dispatch])
+		if (!data) dispatch(getSettings())
+	}, [dispatch, data])
 
 	const { is_admin } = useSelector(({ session }) => session)
 
@@ -55,7 +49,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		if (data) {
 			return (
 				<img
-					src={data.url}
+					src={typeof data !== 'string' ? data.url : data}
 					alt="logo"
 					className={styles.logo}
 					onError={(e) => {

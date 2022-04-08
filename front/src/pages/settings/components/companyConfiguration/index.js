@@ -1,8 +1,9 @@
 import React from 'react'
 import { Card, Button, Typography, Upload, Form } from 'antd'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { saveSettings } from '~/states/modules/settings'
 import { UploadOutlined } from '@ant-design/icons'
+import { getSettings } from '~/states/modules/settings'
 
 const { Title } = Typography
 
