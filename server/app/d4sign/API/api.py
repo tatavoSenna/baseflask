@@ -62,9 +62,8 @@ class D4SignAPI:
         url = self.put_url_credentials(url)
 
         response = requests.get(url)
-        assert response.status_code == 200
-
         response_payload = response.json()
+
         return response_payload
 
     def get_safe(self, safe_uuid: str = "", safe_name: str = "") -> Dict:
@@ -112,9 +111,8 @@ class D4SignAPI:
         url = self.put_url_credentials(url)
 
         response = requests.get(url)
-        assert response.status_code == 200
-
         response_payload = response.json()
+
         return response_payload
 
     def upload_document_file(
@@ -151,9 +149,8 @@ class D4SignAPI:
         files = [("file", (filename, file.getvalue(), mime))]
 
         response = requests.post(url, data=payload, files=files)
-        assert response.status_code == 200
-
         response_payload = response.json()
+
         return response_payload
 
     def get_document_file_download_info(
@@ -173,9 +170,8 @@ class D4SignAPI:
         body = {"type": "pdf"}
 
         response = requests.post(url, data=body)
-        assert response.status_code == 200
-
         response_payload = response.json()
+
         return response_payload
 
     def register_document_webhook(self, document_uuid: str) -> Dict:
@@ -203,10 +199,9 @@ class D4SignAPI:
         payload = json.dumps(payload)
 
         response = requests.post(url, headers=headers, data=payload)
-        assert response.status_code == 200
-
         response_payload = response.json()
         response_payload["document_webhook_url"] = document_webhook_url
+
         return response_payload
 
     def register_document_signer(
