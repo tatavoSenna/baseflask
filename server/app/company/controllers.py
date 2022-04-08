@@ -1,4 +1,3 @@
-import email
 from sqlalchemy import true
 from app import db
 import os
