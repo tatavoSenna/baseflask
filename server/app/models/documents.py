@@ -28,6 +28,7 @@ class DocumentTemplate(db.Model):
     variables = db.Column(JSONB, unique=False, nullable=True)
     filename = db.Column(db.String(255), unique=False, nullable=True)
     published = db.Column(db.Boolean, default=False, nullable=True)
+    favorite = db.Column(db.Boolean, default=False, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="templates")

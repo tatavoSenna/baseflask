@@ -9,6 +9,7 @@ import { getColumns } from './columns'
 import {
 	listTemplate,
 	publishTemplate,
+	favorteTemplate,
 	deleteTemplate,
 	setShowModal,
 } from '../../states/modules/templates'
@@ -56,6 +57,10 @@ const Templates = () => {
 		dispatch(publishTemplate({ id: template.id, status: status }))
 	}
 
+	const handleFavoriteTemplate = (template, status) => {
+		dispatch(favorteTemplate({ id: template, status: status }))
+	}
+
 	const handleDeleteTemplate = (template) =>
 		dispatch(deleteTemplate({ id: template.id, pages }))
 
@@ -85,7 +90,8 @@ const Templates = () => {
 						columns={getColumns(
 							handleToGo,
 							handlePublishTemplate,
-							handleDeleteTemplate
+							handleDeleteTemplate,
+							handleFavoriteTemplate
 						)}
 						dataSource={templates}
 						pages={pages}

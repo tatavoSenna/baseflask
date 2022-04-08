@@ -1,7 +1,11 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { selectAllTemplates, updatePublished } from './selectors'
+import {
+	selectAllTemplates,
+	updatePublished,
+	updateFavorite,
+} from './selectors'
 
 const initialState = {
 	data: [],
@@ -54,6 +58,21 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		favorteTemplate: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		favoriteTemplateSuccess: (state, { payload }) =>
+			extend(state, {
+				data: updateFavorite(state.data, payload),
+				loading: false,
+				error: null,
+			}),
+		favoriteTemplateFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		deleteTemplate: (state) =>
 			extend(state, {
 				loading: true,
@@ -89,6 +108,9 @@ export const {
 	publishTemplate,
 	publishTemplateSuccess,
 	publishTemplateFailure,
+	favorteTemplate,
+	favoriteTemplateSuccess,
+	favoriteTemplateFailure,
 	deleteTemplate,
 	deleteTemplateSuccess,
 	deleteTemplateFailure,

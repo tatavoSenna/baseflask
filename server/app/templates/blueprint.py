@@ -3,7 +3,7 @@ import logging
 
 from flask import request, Blueprint, abort, jsonify, current_app
 from werkzeug.utils import secure_filename
-from sqlalchemy import desc
+from sqlalchemy import desc, nulls_last
 
 from app import aws_auth, db
 from app.users.remote import get_local_user
@@ -20,6 +20,7 @@ from .controllers import (
     download_template_text_controller,
     get_document_upload_url,
     template_status_controller,
+    template_favorite_controller,
 )
 
 
@@ -137,7 +138,10 @@ def get_template_list(current_user):
     paginated_query = (
         DocumentTemplate.query.filter_by(company_id=current_user["company_id"])
         .filter(DocumentTemplate.name.ilike(f"%{search_param}%"))
-        .order_by(desc(DocumentTemplate.created_at))
+        .order_by(
+            nulls_last(desc(DocumentTemplate.favorite)),
+            desc(DocumentTemplate.created_at),
+        )
         .paginate(page=page, per_page=per_page)
     )
 
@@ -238,5 +242,23 @@ def set_published(current_user, document_template_id):
     user_id = current_user["id"]
 
     template_id = template_status_controller(company_id, user_id, template.id, status)
+
+    return jsonify({"id": template_id, "status": status})
+
+
+@templates_bp.route("/<int:document_template_id>/favorite", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def set_favorite(current_user, document_template_id):
+    template = get_template_controller(current_user["company_id"], document_template_id)
+    if not request.is_json:
+        return abort(404, "Accepts only content-type json.")
+    if not template:
+        abort(404, "Template not found")
+
+    status = request.json.get("status", None)
+    company_id = current_user["company_id"]
+
+    template_id = template_favorite_controller(company_id, template.id, status)
 
     return jsonify({"id": template_id, "status": status})

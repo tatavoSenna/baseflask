@@ -14,6 +14,7 @@ export const selectAllTemplates = (payload) =>
 		createdAt: template.created_at
 			? moment(template.created_at).fromNow()
 			: null,
+		favorite: template.favorite,
 	}))
 
 export const updatePublished = (data, payload) => {
@@ -24,4 +25,14 @@ export const updatePublished = (data, payload) => {
 		}
 	}
 	return update(data, { [index]: { published: { $set: payload.status } } })
+}
+
+export const updateFavorite = (data, payload) => {
+	let index
+	for (var i = 0; i < data.length; i++) {
+		if (data[i].id === payload.id) {
+			index = i
+		}
+	}
+	return update(data, { [index]: { favorite: { $set: payload.status } } })
 }
