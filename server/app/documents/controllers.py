@@ -36,6 +36,7 @@ from app import jinja_env
 import convertapi
 import sys, traceback
 from werkzeug.exceptions import Unauthorized
+from sqlalchemy import desc, nulls_last
 
 from app.documents.formatters.variables_formatter import (
     format_variables,
@@ -48,6 +49,7 @@ def get_document_template_list_controller(company_id):
     document_templates = (
         DocumentTemplate.query.filter_by(company_id=company_id)
         .filter_by(published=True)
+        .order_by(nulls_last(desc(DocumentTemplate.favorite)))
         .all()
     )
     return document_templates

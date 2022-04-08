@@ -13,6 +13,9 @@ import {
 	publishTemplate,
 	publishTemplateSuccess,
 	publishTemplateFailure,
+	favorteTemplate,
+	favoriteTemplateSuccess,
+	favoriteTemplateFailure,
 	deleteTemplate,
 	deleteTemplateSuccess,
 	deleteTemplateFailure,
@@ -21,6 +24,7 @@ import {
 export default function* rootSaga() {
 	yield takeEvery(listTemplate, fetchTemplates)
 	yield takeEvery(publishTemplate, publishTemplateSaga)
+	yield takeEvery(favorteTemplate, favoriteTemplateSaga)
 	yield takeEvery(deleteTemplate, deleteTemplateSaga)
 }
 
@@ -63,6 +67,35 @@ function* publishTemplateSaga({ payload = {} }) {
 		errorMessage({
 			content: `${message[2]} do template falhou.`,
 			updateKey: 'publishTemplateSaga',
+		})
+	}
+}
+
+function* favoriteTemplateSaga({ payload = {} }) {
+	const { id, status } = payload
+	const message = status
+		? ['Adicionando', 'adicionado', 'Adição']
+		: ['Removendo', 'removido', 'Remoção']
+
+	loadingMessage({
+		content: `${message[0]} template favorito...`,
+		updateKey: 'favoriteTemplateSaga',
+	})
+
+	try {
+		const { data } = yield call(api.patch, `/templates/${id}/favorite`, {
+			status: status,
+		})
+		yield put(favoriteTemplateSuccess(data))
+		successMessage({
+			content: `Template favorito ${message[1]} com sucesso.`,
+			updateKey: 'favoriteTemplateSaga',
+		})
+	} catch (error) {
+		yield put(favoriteTemplateFailure(error))
+		errorMessage({
+			content: `${message[2]} do template favorito falhou.`,
+			updateKey: 'favoriteTemplateSaga',
 		})
 	}
 }

@@ -1,12 +1,14 @@
 import React from 'react'
-import { Button, Space, Switch } from 'antd'
+import { Button, Space, Switch, Checkbox } from 'antd'
+import { StarOutlined, StarFilled } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
 
 export const getColumns = (
 	handleToGo,
 	handlePublishTemplate,
-	handleDeleteTemplate
+	handleDeleteTemplate,
+	handleFavoriteTemplate
 ) => [
 	{
 		title: 'Publicado',
@@ -40,6 +42,26 @@ export const getColumns = (
 		title: 'Data Criação',
 		dataIndex: 'createdAt',
 		key: 'createdAt',
+	},
+	{
+		title: 'Favorito',
+		dataIndex: 'favorite',
+		key: 'favorite',
+		render: (text, record) => {
+			return (
+				<Button
+					icon={
+						record.favorite ? (
+							<StarFilled style={{ color: 'gold' }} />
+						) : (
+							<StarOutlined />
+						)
+					}
+					onClick={() =>
+						handleFavoriteTemplate(record.id, !record.favorite)
+					}></Button>
+			)
+		},
 	},
 	{
 		title: '',
