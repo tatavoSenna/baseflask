@@ -116,7 +116,7 @@ def delete(logged_user, username):
         return dict(error="Cannot delete yourself"), 400
 
     try:
-        response = cognito.admin_disable_user(**user_attributes)
+        response = cognito.admin_delete_user(**user_attributes)
     except cognito.exceptions.UserNotFoundException as identifier:
         return dict(error="Username not found")
 

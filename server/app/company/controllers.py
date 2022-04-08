@@ -1,3 +1,4 @@
+import email
 from sqlalchemy import true
 from app import db
 import os
@@ -127,6 +128,20 @@ def assign_company_to_new_user_controller(logged_user, company_id):
         else:
             price_id = "price_1KP85XHIZcJ4D4nayv0Sx6dc"
         stripe.Subscription.create(customer=customer_id, items=[{"price": price_id}])
+
+    deleted_user = User.query.filter_by(
+        email=logged_user["email"], active=False
+    ).first()
+
+    if deleted_user:
+        deleted_user.company_id = local_user.company_id
+        deleted_user.is_financial = local_user.is_financial
+        deleted_user.sub = local_user.sub
+        deleted_user.active = True
+        db.session.add(deleted_user)
+        db.session.commit()
+        logged_user["created"] = True
+        return deleted_user
 
     db.session.add(local_user)
     db.session.commit()
