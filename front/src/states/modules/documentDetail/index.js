@@ -30,6 +30,15 @@ const { actions, reducer } = createSlice({
 	name: 'documentDetail',
 	initialState,
 	reducers: {
+		getDocumentCertificate: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		getDocumentCertificateFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		getDocumentDetail: (state) =>
 			extend(state, {
 				data: {},
@@ -274,6 +283,8 @@ export const {
 	changeVariables,
 	changeVariablesSuccess,
 	changeVariablesFailure,
+	getDocumentCertificate,
+	getDocumentCertificateFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'

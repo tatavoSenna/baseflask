@@ -156,6 +156,28 @@ class D4SignAPI:
         response_payload = response.json()
         return response_payload
 
+    def get_document_file_download_info(
+        self,
+        document_uuid: str,
+    ) -> Dict:
+        """
+        Returns the download information for a specific document file.
+        return example = {
+            'name': 'My Document',
+            'url': '...d4sign.com.br/.../<some hash>'
+        }
+        """
+        url = f"{self.url}/documents/{document_uuid}/download"
+        url = self.put_url_credentials(url)
+
+        body = {"type": "pdf"}
+
+        response = requests.post(url, data=body)
+        assert response.status_code == 200
+
+        response_payload = response.json()
+        return response_payload
+
     def register_document_webhook(self, document_uuid: str) -> Dict:
         """
         Registers a webhook to a D4Sign document.

@@ -36,6 +36,8 @@ import {
 	changeVariables,
 	changeVariablesSuccess,
 	changeVariablesFailure,
+	getDocumentCertificate,
+	getDocumentCertificateFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -49,6 +51,17 @@ export default function* rootSaga() {
 	yield takeEvery(downloadLink, downloadLinkSaga)
 	yield takeEvery(getDocumentWordDownload, getDocumentWordDownloadSaga)
 	yield takeEvery(changeVariables, changeVariablesSaga)
+	yield takeEvery(getDocumentCertificate, getDocumentCertificateSaga)
+}
+
+function* getDocumentCertificateSaga({ payload = {} }) {
+	const { id } = payload
+	try {
+		const { data } = yield call(api.get, `/documents/${id}/certificate`)
+		window.location.href = data.data.url
+	} catch (error) {
+		yield put(getDocumentCertificateFailure(error))
+	}
 }
 
 function* getDocumentDetailSaga({ payload = {} }) {

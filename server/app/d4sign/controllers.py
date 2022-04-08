@@ -1,6 +1,13 @@
+import io
+import boto3
+import requests
+
 from datetime import date, datetime
+from pdfrw import PdfReader, PdfWriter
 from sqlalchemy.orm.attributes import flag_modified
 from typing import Optional
+
+from flask import current_app
 
 from app import db
 from app.models import Company, Document
@@ -378,6 +385,8 @@ def d4sign_upload_and_send_document_for_signing_controller(
         if control["status_code"] not in [200, 202]:
             return control
 
+    d4sign_update_document_certificate_file_controller(document_model_instance)
+
     updated_document_model_instance = Document.query.get(document_id)
 
     return updated_document_model_instance, control
@@ -407,6 +416,9 @@ def d4sign_document_webhook_controller(
                 flag_modified(document, "signers")
             db.session.add(document)
             db.session.commit()
+
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Document with d4sign_document_uuid "
             f"<{d4sign_document_uuid}> finished signing"
@@ -460,6 +472,8 @@ def d4sign_document_webhook_controller(
         db.session.add(document)
         db.session.commit()
 
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Signatures for document "
             f"with d4sign_document_uuid <{d4sign_document_uuid}> "
@@ -499,9 +513,81 @@ def d4sign_document_webhook_controller(
         db.session.add(document)
         db.session.commit()
 
+        d4sign_update_document_certificate_file_controller(document)
+
         control["message"] = (
             f"Person with email {signer_email} "
             f"successfully signed the document "
             f"with d4sign_document_uuid <{d4sign_document_uuid}>"
         )
         return control
+
+
+def d4sign_update_document_certificate_file_controller(document) -> dict:
+    """
+    Controls updating the document's certificate file on S3.
+    The full file, which contains both the document and the certificate,
+    is downloaded from the D4Sign API, then the certificate is uploaded to the bucket.
+    This update is meant to happen every time there is an update on the document.
+    """
+    control = {"status_code": 200, "message": "", "data": {}}
+
+    d4sign_api = D4SignAPI(company=document.company)
+    document_file_download_info = d4sign_api.get_document_file_download_info(
+        document_uuid=document.d4sign_document_uuid
+    )
+
+    document_file_download_url = document_file_download_info["url"]
+    document_file = requests.get(document_file_download_url).content
+    document_pdf = PdfReader(io.BytesIO(document_file))
+
+    certificate_pdf = PdfWriter()
+    certificate_pdf.addpage(
+        document_pdf.pages[-1]
+    )  # certificate is in the last page (always?)
+    certificate_file = io.BytesIO()
+    certificate_pdf.write(certificate_file)
+    certificate_file = certificate_file.getvalue()
+
+    s3_client = boto3.client("s3")
+    bucket = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+    filepath = f"{document.company.id}/certificates/{document.id}/certificate.pdf"
+    s3_client.put_object(
+        Body=certificate_file,
+        Bucket=bucket,
+        Key=filepath,
+    )
+
+    return control
+
+
+def d4sign_generate_document_certificate_file_presigned_url_controller(
+    user, document
+) -> dict:
+    """
+    Controls generating an accessible url for the document's certificate file.
+    """
+    control = {"status_code": 200, "message": "", "data": {}}
+
+    if document.company != user.company:
+        control["status_code"] = 403
+        control["message"] = "Document does not belong to this user's company"
+        return control
+
+    s3_client = boto3.client("s3")
+    bucket = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+    filepath = f"{document.company.id}/certificates/{document.id}/certificate.pdf"
+    try:
+        s3_client.head_object(Bucket=bucket, Key=filepath)
+    except (Exception,):
+        d4sign_update_document_certificate_file_controller(document)
+    try:
+        presigned_url = s3_client.generate_presigned_url(
+            "get_object", Params={"Bucket": bucket, "Key": filepath}, ExpiresIn=180
+        )
+    except (Exception,):
+        control["status_code"] = 404
+        control["message"] = "Certificate file not found"
+    else:
+        control["data"]["url"] = presigned_url
+    return control
