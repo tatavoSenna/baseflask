@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	data: [],
 	visible: [],
+	conditionals: [],
 	currentPage: 0,
 	lastPage: 0,
 	error: null,
@@ -34,6 +35,22 @@ const { actions, reducer } = createSlice({
 						return !field.condition
 					})
 				}),
+				conditionals: (() => {
+					let variables = new Set()
+					for (let page of data.form) {
+						for (let field of page.fields) {
+							if ('condition' in field) {
+								if (Array.isArray(field.condition))
+									field.condition.forEach((cond) =>
+										variables.add(cond.variable)
+									)
+								else variables.add(field.condition.variable)
+							}
+						}
+					}
+
+					return [...variables]
+				})(),
 			})
 		},
 		listQuestionFailure: (state, { payload }) =>
@@ -172,6 +189,9 @@ const { actions, reducer } = createSlice({
 				modelId: null,
 				title: '',
 				visible: [],
+				conditionals: [],
+				currentPage: 0,
+				lastPage: 0,
 			})
 		},
 	},

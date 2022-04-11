@@ -1,9 +1,9 @@
 import React from 'react'
 import { object, func, number, array } from 'prop-types'
-import { Form, Input, Select, Button, AutoComplete, Switch } from 'antd'
+import { Form, Input, Select, Button, AutoComplete } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useUpdate } from './widget'
-import { FormItem, ListItem } from './styles'
+import { ListItem } from './styles'
 import { TextInput } from '../textWidget'
 import { NumberInput } from '../numberWidget'
 import { CurrencyInput } from '../currencyWidget'
@@ -59,12 +59,6 @@ const WidgetConditional = ({
 
 	return (
 		<div>
-			<FormItem label="Condicional">
-				<Switch
-					defaultChecked={data.conditional}
-					onChange={(e) => update({ conditional: e })}
-				/>
-			</FormItem>
 			{conditions.map((condition, i) => (
 				<ListItem key={condition.variable + i}>
 					<Input.Group compact>

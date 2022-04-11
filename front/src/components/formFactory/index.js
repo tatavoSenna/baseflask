@@ -16,12 +16,12 @@ const FormFactory = ({ token, initialValues = {} }) => {
 		data: questions,
 		visible,
 		currentPage,
+		lastPage,
 	} = useSelector(({ question }) => question)
 
 	const history = useHistory()
 	const [form] = Form.useForm()
-	const lastPage = questions.length
-	const isLastPage = currentPage + 1 === lastPage
+	const isLastPage = currentPage === lastPage
 	const pageFieldsData = questions[currentPage]
 
 	function handleGoTo(path) {
@@ -50,7 +50,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 
 	return (
 		<div className={styles['flex-container']}>
-			{pageFieldsData && pageFieldsData.fields.length > 0 && (
+			{pageFieldsData && (
 				<PageHeader className={styles.title}>{pageFieldsData.title}</PageHeader>
 			)}
 			<Form
@@ -60,7 +60,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 				hideRequiredMark
 				onFinish={onSubmit}
 				className={styles['form-container']}>
-				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+				{pageFieldsData && (
 					<div className={styles['form']}>
 						<InputFactory
 							data={pageFieldsData.fields}
@@ -72,10 +72,10 @@ const FormFactory = ({ token, initialValues = {} }) => {
 					</div>
 				)}
 
-				{pageFieldsData && pageFieldsData.fields.length > 0 && (
+				{pageFieldsData && (
 					<div className={styles['flex-row-buttons']}>
 						<Form.Item>
-							{true && currentPage > 0 ? (
+							{currentPage > 0 ? (
 								<Button
 									block
 									type="default"
@@ -98,9 +98,9 @@ const FormFactory = ({ token, initialValues = {} }) => {
 							)}
 						</Form.Item>
 
-						{lastPage > 1 && (
+						{lastPage > 0 && (
 							<Typography className={styles.text}>
-								{currentPage + 1} de {lastPage}
+								{currentPage + 1} de {lastPage + 1}
 							</Typography>
 						)}
 
