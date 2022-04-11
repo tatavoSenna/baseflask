@@ -651,7 +651,7 @@ const Tabs = ({
 
 					{signed && (
 						<Button key="assinar" type="primary" onClick={downloadButton}>
-							Download
+							Download do Certificado
 						</Button>
 					)}
 				</Form.Item>
