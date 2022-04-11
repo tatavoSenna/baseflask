@@ -27,7 +27,7 @@ import StructuredCheckbox from '~/components/structuredCheckbox'
 import AddressField from '~/components/addressField'
 
 import { Divider } from 'antd'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateVisible } from '~/states/modules/question'
 
 import styles from './index.module.scss'
@@ -54,9 +54,13 @@ function InputFactory({
 			)
 	}, [dispatch, form, currentFormStep])
 
+	const conditionals = useSelector(({ question }) => question.conditionals)
+
 	for (let i = 0; i < pageFieldsData.length; i++) {
-		const { type, conditional, initialValue, variable } = pageFieldsData[i]
+		const { type, initialValue, variable } = pageFieldsData[i]
 		const isVisible = visible[i] ? styles['default-style'] : styles.hidden
+		const isConditional =
+			variable?.name !== undefined && conditionals.includes(variable.name)
 
 		const defaultValue = () => {
 			if (initialValues) {
@@ -75,7 +79,7 @@ function InputFactory({
 		const first = i === 0
 
 		let onchange = (selector = (e) => e) =>
-			conditional
+			isConditional
 				? (e) =>
 						dispatch(
 							updateVisible({
