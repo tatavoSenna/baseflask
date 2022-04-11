@@ -55,7 +55,6 @@ class DocumentListSerializer(ma.SQLAlchemyAutoSchema):
             "versions",
             "signers",
             "form",
-            "current_step",
             "company",
         )
 
