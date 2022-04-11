@@ -19,7 +19,7 @@ from .API.api import D4SignAPI
 def update_document_signing_current_step(document):
     """
     Each time a document is signed, the current step is changed to
-    `Assinado (m/n)`, representing how many signatures were made in
+    `Assinando (m/n)`, representing how many signatures were made in
     respect to how many are required.
     """
     m = sum(signer["status"] == "Completed" for signer in document.signers)
@@ -27,7 +27,7 @@ def update_document_signing_current_step(document):
     if m == n:
         document.current_step = "Assinado"
     else:
-        document.current_step = f"Assinado ({m}/{n})"
+        document.current_step = f"Assinando ({m}/{n})"
     db.session.add(document)
     db.session.commit()
     return m, n
