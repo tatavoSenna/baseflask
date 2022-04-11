@@ -16,6 +16,23 @@ from app.documents.remote import RemoteDocument
 from .API.api import D4SignAPI
 
 
+def update_document_signing_current_step(document):
+    """
+    Each time a document is signed, the current step is changed to
+    `Assinado (m/n)`, representing how many signatures were made in
+    respect to how many are required.
+    """
+    m = sum(signer["status"] == "Completed" for signer in document.signers)
+    n = len(document.signers)
+    if m == n:
+        document.current_step = "Assinado"
+    else:
+        document.current_step = f"Assinado ({m}/{n})"
+    db.session.add(document)
+    db.session.commit()
+    return m, n
+
+
 def d4sign_get_company_info_controller(user, company_id: int) -> dict:
     """
     Controls fetching for a company's D4Sign info from database.
@@ -385,6 +402,7 @@ def d4sign_upload_and_send_document_for_signing_controller(
         if control["status_code"] not in [200, 202]:
             return control
 
+    update_document_signing_current_step(document_model_instance)
     d4sign_update_document_certificate_file_controller(document_model_instance)
 
     updated_document_model_instance = Document.query.get(document_id)
@@ -413,10 +431,12 @@ def d4sign_document_webhook_controller(
                     signer["status"] = "Completed"
                     signers_modified = True
             if signers_modified:
+                flag_modified(document, "current_step")
                 flag_modified(document, "signers")
             db.session.add(document)
             db.session.commit()
 
+        update_document_signing_current_step(document)
         d4sign_update_document_certificate_file_controller(document)
 
         control["message"] = (
@@ -509,10 +529,12 @@ def d4sign_document_webhook_controller(
             datetime.utcnow().astimezone().replace(microsecond=0).isoformat()
         )
 
+        flag_modified(document, "current_step")
         flag_modified(document, "signers")  # no need of deepcopying JSON field
         db.session.add(document)
         db.session.commit()
 
+        update_document_signing_current_step(document)
         d4sign_update_document_certificate_file_controller(document)
 
         control["message"] = (
