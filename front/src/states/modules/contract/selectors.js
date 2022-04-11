@@ -19,7 +19,7 @@ export const selectAllContracts = (payload) =>
 		),*/,
 		authorEmail: contract.user.email,
 		documentId: contract.document_model_id,
-		status: contract.status,
+		status: contract.current_step,
 		is_folder: contract.is_folder,
 		parent_id: contract.parent_id,
 		createdAt: contract.created_at
