@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Space, Switch, Checkbox } from 'antd'
+import { Button, Space, Switch } from 'antd'
 import { StarOutlined, StarFilled } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
