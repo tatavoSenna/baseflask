@@ -33,7 +33,7 @@ const DateField = ({
 			initialValue={validateDate(inputValue)}
 			colon={false}>
 			<DatePicker
-				format={'DD-MM-YYYY'}
+				format="DD-MM-YYYY"
 				placeholder={''}
 				disabled={disabled}
 				onChange={onChange}
@@ -45,10 +45,10 @@ const DateField = ({
 DateField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: object.isRequired,
+		variable: PropTypes.oneOfType([object, string]).isRequired,
 		info: string,
 	}).isRequired,
-	className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+	className: PropTypes.string,
 	onChange: func,
 	inputValue: string,
 	disabled: bool,

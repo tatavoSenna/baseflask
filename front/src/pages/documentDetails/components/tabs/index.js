@@ -35,6 +35,7 @@ import styled from 'styled-components'
 import PersonFieldText from './components/textTemplate/personFieldText'
 import AddressField from './components/docxTemplate/addressField'
 import AddressFieldText from './components/textTemplate/addressFieldText'
+import DateFieldText from './components/textTemplate/dateFieldText'
 
 moment.locale('pt-br')
 
@@ -106,6 +107,8 @@ const Tabs = ({
 					return <AddressFieldText data={item} key={index} />
 				case 'person':
 					return <PersonFieldText data={item} key={index} />
+				case 'date':
+					return <DateFieldText data={item} key={index} />
 				default:
 					return (
 						<div key={index}>

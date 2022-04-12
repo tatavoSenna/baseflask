@@ -67,7 +67,6 @@ TextField.propTypes = {
 
 TextField.defaultProps = {
 	inputValue: '',
-	className: {},
 	onChange: () => null,
 	OutsideLabel: '',
 }

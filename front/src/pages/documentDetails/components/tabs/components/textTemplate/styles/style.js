@@ -10,12 +10,12 @@ export const StyledTitle = styled(Title)`
 
 export const StyledLabel = styled(Paragraph)`
 	color: #000;
-	font-size: 10px;
-	margin: 0 0 0 10px !important;
+	font-size: 12px;
+	margin: 0 !important;
 `
 
 export const StyledValue = styled(Paragraph)`
 	color: #646464;
-	font-size: 14px;
-	margin: 0 0 14px 10px;
+	font-size: 16px;
+	margin: 0 0 14px 0 !important;
 `
