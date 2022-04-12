@@ -86,9 +86,14 @@ export const validateTime = (time) => {
 	return true
 }
 
-export const validateDate = (s, format = 'DD-MM-YYYY') => {
-	let date = moment(s, format)
-	return date.isValid() ? date : ''
+export const validateDate = (date, format = 'DD-MM-YYYY') => {
+	const _date =
+		date !== ''
+			? moment(date).isValid()
+				? moment(moment(date).format(format), format)
+				: moment(date, format)
+			: ''
+	return _date
 }
 
 export const validateNumber = (x, invalidValue) => {

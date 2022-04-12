@@ -34,7 +34,11 @@ const FormFactory = ({ token, initialValues = {} }) => {
 
 	const onSubmit = (data) => {
 		dispatch(
-			appendAnswer({ data, pageFieldsData, visible: visible[currentPage] })
+			appendAnswer({
+				data,
+				pageFieldsData,
+				visible: visible[currentPage],
+			})
 		)
 
 		if (!isLastPage) {
