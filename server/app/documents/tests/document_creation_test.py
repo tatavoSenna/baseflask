@@ -542,7 +542,7 @@ class TestDocumentCreation:
         document_creation_email_controller(email_title, company_id)
 
         send_email_on_document_creation_mock.assert_called_once_with(
-            "leon@lawing.com.br",
+            "app@lawing.com.br",
             email_list,
             "New Document created",
             email_title,

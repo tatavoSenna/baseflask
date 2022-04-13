@@ -416,7 +416,7 @@ def document_creation_email_controller(title, company_id):
     for user in company_users:
         email_list.append(user.email)
     response = send_email_controller(
-        "leon@lawing.com.br",
+        "app@lawing.com.br",
         email_list,
         "New Document created",
         title,
@@ -445,7 +445,7 @@ def workflow_status_change_email_controller(document_id, name):
     if len(email_list) == 0:
         return
     response = send_email_controller(
-        "leon@lawing.com.br",
+        "app@lawing.com.br",
         email_list,
         f"O Documento {title} mudou para o status {status}.",
         name,
