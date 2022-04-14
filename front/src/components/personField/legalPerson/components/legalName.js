@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { bool, func, number, object, string } from 'prop-types'
+import PropTypes, { bool, func, number, string } from 'prop-types'
 
 import TextField from 'components/textField'
 
@@ -10,6 +10,8 @@ const LegalName = ({
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
 	className,
 }) => {
 	const pageFieldsData = {
@@ -17,8 +19,9 @@ const LegalName = ({
 		type: 'text',
 		label: 'Razão Social',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'SOCIETY_NAME',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -44,7 +47,9 @@ LegalName.propTypes = {
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
-	className: PropTypes.oneOfType([object, string]),
+	optional: bool,
+	fieldType: string,
+	className: string,
 }
 
 export default LegalName

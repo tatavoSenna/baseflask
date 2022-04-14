@@ -3,8 +3,6 @@ import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-import styles from '../index.module.scss'
-
 const AddressComplement = ({
 	key,
 	first,
@@ -12,14 +10,17 @@ const AddressComplement = ({
 	inputValue,
 	onChange,
 	disabled,
+	fieldType,
+	className,
 }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
 		label: 'Complemento',
 		list: name,
+		optional: true,
 		variable: {
-			name: 'COMPLEMENT',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -33,7 +34,7 @@ const AddressComplement = ({
 			inputValue={inputValue}
 			onChange={onChange}
 			disabled={disabled}
-			className={styles['complement']}
+			className={className}
 		/>
 	)
 }
@@ -44,6 +45,8 @@ AddressComplement.propTypes = {
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
+	fieldType: string,
+	className: string,
 	disabled: bool,
 }
 

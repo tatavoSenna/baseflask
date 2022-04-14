@@ -1,45 +1,34 @@
 import React from 'react'
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-import DropdownField from 'components/dropdownField'
+import EmailField from 'components/emailField'
 
-const PersonPronoun = ({
+const Email = ({
 	key,
 	first,
 	name,
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
 	className,
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'dropdown',
-		label: 'Pronomes',
+		type: 'email',
+		label: 'E-mail',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'PRONOUN',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
-		options: [
-			{
-				label: 'Sr.',
-				value: 'Sr.',
-			},
-			{
-				label: 'Sra.',
-				value: 'Sra.',
-			},
-			{
-				label: 'Sre.',
-				value: 'Sre.',
-			},
-		],
 	}
 
 	return (
-		<DropdownField
+		<EmailField
 			key={key}
 			first={first}
 			pageFieldsData={pageFieldsData}
@@ -51,14 +40,16 @@ const PersonPronoun = ({
 	)
 }
 
-PersonPronoun.propTypes = {
+Email.propTypes = {
 	key: number,
 	first: bool,
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
+	optional: bool,
+	fieldType: string,
 	className: string,
 }
 
-export default PersonPronoun
+export default Email

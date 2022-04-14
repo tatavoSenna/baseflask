@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, func, bool } from 'prop-types'
 import { Form, Input } from 'antd'
 import InfoField from '~/components/infoField'
 
@@ -13,7 +13,7 @@ const EmailField = ({
 	placeHolderRequirement,
 	OutsideLabel,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -41,7 +41,7 @@ const EmailField = ({
 			rules={
 				!hidden && [
 					{ type, message: 'E-mail não é válido.' },
-					{ required: true, message: 'Este campo é obrigatório.' },
+					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
 			colon={false}
@@ -65,7 +65,7 @@ EmailField.propTypes = {
 		info: string,
 	}).isRequired,
 	inputValue: string,
-	className: object,
+	className: string,
 	onChange: func,
 	first: bool,
 	disabled: bool,

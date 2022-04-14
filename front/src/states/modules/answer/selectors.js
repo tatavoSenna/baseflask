@@ -1,15 +1,19 @@
 import { extend } from 'lodash'
+import moment from 'moment'
 
 export const selectAnswer = (data, payload) => {
 	const answers = {}
 
 	// Remove the non variable items from the visible array, to keep it in sync with the variables
-	const visible = payload.visible.filter((item, index) => {
-		return payload.pageFieldsData.fields[index]['type'] !== 'separator' // separators have no variables.
-	})
+	const variableItems = payload.pageFieldsData.fields.map(
+		(item) => item['type'] !== 'separator' // separators have no variables.
+	)
 
-	let index = 0
-	Object.entries(payload.data).forEach((answer) => {
+	const itemsWithVariables = (_, index) => variableItems[index]
+	const visible = payload.visible.filter(itemsWithVariables)
+	const fields = payload.pageFieldsData.fields.filter(itemsWithVariables)
+
+	Object.entries(payload.data).forEach((answer, index) => {
 		if (visible[index]) {
 			//This rearranges the Structured Checkbox variables, where all detail variables from a selected option are grouped on an object
 			if (answer[0].slice(0, 19) === 'structured_checkbox') {
@@ -30,11 +34,16 @@ export const selectAnswer = (data, payload) => {
 					}
 				})
 				answers[answer[0]] = items
+			}
+			// Convert date variables from moment objects to text to keep local timezone offsets
+			else if (fields[index]?.variable?.type === 'date') {
+				answers[answer[0]] = moment.isMoment(answer[1])
+					? answer[1].format()
+					: ''
 			} else {
 				answers[answer[0]] = answer[1]
 			}
 		}
-		index++
 	})
 	return extend(data, answers)
 }

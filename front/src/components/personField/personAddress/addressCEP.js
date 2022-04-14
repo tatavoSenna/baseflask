@@ -2,7 +2,7 @@ import React from 'react'
 import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
-
+import styled from 'styled-components'
 const AddressCEP = ({
 	key,
 	first,
@@ -10,32 +10,47 @@ const AddressCEP = ({
 	inputValue,
 	onChange,
 	disabled,
+	optional,
 	className,
+	fieldType,
 }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
 		label: 'CEP',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'CEP',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
 	}
 
 	return (
-		<TextField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
+		<React.Fragment key={key}>
+			<Title>Endereço</Title>
+			<TextField
+				key={key}
+				first={first}
+				pageFieldsData={pageFieldsData}
+				inputValue={inputValue}
+				onChange={onChange}
+				disabled={disabled}
+				className={className}
+			/>
+		</React.Fragment>
 	)
 }
+
+const Title = styled.p`
+	order: 6;
+	flex: 1 0 100%;
+
+	font-size: 18px;
+	font-weight: 500;
+	margin-bottom: 24px;
+`
 
 AddressCEP.propTypes = {
 	key: number,
@@ -44,6 +59,8 @@ AddressCEP.propTypes = {
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
+	optional: bool,
+	fieldType: string,
 	className: string,
 }
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 from slugify import slugify
 from datetime import date
+from app.documents.formatters.structured_list_formatter import StructuredListFormatter
 from app.models.documents import DocumentTemplate
 from app import jinja_env
 import requests
@@ -166,47 +167,7 @@ def format_variables(variables, document_template_id):
                 logging.exception(e)
 
         elif variable_type[0:11] == "structured_":
-            if specs["doc_display_style"] == "text":
-                try:
-                    rows_list = []
-                    text_template = specs["extra_style_params"]["row_template"]
-                    jinja_template = jinja_env.from_string(text_template)
-                    for index, item in enumerate(variables[struct_name]):
-                        item["INDEX"] = index + 1
-                        filled_text = jinja_template.render(item)
-                        rows_list.append(filled_text)
-                    return specs["extra_style_params"]["separator"].join(rows_list)
-                except Exception as e:
-                    logging.exception(e)
-
-            elif specs["doc_display_style"] == "table":
-                try:
-                    table_list = []
-                    table_title = specs["extra_style_params"]["title"]
-                    i = 0
-                    for item in variables[struct_name]:
-                        table_rows = [
-                            f"<tr><td><p>{table_title.format(i+1)}</p></td></tr>"
-                        ]
-                        i += 1
-                        for lineSpec in specs["extra_style_params"]["lines"]:
-                            columns = []
-                            for info in lineSpec:
-                                for label, value in info.items():
-                                    columns.append(
-                                        f"<td>{label}</td><td>{item[value]}</td>"
-                                    )
-                            table_rows.append("<tr>" + "".join(columns) + "</tr>")
-
-                        table_list.append("".join(table_rows))
-
-                    return (
-                        "<figure class='table'><table><tbody>"
-                        + "".join(table_list)
-                        + "</tbody></table></figure>"
-                    )
-                except Exception as e:
-                    logging.exception(e)
+            return StructuredListFormatter(variables[struct_name], specs)
 
     if not variables_specification:
         return variables
