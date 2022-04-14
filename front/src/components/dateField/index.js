@@ -11,7 +11,7 @@ const DateField = ({
 	inputValue,
 	disabled,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -28,7 +28,9 @@ const DateField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [{ required: true, message: 'Este campo é obrigatório.' }]
+				!hidden && [
+					{ required: !optional, message: 'Este campo é obrigatório.' },
+				]
 			}
 			initialValue={validateDate(inputValue)}
 			colon={false}>

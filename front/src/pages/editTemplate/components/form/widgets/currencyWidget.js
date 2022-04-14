@@ -1,8 +1,9 @@
 import React from 'react'
 import { object, number, func } from 'prop-types'
-import { Input, InputNumber } from 'antd'
+import { InputNumber } from 'antd'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
+import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, TextIcon } from './base/styles'
 import {
 	currencyFormatter,
@@ -23,22 +24,7 @@ export const CurrencyWidget = (props) => {
 			onValidate={setValid}
 			formItems={
 				<div>
-					<FormItem label="Título">
-						<Input
-							onBlur={(e) => update({ label: e.target.value })}
-							defaultValue={data.label}
-							autoComplete="off"
-						/>
-					</FormItem>
-
-					<FormItem label="Descrição">
-						<Input
-							onBlur={(e) => update({ info: e.target.value })}
-							defaultValue={data.info}
-							autoComplete="off"
-						/>
-					</FormItem>
-
+					<CommonFields data={data} update={update} />
 					<FormItem label="Valor inicial">
 						<CurrencyInput
 							onBlur={(v) => update({ initialValue: v })}

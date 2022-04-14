@@ -12,7 +12,8 @@ const StructuredCheckbox = ({
 	fieldIndex,
 	disabled,
 }) => {
-	const { label, variable, structure, options, type, id, info } = pageFieldsData
+	const { label, variable, structure, options, type, id, info, optional } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const listName = `structured_checkbox_${pageIndex}_${fieldIndex}`
 	const name = isObj ? variable.name : variable
@@ -38,7 +39,8 @@ const StructuredCheckbox = ({
 			hasFeedback
 			type={type}
 			initialValue={selected}
-			colon={false}>
+			colon={false}
+			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}>
 			<Checkbox.Group>
 				<Card>
 					{options.map((option, index) => {

@@ -1,44 +1,35 @@
 import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import { useState } from 'react'
+import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
-import PersonName from './components/personName'
-import PersonCPF from './components/personCPF'
-import AddressStreet from '../personAddress/addressStreet'
-import AddressCountry from '../personAddress/addressCountry'
-import AddressCEP from '../personAddress/addressCEP'
-import AddressNumber from '../personAddress/addressNumber'
-import AddressComplement from '../personAddress/addressComplement'
-import AddressCity from '../personAddress/addressCity'
-import AddressState from '../personAddress/addressState'
-import PersonPronoun from './components/personPronoun'
-
-import styles from './index.module.scss'
-
-const NaturalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
-	const components = {
-		name: PersonName,
-		pronoun: PersonPronoun,
-		cpf: PersonCPF,
-		country: AddressCountry,
-		cep: AddressCEP,
-		number: AddressNumber,
-		street: AddressStreet,
-		complement: AddressComplement,
-		city: AddressCity,
-		state: AddressState,
+const NaturalPerson = ({
+	fields,
+	name,
+	disabled,
+	optional,
+	onChange,
+	inputValue,
+	form,
+}) => {
+	let fieldMarital = ''
+	if (typeof fields !== 'string') {
+		const field = fields.find((f) => f?.field_type === 'marital_state')
+		if (field !== undefined) fieldMarital = field?.value
 	}
 
-	const classNames = [
-		styles['name'],
-		styles['pronoun'],
-		styles['cpf'],
-		styles['country'],
-		styles['cep'],
-		styles['number'],
-		styles['street'],
-		styles['complement'],
-		styles['city'],
-		styles['state'],
-	]
+	const components = getAllComponents()
+	const classNames = getAllClasses()
+
+	const [pronoun, setPronoun] = useState('')
+	const [maritalState, setMaritalState] = useState(fieldMarital)
+
+	const getPronuounValue = (value) => {
+		setPronoun(value)
+	}
+
+	const getMaritalStateValue = (value) => {
+		setMaritalState(value)
+	}
 
 	const componentsTypes = Object.keys(components)
 
@@ -50,6 +41,8 @@ const NaturalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 			inputValue,
 			onChange,
 			disabled,
+			optional,
+			form,
 		}
 
 		if (typeof field === 'string') {
@@ -59,7 +52,20 @@ const NaturalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 		for (let i = 0; i < componentsTypes.length; i++) {
 			if (field.field_type === componentsTypes[i]) {
 				dict.inputValue = field.value
-				dict.className = classNames[i]
+				dict.className = classNames[field.field_type]
+				dict.fieldType = field.field_type
+
+				if (field.field_type === 'pronoun') dict.onChange = getPronuounValue
+
+				if (field.field_type === 'marital_state') {
+					dict.pronoun = pronoun
+					dict.onChange = getMaritalStateValue
+				}
+
+				if (field.field_type === 'property_regime') {
+					dict.maritalState = maritalState
+				}
+
 				return components[field.field_type](dict)
 			}
 		}

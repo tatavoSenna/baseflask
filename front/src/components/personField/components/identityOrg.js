@@ -1,9 +1,9 @@
 import React from 'react'
-import TextField from 'components/textField'
-
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-const AddressStreet = ({
+import TextField from 'components/textField'
+
+const IdentityOrg = ({
 	key,
 	first,
 	name,
@@ -17,7 +17,7 @@ const AddressStreet = ({
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
-		label: 'Logradouro',
+		label: 'Orgão exp',
 		list: name,
 		optional: optional,
 		variable: {
@@ -40,16 +40,16 @@ const AddressStreet = ({
 	)
 }
 
-AddressStreet.propTypes = {
+IdentityOrg.propTypes = {
 	key: number,
 	first: bool,
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
-	fieldType: string,
-	className: string,
 	disabled: bool,
 	optional: bool,
+	fieldType: string,
+	className: string,
 }
 
-export default AddressStreet
+export default IdentityOrg

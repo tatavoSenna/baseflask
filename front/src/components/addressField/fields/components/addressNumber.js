@@ -3,8 +3,6 @@ import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-import styles from '../index.module.scss'
-
 const AddressNumber = ({
 	key,
 	first,
@@ -12,14 +10,18 @@ const AddressNumber = ({
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
+	className,
 }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
 		label: 'Número',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'NUMBER',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -33,7 +35,7 @@ const AddressNumber = ({
 			inputValue={inputValue}
 			onChange={onChange}
 			disabled={disabled}
-			className={styles['number']}
+			className={className}
 		/>
 	)
 }
@@ -44,7 +46,10 @@ AddressNumber.propTypes = {
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
+	fieldType: string,
+	className: string,
 	disabled: bool,
+	optional: bool,
 }
 
 export default AddressNumber
