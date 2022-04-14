@@ -180,7 +180,7 @@ def test_email_change_document_workflow_status(status_change_email_mock):
         "current_node": "5521",
     }
 
-    sender_email = "leon@lawing.com.br"
+    sender_email = "app@lawing.com.br"
     status = "Análise Diretoria"
     title = "Documento de teste"
 
@@ -197,7 +197,7 @@ def test_email_change_document_workflow_status(status_change_email_mock):
     workflow_status_change_email_controller(document_id, title)
 
     status_change_email_mock.assert_called_once_with(
-        "leon@lawing.com.br",
+        "app@lawing.com.br",
         email_list,
         f"O Documento {title} mudou para o status {status}.",
         title,

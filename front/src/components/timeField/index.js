@@ -13,7 +13,7 @@ const TimeField = ({
 	inputValue,
 	disabled,
 }) => {
-	const { label, variable, id, info } = pageFieldsData
+	const { label, variable, id, info, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const name = isObj ? variable.name : variable
 	const hidden =
@@ -33,12 +33,14 @@ const TimeField = ({
 					() => ({
 						validator(rule, value) {
 							if (!value) {
-								return Promise.reject('Este campo é obrigatório.')
+								if (optional) return Promise.resolve()
+								else return Promise.reject('Este campo é obrigatório.')
+							} else {
+								if (validateTime(value)) {
+									return Promise.resolve()
+								}
+								return Promise.reject('Horário não é válido.')
 							}
-							if (validateTime(value)) {
-								return Promise.resolve()
-							}
-							return Promise.reject('Horário não é válido.')
 						},
 					}),
 				]

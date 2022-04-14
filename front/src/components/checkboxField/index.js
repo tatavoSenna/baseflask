@@ -10,7 +10,8 @@ const CheckboxField = ({
 	inputValue,
 	disabled,
 }) => {
-	const { label, variable, type, options, id, info, list } = pageFieldsData
+	const { label, variable, type, options, id, info, list, optional } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -23,6 +24,12 @@ const CheckboxField = ({
 			hasFeedback
 			type={type}
 			colon={false}
+			rules={[
+				{
+					required: !optional,
+					message: 'Este campo é obrigatório.',
+				},
+			]}
 			initialValue={
 				!inputValue ? '' : Array.isArray(inputValue) ? inputValue : [inputValue]
 			}>

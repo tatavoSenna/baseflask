@@ -4,6 +4,7 @@ import { Input } from 'antd'
 import { MailOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
+import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 
 export const EmailWidget = (props) => {
@@ -20,22 +21,7 @@ export const EmailWidget = (props) => {
 			onValidate={setValid}
 			formItems={
 				<div>
-					<FormItem label="Título">
-						<Input
-							onBlur={(e) => update({ label: e.target.value })}
-							defaultValue={data.label}
-							autoComplete="off"
-						/>
-					</FormItem>
-
-					<FormItem label="Descrição">
-						<Input
-							onBlur={(e) => update({ info: e.target.value })}
-							defaultValue={data.info}
-							autoComplete="off"
-						/>
-					</FormItem>
-
+					<CommonFields data={data} update={update} />
 					<FormItem label="Valor inicial">
 						<Input
 							onBlur={(e) => update({ initialValue: e.target.value })}

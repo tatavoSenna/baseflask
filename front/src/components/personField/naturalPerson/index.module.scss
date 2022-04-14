@@ -13,37 +13,77 @@
 	flex: 1;
 }
 
-.country {
-	order: 3;
-	flex: 0 238px;
+.surname {
+	order: 2;
+	flex: 1 0 100%;
 }
 
-.cep {
-	order: 3;
-	flex: 1;
-}
-
-.number {
+.identity {
 	order: 3;
 	flex: 1;
 }
 
-.street {
+.identity-org {
+	order: 3;
+	flex: 1;
+}
+
+.identity-date {
+	order: 3;
+	flex: 1;
+}
+
+.email {
 	order: 4;
 	flex: 1 0 100%;
 }
 
-.complement {
+.marital-state {
 	order: 5;
+	flex: 1;
+}
+
+.property-regime {
+	order: 5;
+	flex: 1;
+}
+
+.profession {
+	order: 6;
+	flex: 1 0 100%;
+}
+
+.cep {
+	order: 7;
+	flex: 1;
+}
+
+.country {
+	order: 7;
+	flex: 0 238px;
+}
+
+.number {
+	order: 7;
+	flex: 1;
+}
+
+.street {
+	order: 8;
+	flex: 1 0 100%;
+}
+
+.complement {
+	order: 9;
 	flex: 1 0 100%;
 }
 
 .city {
-	order: 6;
+	order: 10;
 	flex: 1;
 }
 
 .state {
-	order: 6;
+	order: 10;
 	flex: 1;
 }

@@ -40,6 +40,7 @@ export const FormItem = styled(Form.Item)`
 
 	.ant-form-item-label {
 		width: ${({ $labelWidth = '94px' }) => $labelWidth};
+		padding-top: ${({ $labelTop }) => $labelTop};
 		text-align: left;
 	}
 `

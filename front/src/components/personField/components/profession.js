@@ -3,22 +3,25 @@ import PropTypes, { bool, func, number, string } from 'prop-types'
 
 import TextField from 'components/textField'
 
-const PersonName = ({
+const Profession = ({
 	key,
 	first,
 	name,
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
 	className,
 }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
-		label: 'Nome Completo',
+		label: 'Profissão',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'NAME',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -37,14 +40,16 @@ const PersonName = ({
 	)
 }
 
-PersonName.propTypes = {
+Profession.propTypes = {
 	key: number,
 	first: bool,
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
+	optional: bool,
+	fieldType: string,
 	className: string,
 }
 
-export default PersonName
+export default Profession

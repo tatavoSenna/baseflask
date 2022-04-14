@@ -68,6 +68,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				name: '',
 			},
 			initialValue: '',
+			optional: false,
 		}
 
 		switch (type) {
@@ -117,15 +118,40 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'cpf',
 					'pronoun',
 					'name',
+					'surname',
+					'identity',
+					'identity_org',
+					'identity_date',
+					'email',
+					'marital_state',
+					'property_regime',
+					'profession',
 					'cnpj',
 					'society_name',
-					'country',
+					'activity',
 					'cep',
+					'country',
 					'number',
 					'street',
 					'complement',
-					'city',
 					'state',
+					'city',
+					'attorney_cpf',
+					'attorney_pronoun',
+					'attorney_name',
+					'attorney_surname',
+					'attorney_identity',
+					'attorney_identity_org',
+					'attorney_identity_date',
+					'attorney_email',
+					'attorney_profession',
+					'attorney_cep',
+					'attorney_country',
+					'attorney_number',
+					'attorney_street',
+					'attorney_complement',
+					'attorney_state',
+					'attorney_city',
 				]
 
 				delete newField['info']
@@ -135,13 +161,13 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.type = 'address'
 				newField.label = 'Endereço'
 				newField.fields = [
-					'country',
 					'cep',
+					'country',
 					'number',
 					'street',
 					'complement',
-					'city',
 					'state',
+					'city',
 				]
 
 				delete newField['info']

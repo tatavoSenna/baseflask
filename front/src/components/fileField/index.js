@@ -15,7 +15,7 @@ import InfoField from '~/components/infoField'
 const { Dragger } = Upload
 
 const FileField = ({ pageFieldsData }) => {
-	const { label, id, url, info } = pageFieldsData
+	const { label, id, url, info, optional } = pageFieldsData
 	const dispatch = useDispatch()
 	const { loading, data } = useSelector(({ fileField }) => fileField)
 	const [empty, setEmpty] = useState(true)
@@ -28,7 +28,8 @@ const FileField = ({ pageFieldsData }) => {
 		<Form.Item
 			key={`fileField_${id}`}
 			label={<InfoField label={label} info={info} />}
-			colon={false}>
+			colon={false}
+			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Dragger
 					action={(file) => handleFileUpload(file)}
