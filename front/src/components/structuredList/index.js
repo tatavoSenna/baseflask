@@ -12,7 +12,8 @@ const StructuredList = ({
 	pageIndex,
 	fieldIndex,
 }) => {
-	const { label, variable, structure, type, id, info } = pageFieldsData
+	const { label, variable, structure, type, id, info, optional } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	return (
 		<Form.Item
@@ -22,7 +23,8 @@ const StructuredList = ({
 			onChange={onChange}
 			hasFeedback
 			type={type}
-			colon={false}>
+			colon={false}
+			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}>
 			<Card>
 				<Form.List name={`structured_list_${pageIndex}_${fieldIndex}`}>
 					{(fields, { add, remove }) => {

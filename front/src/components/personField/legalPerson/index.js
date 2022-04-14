@@ -1,41 +1,16 @@
 import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
-import LegalName from './components/legalName'
-import LegalCNPJ from './components/legalCNPJ'
-import AddressStreet from '../personAddress/addressStreet'
-import AddressCountry from '../personAddress/addressCountry'
-import AddressCEP from '../personAddress/addressCEP'
-import AddressNumber from '../personAddress/addressNumber'
-import AddressComplement from '../personAddress/addressComplement'
-import AddressCity from '../personAddress/addressCity'
-import AddressState from '../personAddress/addressState'
-
-import styles from './index.module.scss'
-
-const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
-	const components = {
-		society_name: LegalName,
-		cnpj: LegalCNPJ,
-		country: AddressCountry,
-		cep: AddressCEP,
-		number: AddressNumber,
-		street: AddressStreet,
-		complement: AddressComplement,
-		city: AddressCity,
-		state: AddressState,
-	}
-
-	const classNames = [
-		styles['society-name'],
-		styles['cnpj'],
-		styles['country'],
-		styles['cep'],
-		styles['number'],
-		styles['street'],
-		styles['complement'],
-		styles['city'],
-		styles['state'],
-	]
+const LegalPerson = ({
+	fields,
+	name,
+	disabled,
+	optional,
+	onChange,
+	inputValue,
+}) => {
+	const components = getAllComponents()
+	const classNames = getAllClasses()
 
 	const componentsTypes = Object.keys(components)
 
@@ -47,6 +22,7 @@ const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 			inputValue,
 			onChange,
 			disabled,
+			optional,
 		}
 
 		if (typeof field === 'string') {
@@ -56,7 +32,8 @@ const LegalPerson = ({ fields, name, disabled, onChange, inputValue }) => {
 		for (let i = 0; i < componentsTypes.length; i++) {
 			if (field.field_type === componentsTypes[i]) {
 				dict.inputValue = field.value
-				dict.className = classNames[i]
+				dict.className = classNames[field.field_type]
+				dict.fieldType = field.field_type
 				return components[field.field_type](dict)
 			}
 		}

@@ -3,16 +3,25 @@ import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-import styles from '../index.module.scss'
-
-const AddressCity = ({ key, first, name, inputValue, onChange, disabled }) => {
+const AddressCity = ({
+	key,
+	first,
+	name,
+	inputValue,
+	onChange,
+	disabled,
+	optional,
+	fieldType,
+	className,
+}) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
 		label: 'Cidade',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'CITY',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -26,7 +35,7 @@ const AddressCity = ({ key, first, name, inputValue, onChange, disabled }) => {
 			inputValue={inputValue}
 			onChange={onChange}
 			disabled={disabled}
-			className={styles['city']}
+			className={className}
 		/>
 	)
 }
@@ -37,7 +46,10 @@ AddressCity.propTypes = {
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
+	fieldType: string,
+	className: string,
 	disabled: bool,
+	optional: bool,
 }
 
 export default AddressCity

@@ -1,4 +1,5 @@
 import { extend } from 'lodash'
+import moment from 'moment'
 
 export const selectAnswer = (data, payload) => {
 	const answers = {}
@@ -36,7 +37,9 @@ export const selectAnswer = (data, payload) => {
 			}
 			// Convert date variables from moment objects to text to keep local timezone offsets
 			else if (fields[index]?.variable?.type === 'date') {
-				answers[answer[0]] = answer[1].format()
+				answers[answer[0]] = moment.isMoment(answer[1])
+					? answer[1].format()
+					: ''
 			} else {
 				answers[answer[0]] = answer[1]
 			}

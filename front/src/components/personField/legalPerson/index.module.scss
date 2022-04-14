@@ -8,37 +8,122 @@
 	flex: 1 0 100%;
 }
 
-.country {
-	order: 3;
-	flex: 0 238px;
+.activity {
+	order: 1;
+	flex: 1 0 100%;
 }
 
 .cep {
-	order: 3;
+	order: 7;
 	flex: 1;
 }
 
+.country {
+	order: 7;
+	flex: 0 238px;
+}
+
 .number {
-	order: 3;
+	order: 7;
 	flex: 1;
 }
 
 .street {
-	order: 4;
+	order: 8;
 	flex: 1 0 100%;
 }
 
 .complement {
-	order: 5;
+	order: 9;
 	flex: 1 0 100%;
 }
 
 .city {
-	order: 6;
-	flex: 1;
+	order: 10;
+	flex: 0 238px;
 }
 
 .state {
-	order: 6;
+	order: 10;
+	flex: 0 238px;
+}
+
+.attorney-cpf {
+	order: 11;
+	flex: 1 0 100%;
+}
+
+.attorney-pronoun {
+	order: 12;
+	flex: 0 113px;
+}
+
+.attorney-name {
+	order: 12;
 	flex: 1;
+}
+
+.attorney-surname {
+	order: 13;
+	flex: 1 0 100%;
+}
+
+.attorney-identity {
+	order: 14;
+	flex: 1;
+}
+
+.attorney-identity-org {
+	order: 14;
+	flex: 1;
+}
+
+.attorney-identity-date {
+	order: 14;
+	flex: 1;
+}
+
+.attorney-email {
+	order: 15;
+	flex: 1 0 100%;
+}
+
+.attorney-profession {
+	order: 16;
+	flex: 1 0 100%;
+}
+
+.attorney-cep {
+	order: 18;
+	flex: 1;
+}
+
+.attorney-country {
+	order: 18;
+	flex: 0 238px;
+}
+
+.attorney-number {
+	order: 18;
+	flex: 1;
+}
+
+.attorney-street {
+	order: 19;
+	flex: 1 0 100%;
+}
+
+.attorney-complement {
+	order: 20;
+	flex: 1 0 100%;
+}
+
+.attorney-city {
+	order: 22;
+	flex: 0 238px;
+}
+
+.attorney-state {
+	order: 21;
+	flex: 0 238px;
 }

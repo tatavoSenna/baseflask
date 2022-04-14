@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { bool, func, number, object, string } from 'prop-types'
+import PropTypes, { bool, func, number, string } from 'prop-types'
 
 import CnpjField from 'components/cnpjField'
 
@@ -10,6 +10,8 @@ const LegalCNPJ = ({
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
 	className,
 }) => {
 	const pageFieldsData = {
@@ -17,8 +19,9 @@ const LegalCNPJ = ({
 		type: 'cnpj',
 		label: 'CNPJ',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'CNPJ',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -44,7 +47,9 @@ LegalCNPJ.propTypes = {
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
-	className: PropTypes.oneOfType([object, string]),
+	optional: bool,
+	fieldType: string,
+	className: string,
 }
 
 export default LegalCNPJ

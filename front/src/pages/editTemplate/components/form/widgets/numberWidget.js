@@ -4,6 +4,7 @@ import { Input, InputNumber } from 'antd'
 import { FieldNumberOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
+import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 import { validateNumber } from 'utils'
 
@@ -21,21 +22,7 @@ export const NumberWidget = (props) => {
 			onValidate={setValid}
 			formItems={
 				<div>
-					<FormItem label="Título">
-						<Input
-							onBlur={(e) => update({ label: e.target.value })}
-							defaultValue={data.label}
-							autoComplete="off"
-						/>
-					</FormItem>
-
-					<FormItem label="Descrição">
-						<Input
-							onBlur={(e) => update({ info: e.target.value })}
-							defaultValue={data.info}
-							autoComplete="off"
-						/>
-					</FormItem>
+					<CommonFields data={data} update={update} />
 
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<FormItem label="Valor inicial" $width={'59%'}>

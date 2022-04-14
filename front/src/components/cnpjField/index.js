@@ -13,7 +13,7 @@ const CnpjField = ({
 	inputValue,
 	disabled,
 }) => {
-	const { label, variable, type, id, info, list } = pageFieldsData
+	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -34,12 +34,12 @@ const CnpjField = ({
 					() => ({
 						validator(rule, value) {
 							if (!value) {
-								return Promise.reject('Este campo é obrigatório.')
+								if (optional) return Promise.resolve()
+								else return Promise.reject('Este campo é obrigatório.')
+							} else {
+								if (validateCNPJ(value)) return Promise.resolve()
+								else return Promise.reject('CNPJ não é válido.')
 							}
-							if (validateCNPJ(value)) {
-								return Promise.resolve()
-							}
-							return Promise.reject('CNPJ não é válido.')
 						},
 					}),
 				]

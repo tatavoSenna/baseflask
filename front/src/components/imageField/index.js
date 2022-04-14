@@ -4,7 +4,7 @@ import { Form, Upload, message, Modal, Input } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
 const ImageField = ({ pageFieldsData, className, onChange }) => {
-	const { label, variable, info } = pageFieldsData
+	const { label, variable, info, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const [fileList, setFileList] = useState('')
 	const [visible, setVisible] = useState(false)
@@ -44,6 +44,7 @@ const ImageField = ({ pageFieldsData, className, onChange }) => {
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			colon={false}
+			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}
 			value={fileList.length > 0 ? fileList[0].url : ''}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Input

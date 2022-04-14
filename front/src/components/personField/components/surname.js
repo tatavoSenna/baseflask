@@ -1,24 +1,27 @@
 import React from 'react'
-import TextField from 'components/textField'
-
 import PropTypes, { bool, func, number, string } from 'prop-types'
 
-const AddressNumber = ({
+import TextField from 'components/textField'
+
+const Surname = ({
 	key,
 	first,
 	name,
 	inputValue,
 	onChange,
 	disabled,
+	optional,
+	fieldType,
 	className,
 }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
-		label: 'Número',
+		label: 'Sobrenome',
 		list: name,
+		optional: optional,
 		variable: {
-			name: 'NUMBER',
+			name: fieldType.toUpperCase(),
 			type: 'string',
 			doc_display_style: 'plain',
 		},
@@ -37,14 +40,16 @@ const AddressNumber = ({
 	)
 }
 
-AddressNumber.propTypes = {
+Surname.propTypes = {
 	key: number,
 	first: bool,
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
 	onChange: func,
 	disabled: bool,
+	optional: bool,
+	fieldType: string,
 	className: string,
 }
 
-export default AddressNumber
+export default Surname

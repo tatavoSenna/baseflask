@@ -6,7 +6,6 @@ const { Title } = Typography
 export const DisplayNone = styled.div`
 	display: none;
 `
-
 export const SBtnGroup = styled(Radio.Group)`
 	display: flex;
 	column-gap: 12px;
@@ -40,7 +39,6 @@ export const SBtnRadio = styled(Radio.Button)`
 		color: rgba(0, 0, 0, 0.65);
 	}
 `
-
 export const PersonContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
@@ -53,24 +51,11 @@ export const PersonContainer = styled.div`
 		}
 	}
 `
-
-export const AddressSeparator = styled.p`
-	order: 2;
-	flex: 1 0 100%;
-
-	font-size: 18px;
-	font-weight: 500;
-	margin-bottom: 24px;
-
-	display: ${(props) => (props.$displayNone ? `none` : `block`)};
-`
-
-export const Lebal = styled(Title)`
+export const Label = styled(Title)`
 	margin: 10px 0 24px !important;
 	font-size: 18px !important;
 	font-weight: 500;
 `
-
 export const PersonTitle = styled.p`
 	font-size: 18px;
 	font-weight: 500;

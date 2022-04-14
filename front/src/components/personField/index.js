@@ -9,8 +9,7 @@ import {
 	SBtnGroup,
 	SBtnRadio,
 	PersonContainer,
-	AddressSeparator,
-	Lebal,
+	Label,
 	PersonTitle,
 } from './style'
 
@@ -23,8 +22,10 @@ const PersonField = ({
 	disabled,
 	inputValue,
 	onChange,
+	form,
 }) => {
-	const { label, variable, type, fields, id, person_type } = pageFieldsData
+	const { label, variable, type, fields, id, person_type, optional } =
+		pageFieldsData
 
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
@@ -51,12 +52,14 @@ const PersonField = ({
 					<></>
 				</Form.Item>
 			</DisplayNone>
-			<Lebal>{label}</Lebal>
+			<Label>{label}</Label>
 			{person_type !== undefined && person_type.length > 1 ? (
 				<Form.Item
 					name={[variable.name, 'PERSON_TYPE']}
 					initialValue=""
-					rules={[{ required: true, message: 'Este campo é obrigatório!' }]}>
+					rules={[
+						{ required: !optional, message: 'Este campo é obrigatório!' },
+					]}>
 					<SBtnGroup
 						onChange={(value) => setPerson(value.target.value)}
 						btnProps={person}>
@@ -83,7 +86,9 @@ const PersonField = ({
 						fields={fields}
 						name={variable.name}
 						disabled={disabled}
+						optional={optional}
 						onChange={onChange}
+						form={form}
 						inputValue={inputValue}
 					/>
 				)}
@@ -92,13 +97,11 @@ const PersonField = ({
 						fields={fields}
 						name={variable.name}
 						disabled={disabled}
+						optional={optional}
 						onChange={onChange}
 						inputValue={inputValue}
 					/>
 				)}
-				<AddressSeparator $displayNone={person === ''}>
-					Endereço
-				</AddressSeparator>
 			</PersonContainer>
 		</Form.Item>
 	)
@@ -110,16 +113,13 @@ PersonField.propTypes = {
 		variable: PropTypes.oneOfType([object, string]),
 		fields: array,
 		person_type: array,
+		optional: bool,
 	}).isRequired,
 	className: string,
+	form: object,
 	disabled: bool,
 	inputValue: string,
 	onChange: func,
-}
-
-PersonField.defaultProps = {
-	className: {},
-	onChange: () => null,
 }
 
 export default PersonField
