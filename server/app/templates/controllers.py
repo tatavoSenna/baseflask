@@ -3,6 +3,8 @@ from app.models.documents import DocumentTemplate
 from unittest.mock import MagicMock
 import boto3
 import io
+from flask import current_app
+from sentry_sdk import capture_exception
 from app.models.user import User, Group
 from app.workflow.services import (
     format_workflow_responsible_group,
@@ -160,3 +162,64 @@ def template_favorite_controller(company_id, template_id, status):
     db.session.commit()
 
     return template.id
+
+
+def duplicate_template(template, company_id=None):
+    if not template.id and not type(template) is DocumentTemplate:
+        return False
+
+    DT_table = DocumentTemplate.__table__
+    non_pk_columns = [
+        k
+        for k in DT_table.columns.keys()
+        if k not in DT_table.primary_key.columns.keys() and k not in ["created_at"]
+    ]
+    data = {c: getattr(template, c) for c in non_pk_columns}
+
+    if company_id:
+        data["company_id"] = company_id
+
+    template_name_count = (
+        DocumentTemplate.query.filter(
+            DocumentTemplate.name.contains(data["name"] + " (Copy) ")
+        )
+        .filter_by(company_id=data["company_id"])
+        .count()
+    )
+    if template_name_count > 0:
+        data["name"] = data["name"] + " (Copy) " + str(template_name_count)
+    else:
+        data["name"] = data["name"] + " (Copy) "
+
+    try:
+        duplicated_template = template.__class__(**data)
+        db.session.add(duplicated_template)
+        db.session.commit()
+    except Exception as e:
+        capture_exception(e)
+        return False
+
+    if template.text_type == ".docx":
+        original_file_key = f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{template.id}/{template.filename}{template.text_type}'
+        new_file_key = f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{duplicated_template.id}/{template.filename}{template.text_type}'
+    elif template.text_type == ".txt":
+        original_file_key = f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{template.id}/{template.id}{template.text_type}'
+        new_file_key = f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/{duplicated_template.id}/{duplicated_template.id}{template.text_type}'
+    else:
+        return True
+
+    try:
+        s3 = boto3.resource("s3")
+        copy_source = {
+            "Bucket": current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            "Key": original_file_key,
+        }
+        s3.meta.client.copy(
+            copy_source,
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
+            new_file_key,
+        )
+    except Exception as e:
+        capture_exception(e)
+
+    return True
