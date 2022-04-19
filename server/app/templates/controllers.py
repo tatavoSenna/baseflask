@@ -8,6 +8,7 @@ from app.workflow.services import (
     format_workflow_responsible_group,
     format_workflow_responsible_users,
 )
+from werkzeug.exceptions import BadRequest
 
 from .remote import RemoteTemplate
 
@@ -15,6 +16,11 @@ from .remote import RemoteTemplate
 def create_template_controller(
     company_id, user_id, name, form, workflow, signers, text, text_type, variables
 ):
+    template = DocumentTemplate.query.filter_by(name=name, company_id=company_id).all()
+
+    if template:
+        raise BadRequest(description="There already exists a template with that name")
+
     for node in workflow["nodes"]:
         responsible_group = workflow["nodes"][node]["responsible_group"]
         if type(responsible_group) is str:
