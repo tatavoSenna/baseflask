@@ -298,7 +298,9 @@ def create(current_user):
     # Check if content being created is a folder
     if is_folder:
 
-        folder = Document.query.filter_by(parent_id=parent, title=title).all()
+        folder = Document.query.filter_by(
+            parent_id=parent, title=title, company_id=current_user["company_id"]
+        ).all()
 
         if folder:
             abort(400, description="Titulo da pasta já existe nesse diretório.")
@@ -680,7 +682,8 @@ def edit_document_workflow(current_user, document_id):
 @authenticated_user
 def get_document_certificate_file(current_user, document_id):
     control = {"status_code": 200, "message": "", "data": {}}
-    if (document := get_document_controller(document_id)) is None:
+    document = get_document_controller(document_id)
+    if document is None:
         control["status_code"] = 404
         control["message"] = "Document not Found"
     else:
