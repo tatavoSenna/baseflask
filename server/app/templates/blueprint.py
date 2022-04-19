@@ -3,16 +3,18 @@ import logging
 
 from flask import request, Blueprint, abort, jsonify, current_app
 from werkzeug.utils import secure_filename
+from werkzeug.exceptions import BadRequest, NotFound, Forbidden
 from sqlalchemy import desc, nulls_last
 
 from app import aws_auth, db
-from app.users.remote import get_local_user
+from app.users.remote import authenticated_user, get_local_user
 from app.serializers.document_serializers import DocumentTemplateListSerializer
 from app.serializers.template_serializers import TemplateSerializer
 from app.models.documents import DocumentTemplate
 
 from .controllers import (
     create_template_controller,
+    duplicate_template,
     edit_template_controller,
     get_template_controller,
     delete_template_controller,
@@ -262,3 +264,34 @@ def set_favorite(current_user, document_template_id):
     template_id = template_favorite_controller(company_id, template.id, status)
 
     return jsonify({"id": template_id, "status": status})
+
+
+@templates_bp.route("/<int:document_template_id>/duplicate", methods=["POST"])
+@authenticated_user
+def duplicate(current_user, document_template_id):
+    if not request.is_json:
+        return abort(404, "Accepts only content-type json.")
+
+    try:
+        template = get_template_controller(
+            current_user.company_id, document_template_id
+        )
+    except:
+        raise NotFound(description="Template does not exist.")
+
+    company_id = request.json.get("company_id", None)
+    if company_id and company_id != current_user.company_id:
+        if not current_user.is_admin:
+            raise Forbidden(description="User is not allowed to do this action.")
+
+    return_value = duplicate_template(template, company_id)
+
+    if return_value:
+        return jsonify({"message": "Template duplicated succesfully.", "status": 201})
+    else:
+        return jsonify(
+            {
+                "message": "Something went wrong while duplicating the template.",
+                "status": 400,
+            }
+        )
