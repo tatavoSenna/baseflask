@@ -100,6 +100,7 @@ const PersonField = ({
 						optional={optional}
 						onChange={onChange}
 						inputValue={inputValue}
+						form={form}
 					/>
 				)}
 			</PersonContainer>

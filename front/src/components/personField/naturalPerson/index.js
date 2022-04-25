@@ -17,11 +17,18 @@ const NaturalPerson = ({
 		if (field !== undefined) fieldMarital = field?.value
 	}
 
+	let fieldState = ''
+	if (typeof fields !== 'string') {
+		const field = fields.find((f) => f?.field_type === 'state')
+		if (field !== undefined) fieldState = field?.value
+	}
+
 	const components = getAllComponents()
 	const classNames = getAllClasses()
 
 	const [pronoun, setPronoun] = useState('')
 	const [maritalState, setMaritalState] = useState(fieldMarital)
+	const [state, setState] = useState(fieldState)
 
 	const getPronuounValue = (value) => {
 		setPronoun(value)
@@ -29,6 +36,10 @@ const NaturalPerson = ({
 
 	const getMaritalStateValue = (value) => {
 		setMaritalState(value)
+	}
+
+	const getState = (value) => {
+		setState(value)
 	}
 
 	const componentsTypes = Object.keys(components)
@@ -62,9 +73,12 @@ const NaturalPerson = ({
 					dict.onChange = getMaritalStateValue
 				}
 
-				if (field.field_type === 'property_regime') {
+				if (field.field_type === 'property_regime')
 					dict.maritalState = maritalState
-				}
+
+				if (field.field_type === 'state') dict.onChange = getState
+
+				if (field.field_type === 'city') dict.state = state
 
 				return components[field.field_type](dict)
 			}

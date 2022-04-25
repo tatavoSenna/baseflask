@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import AddressCEP from './components/addressCEP'
 import AddressCity from './components/addressCity'
 import AddressComplement from './components/addressComplement'
@@ -8,7 +9,15 @@ import AddressStreet from './components/addressStreet'
 
 import styles from './index.module.scss'
 
-const Fields = ({ fields, name, disabled, optional, onChange, inputValue }) => {
+const Fields = ({
+	fields,
+	name,
+	disabled,
+	optional,
+	onChange,
+	inputValue,
+	form,
+}) => {
 	const components = {
 		cep: AddressCEP,
 		country: AddressCountry,
@@ -31,6 +40,18 @@ const Fields = ({ fields, name, disabled, optional, onChange, inputValue }) => {
 
 	const componentsTypes = Object.keys(components)
 
+	let fieldState = ''
+	if (typeof fields !== 'string') {
+		const field = fields.find((f) => f?.field_type === 'state')
+		if (field !== undefined) fieldState = field?.value
+	}
+
+	const [state, setState] = useState(fieldState)
+
+	const getState = (value) => {
+		setState(value)
+	}
+
 	return fields.map((field, i) => {
 		const dict = {
 			key: i,
@@ -40,6 +61,7 @@ const Fields = ({ fields, name, disabled, optional, onChange, inputValue }) => {
 			onChange,
 			disabled,
 			optional,
+			form,
 		}
 
 		if (typeof field === 'string') {
@@ -51,6 +73,11 @@ const Fields = ({ fields, name, disabled, optional, onChange, inputValue }) => {
 				dict.inputValue = field.value
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type
+
+				if (field.field_type === 'state') dict.onChange = getState
+
+				if (field.field_type === 'city') dict.state = state
+
 				return components[field.field_type](dict)
 			}
 		}

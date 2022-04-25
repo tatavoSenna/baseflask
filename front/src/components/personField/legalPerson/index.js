@@ -1,4 +1,5 @@
 import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import { useState } from 'react'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
 const LegalPerson = ({
@@ -8,9 +9,31 @@ const LegalPerson = ({
 	optional,
 	onChange,
 	inputValue,
+	form,
 }) => {
+	let fieldState = ''
+	if (typeof fields !== 'string') {
+		const field = fields.find((f) => f?.field_type === 'state')
+		if (field !== undefined) fieldState = field?.value
+	}
+	let fieldStateAttorney = ''
+	if (typeof fields !== 'string') {
+		const field = fields.find((f) => f?.field_type === 'attorney_state')
+		if (field !== undefined) fieldState = field?.value
+	}
+
 	const components = getAllComponents()
 	const classNames = getAllClasses()
+
+	const [state, setState] = useState(fieldState)
+	const [stateAttorney, setStateAttorney] = useState(fieldStateAttorney)
+
+	const getState = (value) => {
+		setState(value)
+	}
+	const getStateAttorney = (value) => {
+		setStateAttorney(value)
+	}
 
 	const componentsTypes = Object.keys(components)
 
@@ -23,6 +46,7 @@ const LegalPerson = ({
 			onChange,
 			disabled,
 			optional,
+			form,
 		}
 
 		if (typeof field === 'string') {
@@ -34,6 +58,16 @@ const LegalPerson = ({
 				dict.inputValue = field.value
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type
+
+				if (field.field_type === 'state') dict.onChange = getState
+
+				if (field.field_type === 'city') dict.state = state
+
+				if (field.field_type === 'attorney_state')
+					dict.onChange = getStateAttorney
+
+				if (field.field_type === 'attorney_city') dict.state = stateAttorney
+
 				return components[field.field_type](dict)
 			}
 		}
