@@ -1,7 +1,7 @@
 import React from 'react'
-import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
+import CepField from 'components/cepField'
 
 const AddressCEP = ({
 	key,
@@ -16,7 +16,7 @@ const AddressCEP = ({
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'text',
+		type: 'cep',
 		label: 'CEP',
 		list: name,
 		optional: optional,
@@ -28,7 +28,7 @@ const AddressCEP = ({
 	}
 
 	return (
-		<TextField
+		<CepField
 			key={key}
 			first={first}
 			pageFieldsData={pageFieldsData}

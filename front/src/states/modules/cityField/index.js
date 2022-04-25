@@ -1,5 +1,6 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
+import { alphabeticalOrderCitys } from './selectors'
 
 const initialState = {
 	loading: false,
@@ -16,7 +17,7 @@ const { actions, reducer } = createSlice({
 		getCityFieldSuccess: (state, { payload }) =>
 			extend(state, {
 				loading: false,
-				data: payload,
+				data: alphabeticalOrderCitys(payload),
 			}),
 		getCityFieldFailure: (state, { payload }) =>
 			extend(state, {

@@ -344,6 +344,7 @@ function InputFactory({
 						disabled={disabled}
 						inputValue={defaultValue()}
 						fieldIndex={i}
+						form={form}
 						onChange={onchange((e) => e.target.value)}
 					/>
 				)

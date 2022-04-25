@@ -1,7 +1,7 @@
 import React from 'react'
-import TextField from 'components/textField'
 
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, func, number, object, string } from 'prop-types'
+import CityField from 'components/cityField'
 
 const AddressCity = ({
 	key,
@@ -13,10 +13,12 @@ const AddressCity = ({
 	optional,
 	fieldType,
 	className,
+	state,
+	form,
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'text',
+		type: 'city',
 		label: 'Cidade',
 		list: name,
 		optional: optional,
@@ -28,7 +30,7 @@ const AddressCity = ({
 	}
 
 	return (
-		<TextField
+		<CityField
 			key={key}
 			first={first}
 			pageFieldsData={pageFieldsData}
@@ -36,6 +38,8 @@ const AddressCity = ({
 			onChange={onChange}
 			disabled={disabled}
 			className={className}
+			state={state}
+			form={form}
 		/>
 	)
 }
@@ -48,8 +52,10 @@ AddressCity.propTypes = {
 	onChange: func,
 	fieldType: string,
 	className: string,
+	form: object,
 	disabled: bool,
 	optional: bool,
+	state: string,
 }
 
 export default AddressCity

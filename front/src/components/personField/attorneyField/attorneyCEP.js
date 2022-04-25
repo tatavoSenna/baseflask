@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes, { bool, func, number, string } from 'prop-types'
-import TextField from 'components/textField'
 import styled from 'styled-components'
+import CepField from 'components/cepField'
 
 const AttorneyCEP = ({
 	key,
@@ -16,7 +16,7 @@ const AttorneyCEP = ({
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'text',
+		type: 'cep',
 		label: 'CEP',
 		list: name,
 		optional: optional,
@@ -30,7 +30,7 @@ const AttorneyCEP = ({
 	return (
 		<React.Fragment key={key}>
 			<Title>Endereço do procurador</Title>
-			<TextField
+			<CepField
 				key={key}
 				first={first}
 				pageFieldsData={pageFieldsData}
