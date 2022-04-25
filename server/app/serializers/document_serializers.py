@@ -325,18 +325,6 @@ def map_variables_to_form(variables, form):
                         )
 
                 filled_form[-1]["fields"].append(variables_obj)
-            elif (
-                question["type"] == "variable_image"
-                and "image_" + question["variable"]["name"] in variables
-            ):
-                filled_form[-1]["fields"].append(
-                    {
-                        "label": question["label"],
-                        "variable": question["variable"]["name"],
-                        "type": "variable_image",
-                        "value": variables["image_" + question["variable"]["name"]],
-                    }
-                )
             elif type(question["variable"]) == list:
                 for list_variable in question["variable"]:
                     if variables.get(list_variable["name"]):
