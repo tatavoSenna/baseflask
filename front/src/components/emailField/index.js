@@ -74,7 +74,6 @@ EmailField.propTypes = {
 }
 
 EmailField.defaultProps = {
-	className: {},
 	onChange: () => null,
 	placeHolderRequirement: '',
 	OutsideLabel: '',

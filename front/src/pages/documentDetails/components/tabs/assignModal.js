@@ -1,12 +1,52 @@
 import React from 'react'
 import { Button, Modal, Form, Typography, Divider } from 'antd'
 import PropTypes from 'prop-types'
-import InputFactory from './inputFactory'
+import AutocompleteField from 'components/autocompleteField'
 
 const { Title } = Typography
 
-const AssignModal = ({ handleAssign, handleCancel, showModal, signers }) => {
+const AssignModal = ({
+	handleAssign,
+	handleCancel,
+	showModal,
+	signers,
+	infos,
+}) => {
 	const [form] = Form.useForm()
+
+	let objArrayNameEmail = []
+	let namesSurnames = []
+	let emails = []
+
+	const handleSelect = (value, index) => {
+		const variableEmail = signers[index].fields.find(
+			(f) => f.type === 'email'
+		).variable
+		if (value in objArrayNameEmail) {
+			form.setFieldsValue({ [variableEmail]: objArrayNameEmail[value] })
+		}
+	}
+
+	// extract name, surname and email from infos and put in theirs respective arrays
+	const fields = infos?.map((info) => info.fields).flat()
+	const personFields = fields?.filter((field) => field?.type === 'person')
+	const itemsInfo = personFields?.map((field) => field?.items)
+
+	if (itemsInfo !== undefined) {
+		objArrayNameEmail = itemsInfo.reduce((a, value) => {
+			let nameSurname =
+				value.find((f) => f.field_type === 'name').value +
+				' ' +
+				(value.find((f) => f.field_type === 'surname')?.value ?? '')
+
+			let valueEmail = value.find((f) => f.field_type === 'email').value
+
+			return { ...a, [nameSurname.trim()]: valueEmail }
+		}, {})
+
+		namesSurnames = Object.keys(objArrayNameEmail).map((f) => ({ value: f }))
+		emails = Object.values(objArrayNameEmail).map((f) => ({ value: f }))
+	}
 
 	return (
 		<Modal
@@ -56,7 +96,25 @@ const AssignModal = ({ handleAssign, handleCancel, showModal, signers }) => {
 							}}>
 							{item.title}
 						</Title>
-						{InputFactory(item.fields)}
+						{item.fields.map((item, i) =>
+							item.value === 'Nome' ? (
+								<AutocompleteField
+									key={i}
+									indexSigner={index}
+									signer={item}
+									info={namesSurnames}
+									onSelect={handleSelect}
+								/>
+							) : (
+								<AutocompleteField
+									key={i}
+									indexSigner={index}
+									signer={item}
+									info={emails}
+									form={form}
+								/>
+							)
+						)}
 					</div>
 				))}
 			</Form>
@@ -69,6 +127,7 @@ AssignModal.propTypes = {
 	handleCancel: PropTypes.func,
 	showModal: PropTypes.bool,
 	signers: PropTypes.array,
+	infos: PropTypes.array,
 }
 
 AssignModal.defaultProps = {
