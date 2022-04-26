@@ -100,6 +100,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						form={form}
 						onChange={onchange((e) => e.target.value)}
 					/>
 				)
@@ -163,6 +164,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						form={form}
 						onChange={onchange()}
 					/>
 				)

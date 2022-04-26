@@ -1,7 +1,10 @@
 import React from 'react'
-import { string, shape, array, object, func, bool } from 'prop-types'
-import { Form, Radio } from 'antd'
+import PropTypes, { string, shape, array, object, func, bool } from 'prop-types'
 import InfoField from '~/components/infoField'
+
+import { Form, Radio } from 'antd'
+import { InfoOptionalField } from 'components/infoField'
+import styles from './index.module.scss'
 
 const RadioField = ({
 	pageFieldsData,
@@ -9,6 +12,7 @@ const RadioField = ({
 	onChange,
 	inputValue,
 	disabled,
+	form,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
 		pageFieldsData
@@ -20,12 +24,28 @@ const RadioField = ({
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
+	const returnLabel = () => {
+		if (optional && label.length > 0) {
+			return <InfoOptionalField label={label} info={info} onClick={clearAll} />
+		}
+		if (label.length > 0) {
+			return <InfoField label={label} info={info} />
+		}
+		return null
+	}
+
+	const clearAll = () => {
+		if (form !== undefined) {
+			form.setFieldsValue({ [name]: '' })
+		}
+	}
 	return (
 		<Form.Item
 			key={name}
 			name={list !== undefined ? [list, name] : name}
-			label={<InfoField label={label} info={info} />}
-			className={className}
+			label={returnLabel()}
+			className={`${className} ${styles['form-radio']}`}
 			hasFeedback
 			rules={
 				!hidden && [
@@ -49,19 +69,19 @@ const RadioField = ({
 RadioField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: object.isRequired,
+		variable: PropTypes.oneOfType([object, string]).isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	form: object,
+	className: string,
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
 }
 
 RadioField.defaultProps = {
-	className: {},
 	onChange: () => null,
 }
 
