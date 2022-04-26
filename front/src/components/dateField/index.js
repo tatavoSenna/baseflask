@@ -37,6 +37,7 @@ const DateField = ({
 			<DatePicker
 				format="DD-MM-YYYY"
 				placeholder={''}
+				allowClear
 				disabled={disabled}
 				onChange={onChange}
 			/>
