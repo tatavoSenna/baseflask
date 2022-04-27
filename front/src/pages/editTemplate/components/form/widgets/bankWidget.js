@@ -1,13 +1,16 @@
 import React from 'react'
 import { object, number, func } from 'prop-types'
-import { Input } from 'antd'
-import { FontSizeOutlined } from '@ant-design/icons'
+import { BankOutlined } from '@ant-design/icons'
+import { Select } from 'antd'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
 import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 
-export const TextWidget = React.memo((props) => {
+import bank from 'components/bankField/bankName'
+import { filterText } from 'services/filter'
+
+export const BankWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -16,26 +19,23 @@ export const TextWidget = React.memo((props) => {
 	return (
 		<Widget
 			{...props}
-			type={'Texto'}
+			type={'Banco'}
 			icon={<Icon $error={!valid} />}
 			onValidate={setValid}
 			formItems={
 				<div>
 					<CommonFields data={data} update={update} />
-					<FormItem label="Placeholder">
-						<Input
-							onBlur={(e) => update({ placeholder: e.target.value })}
-							defaultValue={data.placeholder}
-							autoComplete="off"
-						/>
-					</FormItem>
-
 					<FormItem label="Valor inicial">
-						<Input.TextArea
-							onBlur={(e) => update({ initialValue: e.target.value })}
-							defaultValue={data.initialValue}
-							autoComplete="off"
-						/>
+						<Select
+							showSearch={true}
+							filterOption={filterText}
+							onChange={(v) => update({ initialValue: v })}>
+							{bank.names.map((option, index) => (
+								<Select.Option key={index} value={option}>
+									{option}
+								</Select.Option>
+							))}
+						</Select>
 					</FormItem>
 				</div>
 			}
@@ -49,19 +49,11 @@ export const TextWidget = React.memo((props) => {
 	)
 })
 
-const Icon = styleIconValidation(FontSizeOutlined)
+const Icon = styleIconValidation(BankOutlined)
 
-TextWidget.propTypes = {
+BankWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
 	updateFormInfo: func,
-}
-
-export const TextInput = ({ onBlur, ...props }) => (
-	<Input {...props} onBlur={(e) => onBlur(e.target.value)} />
-)
-
-TextInput.propTypes = {
-	onBlur: func,
 }

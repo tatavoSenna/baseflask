@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, number, string, node } from 'prop-types'
 import { Collapse, Divider } from 'antd'
@@ -13,9 +13,9 @@ import { Panel, Title, ThinDivider } from './styles'
 const WidgetCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 	const dispatch = useDispatch()
 
-	const handleRemoveField = () => {
+	const handleRemoveField = useCallback(() => {
 		dispatch(editTemplateFieldRemove({ pageIndex, fieldIndex }))
-	}
+	}, [dispatch, pageIndex, fieldIndex])
 
 	return (
 		<DragDropCard
@@ -26,7 +26,7 @@ const WidgetCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 			style={{
 				padding: '0',
 			}}>
-			<Collapse ghost defaultActiveKey={[0]}>
+			<Collapse ghost defaultActiveKey={[1]}>
 				<Panel
 					key={0}
 					header={
@@ -41,7 +41,7 @@ const WidgetCard = ({ data, pageIndex, fieldIndex, type, icon, children }) => {
 					}
 					extra={
 						<Delete
-							handle={() => handleRemoveField()}
+							handle={handleRemoveField}
 							title="Deseja excluir esse campo?"
 							onClick={(e) => e.stopPropagation()}
 						/>

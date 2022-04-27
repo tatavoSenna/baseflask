@@ -7,7 +7,7 @@ import { CommonFields } from './base/widgetCommonFields'
 import { WidgetOption } from './base/widgetOption'
 import { styleIconValidation } from './base/styles'
 
-export const RadioWidget = (props) => {
+export const RadioWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -33,7 +33,7 @@ export const RadioWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 const Icon = styleIconValidation(CheckCircleOutlined)
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { node } from 'prop-types'
 import { Layout } from 'antd'
 import { useMediaQuery } from 'react-responsive'
@@ -26,7 +26,10 @@ function MainLayout({ children }) {
 	const isDesktopOrLaptop = useMediaQuery({
 		query: '(min-device-width: 1224px)',
 	})
-	const handleCollapsed = () => setCollapsed(!collapsed)
+	const handleCollapsed = useCallback(
+		() => setCollapsed((collapsed) => !collapsed),
+		[setCollapsed]
+	)
 
 	const handleClickContent = () => {
 		if (!isDesktopOrLaptop && !collapsed) {
@@ -42,11 +45,7 @@ function MainLayout({ children }) {
 				isWeb={isDesktopOrLaptop}
 			/>
 			<StyledInternalLayout>
-				<Header
-					handleCollapsed={handleCollapsed}
-					isCollapsed={collapsed}
-					isWeb={isDesktopOrLaptop}
-				/>
+				<Header isWeb={isDesktopOrLaptop} />
 				<StyledMainContent onClick={handleClickContent}>
 					{children}
 				</StyledMainContent>

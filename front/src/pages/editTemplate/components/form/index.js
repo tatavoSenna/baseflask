@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { object, string, func, any } from 'prop-types'
+import { object, string, func, number, any } from 'prop-types'
 import { Tabs, Empty, Button } from 'antd'
 import { DndProvider, DragSource, DropTarget } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -52,7 +52,7 @@ const WrapTabNode = DropTarget('DND_NODE', cardTarget, (connect) => ({
 	}))(TabNode)
 )
 
-const DraggableTabs = ({ setCurrent, ...props }) => {
+const DraggableTabs = ({ setCurrent, lastPage, ...props }) => {
 	const dispatch = useDispatch()
 
 	const moveTabNode = (dragKey, hoverKey) => {
@@ -86,7 +86,7 @@ const DraggableTabs = ({ setCurrent, ...props }) => {
 			fields: [],
 		}
 		dispatch(editTemplatePageAdd({ newPage }))
-		setCurrent(`${props.data.form.length}`)
+		setCurrent(`${lastPage}`)
 	}
 
 	return (
@@ -118,12 +118,29 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 	const dispatch = useDispatch()
 	const [current, setCurrent] = useState('0')
 
-	const handleRemovePage = (pageIndex) => {
-		if (pageIndex === data.form.length - 1) {
-			setCurrent(`${current - 1}`)
+	const handleRemovePage = useCallback(
+		(pageIndex) => {
+			if (pageIndex === data.form.length - 1) {
+				setCurrent(`${current - 1}`)
+			}
+			dispatch(editTemplatePageRemove({ pageIndex }))
+		},
+		[data.form.length, current, dispatch, setCurrent]
+	)
+
+	const [allVariables, setAllVariables] = useState([])
+	useEffect(() => {
+		const newVariables = data.variables.reduce((a, page) => [...a, ...page], [])
+
+		if (
+			allVariables.length !== newVariables.length ||
+			allVariables.some(
+				(variable, i) => newVariables[i]?.name !== variable?.name
+			)
+		) {
+			setAllVariables(newVariables)
 		}
-		dispatch(editTemplatePageRemove({ pageIndex }))
-	}
+	}, [data.variables, allVariables])
 
 	useEffect(() => {
 		setInputsFilled((filled) => ({
@@ -145,16 +162,16 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 
 	return (
 		<>
-			<DraggableTabs current={current} setCurrent={setCurrent} data={data}>
+			<DraggableTabs
+				current={current}
+				setCurrent={setCurrent}
+				lastPage={data.form.length}>
 				{data.form.map((page, index) => (
 					<TabPane key={index} tab={page.title} closable={false}>
 						<Page
 							pageIndex={index}
 							data={data.form[index]}
-							variables={data.variables.reduce(
-								(a, page) => [...a, ...page],
-								[]
-							)}
+							variables={allVariables}
 							handleRemovePage={handleRemovePage}
 						/>
 					</TabPane>
@@ -167,7 +184,7 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 	)
 }
 
-export default TemplateForm
+export default React.memo(TemplateForm)
 
 TemplateForm.propTypes = {
 	data: object,
@@ -177,6 +194,6 @@ TemplateForm.propTypes = {
 DraggableTabs.propTypes = {
 	current: string,
 	setCurrent: func,
-	data: object,
+	lastPage: number,
 	children: any,
 }

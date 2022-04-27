@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { bool, func } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
+import { useMediaQuery } from 'react-responsive'
 import { Menu, Layout, Tooltip } from 'antd'
 import {
 	FolderOpenOutlined,
@@ -45,7 +46,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		return history.push(path)
 	}
 
-	function logoSideBar() {
+	const logoSideBar = useMemo(() => {
 		if (data) {
 			return (
 				<img
@@ -60,27 +61,11 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 			)
 		}
 		return <img src={logoSmall} alt="logo" className={styles.logo} />
-	}
+	}, [data])
 
-	// initial state for window width
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
-	// using useEffect for always get windows width when the user change it
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowWidth(window.innerWidth)
-		}
-
-		// the 'resize' event is always shot when the user change the view
-		window.addEventListener('resize', handleResize)
-		// cleaning the eventListener
-		return () => window.removeEventListener('resize', handleResize)
-	}, [])
-
-	const handleCollapseDynamic = () => {
-		// if window width if minor and equal to 1200
-		return windowWidth <= 1200 ? true : false
-	}
+	const dynamicCollapse = useMediaQuery({
+		query: '(max-width: 1200px)',
+	})
 
 	return (
 		<>
@@ -88,10 +73,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 				<Sider
 					className={styles.sider}
 					trigger={null}
-					collapsed={handleCollapseDynamic()}
+					collapsed={dynamicCollapse}
 					collapsible>
 					<div className={styles.logoWrapper}>
-						{handleCollapseDynamic() ? (
+						{dynamicCollapse ? (
 							<img
 								src={logoSmall}
 								alt="logo"
@@ -102,7 +87,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								}}
 							/>
 						) : (
-							logoSideBar()
+							logoSideBar
 						)}
 					</div>
 					<Menu
@@ -243,4 +228,4 @@ SideBar.deafultProps = {
 	isWeb: true,
 }
 
-export default SideBar
+export default React.memo(SideBar)

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { func, bool, string } from 'prop-types'
+import { bool, string } from 'prop-types'
 import { Layout, Menu, Dropdown, Avatar, Typography } from 'antd'
 import { DownOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
@@ -12,7 +12,7 @@ import styles from './index.module.scss'
 
 const { Text } = Typography
 
-function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
+function Head({ isWeb, className }) {
 	const { name: username, signatures_provider } = useSelector(
 		({ session }) => session
 	)
@@ -70,8 +70,6 @@ function Head({ handleCollapsed, isCollapsed, isWeb, className }) {
 }
 
 Head.propTypes = {
-	handleCollapsed: func.isRequired,
-	isCollapsed: bool.isRequired,
 	isWeb: bool,
 	className: string,
 }

@@ -6,7 +6,7 @@ import locale from 'react-json-editor-ajrm/locale/pt'
 import { Widget, useValidation } from './base/widget'
 import { FormItem, TextIcon } from './base/styles'
 
-export const JSONWidget = (props) => {
+export const JSONWidget = React.memo((props) => {
 	const { data, pageIndex, fieldIndex, updateFormInfo } = props
 	const [error, setError] = useState(false)
 	const [valid, setValid] = useValidation(props)
@@ -63,7 +63,7 @@ export const JSONWidget = (props) => {
 			}
 		/>
 	)
-}
+})
 
 JSONWidget.propTypes = {
 	data: object,
