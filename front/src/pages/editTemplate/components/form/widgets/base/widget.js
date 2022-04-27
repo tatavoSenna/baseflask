@@ -11,10 +11,11 @@ import {
 } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Select } from 'antd'
+
 import { editTemplateFieldValid } from '~/states/modules/editTemplate'
 import { WidgetCard } from './widgetCard'
-import { ThinDivider, ValidatedSelect } from './styles'
 import { WidgetConditional } from './widgetConditional'
+import { ThinDivider, ValidatedSelect, ValidatedInput } from './styles'
 
 const Widget = ({
 	data,
@@ -34,6 +35,7 @@ const Widget = ({
 
 	const [validVariableName, setValidVariableName] = useState(false)
 	const [validVariableStyle, setValidVariableStyle] = useState(false)
+	const [validConditionals, setValidConditionals] = useState(true)
 
 	useEffect(() => {
 		if (data.variable) {
@@ -50,21 +52,26 @@ const Widget = ({
 
 			setValidVariableName(validName)
 			setValidVariableStyle(validStyle)
-
-			onValidate(validName && validStyle)
 		}
-	}, [data, variableNames, displayStyles, onValidate])
+	}, [data, variableNames, displayStyles])
+
+	useEffect(() => {
+		onValidate(validVariableName && validVariableStyle && validConditionals)
+	}, [validVariableName, validVariableStyle, validConditionals, onValidate])
 
 	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
 
-	const updateVariable = (property, value) => {
-		update({
-			variable: {
-				...(data?.variable ?? {}),
-				[property]: value,
-			},
-		})
-	}
+	const updateVariable = useCallback(
+		(property, value) => {
+			update({
+				variable: {
+					...(data?.variable ?? {}),
+					[property]: value,
+				},
+			})
+		},
+		[data, update]
+	)
 
 	return (
 		<WidgetCard {...{ data, type, icon, pageIndex, fieldIndex }}>
@@ -76,15 +83,13 @@ const Widget = ({
 
 					<div style={{ display: 'flex' }}>
 						<Input.Group compact>
-							<Input
+							<ValidatedInput
 								label="Name"
 								placeholder="Nome da variável"
 								defaultValue={data.variable?.name || ''}
-								style={{
-									width: '70%',
-									borderColor: validVariableName ? null : '#ff4d4f',
-								}}
+								style={{ width: '70%' }}
 								onBlur={(e) => updateVariable('name', e.target.value)}
+								$error={!validVariableName}
 								autoComplete="chrome-off"
 							/>
 							<ValidatedSelect
@@ -117,7 +122,14 @@ const Widget = ({
 					<ThinDivider orientation="left">Condicionais</ThinDivider>
 
 					<WidgetConditional
-						{...{ data, variables, pageIndex, fieldIndex, updateFormInfo }}
+						{...{
+							data,
+							variables,
+							pageIndex,
+							fieldIndex,
+							onValidate: setValidConditionals,
+							updateFormInfo,
+						}}
 					/>
 				</>
 			) : null}

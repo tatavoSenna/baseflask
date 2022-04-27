@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, array, number, func } from 'prop-types'
 import { Card, Form, Input, Button, Dropdown, Menu, Empty } from 'antd'
@@ -16,6 +16,8 @@ import { DateWidget } from './widgets/dateWidget'
 import { EmailWidget } from './widgets/emailWidget'
 import { CheckboxWidget } from './widgets/checkboxWidget'
 import { RadioWidget } from './widgets/radioWidget'
+import { DropdownWidget } from './widgets/dropdownWidget'
+import { BankWidget } from './widgets/bankWidget'
 
 const widgets = {
 	text: TextWidget,
@@ -25,6 +27,8 @@ const widgets = {
 	email: EmailWidget,
 	checkbox: CheckboxWidget,
 	radio: RadioWidget,
+	dropdown: DropdownWidget,
+	bank: BankWidget,
 }
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
@@ -250,9 +254,12 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 		dispatch(editTemplateFieldAdd({ newField, pageIndex }))
 	}
 
-	const updateFormInfo = (value, name, pageIndex, fieldIndex) => {
-		dispatch(editTemplateFormInfo({ value, name, pageIndex, fieldIndex }))
-	}
+	const updateFormInfo = useCallback(
+		(value, name, pageIndex, fieldIndex) => {
+			dispatch(editTemplateFormInfo({ value, name, pageIndex, fieldIndex }))
+		},
+		[dispatch]
+	)
 
 	return (
 		<Card

@@ -8,7 +8,7 @@ import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 import { validateDate } from 'utils'
 
-export const DateWidget = (props) => {
+export const DateWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -39,7 +39,7 @@ export const DateWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 const Icon = styleIconValidation(CalendarOutlined)
 

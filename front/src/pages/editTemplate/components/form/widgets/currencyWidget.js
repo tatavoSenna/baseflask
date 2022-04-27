@@ -10,7 +10,7 @@ import {
 	currencyParser,
 } from 'components/currencyField/currencyUtils'
 
-export const CurrencyWidget = (props) => {
+export const CurrencyWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -39,7 +39,7 @@ export const CurrencyWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 CurrencyWidget.propTypes = {
 	data: object,
