@@ -38,7 +38,9 @@ const CityField = ({
 
 	const findAndChangeValue = (data, value, _value, stateValue, state) => {
 		const _fieldValue = data.data.find((d) => d.nome === value)
-		stateValue = _fieldValue['regiao-imediata']['regiao-intermediaria'].UF.nome
+		if (_fieldValue !== undefined)
+			stateValue =
+				_fieldValue['regiao-imediata']['regiao-intermediaria'].UF.nome
 		if (stateValue !== state) _value = ''
 		return _value
 	}
@@ -96,6 +98,7 @@ const CityField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Select
+				allowClear={optional}
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
