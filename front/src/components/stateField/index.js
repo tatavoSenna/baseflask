@@ -47,6 +47,7 @@ const StateField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Select
+				allowClear={optional}
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
