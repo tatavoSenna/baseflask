@@ -34,7 +34,12 @@ const FormFactory = ({ token, initialValues = {} }) => {
 
 	const onSubmit = (data) => {
 		for (const key in data) {
-			if (data[key] === '' || data[key] === undefined || data[key] === null) {
+			if (
+				data[key] === '' ||
+				data[key] === undefined ||
+				data[key] === null ||
+				data[key].length === 0
+			) {
 				delete data[key]
 			}
 		}
