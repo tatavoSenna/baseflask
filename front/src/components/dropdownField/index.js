@@ -1,5 +1,13 @@
 import React from 'react'
-import PropTypes, { string, shape, array, object, func, bool } from 'prop-types'
+import PropTypes, {
+	string,
+	shape,
+	array,
+	object,
+	func,
+	bool,
+	node,
+} from 'prop-types'
 import { Form, Select } from 'antd'
 import InfoField from '~/components/infoField'
 import { InfoOptionalField } from 'components/infoField'
@@ -11,6 +19,7 @@ const DropdownField = ({
 	onChange,
 	inputValue,
 	disabled,
+	notFoundContent,
 	form,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
@@ -54,7 +63,10 @@ const DropdownField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select disabled={disabled} onChange={onChange}>
+			<Select
+				disabled={disabled}
+				onChange={onChange}
+				notFoundContent={notFoundContent}>
 				{options.map((option, index) => (
 					<Select.Option key={index} value={option.value}>
 						{option.label}
@@ -77,6 +89,7 @@ DropdownField.propTypes = {
 	className: string,
 	onChange: func,
 	inputValue: string,
+	notFoundContent: node,
 	disabled: bool,
 }
 

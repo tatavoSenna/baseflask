@@ -25,6 +25,7 @@ import PersonField from '~/components/personField'
 import StructuredList from '~/components/structuredList'
 import StructuredCheckbox from '~/components/structuredCheckbox'
 import AddressField from '~/components/addressField'
+import DatabaseField from 'components/databaseField'
 
 import { Divider } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
@@ -371,6 +372,19 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						onChange={onchange((e) => e.target.value)}
+					/>
+				)
+				break
+			case 'database':
+				children.push(
+					<DatabaseField
+						key={i}
+						pageFieldsData={pageFieldsData[i]}
+						className={isVisible}
+						inputValue={defaultValue()}
+						disabled={disabled}
+						form={form}
+						onChange={onchange()}
 					/>
 				)
 				break
