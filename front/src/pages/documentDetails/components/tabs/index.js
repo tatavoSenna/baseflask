@@ -229,7 +229,12 @@ const Tabs = ({
 						)
 					case 'address':
 						return (
-							<AddressField item={item} disabled={!isEdit} key={fieldIndex} />
+							<AddressField
+								item={item}
+								disabled={!isEdit}
+								key={fieldIndex}
+								form={form}
+							/>
 						)
 					case 'variable_image':
 						return isEdit && <ImageField pageFieldsData={item} />

@@ -73,17 +73,21 @@ const Contracts = () => {
 
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
-		dispatch(
-			listQuestion({
-				modelId: values.modelId,
-				title: values.title,
-				parent: values.parent,
+		if (companyInfo['remainingDocuments'] > 0) {
+			dispatch(
+				listQuestion({
+					modelId: values.modelId,
+					title: values.title,
+					parent: values.parent,
+				})
+			)
+			return history.push({
+				pathname: `/documents/new`,
+				state: { current: 0 },
 			})
-		)
-		return history.push({
-			pathname: `/documents/new`,
-			state: { current: 0 },
-		})
+		} else {
+			dispatch(setShowStripeModal(true))
+		}
 	}
 
 	const handleCreateInFolder = (values) => {
@@ -139,6 +143,7 @@ const Contracts = () => {
 	}
 
 	const handleChooseModal = () => {
+		dispatch(getCompanyInfo({ id: company_id }))
 		companyInfo['remainingDocuments'] > 0
 			? handleShowModal()
 			: dispatch(setShowStripeModal(true))

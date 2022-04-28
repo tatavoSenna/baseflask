@@ -8,7 +8,7 @@ import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 import { validateNumber } from 'utils'
 
-export const NumberWidget = (props) => {
+export const NumberWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -109,7 +109,7 @@ export const NumberWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 const Icon = styleIconValidation(FieldNumberOutlined)
 

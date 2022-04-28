@@ -6,7 +6,7 @@ import Fields from 'components/addressField/fields'
 
 import { DisplayNone, StyledTitle, FlexContainer } from './styles/style'
 
-const AddressField = ({ item, disabled }) => {
+const AddressField = ({ item, disabled, form }) => {
 	const { struct_name, items } = item
 
 	const FormItems = (name) => (
@@ -22,7 +22,12 @@ const AddressField = ({ item, disabled }) => {
 				<>
 					<DisplayNone>{FormItems(struct_name)}</DisplayNone>
 					<FlexContainer>
-						<Fields fields={items} name={struct_name} disabled={disabled} />
+						<Fields
+							fields={items}
+							name={struct_name}
+							disabled={disabled}
+							form={form}
+						/>
 					</FlexContainer>
 				</>
 			</Form.Item>
@@ -33,6 +38,7 @@ const AddressField = ({ item, disabled }) => {
 AddressField.propTypes = {
 	item: object,
 	disabled: bool,
+	form: object,
 }
 
 export default AddressField

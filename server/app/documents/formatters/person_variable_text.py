@@ -1,6 +1,6 @@
 NaturalPersonTextVariable = {
-    "PRONOUN": "{{ PRONOUN }}",
-    "NAME": "{{ NAME }},",
+    "PRONOUN": "{{ PRONOUN }} ",
+    "NAME": "{{ NAME }}, ",
     "NATIONALITY": "{{ NATIONALITY }}, ",
     "CIVIL_STATUS": "{{ CIVIL_STATUS }}, ",
     "PROPERTY_REGIME": "no regime de {{ PROPERTY_REGIME }}, ",
@@ -12,11 +12,11 @@ NaturalPersonTextVariable = {
     "EMAIL": "com email {{ EMAIL }}, ",
     "STREET": "residente à {{ STREET }}, ",
     "NUMBER": "{{ NUMBER }} ",
-    "CITY": "{{ CITY }}/ ",
+    "CITY": "{{ CITY }}/",
     "COMPLEMENT": "{{ COMPLEMENT }} - ",
     "STATE": "{{ STATE }} - ",
     "CEP": "{{ CEP }}, ",
-    "COUNTRY": "{{ COUNTRY }} ",
+    "COUNTRY": "{{ COUNTRY }}",
 }
 NaturalPersonText = "{{ PRONOUN }}{{ NAME }}{{ NATIONALITY }}{{ CIVIL_STATUS }}{{ PROPERTY_REGIME }}{{ PROFESSION }}{{ RG }}{{ RG_EMISSION }}{{ RG_EMISSIONDATE }}{{ CPF }}{{ EMAIL }}{{ STREET }}{{ NUMBER }}{{ COMPLEMENT }}{{ CITY }}{{ STATE }}{{ CEP }}{{ COUNTRY }}"
 

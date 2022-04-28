@@ -18,7 +18,10 @@ const PersonPropertyRegime = ({
 
 	let value = ''
 	let _disabled = disabled
-	if (maritalState === 'União estável' || maritalState.includes('Casad')) {
+	if (
+		maritalState !== undefined &&
+		(maritalState === 'União estável' || maritalState.includes('Casad'))
+	) {
 		value = thisValue === '' ? inputValue : thisValue
 		if (!disabled) _disabled = false
 	} else {

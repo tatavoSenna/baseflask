@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Form, Typography, Collapse, Divider, Select } from 'antd'
+import { Form, Typography, Collapse, Divider, Select, Input } from 'antd'
 
 export const Title = styled(Typography.Title)`
 	&& {
@@ -52,9 +52,25 @@ export const ListItem = styled.div`
 	margin-bottom: 8px;
 `
 
+export const ValidatedInput = styled(Input)`
+	${(props) =>
+		props.$error
+			? `
+				border-color: #ff4d4f;
+				z-index: 1;
+			`
+			: ''}
+`
+
 export const ValidatedSelect = styled(Select)`
 	&& .ant-select-selector {
-		${(props) => (props.$error ? 'border-color: #ff4d4f' : '')}
+		${(props) =>
+			props.$error
+				? `
+					border-color: #ff4d4f;
+					z-index: 1;
+				`
+				: ''}
 	}
 `
 

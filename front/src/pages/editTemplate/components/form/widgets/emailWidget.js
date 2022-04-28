@@ -7,7 +7,7 @@ import { Widget, useUpdate, useValidation } from './base/widget'
 import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 
-export const EmailWidget = (props) => {
+export const EmailWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -39,7 +39,7 @@ export const EmailWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 const Icon = styleIconValidation(MailOutlined)
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import TextField from 'components/textField'
 
 import PropTypes, { bool, func, number, string } from 'prop-types'
+import StateField from 'components/stateField'
 
 const AddressState = ({
 	key,
@@ -16,7 +16,7 @@ const AddressState = ({
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'text',
+		type: 'state',
 		label: 'Estado',
 		list: name,
 		optional: optional,
@@ -28,7 +28,7 @@ const AddressState = ({
 	}
 
 	return (
-		<TextField
+		<StateField
 			key={key}
 			first={first}
 			pageFieldsData={pageFieldsData}

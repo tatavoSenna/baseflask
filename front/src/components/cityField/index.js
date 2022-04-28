@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCityField } from '~/states/modules/cityField'
@@ -12,6 +12,8 @@ const CityField = ({
 	onChange,
 	inputValue,
 	disabled,
+	state,
+	form,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
@@ -27,9 +29,58 @@ const CityField = ({
 		dispatch(getCityField())
 	}, [dispatch])
 	const data = useSelector(({ cityField }) => cityField)
-	if (data.data !== undefined) {
-		data.data.map((name, index) => (cityName[index] = name.nome))
+
+	const [thisValue, setThisValue] = useState('')
+
+	const handleOnChange = (value) => {
+		setThisValue(value)
 	}
+
+	const findAndChangeValue = (data, value, _value, stateValue, state) => {
+		const _fieldValue = data.data.find((d) => d.nome === value)
+		if (_fieldValue !== undefined)
+			stateValue =
+				_fieldValue['regiao-imediata']['regiao-intermediaria'].UF.nome
+		if (stateValue !== state) _value = ''
+		return _value
+	}
+
+	let inputValueState = state
+	let value = thisValue === '' ? inputValue : thisValue
+	if (data.data !== undefined) {
+		if (state === '' || state === undefined) {
+			data.data.map((name, index) => (cityName[index] = name.nome))
+		} else {
+			const filteredCitys = data.data.filter(
+				(d) => d['regiao-imediata']['regiao-intermediaria'].UF.nome === state
+			)
+			filteredCitys.map((name, index) => (cityName[index] = name.nome))
+		}
+
+		if (inputValue !== '' && (state !== '' || state !== undefined)) {
+			value = findAndChangeValue(
+				data,
+				inputValue,
+				value,
+				inputValueState,
+				state
+			)
+		}
+
+		if ((state !== '' || state !== undefined) && thisValue !== '') {
+			value = findAndChangeValue(data, thisValue, value, inputValueState, state)
+		}
+	}
+
+	useEffect(() => {
+		if (form !== undefined) {
+			form.setFieldsValue({
+				[list]: {
+					[name]: value,
+				},
+			})
+		}
+	}, [form, state, inputValueState, list, name, value])
 
 	return (
 		<Form.Item
@@ -47,10 +98,11 @@ const CityField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Select
+				allowClear={optional}
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange}>
+				onChange={state === undefined ? onChange : handleOnChange}>
 				{cityName.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
@@ -70,8 +122,10 @@ CityField.propTypes = {
 	}).isRequired,
 	className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 	onChange: func,
+	form: object,
 	inputValue: string,
 	disabled: bool,
+	state: string,
 }
 
 CityField.defaultProps = {

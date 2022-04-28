@@ -7,7 +7,7 @@ import { CommonFields } from './base/widgetCommonFields'
 import { WidgetOption } from './base/widgetOption'
 import { styleIconValidation } from './base/styles'
 
-export const CheckboxWidget = (props) => {
+export const CheckboxWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -31,7 +31,7 @@ export const CheckboxWidget = (props) => {
 			]}
 		/>
 	)
-}
+})
 
 const Icon = styleIconValidation(CheckSquareOutlined)
 

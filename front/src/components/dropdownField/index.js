@@ -1,7 +1,16 @@
 import React from 'react'
-import { string, shape, array, object, func, bool } from 'prop-types'
+import PropTypes, {
+	string,
+	shape,
+	array,
+	object,
+	func,
+	bool,
+	node,
+} from 'prop-types'
 import { Form, Select } from 'antd'
 import InfoField from '~/components/infoField'
+import styles from './index.module.scss'
 
 const DropdownField = ({
 	pageFieldsData,
@@ -9,6 +18,7 @@ const DropdownField = ({
 	onChange,
 	inputValue,
 	disabled,
+	notFoundContent,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
 		pageFieldsData
@@ -19,13 +29,21 @@ const DropdownField = ({
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
+	const returnLabel = () => {
+		if (label.length > 0) {
+			return <InfoField label={label} info={info} />
+		}
+		return null
+	}
+
 	return (
 		<Form.Item
 			key={name}
 			name={list !== undefined ? [list, name] : name}
-			label={<InfoField label={label} info={info} />}
+			label={returnLabel()}
 			hasFeedback
-			className={className}
+			className={`${className} ${styles['form-dropdown']}`}
 			rules={
 				!hidden && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
@@ -34,7 +52,11 @@ const DropdownField = ({
 			type={type}
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
-			<Select disabled={disabled} onChange={onChange}>
+			<Select
+				disabled={disabled}
+				onChange={onChange}
+				allowClear={optional ? true : false}
+				notFoundContent={notFoundContent}>
 				{options.map((option, index) => (
 					<Select.Option key={index} value={option.value}>
 						{option.label}
@@ -48,7 +70,7 @@ const DropdownField = ({
 DropdownField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: object.isRequired,
+		variable: PropTypes.oneOfType([object, string]).isRequired,
 		type: string.isRequired,
 		options: array.isRequired,
 		info: string,
@@ -56,11 +78,11 @@ DropdownField.propTypes = {
 	className: string,
 	onChange: func,
 	inputValue: string,
+	notFoundContent: node,
 	disabled: bool,
 }
 
 DropdownField.defaultProps = {
-	className: {},
 	onChange: () => null,
 }
 

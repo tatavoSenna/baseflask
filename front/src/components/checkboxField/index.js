@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, shape, array, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, array, object, func, bool } from 'prop-types'
 import { Form, Checkbox } from 'antd'
 import InfoField from '~/components/infoField'
 
@@ -52,14 +52,13 @@ CheckboxField.propTypes = {
 		options: array.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
-	inputValue: array,
+	inputValue: PropTypes.oneOfType([array, string]),
 	disabled: bool,
 }
 
 CheckboxField.defaultProps = {
-	className: {},
 	onChange: () => null,
 }
 

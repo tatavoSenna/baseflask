@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { object, func, number, array } from 'prop-types'
-import { Form, Input, Select, Button, AutoComplete } from 'antd'
+import { Form, Input, Select, Button } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useUpdate } from './widget'
-import { ListItem } from './styles'
+import { ListItem, ValidatedSelect } from './styles'
 import { TextInput } from '../textWidget'
 import { NumberInput } from '../numberWidget'
 import { CurrencyInput } from '../currencyWidget'
@@ -19,23 +19,43 @@ const WidgetConditional = ({
 	variables,
 	pageIndex,
 	fieldIndex,
+	onValidate,
 	updateFormInfo,
 }) => {
-	const variableNames = variables
-		.filter((x) => x && Object.keys(conditionalInputs).includes(x.type))
-		.map((x) => x?.name)
+	const variableNames = useMemo(
+		() =>
+			variables
+				.filter((x) => x && Object.keys(conditionalInputs).includes(x.type))
+				.map((x) => x?.name),
+		[variables]
+	)
 
-	const variableOptions = variableNames
-		.filter((x, i, arr) => arr.indexOf(x) === i) // Checks unique
-		.filter((x) => x && x !== data?.variable?.name)
-		.map((x) => ({ value: x }))
+	const variableOptions = useMemo(
+		() =>
+			variableNames
+				.filter((x, i, arr) => arr.indexOf(x) === i) // Checks unique
+				.filter((x) => x && x !== data?.variable?.name)
+				.map((x) => ({ value: x })),
+		[variableNames, data]
+	)
 
-	const conditions =
-		'condition' in data
-			? Array.isArray(data.condition)
-				? data.condition
-				: [data.condition]
-			: []
+	const conditions = useMemo(
+		() =>
+			'condition' in data
+				? Array.isArray(data.condition)
+					? data.condition
+					: [data.condition]
+				: [],
+		[data]
+	)
+
+	const [validConditionVars, setValidVars] = useState([])
+	useEffect(() => {
+		const validVars = conditions.map((c) => variableNames.includes(c.variable))
+		setValidVars(validVars)
+
+		onValidate(validVars.every((c) => c))
+	}, [conditions, variableNames, onValidate])
 
 	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
 
@@ -62,18 +82,23 @@ const WidgetConditional = ({
 			{conditions.map((condition, i) => (
 				<ListItem key={condition.variable + i}>
 					<Input.Group compact>
-						<AutoComplete
+						<ValidatedSelect
+							showSearch
+							allowClear
+							showArrow={false}
 							placeholder="Variável"
 							style={{
 								width: '44%',
 							}}
 							options={variableOptions}
-							defaultValue={condition?.variable}
+							defaultValue={condition?.variable || undefined}
+							notFoundContent={'Variável não encontrada'}
 							filterOption={(inputValue, option) =>
 								option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
 								-1
 							}
-							onBlur={(e) => updateCondition('variable', e.target.value, i)}
+							onChange={(v) => updateCondition('variable', v, i)}
+							$error={!validConditionVars[i]}
 						/>
 
 						<Select
@@ -131,6 +156,7 @@ WidgetConditional.propTypes = {
 	variables: array,
 	pageIndex: number,
 	fieldIndex: number,
+	onValidate: func,
 	updateFormInfo: func,
 }
 

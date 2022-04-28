@@ -13,6 +13,7 @@ const AddressField = ({
 	disabled,
 	inputValue,
 	onChange,
+	form,
 }) => {
 	const { label, variable, type, fields, id, optional } = pageFieldsData
 
@@ -43,6 +44,7 @@ const AddressField = ({
 					optional={optional}
 					onChange={onChange}
 					inputValue={inputValue}
+					form={form}
 				/>
 			</AddressContainer>
 		</Form.Item>
@@ -59,6 +61,7 @@ AddressField.propTypes = {
 	}).isRequired,
 	className: PropTypes.oneOfType([object, string]),
 	disabled: bool,
+	form: object,
 	inputValue: string,
 	onChange: func,
 }

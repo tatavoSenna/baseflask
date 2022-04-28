@@ -33,6 +33,11 @@ const FormFactory = ({ token, initialValues = {} }) => {
 	}
 
 	const onSubmit = (data) => {
+		for (const key in data) {
+			if (data[key] === '' || data[key] === undefined || data[key] === null) {
+				delete data[key]
+			}
+		}
 		dispatch(
 			appendAnswer({
 				data,
