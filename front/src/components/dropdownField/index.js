@@ -10,7 +10,6 @@ import PropTypes, {
 } from 'prop-types'
 import { Form, Select } from 'antd'
 import InfoField from '~/components/infoField'
-import { InfoOptionalField } from 'components/infoField'
 import styles from './index.module.scss'
 
 const DropdownField = ({
@@ -20,7 +19,6 @@ const DropdownField = ({
 	inputValue,
 	disabled,
 	notFoundContent,
-	form,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
 		pageFieldsData
@@ -33,19 +31,10 @@ const DropdownField = ({
 			: false
 
 	const returnLabel = () => {
-		if (optional && label.length > 0) {
-			return <InfoOptionalField label={label} info={info} onClick={clearAll} />
-		}
 		if (label.length > 0) {
 			return <InfoField label={label} info={info} />
 		}
 		return null
-	}
-
-	const clearAll = () => {
-		if (form !== undefined) {
-			form.setFieldsValue({ [name]: '' })
-		}
 	}
 
 	return (
@@ -66,6 +55,7 @@ const DropdownField = ({
 			<Select
 				disabled={disabled}
 				onChange={onChange}
+				allowClear={optional ? true : false}
 				notFoundContent={notFoundContent}>
 				{options.map((option, index) => (
 					<Select.Option key={index} value={option.value}>
@@ -85,7 +75,6 @@ DropdownField.propTypes = {
 		options: array.isRequired,
 		info: string,
 	}).isRequired,
-	form: object,
 	className: string,
 	onChange: func,
 	inputValue: string,
