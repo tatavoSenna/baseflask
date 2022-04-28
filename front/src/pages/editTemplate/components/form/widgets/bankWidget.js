@@ -28,7 +28,9 @@ export const BankWidget = React.memo((props) => {
 					<FormItem label="Valor inicial">
 						<Select
 							showSearch={true}
+							allowClear={true}
 							filterOption={filterText}
+							value={data.initialValue}
 							onChange={(v) => update({ initialValue: v })}>
 							{bank.names.map((option, index) => (
 								<Select.Option key={index} value={option}>
