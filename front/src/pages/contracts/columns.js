@@ -169,18 +169,12 @@ export const getColumns = (
 					/>
 				)}
 				<Tooltip title={'Mover para outra pasta'}>
-					<Button
-						icon={
-							<FolderOpenOutlined
-								style={{
-									fontSize: '20px',
-									color: '#1890FF',
-									margin: 'auto',
-								}}
-							/>
-						}
+					<FolderOpenOutlined
 						style={{
-							border: 'none',
+							fontSize: '20px',
+							color: '#1890FF',
+							verticalAlign: 'middle',
+							margin: 'auto',
 						}}
 						onClick={() => setMoveNode(row)}
 					/>
