@@ -12,7 +12,6 @@ import AddressState from 'components/addressField/fields/components/addressState
 import styles from '../index.module.scss'
 import Name from '../../components/name'
 import Surname from '../../components/surname'
-import AttorneyCPF from '../../attorneyField/attorneyCPF'
 import Pronoun from '../../components/pronoun'
 import Email from '../../components/email'
 import Profession from '../../components/profession'
@@ -20,19 +19,26 @@ import AttorneyCEP from '../../attorneyField/attorneyCEP'
 import Identity from '../../components/identity'
 import IdentityOrg from '../../components/identityOrg'
 import IdentityDate from '../../components/identityDate'
+import AddressDistrict from 'components/addressField/fields/components/addressDistrict'
+import CPF from 'components/personField/components/CPF'
+import AttorneyNationality from 'components/personField/attorneyField/attoneyNationality'
+import LegalNationality from '../components/legalNationality'
 
 const components = {
-	society_name: LegalName,
+	nationality: LegalNationality,
 	cnpj: LegalCNPJ,
+	society_name: LegalName,
 	activity: LegalActivity,
 	cep: AddressCEP,
 	country: AddressCountry,
 	number: AddressNumber,
 	street: AddressStreet,
 	complement: AddressComplement,
-	city: AddressCity,
 	state: AddressState,
-	attorney_cpf: AttorneyCPF,
+	district: AddressDistrict,
+	city: AddressCity,
+	attorney_nationality: AttorneyNationality,
+	attorney_cpf: CPF,
 	attorney_pronoun: Pronoun,
 	attorney_name: Name,
 	attorney_surname: Surname,
@@ -46,11 +52,13 @@ const components = {
 	attorney_number: AddressNumber,
 	attorney_street: AddressStreet,
 	attorney_complement: AddressComplement,
-	attorney_city: AddressCity,
 	attorney_state: AddressState,
+	attorney_district: AddressDistrict,
+	attorney_city: AddressCity,
 }
 
 const classNames = {
+	nationality: styles['nationality'],
 	society_name: styles['society-name'],
 	cnpj: styles['cnpj'],
 	activity: styles['activity'],
@@ -59,8 +67,10 @@ const classNames = {
 	number: styles['number'],
 	street: styles['street'],
 	complement: styles['complement'],
-	city: styles['city'],
 	state: styles['state'],
+	district: styles['district'],
+	city: styles['city'],
+	attorney_nationality: styles['attorney-nationality'],
 	attorney_cpf: styles['attorney-cpf'],
 	attorney_pronoun: styles['attorney-pronoun'],
 	attorney_name: styles['attorney-name'],
@@ -75,8 +85,9 @@ const classNames = {
 	attorney_number: styles['attorney-number'],
 	attorney_street: styles['attorney-street'],
 	attorney_complement: styles['attorney-complement'],
-	attorney_city: styles['attorney-city'],
 	attorney_state: styles['attorney-state'],
+	attorney_district: styles['attorney-district'],
+	attorney_city: styles['attorney-city'],
 }
 
 export const getAllComponents = () => {

@@ -1,6 +1,11 @@
+.nationality{
+	order: 0;
+	flex: 1;
+}
+
 .cnpj {
 	order: 0;
-	flex: 1 0 100%;
+	flex: 0 238px;
 }
 
 .society-name {
@@ -35,22 +40,32 @@
 
 .complement {
 	order: 9;
-	flex: 1 0 100%;
+	flex: 0 238px;
+}
+
+.district{
+	order: 9;
+	flex: 0 238px;
 }
 
 .city {
 	order: 10;
-	flex: 0 238px;
+	flex: 1;
 }
 
 .state {
 	order: 10;
+	flex: 1;
+}
+
+.attorney-nationality{
+	order: 11;
 	flex: 0 238px;
 }
 
 .attorney-cpf {
 	order: 11;
-	flex: 1 0 100%;
+	flex: 0 238px;
 }
 
 .attorney-pronoun {
@@ -115,15 +130,20 @@
 
 .attorney-complement {
 	order: 20;
-	flex: 1 0 100%;
+	flex: 0 238px;
+}
+
+.attorney-district {
+	order: 20;
+	flex: 0 238px;
 }
 
 .attorney-city {
 	order: 22;
-	flex: 0 238px;
+	flex: 1;
 }
 
 .attorney-state {
 	order: 21;
-	flex: 0 238px;
+	flex: 1;
 }
