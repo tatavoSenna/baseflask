@@ -110,7 +110,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				break
 			case 'person':
 				newField.variable.type = 'person'
-				newField.label = 'Autor'
+				newField.label = ''
 				newField.person_type = ['legal_person', 'natural_person']
 				newField.fields = [
 					'cpf',
@@ -157,7 +157,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				break
 			case 'address':
 				newField.variable.type = 'address'
-				newField.label = 'Endereço'
+				newField.label = ''
 				newField.fields = [
 					'cep',
 					'country',
