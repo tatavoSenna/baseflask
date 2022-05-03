@@ -51,7 +51,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="dropdown">Dropdown</Menu.Item>
 			<Menu.Item key="radio">Rádio</Menu.Item>
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
-			<Menu.Item key="slider">Slider</Menu.Item>
 			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
@@ -96,9 +95,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.initialValue = 0
 				newField.variable.type = 'currency'
 				newField.variable.doc_display_style = 'plain | extended'
-				break
-			case 'slider':
-				newField.options = ['min', 'max']
 				break
 			case 'database':
 				newField.variable.type = 'database'
