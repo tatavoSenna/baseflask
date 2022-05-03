@@ -162,7 +162,8 @@ const EditTemplate = () => {
 
 	const handleClickTitleButton = () => {
 		setEditTitle(false)
-		dispatch(editTemplateTitle({ title: title.trim() }))
+		const _title = title === '' ? data.title : title
+		dispatch(editTemplateTitle({ title: _title.trim() }))
 	}
 
 	const disabledTitleTemplate =
