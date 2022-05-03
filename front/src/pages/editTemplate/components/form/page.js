@@ -45,8 +45,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="date">Data</Menu.Item>
 			<Menu.Item key="currency">Moeda</Menu.Item>
 			<Menu.Item key="bank">Banco</Menu.Item>
-			<Menu.Item key="state">Estado</Menu.Item>
-			<Menu.Item key="city">Cidade</Menu.Item>
 			<Menu.Item key="cnae">CNAE</Menu.Item>
 			<Menu.Item key="dropdown">Dropdown</Menu.Item>
 			<Menu.Item key="radio">Rádio</Menu.Item>
