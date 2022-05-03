@@ -13,7 +13,6 @@ import StateField from '~/components/stateField'
 import CnaeField from '~/components/cnaeField'
 import CityField from '~/components/cityField'
 import CheckboxField from '~/components/checkboxField'
-import SliderField from '~/components/sliderField'
 import NumberField from '~/components/numberField'
 import PercentageField from '~/components/percentageField'
 import BankField from '~/components/bankField'
@@ -233,18 +232,6 @@ function InputFactory({
 			case 'city':
 				children.push(
 					<CityField
-						key={i}
-						pageFieldsData={pageFieldsData[i]}
-						className={isVisible}
-						inputValue={defaultValue()}
-						disabled={disabled}
-						onChange={onchange()}
-					/>
-				)
-				break
-			case 'slider':
-				children.push(
-					<SliderField
 						key={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
