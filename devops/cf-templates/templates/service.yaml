@@ -122,7 +122,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - cognito-idp:*
-              - Resource: !ImportValue SNSNewDocumentARN
+              - Resource: !ImportValue SnsTopicDocumentCreatedArn
                 Effect: Allow
                 Action:
                   - sns:Publish
@@ -215,7 +215,7 @@ Resources:
             - Name: SENDGRID_API_KEY
               Value: !Ref SendGridApiKey
             - Name: SNS_NEWDOCUMENT_ARN
-              Value: !ImportValue SNSNewDocumentARN
+              Value: !ImportValue SnsTopicDocumentCreatedArn
             - Name: D4SIGN_API_URL
               Value: !Ref D4SignApiURL
             - Name: D4SIGN_API_DOCUMENT_WEBHOOK_URL
