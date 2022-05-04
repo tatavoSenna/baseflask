@@ -2,6 +2,7 @@ import os
 
 from datetime import datetime
 from base64 import b64encode
+from sentry_sdk import capture_exception
 
 import requests
 
@@ -15,7 +16,7 @@ def get_token(user_data):
         token = User.query.get(user_data["id"]).docusign_token
         return token
     except Exception as e:
-        print(e)
+        capture_exception(e)
 
 
 def fetch_docusign_token(current_user, data):

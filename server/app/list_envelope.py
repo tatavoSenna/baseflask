@@ -1,5 +1,6 @@
 from app.docusign_esign import ApiClient, EnvelopesApi
 from datetime import datetime, timedelta
+from sentry_sdk import capture_exception
 
 api_client = ApiClient()
 api_client.host = "https://demo.docusign.net/restapi"
@@ -18,4 +19,4 @@ try:
         recipient_id="6669ff8e-6bc6-4d17-9481-88687a5dd928",
     )
 except Exception as e:
-    print(e)
+    capture_exception(e)

@@ -183,7 +183,6 @@ def get_local_user(view=None, raise_forbidden=True):
             user = client.get_user(
                 AccessToken=cognito_utils.extract_access_token(request.headers)
             )
-            print(user)
             current_user_known_info = {
                 "name": get_new_user_attributes(user, "name"),
                 "username": user.get("Username"),
