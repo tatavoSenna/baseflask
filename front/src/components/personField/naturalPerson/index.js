@@ -57,7 +57,7 @@ const NaturalPerson = ({
 		}
 
 		if (typeof field === 'string') {
-			field = { field_type: field, value: inputValue[field] ?? '' }
+			field = { field_type: field, value: '' }
 		}
 
 		for (let i = 0; i < componentsTypes.length; i++) {

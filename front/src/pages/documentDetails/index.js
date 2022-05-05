@@ -215,7 +215,7 @@ const DocumentDetails = () => {
 							signers={data.signers}
 							versions={data.versions}
 							showAssignModal={handleShowAssignModal}
-							infos={data}
+							infos={data.info}
 							variables={data.variables}
 							signed={data.sent}
 							sentAssign={handleSentAssign}
