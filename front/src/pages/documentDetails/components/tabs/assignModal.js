@@ -19,11 +19,17 @@ const AssignModal = ({
 	let emails = []
 
 	const handleSelect = (value, index) => {
-		const variableEmail = signers[index].fields.find(
-			(f) => f.type === 'email'
-		).variable
-		if (value in objArrayNameEmail) {
-			form.setFieldsValue({ [variableEmail]: objArrayNameEmail[value] })
+		let variableEmail = ''
+		if (signers[index] !== undefined) {
+			variableEmail = signers[index]?.fields.find(
+				(f) => f?.type === 'email'
+			)?.variable
+		}
+		if (variableEmail !== '') {
+			if (value in objArrayNameEmail) {
+				if (value !== '')
+					form.setFieldsValue({ [variableEmail]: objArrayNameEmail[value] })
+			}
 		}
 	}
 
@@ -35,16 +41,18 @@ const AssignModal = ({
 	if (itemsInfo !== undefined) {
 		objArrayNameEmail = itemsInfo.reduce((a, value) => {
 			let nameSurname =
-				value.find((f) => f.field_type === 'name').value +
+				(value.find((f) => f.field_type === 'name')?.value ?? '') +
 				' ' +
 				(value.find((f) => f.field_type === 'surname')?.value ?? '')
 
-			let valueEmail = value.find((f) => f.field_type === 'email').value
+			let valueEmail = value.find((f) => f.field_type === 'email')?.value
 
 			return { ...a, [nameSurname.trim()]: valueEmail }
 		}, {})
 
-		namesSurnames = Object.keys(objArrayNameEmail).map((f) => ({ value: f }))
+		namesSurnames = Object.keys(objArrayNameEmail).map((f) =>
+			f !== ' ' ? { value: f } : null
+		)
 		emails = Object.values(objArrayNameEmail).map((f) => ({ value: f }))
 	}
 

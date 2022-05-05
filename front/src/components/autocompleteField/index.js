@@ -15,7 +15,10 @@ const AutocompleteField = ({ signer, info, onSelect, indexSigner }) => {
 			<AutoComplete
 				options={info}
 				filterOption={(inputValue, option) =>
-					option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+					option.value !== undefined
+						? option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+						  -1
+						: ''
 				}
 			/>
 		</Form.Item>
