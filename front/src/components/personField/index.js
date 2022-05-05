@@ -119,7 +119,7 @@ PersonField.propTypes = {
 	className: string,
 	form: object,
 	disabled: bool,
-	inputValue: string,
+	inputValue: object,
 	onChange: func,
 }
 

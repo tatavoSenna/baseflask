@@ -1,14 +1,26 @@
+import _ from 'lodash'
 export const selectAllDocumentDetail = (payload) => {
-	const imgObj = {}
-	payload.info.forEach((page) => {
-		page.fields.forEach((field) => {
-			if (field.type === 'variable_image') {
-				imgObj[`image_${field.variable}`] = field.value
-			}
+	let formatingInitialValue
+	for (let i = 0; i < Object.keys(payload.variables).length; i++) {
+		formatingInitialValue = payload.form.map((form) => {
+			form.fields.map((field) => {
+				if (field.variable.name === Object.keys(payload.variables)[i]) {
+					if (typeof payload.variables[field.variable.name] !== 'string') {
+						payload.variables[field.variable.name] = _.mapKeys(
+							payload.variables[field.variable.name],
+							(value, key) => key.toLowerCase()
+						)
+					}
+					field.initialValue = payload.variables[field.variable.name]
+				}
+				return field
+			})
+			return form
 		})
-	})
+	}
 	return {
 		...payload,
+		form: formatingInitialValue,
 		workflow: {
 			...payload.workflow,
 			current: payload.workflow.steps
@@ -24,7 +36,6 @@ export const selectAllDocumentDetail = (payload) => {
 			})
 			return signer
 		}),
-		imgObj: imgObj,
 	}
 }
 

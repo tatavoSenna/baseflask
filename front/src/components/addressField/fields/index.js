@@ -65,7 +65,7 @@ const Fields = ({
 		}
 
 		if (typeof field === 'string') {
-			field = { field_type: field, value: '' }
+			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
 		for (let i = 0; i < componentsTypes.length; i++) {
