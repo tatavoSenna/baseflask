@@ -34,7 +34,12 @@ const FormFactory = ({ token, initialValues = {} }) => {
 
 	const onSubmit = (data) => {
 		for (const key in data) {
-			if (data[key] === '' || data[key] === undefined || data[key] === null) {
+			if (
+				data[key] === '' ||
+				data[key] === undefined ||
+				data[key] === null ||
+				data[key].length === 0
+			) {
 				delete data[key]
 			}
 		}
@@ -68,6 +73,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 				layout="vertical"
 				hideRequiredMark
 				onFinish={onSubmit}
+				onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
 				className={styles['form-container']}>
 				{pageFieldsData && (
 					<div className={styles['form']}>

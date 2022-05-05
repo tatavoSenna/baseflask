@@ -1,11 +1,8 @@
 import React from 'react'
 import PropTypes, { bool, func, number, string } from 'prop-types'
+import TextField from 'components/textField'
 
-import CpfField from 'components/cpfField'
-
-import styled from 'styled-components'
-
-const AttorneyCPF = ({
+const PersonNationality = ({
 	key,
 	first,
 	name,
@@ -18,8 +15,8 @@ const AttorneyCPF = ({
 }) => {
 	const pageFieldsData = {
 		info: '',
-		type: 'cpf',
-		label: 'CPF',
+		type: 'text',
+		label: 'Nacionalidade',
 		list: name,
 		optional: optional,
 		variable: {
@@ -30,31 +27,19 @@ const AttorneyCPF = ({
 	}
 
 	return (
-		<React.Fragment key={key}>
-			<Title>Procurador</Title>
-			<CpfField
-				key={key}
-				first={first}
-				pageFieldsData={pageFieldsData}
-				inputValue={inputValue}
-				onChange={onChange}
-				disabled={disabled}
-				className={className}
-			/>
-		</React.Fragment>
+		<TextField
+			key={key}
+			first={first}
+			pageFieldsData={pageFieldsData}
+			inputValue={inputValue}
+			onChange={onChange}
+			disabled={disabled}
+			className={className}
+		/>
 	)
 }
 
-const Title = styled.p`
-	order: 11;
-	flex: 1 0 100%;
-
-	font-size: 18px;
-	font-weight: 500;
-	margin-bottom: 24px;
-`
-
-AttorneyCPF.propTypes = {
+PersonNationality.propTypes = {
 	key: number,
 	first: bool,
 	name: PropTypes.oneOfType([number, string]),
@@ -66,4 +51,4 @@ AttorneyCPF.propTypes = {
 	className: string,
 }
 
-export default AttorneyCPF
+export default PersonNationality

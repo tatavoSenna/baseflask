@@ -45,13 +45,10 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="date">Data</Menu.Item>
 			<Menu.Item key="currency">Moeda</Menu.Item>
 			<Menu.Item key="bank">Banco</Menu.Item>
-			<Menu.Item key="state">Estado</Menu.Item>
-			<Menu.Item key="city">Cidade</Menu.Item>
 			<Menu.Item key="cnae">CNAE</Menu.Item>
 			<Menu.Item key="dropdown">Dropdown</Menu.Item>
 			<Menu.Item key="radio">Rádio</Menu.Item>
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
-			<Menu.Item key="slider">Slider</Menu.Item>
 			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
@@ -97,9 +94,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.type = 'currency'
 				newField.variable.doc_display_style = 'plain | extended'
 				break
-			case 'slider':
-				newField.options = ['min', 'max']
-				break
 			case 'database':
 				newField.variable.type = 'database'
 				newField.variable.database_endpoint = ''
@@ -116,9 +110,10 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				break
 			case 'person':
 				newField.variable.type = 'person'
-				newField.label = 'Autor'
+				newField.label = ''
 				newField.person_type = ['legal_person', 'natural_person']
 				newField.fields = [
+					'nationality',
 					'cpf',
 					'pronoun',
 					'name',
@@ -139,7 +134,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'street',
 					'complement',
 					'state',
+					'district',
 					'city',
+					'attorney_nationality',
 					'attorney_cpf',
 					'attorney_pronoun',
 					'attorney_name',
@@ -155,6 +152,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'attorney_street',
 					'attorney_complement',
 					'attorney_state',
+					'attorney_district',
 					'attorney_city',
 				]
 
@@ -163,7 +161,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				break
 			case 'address':
 				newField.variable.type = 'address'
-				newField.label = 'Endereço'
+				newField.label = ''
 				newField.fields = [
 					'cep',
 					'country',
@@ -171,6 +169,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'street',
 					'complement',
 					'state',
+					'district',
 					'city',
 				]
 

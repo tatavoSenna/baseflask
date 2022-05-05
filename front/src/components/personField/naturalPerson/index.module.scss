@@ -1,6 +1,11 @@
+.nationality{
+	order: 0;
+	flex: 0 238px;
+}
+
 .cpf {
 	order: 0;
-	flex: 1 0 100%;
+	flex: 0 238px;
 }
 
 .pronoun {
@@ -75,13 +80,19 @@
 
 .complement {
 	order: 9;
-	flex: 1 0 100%;
+	flex: 0 238px;
+}
+
+.district{
+	order: 9;
+	flex: 0 238px;
 }
 
 .city {
 	order: 10;
 	flex: 1;
 }
+
 
 .state {
 	order: 10;

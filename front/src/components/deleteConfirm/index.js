@@ -4,13 +4,14 @@ import { DeleteOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 
 const Delete = ({ handle, title, disabled, onClick = () => {} }) => (
-	<div style={{ display: 'flex', gap: '5px', justifyContent: 'flex-end' }}>
+	<div>
 		<Tooltip title={disabled ? '' : 'Deletar'} placement="left">
 			<Popconfirm disabled={disabled} title={title} onConfirm={handle}>
 				<DeleteOutlined
 					style={{
 						fontSize: '20px',
 						color: disabled ? 'lightgray' : '#1890FF',
+						verticalAlign: 'middle',
 						margin: 'auto',
 					}}
 					onClick={onClick}

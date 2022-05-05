@@ -53,16 +53,17 @@ export const NumberWidget = React.memo((props) => {
 						<FormItem label="Intervalo" $width={'59%'}>
 							<Input.Group compact>
 								<InputNumber
+									placeholder="Mínimo"
+									defaultValue={data.min}
+									step={data.step || undefined}
 									onBlur={(e) =>
 										update({ min: validateNumber(e.target.value, '') })
 									}
-									defaultValue={data.min}
 									style={{
 										width: '41%',
 										textAlignLast: 'center',
 										borderRight: 0,
 									}}
-									placeholder="Mínimo"
 								/>
 								<Input
 									style={{
@@ -75,16 +76,17 @@ export const NumberWidget = React.memo((props) => {
 									disabled
 								/>
 								<InputNumber
+									placeholder="Máximo"
+									defaultValue={data.max}
+									step={data.step || undefined}
 									onBlur={(e) =>
 										update({ max: validateNumber(e.target.value, '') })
 									}
-									defaultValue={data.max}
 									style={{
 										width: '41%',
 										textAlignLast: 'center',
 										borderLeft: 0,
 									}}
-									placeholder="Máximo"
 								/>
 							</Input.Group>
 						</FormItem>
