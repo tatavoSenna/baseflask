@@ -303,7 +303,10 @@ def map_variables_to_form(variables, form):
                     variables_obj["items"].append(item_list)
 
                 filled_form[-1]["fields"].append(variables_obj)
-            elif question["type"] == "person":
+            elif (
+                question["type"] == "person"
+                and question["variable"]["name"] in variables
+            ):
                 struct_name = question["variable"]["name"]
                 variables_obj = {
                     "subtitle": question["label"],
