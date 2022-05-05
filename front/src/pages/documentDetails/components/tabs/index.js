@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Form, Typography, Button, Spin, Menu, Steps as StepsAntd } from 'antd'
+import {
+	Form,
+	Typography,
+	Button,
+	Spin,
+	Menu,
+	Divider,
+	Steps as StepsAntd,
+} from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 
 import {
@@ -12,6 +20,11 @@ import {
 	arrayOf,
 	shape,
 } from 'prop-types'
+import InputFactory from '~/components/inputFactory'
+import ImageField from '~/components/imageField'
+import StructuredList from './components/structuredList'
+import StructuredCheckbox from '~/components/structuredCheckbox'
+import PersonField from './components/docxTemplate/personField'
 
 import { ContainerTabs, ScrollContent } from './styles'
 import styles from './index.module.scss'
@@ -19,7 +32,10 @@ import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 import styled from 'styled-components'
-import InfoView from './infoView'
+import PersonFieldText from './components/textTemplate/personFieldText'
+import AddressField from './components/docxTemplate/addressField'
+import AddressFieldText from './components/textTemplate/addressFieldText'
+import DateFieldText from './components/textTemplate/dateFieldText'
 
 moment.locale('pt-br')
 
@@ -41,6 +57,7 @@ const Tabs = ({
 	sentAssign,
 	loadingSign,
 	versionId,
+	onChangeVariables,
 	steps,
 	current,
 	onClickPrevious,
@@ -57,10 +74,12 @@ const Tabs = ({
 }) => {
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
+	const [isEdit, setIsEdit] = useState(false)
+	const [form] = Form.useForm()
 
 	const tab = (option) => {
 		if (option === '1') {
-			return <InfoView infos={infos} textType={textType} />
+			return info()
 		} else if (option === '2') {
 			return version()
 		} else if (option === '3') {
@@ -80,6 +99,219 @@ const Tabs = ({
 			})
 		)
 	}
+
+	const textView = (item) =>
+		item.fields.map((item, index) => {
+			switch (item.type) {
+				case 'address':
+					return <AddressFieldText data={item} key={index} />
+				case 'person':
+					return <PersonFieldText data={item} key={index} />
+				case 'date':
+					return <DateFieldText data={item} key={index} />
+				default:
+					return (
+						<div key={index}>
+							{item.hasOwnProperty('subtitle') ? (
+								<>
+									<Title level={4} style={{ marginTop: 10, fontSize: 15 }}>
+										{item.subtitle}
+									</Title>
+									{item.items.map((item_list, index) => (
+										<>
+											{Array.isArray(item_list) ? (
+												item_list.map((item, index) => (
+													<>
+														<Paragraph
+															style={{
+																color: '#000',
+																fontSize: 10,
+																marginBottom: 0,
+																marginLeft: '10px',
+															}}
+															key={item.label + index}>
+															{item.label}:
+														</Paragraph>
+														<Paragraph
+															style={{
+																color: '#646464',
+																fontSize: 14,
+																marginBottom: 14,
+																marginLeft: '10px',
+															}}
+															key={item.value + index}>
+															{item.value}
+														</Paragraph>
+													</>
+												))
+											) : (
+												<>
+													<Paragraph
+														style={{
+															color: '#000',
+															fontSize: 12,
+															marginBottom: 0,
+														}}
+														key={item_list.label + index}>
+														{item_list.label}:
+													</Paragraph>
+													<Paragraph
+														style={{
+															color: '#646464',
+															fontSize: 16,
+															marginBottom: 14,
+														}}
+														key={item_list.value + index}>
+														{item_list.value}
+													</Paragraph>
+												</>
+											)}
+											{item.items.length - 1 !== index && <Divider />}
+										</>
+									))}
+								</>
+							) : (
+								<>
+									<Paragraph
+										style={{ color: '#000', fontSize: 12, marginBottom: 0 }}
+										key={item.label + index}>
+										{item.label}:
+									</Paragraph>
+									<Paragraph
+										style={{ color: '#646464', fontSize: 16, marginBottom: 14 }}
+										key={item.value + index}>
+										{item.value}
+									</Paragraph>
+								</>
+							)}
+						</div>
+					)
+			}
+		})
+
+	const inputView = (item, pageIndex) => (
+		<Form
+			id="infoForm"
+			form={form}
+			layout="horizontal"
+			onFinish={(values) => {
+				onChangeVariables(values)
+				setIsEdit(false)
+			}}>
+			{item.fields.map((item, fieldIndex) => {
+				switch (item.type) {
+					case 'structured_list':
+						return <StructuredList item={item} disabled={!isEdit} />
+					case 'structured_checkbox':
+						return (
+							<>
+								<Title
+									level={4}
+									style={{ marginTop: 10, marginBottom: '20px', fontSize: 15 }}>
+									{item.subtitle}
+								</Title>
+								<StructuredCheckbox
+									pageFieldsData={item}
+									disabled={!isEdit}
+									pageIndex={pageIndex}
+									fieldIndex={fieldIndex}
+								/>
+							</>
+						)
+					case 'person':
+						return (
+							<PersonField
+								item={item}
+								disabled={!isEdit}
+								key={fieldIndex}
+								form={form}
+							/>
+						)
+					case 'address':
+						return (
+							<AddressField
+								item={item}
+								disabled={!isEdit}
+								key={fieldIndex}
+								form={form}
+							/>
+						)
+					case 'variable_image':
+						return isEdit && <ImageField pageFieldsData={item} />
+					default:
+						return (
+							<InputFactory
+								key={fieldIndex}
+								data={[item]}
+								visible={[true]}
+								disabled={!isEdit}
+								initialValues={{ [item.variable]: item.value }}
+							/>
+						)
+				}
+			})}
+		</Form>
+	)
+
+	const buttonsView = () => (
+		<div
+			style={{
+				display: 'flex',
+				justifyContent: 'center',
+				marginTop: 10,
+			}}>
+			<Form.Item {...tailLayout}>
+				{!isEdit && (
+					<Button
+						key="edit"
+						className={styles.button}
+						onClick={() => setIsEdit(true)}
+						disabled={loadingSign}>
+						Editar
+					</Button>
+				)}
+				{isEdit && (
+					<Button
+						key="cancel"
+						className={styles.button}
+						onClick={() => setIsEdit(false)}
+						disabled={loadingSign}>
+						Cancelar
+					</Button>
+				)}
+				{isEdit && (
+					<Button
+						key="save"
+						type="primary"
+						htmlType="submit"
+						form="infoForm"
+						disabled={loadingSign}>
+						Salvar
+					</Button>
+				)}
+			</Form.Item>
+		</div>
+	)
+
+	const info = () => (
+		<ScrollContent>
+			{infos.map((item, index) => (
+				<div key={index}>
+					<ContainerTabs key={index}>
+						<Title
+							key={index}
+							level={4}
+							style={{ marginTop: 20, fontSize: 18 }}>
+							{item.title}
+						</Title>
+						{textType === '.docx' ? inputView(item, index) : textView(item)}
+						{infos.length - 1 !== index && <Divider />}
+					</ContainerTabs>
+				</div>
+			))}
+			{textType === '.docx' && buttonsView()}
+		</ScrollContent>
+	)
 
 	const version = () => {
 		const disableButton = !(
@@ -499,7 +731,7 @@ Tabs.propTypes = {
 	downloadDocument: func,
 	signers: array,
 	versions: array,
-	infos: object,
+	infos: array,
 	showAssignModal: func,
 	handleVersion: func,
 	signed: bool,

@@ -82,12 +82,13 @@ class DocumentSerializer(ma.SQLAlchemyAutoSchema):
     user = ma.Nested(UserSerializer)
     envelope = ma.Method("get_envelope_dict")
     workflow = ma.Method("get_workflow")
+    info = ma.Method("get_variables")
 
     class Meta:
         model = Document
         include_fk = True
         include_relationships = True
-        exclude = ("template",)
+        exclude = ("form", "template")
 
     def get_workflow(self, obj):
         if obj.workflow:

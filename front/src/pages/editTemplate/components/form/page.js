@@ -155,11 +155,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'attorney_district',
 					'attorney_city',
 				]
-				newField.initialValue = newField.fields.map((field) => ({
-					[field]: '',
-				}))
 
 				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'address':
 				newField.variable.type = 'address'
@@ -174,11 +172,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'district',
 					'city',
 				]
-				newField.initialValue = newField.fields.map((field) => ({
-					[field]: '',
-				}))
 
 				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'structured_list':
 				newField.variable.type = type
