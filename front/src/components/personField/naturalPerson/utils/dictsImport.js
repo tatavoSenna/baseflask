@@ -7,7 +7,6 @@ import AddressCity from 'components/addressField/fields/components/addressCity'
 import AddressState from 'components/addressField/fields/components/addressState'
 
 import Pronoun from '../../components/pronoun'
-import PersonCPF from '../components/personCPF'
 import Identity from '../../components/identity'
 import IdentityOrg from '../../components/identityOrg'
 import IdentityDate from '../../components/identityDate'
@@ -19,9 +18,13 @@ import Surname from '../../components/surname'
 import Name from '../../components/name'
 
 import styles from '../index.module.scss'
+import AddressDistrict from 'components/addressField/fields/components/addressDistrict'
+import CPF from 'components/personField/components/CPF'
+import PersonNationality from '../components/personNationality'
 
 const components = {
-	cpf: PersonCPF,
+	nationality: PersonNationality,
+	cpf: CPF,
 	pronoun: Pronoun,
 	name: Name,
 	surname: Surname,
@@ -37,11 +40,13 @@ const components = {
 	number: AddressNumber,
 	street: AddressStreet,
 	complement: AddressComplement,
-	city: AddressCity,
 	state: AddressState,
+	district: AddressDistrict,
+	city: AddressCity,
 }
 
 const classNames = {
+	nationality: styles['nationality'],
 	cpf: styles['cpf'],
 	pronoun: styles['pronoun'],
 	name: styles['name'],
@@ -58,8 +63,9 @@ const classNames = {
 	number: styles['number'],
 	street: styles['street'],
 	complement: styles['complement'],
-	city: styles['city'],
 	state: styles['state'],
+	district: styles['district'],
+	city: styles['city'],
 }
 
 export const getAllComponents = () => {

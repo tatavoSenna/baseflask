@@ -113,6 +113,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.label = ''
 				newField.person_type = ['legal_person', 'natural_person']
 				newField.fields = [
+					'nationality',
 					'cpf',
 					'pronoun',
 					'name',
@@ -133,7 +134,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'street',
 					'complement',
 					'state',
+					'district',
 					'city',
+					'attorney_nationality',
 					'attorney_cpf',
 					'attorney_pronoun',
 					'attorney_name',
@@ -149,6 +152,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'attorney_street',
 					'attorney_complement',
 					'attorney_state',
+					'attorney_district',
 					'attorney_city',
 				]
 				newField.initialValue = newField.fields.map((field) => ({
@@ -167,6 +171,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'street',
 					'complement',
 					'state',
+					'district',
 					'city',
 				]
 				newField.initialValue = newField.fields.map((field) => ({
