@@ -169,22 +169,19 @@ def duplicate_template(template, user_id, company_id=None, outside_duplication=F
     if not template.id and not type(template) is DocumentTemplate:
         return False
 
-    exclude_fields = ["created_at"]
-
-    # Cannot duplicate workflow if it's duplicating to another company
-    if outside_duplication:
-        exclude_fields.append("workflow")
-
     DT_table = DocumentTemplate.__table__
     non_pk_columns = [
         k
         for k in DT_table.columns.keys()
-        if k not in DT_table.primary_key.columns.keys() and k not in exclude_fields
+        if k not in DT_table.primary_key.columns.keys() and k not in ["created_at"]
     ]
     data = {c: getattr(template, c) for c in non_pk_columns}
 
     if company_id:
         data["company_id"] = company_id
+
+    if outside_duplication:
+        data["workflow"] = {"created_by": "", "current_node": "0", "node": {}}
 
     data["user_id"] = user_id
 
