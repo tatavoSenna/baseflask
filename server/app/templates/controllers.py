@@ -1,3 +1,4 @@
+from black import out
 from app import db
 from app.models.documents import DocumentTemplate
 from unittest.mock import MagicMock
@@ -164,20 +165,28 @@ def template_favorite_controller(company_id, template_id, status):
     return template.id
 
 
-def duplicate_template(template, company_id=None):
+def duplicate_template(template, user_id, company_id=None, outside_duplication=False):
     if not template.id and not type(template) is DocumentTemplate:
         return False
+
+    exclude_fields = ["created_at"]
+
+    # Cannot duplicate workflow if it's duplicating to another company
+    if outside_duplication:
+        exclude_fields.append("workflow")
 
     DT_table = DocumentTemplate.__table__
     non_pk_columns = [
         k
         for k in DT_table.columns.keys()
-        if k not in DT_table.primary_key.columns.keys() and k not in ["created_at"]
+        if k not in DT_table.primary_key.columns.keys() and k not in exclude_fields
     ]
     data = {c: getattr(template, c) for c in non_pk_columns}
 
     if company_id:
         data["company_id"] = company_id
+
+    data["user_id"] = user_id
 
     template_name_count = (
         DocumentTemplate.query.filter(

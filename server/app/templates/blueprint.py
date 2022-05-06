@@ -279,12 +279,16 @@ def duplicate(current_user, document_template_id):
     except:
         raise NotFound(description="Template does not exist.")
 
+    outside_duplication = False
     company_id = request.json.get("company_id", None)
     if company_id and company_id != current_user.company_id:
         if not current_user.is_admin:
             raise Forbidden(description="User is not allowed to do this action.")
+        outside_duplication = True
 
-    return_value = duplicate_template(template, company_id)
+    return_value = duplicate_template(
+        template, current_user["id"], company_id, outside_duplication
+    )
 
     if return_value:
         return jsonify({"message": "Template duplicated succesfully."}), 201
