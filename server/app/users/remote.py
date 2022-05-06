@@ -8,6 +8,7 @@ from functools import wraps, partial
 import boto3
 
 from flask import g, current_app, abort, request
+from sqlalchemy import select
 from sqlalchemy.orm.exc import NoResultFound
 from flask_awscognito import utils as cognito_utils
 from werkzeug.exceptions import Forbidden
@@ -124,9 +125,20 @@ class RemoteUser:
                 400,
                 description="A senha fornecida não está de acordo com a noss politica.",
             )
+        if db.session.query(
+            select(User).where(User.email == email, User.active == False).exists()
+        ).scalar():
+            self.user = response.get("User")
+            local_user = User.query.filter_by(email=email).first()
+            local_user.username = self.username()
+            local_user.sub = self.sub()
+            local_user.sub = self.sub()
+            local_user.active = True
+            local_user.company_id = company_id
+        else:
+            self.user = response.get("User")
+            local_user = self.create_local(company_id)
 
-        self.user = response.get("User")
-        local_user = self.create_local(company_id)
         return local_user
 
     def __extract_user_attributes(self, attribute_name):
