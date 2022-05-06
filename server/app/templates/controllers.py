@@ -211,20 +211,20 @@ def duplicate_template(template, user_id, company_id=None, outside_duplication=F
     if template.text_type == ".docx":
         original_file_key = (
             f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{template.id}/{template.filename}.docx"
+            + f"{template.id}/{template.filename}.docx"
         )
         new_file_key = (
             f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{duplicated_template.id}/{template.filename}.docx"
+            + f"{duplicated_template.id}/{template.filename}.docx"
         )
     elif template.text_type == ".txt":
         original_file_key = (
             f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{template.id}/{template.id}.txt"
+            + f"{template.id}/{template.id}.txt"
         )
         new_file_key = (
             f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{duplicated_template.id}/{duplicated_template.id}.txt"
+            + f"{duplicated_template.id}/{duplicated_template.id}.txt"
         )
     else:
         return True
