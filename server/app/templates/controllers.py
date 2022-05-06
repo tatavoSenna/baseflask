@@ -1,4 +1,3 @@
-from black import out
 from app import db
 from app.models.documents import DocumentTemplate
 from unittest.mock import MagicMock
