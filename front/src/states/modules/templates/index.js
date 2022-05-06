@@ -58,6 +58,33 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		duplicateTemplate: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		duplicateTemplateSuccess: (state, { payload }) => {
+			if (payload.items !== undefined) {
+				return extend(state, {
+					data: selectAllTemplates(payload.items),
+					pages: {
+						page: payload.page,
+						per_page: payload.per_page,
+						total: payload.total,
+					},
+					error: null,
+					loading: false,
+				})
+			}
+			return extend(state, {
+				error: null,
+				loading: false,
+			})
+		},
+		duplicateTemplateFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		favorteTemplate: (state) =>
 			extend(state, {
 				loading: true,
@@ -108,6 +135,9 @@ export const {
 	publishTemplate,
 	publishTemplateSuccess,
 	publishTemplateFailure,
+	duplicateTemplate,
+	duplicateTemplateSuccess,
+	duplicateTemplateFailure,
 	favorteTemplate,
 	favoriteTemplateSuccess,
 	favoriteTemplateFailure,
