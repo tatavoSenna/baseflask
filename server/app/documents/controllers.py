@@ -215,6 +215,8 @@ def create_document_controller(
         delete_document_controller(document)
         raise
 
+    """ Disable the email while we don't have the correct sendgrid key 
+    Will migrate this to a lambda with the new document sns hook
     # Send email informing document creation
     if step_name != None:
         try:
@@ -223,7 +225,7 @@ def create_document_controller(
             logging.exception(
                 "Failed to send emails on document creation. One or more emails is bad formated or invalid"
             )
-
+    """
     return document
 
 
