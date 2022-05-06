@@ -287,7 +287,7 @@ def duplicate(current_user, document_template_id):
     return_value = duplicate_template(template, company_id)
 
     if return_value:
-        return jsonify({"message": "Template duplicated succesfully.", "status": 201})
+        return jsonify({"message": "Template duplicated succesfully."}), 201
     else:
         return jsonify(
             {
