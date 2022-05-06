@@ -4,10 +4,12 @@ import boto3
 import botocore
 
 from flask import request, Blueprint, jsonify, current_app, abort
+from sqlalchemy import select, delete
+from werkzeug.exceptions import BadRequest
 
 from app import aws_auth, db, IntegrityError
 from app.users.remote import RemoteUser, get_local_user
-from app.models.user import User, Group
+from app.models.user import User, Group, ParticipatesOn
 from app.serializers.user_serializers import UserSerializer, GroupSerializer
 from app.models.company import Company
 
@@ -88,23 +90,26 @@ def create(logged_user):
     if not all(f in fields for f in required_fields):
         return dict(error="Missing required fields")
 
+    if db.session.query(
+        select(User)
+        .where(User.email == fields.get("email"), User.active == True)
+        .exists()
+    ).scalar():
+        raise BadRequest(description="User with given email already exists.")
+
     new_user = create_user_controller(
         email=fields.get("email"),
         name=fields.get("name"),
         group_ids=fields.get("groups"),
         company_id=logged_user["company_id"],
     )
-    new_user = User.query.filter_by(email=fields.get("email")).first()
-    new_user.name = fields.get("name")
-    db.session.add(new_user)
-    db.session.commit()
     return jsonify({"user": UserSerializer().dump(new_user)})
 
 
 @users_bp.route("<username>", methods=["DELETE"])
 @aws_auth.authentication_required
 @get_local_user
-def delete(logged_user, username):
+def delete_user(logged_user, username):
     cognito = boto3.client("cognito-idp")
 
     user_attributes = dict(
@@ -113,16 +118,20 @@ def delete(logged_user, username):
     )
 
     if logged_user["username"] == username:
-        return dict(error="Cannot delete yourself"), 400
+        raise BadRequest(description="Cannot delete yourself")
 
     try:
         response = cognito.admin_delete_user(**user_attributes)
-    except cognito.exceptions.UserNotFoundException as identifier:
-        return dict(error="Username not found")
+    except cognito.exceptions.UserNotFoundException:
+        raise BadRequest(description="Username not found")
 
     disabled_user = User.query.filter_by(username=username).first()
     disabled_user.active = False
-    db.session.add(disabled_user)
+
+    db.session.execute(
+        delete(ParticipatesOn).where(ParticipatesOn.user_id == disabled_user.id)
+    )
+
     db.session.commit()
 
     return response

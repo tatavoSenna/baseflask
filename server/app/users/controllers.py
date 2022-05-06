@@ -21,7 +21,7 @@ def create_user_controller(email, name, group_ids=None, company_id=None):
     if group_ids and groups:
         for group in groups.values():
             db.session.add(ParticipatesOn(group_id=group.id, user_id=new_user.id))
-        db.session.commit()
+    db.session.commit()
 
     return new_user
 
