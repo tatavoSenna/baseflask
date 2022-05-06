@@ -1,8 +1,9 @@
 from app import db
-from app.models.documents import DocumentTemplate
+from app.models.documents import DocumentTemplate, ExternalToken
 from unittest.mock import MagicMock
 import boto3
 import io
+from datetime import datetime
 from flask import current_app
 from sentry_sdk import capture_exception
 from app.models.user import User, Group
@@ -117,10 +118,13 @@ def download_template_text_controller(company_id, template_id):
 
 def delete_template_controller(document_template):
     if not isinstance(document_template, MagicMock):
-        db.session.delete(document_template)
+        for external_token in ExternalToken.query.filter_by(
+            document_template_id=document_template.id
+        ).all():
+            db.session.delete(external_token)
+        document_template.deleted = True
+        document_template.deleted_at = datetime.utcnow()
         db.session.commit()
-    remote_template = RemoteTemplate()
-    remote_template.delete_template(document_template)
 
 
 def upload_file_to_template_controller(uploaded_file, filename, file_root, template_id):

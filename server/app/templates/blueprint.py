@@ -134,11 +134,14 @@ def get_template_list(current_user):
             request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
         )
         search_param = str(request.args.get("search", ""))
+        deleted = bool(int(request.args.get("deleted", 0)))
     except:
         abort(400, "invalid parameters")
 
     paginated_query = (
-        DocumentTemplate.query.filter_by(company_id=current_user["company_id"])
+        DocumentTemplate.query.filter_by(
+            company_id=current_user["company_id"], deleted=deleted
+        )
         .filter(DocumentTemplate.name.ilike(f"%{search_param}%"))
         .order_by(
             nulls_last(desc(DocumentTemplate.favorite)),

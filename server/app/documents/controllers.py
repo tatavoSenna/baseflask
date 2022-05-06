@@ -36,7 +36,7 @@ from app import jinja_env
 import convertapi
 import sys, traceback
 from werkzeug.exceptions import Unauthorized
-from sqlalchemy import desc, nulls_last
+from sqlalchemy import desc, nulls_last, select
 
 from app.documents.formatters.variables_formatter import (
     format_variables,
@@ -47,9 +47,12 @@ from app.documents.formatters.variables_formatter import (
 def get_document_template_list_controller(company_id):
 
     document_templates = (
-        DocumentTemplate.query.filter_by(company_id=company_id)
+        DocumentTemplate.query.filter_by(company_id=company_id, deleted=False)
         .filter_by(published=True)
-        .order_by(nulls_last(desc(DocumentTemplate.favorite)))
+        .order_by(
+            nulls_last(desc(DocumentTemplate.favorite)),
+            desc(DocumentTemplate.created_at),
+        )
         .all()
     )
     return document_templates
@@ -265,12 +268,9 @@ def get_document_controller(document_id):
 
 
 def delete_document_controller(document):
-    remote_document = RemoteDocument()
-    remote_document.delete_document(document)
-    if document.signed:
-        remote_document.delete_signed_document(document)
     if not isinstance(document, MagicMock):
-        db.session.delete(document)
+        document.deleted = True
+        document.deleted_at = datetime.utcnow()
         db.session.commit()
 
 
@@ -677,3 +677,19 @@ def fill_text_with_variables(text_template, variables):
     filled_text = jinja_template.render(variables)
 
     return filled_text
+
+
+def validate_document_ids_controller(document_ids, company_id):
+    valid_ids = db.session.scalars(
+        Document.query.filter(Document.id.in_(document_ids))
+        .filter_by(company_id=company_id)
+        .with_entities(Document.id)
+    ).all()
+    return valid_ids
+
+
+def delete_multiple_documents_controller(document_ids):
+    Document.query.filter(Document.id.in_(document_ids)).update(
+        {"deleted": True, "deleted_at": datetime.utcnow()}
+    )
+    db.session.commit()
