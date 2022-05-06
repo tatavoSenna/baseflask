@@ -29,6 +29,10 @@ class DocumentTemplate(db.Model):
     filename = db.Column(db.String(255), unique=False, nullable=True)
     published = db.Column(db.Boolean, default=False, nullable=True)
     favorite = db.Column(db.Boolean, default=False, nullable=True)
+    deleted = db.Column(
+        db.Boolean, default=False, nullable=False, server_default="false"
+    )
+    deleted_at = db.Column(db.DateTime, nullable=True)
 
     # Belongs to
     company = db.relationship("Company", back_populates="templates")
@@ -77,6 +81,10 @@ class Document(db.Model):
     current_step = db.Column(db.String(255), nullable=True)
     text_type = db.Column(db.String(255), unique=False, nullable=True)
     due_date = db.Column(db.DateTime, nullable=True)
+    deleted = db.Column(
+        db.Boolean, default=False, nullable=False, server_default="false"
+    )
+    deleted_at = db.Column(db.DateTime, nullable=True)
 
     d4sign_document_uuid = db.Column(db.String(255), unique=True, nullable=True)
 
