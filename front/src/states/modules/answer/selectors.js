@@ -13,7 +13,19 @@ export const selectAnswer = (data, payload) => {
 	const visible = payload.visible.filter(itemsWithVariables)
 	const fields = payload.pageFieldsData.fields.filter(itemsWithVariables)
 
-	Object.entries(payload.data).forEach((answer, index) => {
+	Object.entries(payload.data).forEach((answer) => {
+		var index
+		if (
+			answer[0].slice(0, 15) === 'structured_list' ||
+			answer[0].slice(0, 19) === 'structured_checkbox'
+		) {
+			index = Number(answer[0].split('_').slice(-1))
+		} else {
+			index = payload.pageFieldsData.fields.findIndex(
+				(f) => f?.variable?.name === answer[0]
+			)
+		}
+
 		if (visible[index]) {
 			//This rearranges the Structured Checkbox variables, where all detail variables from a selected option are grouped on an object
 			if (answer[0].slice(0, 19) === 'structured_checkbox') {
