@@ -287,7 +287,7 @@ def duplicate(current_user, document_template_id):
         outside_duplication = True
 
     return_value = duplicate_template(
-        template, current_user["id"], company_id, outside_duplication
+        template, current_user.id, company_id, outside_duplication
     )
 
     if return_value:
