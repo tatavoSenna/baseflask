@@ -109,23 +109,29 @@ def get_company_list(logged_user):
             request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
         )
         search_param = str(request.args.get("search", ""))
+        list_all = int(request.args.get("list_all", 0))
     except:
         abort(400, "invalid parameters")
 
-    paginated_query = (
-        Company.query.order_by(Company.name)
-        .filter(Company.name.ilike(f"%{search_param}%"))
-        .paginate(page=page, per_page=per_page)
-    )
+    # This is to list all companies when duplicating a template
+    if list_all:
+        company_list = Company.query.all()
+        return jsonify({"items": CompanyListSerializer(many=True).dump(company_list)})
+    else:
+        paginated_query = (
+            Company.query.order_by(Company.name)
+            .filter(Company.name.ilike(f"%{search_param}%"))
+            .paginate(page=page, per_page=per_page)
+        )
 
-    return jsonify(
-        {
-            "page": paginated_query.page,
-            "per_page": paginated_query.per_page,
-            "total": paginated_query.total,
-            "items": CompanyListSerializer(many=True).dump(paginated_query.items),
-        }
-    )
+        return jsonify(
+            {
+                "page": paginated_query.page,
+                "per_page": paginated_query.per_page,
+                "total": paginated_query.total,
+                "items": CompanyListSerializer(many=True).dump(paginated_query.items),
+            }
+        )
 
 
 @company_bp.route("/", methods=["POST"])
