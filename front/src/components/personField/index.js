@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 
@@ -38,6 +38,15 @@ const PersonField = ({
 		}
 	}, [person_type])
 
+	const personChange = useCallback(
+		(e) => {
+			const value = e.target.value
+			setPerson(value)
+			onChange(value, 'PERSON_TYPE')
+		},
+		[setPerson, onChange]
+	)
+
 	return (
 		<Form.Item
 			key={name}
@@ -60,15 +69,9 @@ const PersonField = ({
 					rules={[
 						{ required: !optional, message: 'Este campo é obrigatório!' },
 					]}>
-					<SBtnGroup
-						onChange={(value) => setPerson(value.target.value)}
-						btnProps={person}>
-						<SBtnRadio value="natural_person" onChange={onChange}>
-							Pessoa física
-						</SBtnRadio>
-						<SBtnRadio value="legal_person" onChange={onChange}>
-							Pessoa jurídica
-						</SBtnRadio>
+					<SBtnGroup onChange={personChange} btnProps={person}>
+						<SBtnRadio value="natural_person">Pessoa física</SBtnRadio>
+						<SBtnRadio value="legal_person">Pessoa jurídica</SBtnRadio>
 					</SBtnGroup>
 				</Form.Item>
 			) : (

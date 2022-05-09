@@ -11,6 +11,7 @@ const PersonPropertyRegime = ({
 	disabled,
 	fieldType,
 	className,
+	onChange,
 	maritalState,
 	form,
 }) => {
@@ -31,6 +32,7 @@ const PersonPropertyRegime = ({
 
 	const handleOnChange = (value) => {
 		setThisValue(value)
+		onChange(value)
 	}
 
 	const pageFieldsData = {

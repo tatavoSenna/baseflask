@@ -34,6 +34,7 @@ const CityField = ({
 
 	const handleOnChange = (value) => {
 		setThisValue(value)
+		onChange(value)
 	}
 
 	const findAndChangeValue = (data, value, _value, stateValue, state) => {

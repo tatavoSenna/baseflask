@@ -53,7 +53,7 @@ const CepField = ({
 			colon={false}
 			initialValue={inputValue}>
 			<MaskedInput
-				onChange={onChange}
+				onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 				autoFocus={first}
 				mask="11111-111"
 				placeholder=""

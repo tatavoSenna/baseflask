@@ -38,7 +38,7 @@ const TextField = ({
 			label={returnLabel()}
 			type={type}
 			className={className}
-			onChange={onChange}
+			onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 			hasFeedback
 			rules={
 				!hidden && [

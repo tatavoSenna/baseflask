@@ -47,7 +47,7 @@ const EmailField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Input
-				onChange={onChange}
+				onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 				autoFocus={first}
 				placeholder={placeHolderRequirement}
 				disabled={disabled}

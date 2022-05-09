@@ -22,13 +22,20 @@ const WidgetConditional = ({
 	onValidate,
 	updateFormInfo,
 }) => {
-	const variableNames = useMemo(
-		() =>
-			variables
-				.filter((x) => x && Object.keys(conditionalInputs).includes(x.type))
-				.map((x) => x?.name),
-		[variables]
-	)
+	const variableNames = useMemo(() => {
+		let allVariables = []
+
+		for (let v of variables) {
+			if (v !== undefined) {
+				if (Object.keys(conditionalInputs).includes(v.type))
+					allVariables.push(v.name)
+				else if (Array.isArray(v.fields) && v.name)
+					allVariables.push(...v.fields.map((f) => v.name + '.' + f))
+			}
+		}
+
+		return allVariables
+	}, [variables])
 
 	const variableOptions = useMemo(
 		() =>

@@ -59,8 +59,16 @@ function InputFactory({
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, initialValue, variable } = pageFieldsData[i]
 		const isVisible = visible[i] ? styles['default-style'] : styles.hidden
-		const isConditional =
-			variable?.name !== undefined && conditionals.includes(variable.name)
+
+		let isConditional, subConditions
+		if (variable?.name !== undefined) {
+			const conditions = conditionals
+				.map((c) => c.split('.'))
+				.filter((c) => c[0] === variable.name)
+
+			isConditional = conditions.length > 0
+			subConditions = new Set(conditions.map((c) => c[1]).filter((c) => c))
+		}
 
 		const defaultValue = () => {
 			if (initialValues) {
@@ -80,15 +88,18 @@ function InputFactory({
 
 		let onchange = (selector = (e) => e) =>
 			isConditional
-				? (e) =>
-						dispatch(
-							updateVisible({
-								input: selector(e),
-								form,
-								fieldIndex: i,
-								pageIndex: currentFormStep,
-							})
-						)
+				? (e, subfield) => {
+						if (subfield === undefined || subConditions.has(subfield))
+							dispatch(
+								updateVisible({
+									input: selector(e),
+									form,
+									fieldIndex: i,
+									pageIndex: currentFormStep,
+									subfield,
+								})
+							)
+				  }
 				: undefined
 
 		switch (type) {
@@ -113,7 +124,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 						first={first}
 					/>
 				)
@@ -126,7 +137,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 						first={first}
 					/>
 				)
@@ -139,7 +150,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 						first={first}
 					/>
 				)
@@ -295,7 +306,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -320,7 +331,7 @@ function InputFactory({
 						inputValue={defaultValue()}
 						fieldIndex={i}
 						form={form}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -335,7 +346,7 @@ function InputFactory({
 						inputValue={defaultValue()}
 						fieldIndex={i}
 						form={form}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 					/>
 				)
 				break
@@ -390,7 +401,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
-						onChange={onchange((e) => e.target.value)}
+						onChange={onchange()}
 						first={first}
 					/>
 				)
