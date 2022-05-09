@@ -1,27 +1,43 @@
 import React from 'react'
 import { CopyOutlined } from '@ant-design/icons'
-import { Tooltip } from 'antd'
-import { func } from 'prop-types'
+import { Popconfirm, Tooltip } from 'antd'
+import { bool, func, string } from 'prop-types'
 
-const Duplicate = ({ onClick }) => {
+const Duplicate = ({ handle, title, isAdmin }) => {
 	return (
 		<Tooltip title={'Duplicar documento'}>
-			<CopyOutlined
-				style={{
-					fontSize: '20px',
-					color: '#1890FF',
-					verticalAlign: 'middle',
-					margin: 'auto',
-					cursor: 'pointer',
-				}}
-				onClick={onClick}
-			/>
+			{isAdmin ? (
+				<CopyOutlined
+					style={{
+						fontSize: '20px',
+						color: '#1890FF',
+						verticalAlign: 'middle',
+						margin: 'auto',
+						cursor: 'pointer',
+					}}
+					onClick={handle}
+				/>
+			) : (
+				<Popconfirm title={title} onConfirm={handle}>
+					<CopyOutlined
+						style={{
+							fontSize: '20px',
+							color: '#1890FF',
+							verticalAlign: 'middle',
+							margin: 'auto',
+							cursor: 'pointer',
+						}}
+					/>
+				</Popconfirm>
+			)}
 		</Tooltip>
 	)
 }
 
 Duplicate.propTypes = {
-	onClick: func,
+	isAdmin: bool,
+	handle: func,
+	title: string,
 }
 
 export default Duplicate
