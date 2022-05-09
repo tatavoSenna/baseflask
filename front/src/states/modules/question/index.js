@@ -100,7 +100,7 @@ const { actions, reducer } = createSlice({
 				return comparison
 			}
 
-			let { form, input, fieldIndex, pageIndex } = payload
+			let { form, input, subfield, fieldIndex, pageIndex } = payload
 			let variableName
 
 			if (typeof input !== 'undefined') {
@@ -112,6 +112,10 @@ const { actions, reducer } = createSlice({
 				} else {
 					variableName = pageFieldsData[fieldIndex].variable.name
 				}
+
+				variableName = subfield
+					? [variableName, subfield].join('.')
+					: variableName
 			}
 
 			let visible = [...state.visible].map((pageFieldsVisible) => [
@@ -130,7 +134,11 @@ const { actions, reducer } = createSlice({
 							if (condition.variable === variableName) {
 								value = input
 							} else {
-								value = form.getFieldValue(condition.variable)
+								let variables = condition.variable.split('.')
+
+								value = form.getFieldValue(variables[0])
+								if (variables.length === 2 && value !== undefined)
+									value = value[variables[1]]
 							}
 							return compareCondition(condition, value)
 						})
@@ -141,6 +149,7 @@ const { actions, reducer } = createSlice({
 
 			let lastPage = state.data.length - 1
 			while (
+				lastPage > 0 &&
 				visible[lastPage].every((fieldVisible) => fieldVisible === false)
 			) {
 				lastPage--

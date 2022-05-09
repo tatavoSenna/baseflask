@@ -134,11 +134,14 @@ def get_template_list(current_user):
             request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
         )
         search_param = str(request.args.get("search", ""))
+        deleted = bool(int(request.args.get("deleted", 0)))
     except:
         abort(400, "invalid parameters")
 
     paginated_query = (
-        DocumentTemplate.query.filter_by(company_id=current_user["company_id"])
+        DocumentTemplate.query.filter_by(
+            company_id=current_user["company_id"], deleted=deleted
+        )
         .filter(DocumentTemplate.name.ilike(f"%{search_param}%"))
         .order_by(
             nulls_last(desc(DocumentTemplate.favorite)),
@@ -279,15 +282,19 @@ def duplicate(current_user, document_template_id):
     except:
         raise NotFound(description="Template does not exist.")
 
+    outside_duplication = False
     company_id = request.json.get("company_id", None)
     if company_id and company_id != current_user.company_id:
         if not current_user.is_admin:
             raise Forbidden(description="User is not allowed to do this action.")
+        outside_duplication = True
 
-    return_value = duplicate_template(template, company_id)
+    return_value = duplicate_template(
+        template, current_user.id, company_id, outside_duplication
+    )
 
     if return_value:
-        return jsonify({"message": "Template duplicated succesfully.", "status": 201})
+        return jsonify({"message": "Template duplicated succesfully."}), 201
     else:
         return jsonify(
             {

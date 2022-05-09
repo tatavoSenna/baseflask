@@ -28,7 +28,7 @@ const TextAreaField = ({
 			label={<InfoField label={label} info={info} />}
 			type={type}
 			className={className}
-			onChange={onChange}
+			onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 			hasFeedback
 			rules={
 				!hidden && [

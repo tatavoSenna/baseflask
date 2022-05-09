@@ -28,13 +28,6 @@ const LegalPerson = ({
 	const [state, setState] = useState(fieldState)
 	const [stateAttorney, setStateAttorney] = useState(fieldStateAttorney)
 
-	const getState = (value) => {
-		setState(value)
-	}
-	const getStateAttorney = (value) => {
-		setStateAttorney(value)
-	}
-
 	const componentsTypes = Object.keys(components)
 
 	return fields.map((field, i) => {
@@ -59,13 +52,21 @@ const LegalPerson = ({
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type
 
-				if (field.field_type === 'state') dict.onChange = getState
+				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
+
+				if (field.field_type === 'state')
+					dict.onChange = (v) => {
+						setState(v)
+						changeCallback(v)
+					}
+				else if (field.field_type === 'attorney_state')
+					dict.onChange = (v) => {
+						setStateAttorney(v)
+						changeCallback(v)
+					}
+				else dict.onChange = changeCallback
 
 				if (field.field_type === 'city') dict.state = state
-
-				if (field.field_type === 'attorney_state')
-					dict.onChange = getStateAttorney
-
 				if (field.field_type === 'attorney_city') dict.state = stateAttorney
 
 				return components[field.field_type](dict)

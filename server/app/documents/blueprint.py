@@ -56,7 +56,6 @@ from .controllers import (
     upload_document_text_controller,
     next_status_controller,
     previous_status_controller,
-    document_creation_email_controller,
     workflow_status_change_email_controller,
     get_download_url_controller,
     fill_signing_date_controller,
@@ -67,6 +66,8 @@ from .controllers import (
     change_variables_controller,
     create_folder_controller,
     edit_document_workflow_controller,
+    validate_document_ids_controller,
+    delete_multiple_documents_controller,
 )
 
 from app.d4sign.controllers import (
@@ -113,11 +114,12 @@ def get_document_list(current_user):
 
         order_by = str(request.args.get("order_by", "creation_date"))
         order = str(request.args.get("order", "descend"))
+        deleted = bool(int(request.args.get("deleted", 0)))
     except:
         abort(400, "invalid parameters")
 
     paginated_query = Document.query.filter_by(
-        company_id=current_user["company_id"], parent_id=folder_id
+        company_id=current_user["company_id"], parent_id=folder_id, deleted=deleted
     )
 
     if type:
@@ -299,7 +301,10 @@ def create(current_user):
     if is_folder:
 
         folder = Document.query.filter_by(
-            parent_id=parent, title=title, company_id=current_user["company_id"]
+            parent_id=parent,
+            title=title,
+            company_id=current_user["company_id"],
+            deleted=False,
         ).all()
 
         if folder:
@@ -700,3 +705,25 @@ def get_document_certificate_file(current_user, document_id):
             )
     status_code = control.pop("status_code")
     return jsonify(control), status_code
+
+
+@documents_bp.route("/", methods=["DELETE"])
+@aws_auth.authentication_required
+@get_local_user
+def delete_multiple_documents(current_user):
+    # check if content_type is json
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    payload = request.json
+    document_ids = payload.get("document_ids", None)
+
+    validated_ids = validate_document_ids_controller(
+        document_ids, current_user["company_id"]
+    )
+    try:
+        delete_multiple_documents_controller(validated_ids)
+    except Exception:
+        abort(400, "Something went wrong while deleting the documents")
+
+    return jsonify({}), 200

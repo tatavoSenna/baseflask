@@ -23,17 +23,12 @@ const Fields = ({
 
 	const [state, setState] = useState(fieldState)
 
-	const getState = (value) => {
-		setState(value)
-	}
-
 	return fields.map((field, i) => {
 		const dict = {
 			key: i,
 			first: i === 0,
 			name,
 			inputValue,
-			onChange,
 			disabled,
 			optional,
 			form,
@@ -49,9 +44,15 @@ const Fields = ({
 				dict.inputValue = field.value
 				dict.fieldType = field.field_type
 
-				if (field.field_type === 'state') dict.onChange = getState
+				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
 
 				if (field.field_type === 'city') dict.state = state
+				if (field.field_type === 'state')
+					dict.onChange = (v) => {
+						setState(v)
+						changeCallback(v)
+					}
+				else dict.onChange = changeCallback
 
 				return components[field.field_type](dict)
 			}

@@ -1,8 +1,9 @@
 from app import db
-from app.models.documents import DocumentTemplate
+from app.models.documents import DocumentTemplate, ExternalToken
 from unittest.mock import MagicMock
 import boto3
 import io
+from datetime import datetime
 from flask import current_app
 from sentry_sdk import capture_exception
 from app.models.user import User, Group
@@ -117,10 +118,13 @@ def download_template_text_controller(company_id, template_id):
 
 def delete_template_controller(document_template):
     if not isinstance(document_template, MagicMock):
-        db.session.delete(document_template)
+        for external_token in ExternalToken.query.filter_by(
+            document_template_id=document_template.id
+        ).all():
+            db.session.delete(external_token)
+        document_template.deleted = True
+        document_template.deleted_at = datetime.utcnow()
         db.session.commit()
-    remote_template = RemoteTemplate()
-    remote_template.delete_template(document_template)
 
 
 def upload_file_to_template_controller(uploaded_file, filename, file_root, template_id):
@@ -164,7 +168,7 @@ def template_favorite_controller(company_id, template_id, status):
     return template.id
 
 
-def duplicate_template(template, company_id=None):
+def duplicate_template(template, user_id, company_id=None, outside_duplication=False):
     if not template.id and not type(template) is DocumentTemplate:
         return False
 
@@ -178,6 +182,11 @@ def duplicate_template(template, company_id=None):
 
     if company_id:
         data["company_id"] = company_id
+
+    if outside_duplication:
+        data["workflow"] = {"created_by": "", "current_node": "0", "node": {}}
+
+    data["user_id"] = user_id
 
     template_name_count = (
         DocumentTemplate.query.filter(
@@ -202,20 +211,20 @@ def duplicate_template(template, company_id=None):
     if template.text_type == ".docx":
         original_file_key = (
             f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{template.id}/{template.filename}.docx"
+            + f"{template.id}/{template.filename}.docx"
         )
         new_file_key = (
             f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{duplicated_template.id}/{template.filename}.docx"
+            + f"{duplicated_template.id}/{template.filename}.docx"
         )
     elif template.text_type == ".txt":
         original_file_key = (
             f'{template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{template.id}/{template.id}.txt"
+            + f"{template.id}/{template.id}.txt"
         )
         new_file_key = (
             f'{duplicated_template.company_id}/{current_app.config["AWS_S3_TEMPLATES_ROOT"]}/'
-            + "{duplicated_template.id}/{duplicated_template.id}.txt"
+            + f"{duplicated_template.id}/{duplicated_template.id}.txt"
         )
     else:
         return True

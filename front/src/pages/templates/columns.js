@@ -3,12 +3,15 @@ import { Button, Space, Switch } from 'antd'
 import { StarOutlined, StarFilled } from '@ant-design/icons'
 
 import Delete from '~/components/deleteConfirm'
+import Duplicate from 'components/duplicateConfirm'
 
 export const getColumns = (
 	handleToGo,
 	handlePublishTemplate,
 	handleDeleteTemplate,
-	handleFavoriteTemplate
+	handleFavoriteTemplate,
+	handleDuplicateTemplate,
+	isAdmin
 ) => [
 	{
 		title: 'Publicado',
@@ -72,6 +75,11 @@ export const getColumns = (
 				<Delete
 					title="Deseja excluir essa template?"
 					handle={() => handleDeleteTemplate(row)}
+				/>
+				<Duplicate
+					isAdmin={isAdmin}
+					title="Deseja duplicar esse template?"
+					handle={() => handleDuplicateTemplate(row)}
 				/>
 			</Space>
 		),

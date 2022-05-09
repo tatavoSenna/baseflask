@@ -13,6 +13,9 @@ import {
 	publishTemplate,
 	publishTemplateSuccess,
 	publishTemplateFailure,
+	duplicateTemplate,
+	duplicateTemplateSuccess,
+	duplicateTemplateFailure,
 	favorteTemplate,
 	favoriteTemplateSuccess,
 	favoriteTemplateFailure,
@@ -24,6 +27,7 @@ import {
 export default function* rootSaga() {
 	yield takeEvery(listTemplate, fetchTemplates)
 	yield takeEvery(publishTemplate, publishTemplateSaga)
+	yield takeEvery(duplicateTemplate, duplicateTemplateSaga)
 	yield takeEvery(favorteTemplate, favoriteTemplateSaga)
 	yield takeEvery(deleteTemplate, deleteTemplateSaga)
 }
@@ -67,6 +71,34 @@ function* publishTemplateSaga({ payload = {} }) {
 		errorMessage({
 			content: `${message[2]} do template falhou.`,
 			updateKey: 'publishTemplateSaga',
+		})
+	}
+}
+
+function* duplicateTemplateSaga({ payload = {} }) {
+	const { id, companyId, pages, targetId } = payload
+	const { perPage = 10, page = 1, search = '' } = pages
+
+	try {
+		let response = yield call(api.post, `/templates/${id}/duplicate`, {
+			company_id: parseInt(targetId),
+		})
+		if (`${companyId}` === targetId || companyId === targetId) {
+			response = yield call(
+				api.get,
+				`/templates/?per_page=${perPage}&page=${page}&search=${search}`
+			)
+		}
+		yield put(duplicateTemplateSuccess(response.data))
+		successMessage({
+			content: `Template duplicado com sucesso.`,
+			updateKey: 'duplicateTemplateSaga',
+		})
+	} catch (error) {
+		yield put(duplicateTemplateFailure(error))
+		errorMessage({
+			content: `Erro ao duplicar o template.`,
+			updateKey: 'duplicateTemplateSaga',
 		})
 	}
 }

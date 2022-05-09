@@ -132,8 +132,8 @@ class RemoteUser:
             local_user = User.query.filter_by(email=email).first()
             local_user.username = self.username()
             local_user.sub = self.sub()
-            local_user.sub = self.sub()
             local_user.active = True
+            local_user.verified = False
             local_user.company_id = company_id
         else:
             self.user = response.get("User")

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Layout, PageHeader } from 'antd'
@@ -12,12 +12,14 @@ import {
 	favorteTemplate,
 	deleteTemplate,
 	setShowModal,
+	duplicateTemplate,
 } from '../../states/modules/templates'
 import {
 	resetTemplateState,
 	editTemplateTitle,
 } from '../../states/modules/editTemplate'
 import MainLayout from '~/components/mainLayout'
+import DuplicateTemplateModal from './components/duplicateTemplateModal'
 
 const Templates = () => {
 	const dispatch = useDispatch()
@@ -28,6 +30,8 @@ const Templates = () => {
 		pages,
 		showModal,
 	} = useSelector(({ template }) => template)
+
+	const { company_id, is_admin } = useSelector(({ session }) => session)
 
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))
@@ -61,6 +65,30 @@ const Templates = () => {
 		dispatch(favorteTemplate({ id: template, status: status }))
 	}
 
+	const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+	const [idTemplate, setIdTemplate] = useState({})
+
+	const handleDuplicateTemplate = (template, targetId) => {
+		dispatch(
+			duplicateTemplate({
+				id: template.id,
+				companyId: company_id,
+				pages,
+				targetId,
+			})
+		)
+		if (is_admin && showDuplicateModal) setShowDuplicateModal(false)
+	}
+
+	const handleOpenModal = (template) => {
+		if (is_admin) {
+			setShowDuplicateModal(true)
+			setIdTemplate(template)
+		} else {
+			handleDuplicateTemplate(template, company_id)
+		}
+	}
+
 	const handleDeleteTemplate = (template) =>
 		dispatch(deleteTemplate({ id: template.id, pages }))
 
@@ -86,12 +114,21 @@ const Templates = () => {
 						handleCreate={handleCreate}
 						showModal={showModal}
 					/>
+					<DuplicateTemplateModal
+						showModal={showDuplicateModal}
+						handleCancel={() => setShowDuplicateModal(false)}
+						currentCompany={company_id}
+						handleDuplicate={handleDuplicateTemplate}
+						template={idTemplate}
+					/>
 					<DataTable
 						columns={getColumns(
 							handleToGo,
 							handlePublishTemplate,
 							handleDeleteTemplate,
-							handleFavoriteTemplate
+							handleFavoriteTemplate,
+							handleOpenModal,
+							is_admin
 						)}
 						dataSource={templates}
 						pages={pages}
