@@ -83,7 +83,7 @@ function* duplicateTemplateSaga({ payload = {} }) {
 		let response = yield call(api.post, `/templates/${id}/duplicate`, {
 			company_id: parseInt(targetId),
 		})
-		if (`${companyId}` === targetId) {
+		if (`${companyId}` === targetId || companyId === targetId) {
 			response = yield call(
 				api.get,
 				`/templates/?per_page=${perPage}&page=${page}&search=${search}`

@@ -24,7 +24,7 @@ const DuplicateTemplateModal = ({
 	const [value, setValue] = useState(`${currentCompany}`)
 
 	useEffect(() => {
-		dispatch(getCompanyList())
+		dispatch(getCompanyList({ list_all: 1 }))
 	}, [dispatch])
 
 	const getFooterModal = () => (
@@ -33,7 +33,7 @@ const DuplicateTemplateModal = ({
 			<Button
 				style={{ marginLeft: 30 }}
 				onClick={() => handleDuplicate(template, value)}>
-				Copiar
+				Duplicar
 			</Button>
 		</FooterWrapper>
 	)
@@ -45,7 +45,7 @@ const DuplicateTemplateModal = ({
 			footer={null}
 			width={450}>
 			<Form form={form}>
-				<StyledTitle level={4}>Copiar Template</StyledTitle>
+				<StyledTitle level={4}>Duplicar Template</StyledTitle>
 				<NewDivider />
 				<Form.Item label="Template">
 					<Select

@@ -36,9 +36,9 @@ export default function* rootSaga() {
 }
 
 function* getCompanyListSaga({ payload = {} }) {
-	const { perPage = 10, page = 1, search = '' } = payload
+	const { perPage = 10, page = 1, search = '', list_all = 0 } = payload
 
-	const url = `/company/?per_page=${perPage}&page=${page}&search=${search}`
+	const url = `/company/?list_all=${list_all}&per_page=${perPage}&page=${page}&search=${search}`
 	try {
 		const { data } = yield call(api.get, url)
 		yield put(getCompanyListSuccess(data))

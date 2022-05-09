@@ -10,7 +10,8 @@ export const getColumns = (
 	handlePublishTemplate,
 	handleDeleteTemplate,
 	handleFavoriteTemplate,
-	handleDuplicateTemplate
+	handleDuplicateTemplate,
+	isAdmin
 ) => [
 	{
 		title: 'Publicado',
@@ -75,7 +76,11 @@ export const getColumns = (
 					title="Deseja excluir essa template?"
 					handle={() => handleDeleteTemplate(row)}
 				/>
-				<Duplicate onClick={() => handleDuplicateTemplate(row)} />
+				<Duplicate
+					isAdmin={isAdmin}
+					title="Deseja duplicar esse template?"
+					handle={() => handleDuplicateTemplate(row)}
+				/>
 			</Space>
 		),
 	},

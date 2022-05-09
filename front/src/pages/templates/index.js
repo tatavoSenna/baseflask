@@ -127,7 +127,8 @@ const Templates = () => {
 							handlePublishTemplate,
 							handleDeleteTemplate,
 							handleFavoriteTemplate,
-							handleOpenModal
+							handleOpenModal,
+							is_admin
 						)}
 						dataSource={templates}
 						pages={pages}
