@@ -30,18 +30,6 @@ const NaturalPerson = ({
 	const [maritalState, setMaritalState] = useState(fieldMarital)
 	const [state, setState] = useState(fieldState)
 
-	const getPronuounValue = (value) => {
-		setPronoun(value)
-	}
-
-	const getMaritalStateValue = (value) => {
-		setMaritalState(value)
-	}
-
-	const getState = (value) => {
-		setState(value)
-	}
-
 	const componentsTypes = Object.keys(components)
 
 	return fields.map((field, i) => {
@@ -66,19 +54,29 @@ const NaturalPerson = ({
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type
 
-				if (field.field_type === 'pronoun') dict.onChange = getPronuounValue
+				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
 
-				if (field.field_type === 'marital_state') {
+				if (field.field_type === 'state')
+					dict.onChange = (v) => {
+						setState(v)
+						changeCallback(v)
+					}
+				else if (field.field_type === 'pronoun')
+					dict.onChange = (v) => {
+						setPronoun(v)
+						changeCallback(v)
+					}
+				else if (field.field_type === 'marital_state') {
 					dict.pronoun = pronoun
-					dict.onChange = getMaritalStateValue
-				}
-
-				if (field.field_type === 'property_regime')
-					dict.maritalState = maritalState
-
-				if (field.field_type === 'state') dict.onChange = getState
+					dict.onChange = (v) => {
+						setMaritalState(v)
+						changeCallback(v)
+					}
+				} else dict.onChange = changeCallback
 
 				if (field.field_type === 'city') dict.state = state
+				if (field.field_type === 'property_regime')
+					dict.maritalState = maritalState
 
 				return components[field.field_type](dict)
 			}

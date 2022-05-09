@@ -47,7 +47,7 @@ const CpfField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<MaskedInput
-				onChange={onChange}
+				onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 				autoFocus={first}
 				mask="111.111.111-11"
 				placeholder=""

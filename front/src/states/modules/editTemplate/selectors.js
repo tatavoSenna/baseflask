@@ -52,6 +52,8 @@ export const selectEdit = (data, payload) => {
 					main: field.variable,
 				}
 				pageList.push(variable)
+			} else if (field?.fields) {
+				pageList.push(getSubfieldVariables(field))
 			} else {
 				pageList.push(field.variable)
 			}
@@ -77,6 +79,26 @@ export const selectEdit = (data, payload) => {
 		variables: pagesList,
 	})
 	return temp
+}
+
+const getSubfieldVariables = (field) => {
+	let fields = []
+	if (Array.isArray(field.fields)) {
+		fields = field.fields.map((f) => f.toUpperCase())
+	}
+
+	if (
+		field?.variable?.type === 'person' &&
+		Array.isArray(field?.person_type) &&
+		field.person_type.length > 1
+	) {
+		fields.push('PERSON_TYPE')
+	}
+
+	return {
+		fields: fields,
+		...field.variable,
+	}
 }
 
 export const selectForm = (form, payload) => {
@@ -334,6 +356,8 @@ export const selectVariable = (variables, payload) => {
 					structure: structure,
 					main: field.variable,
 				}
+			} else if (field.fields) {
+				variable = getSubfieldVariables(field)
 			} else {
 				variable = field.variable
 			}

@@ -135,7 +135,9 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 		if (
 			allVariables.length !== newVariables.length ||
 			allVariables.some(
-				(variable, i) => newVariables[i]?.name !== variable?.name
+				(variable, i) =>
+					newVariables[i]?.name !== variable?.name ||
+					newVariables[i]?.fields !== variable?.fields
 			)
 		) {
 			setAllVariables(newVariables)
