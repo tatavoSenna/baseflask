@@ -18,6 +18,7 @@ import { CheckboxWidget } from './widgets/checkboxWidget'
 import { RadioWidget } from './widgets/radioWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
+import { AddressWidget } from './widgets/addressWidget'
 
 const widgets = {
 	text: TextWidget,
@@ -29,6 +30,7 @@ const widgets = {
 	radio: RadioWidget,
 	dropdown: DropdownWidget,
 	bank: BankWidget,
+	address: AddressWidget,
 }
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
@@ -165,12 +167,12 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.fields = [
 					'cep',
 					'country',
-					'number',
-					'street',
-					'complement',
 					'state',
-					'district',
 					'city',
+					'district',
+					'street',
+					'number',
+					'complement',
 				]
 
 				delete newField['info']

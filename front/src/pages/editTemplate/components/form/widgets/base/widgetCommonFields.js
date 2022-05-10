@@ -1,10 +1,10 @@
 import React from 'react'
-import { func, object } from 'prop-types'
+import { bool, func, object } from 'prop-types'
 import { Input, Switch } from 'antd'
 
 import { FormItem } from './styles'
 
-export const CommonFields = (props) => {
+export const CommonFields = ({ hasDescription, ...props }) => {
 	const { data, update } = props
 
 	return (
@@ -26,19 +26,21 @@ export const CommonFields = (props) => {
 					/>
 				</FormItem>
 			</div>
-
-			<FormItem label="Descrição">
-				<Input
-					onBlur={(e) => update({ info: e.target.value })}
-					defaultValue={data.info}
-					autoComplete="off"
-				/>
-			</FormItem>
+			{hasDescription ?? true ? (
+				<FormItem label="Descrição">
+					<Input
+						onBlur={(e) => update({ info: e.target.value })}
+						defaultValue={data.info}
+						autoComplete="off"
+					/>
+				</FormItem>
+			) : null}
 		</>
 	)
 }
 
 CommonFields.propTypes = {
+	hasDescription: bool,
 	update: func,
 	data: object,
 }
