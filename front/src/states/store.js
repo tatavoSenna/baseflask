@@ -26,7 +26,6 @@ import settings, { settingsSaga } from './modules/settings'
 import stateField, { stateFieldSaga } from './modules/stateField'
 import cnaeField, { cnaeFieldSaga } from './modules/cnaeField'
 import cityField, { cityFieldSaga } from './modules/cityField'
-import fileField, { fileFieldSaga } from './modules/fileField'
 import databaseField, { databaseFieldSaga } from './modules/databaseField'
 import companies, { companiesSaga } from './modules/companies'
 import session, { sessionSaga } from './modules//session'
@@ -56,7 +55,6 @@ const reducers = combineReducers({
 	stateField,
 	cnaeField,
 	cityField,
-	fileField,
 	databaseField,
 	companies,
 	session,
@@ -88,7 +86,6 @@ const rootSaga = function* () {
 		stateFieldSaga(),
 		cnaeFieldSaga(),
 		cityFieldSaga(),
-		fileFieldSaga(),
 		databaseFieldSaga(),
 		companiesSaga(),
 		sessionSaga(),

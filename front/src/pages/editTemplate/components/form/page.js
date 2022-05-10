@@ -51,7 +51,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="dropdown">Dropdown</Menu.Item>
 			<Menu.Item key="radio">Rádio</Menu.Item>
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
-			<Menu.Item key="variable_file">Upload de arquivo</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">Base de dados</Menu.Item>
 			<Menu.Item key="person">Pessoa</Menu.Item>
@@ -100,10 +99,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.type = 'database'
 				newField.variable.database_endpoint = ''
 				newField.variable.search_key = ''
-				break
-			case 'variable_file':
-				newField.variable.type = 'variable_file'
-				newField.variable.doc_display_style = 'plain'
 				break
 			case 'variable_image':
 				newField.variable.type = 'variable_image'
