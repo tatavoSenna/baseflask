@@ -23,6 +23,7 @@ from .controllers import (
     get_document_upload_url,
     template_status_controller,
     template_favorite_controller,
+    undelete_template_controller,
 )
 
 
@@ -302,3 +303,20 @@ def duplicate(current_user, document_template_id):
                 "status": 400,
             }
         )
+
+
+@templates_bp.route("/<int:template_id>/undelete", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def undelete_template(current_user, template_id):
+    try:
+        template = get_template_controller(template_id)
+    except Exception:
+        abort(404, "Document not Found")
+    try:
+        undelete_template_controller(template)
+    except Exception:
+        abort(400, "The template could not be undeleted")
+    msg_JSON = {"message": "The template was undeleted"}
+
+    return jsonify(msg_JSON), 200
