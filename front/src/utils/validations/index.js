@@ -80,10 +80,13 @@ export const validateCNPJ = (cnpj) => {
 }
 
 export const validateTime = (time) => {
-	if (time.includes('_')) return false
-	if (time.substring(0, 2) > '24') return false
-	if (time.substring(3, 5) > '59') return false
-	return true
+	const _time =
+		time !== ''
+			? moment(time).isValid()
+				? moment(moment(time).format('HH:mm'), 'HH:mm')
+				: moment(time, 'HH:mm')
+			: ''
+	return _time
 }
 
 export const validateCep = (cep) => {

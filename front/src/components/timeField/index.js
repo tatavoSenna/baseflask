@@ -1,9 +1,15 @@
 import React from 'react'
-import { string, shape, func, object, number, bool } from 'prop-types'
-import { Form } from 'antd'
-import { validateTime } from '../../utils'
-import MaskedInput from 'antd-mask-input'
+import PropTypes, {
+	string,
+	shape,
+	func,
+	object,
+	number,
+	bool,
+} from 'prop-types'
+import { Form, TimePicker } from 'antd'
 import InfoField from '~/components/infoField'
+import { validateTime } from 'utils'
 
 const TimeField = ({
 	pageFieldsData,
@@ -13,18 +19,21 @@ const TimeField = ({
 	inputValue,
 	disabled,
 }) => {
-	const { label, variable, id, info, optional } = pageFieldsData
+	const { label, variable, type, id, info, minute_step, optional } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const name = isObj ? variable.name : variable
 	const hidden =
 		typeof className === 'string'
 			? className.slice(0, 19) === 'inputFactory_hidden'
 			: false
+
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
 			name={listIndex !== undefined ? [listIndex, name] : name}
 			label={<InfoField label={label} info={info} />}
+			type={type}
 			className={className}
 			hasFeedback
 			rules={
@@ -36,23 +45,21 @@ const TimeField = ({
 								if (optional) return Promise.resolve()
 								else return Promise.reject('Este campo é obrigatório.')
 							} else {
-								if (validateTime(value)) {
-									return Promise.resolve()
-								}
-								return Promise.reject('Horário não é válido.')
+								return Promise.resolve()
 							}
 						},
 					}),
 				]
 			}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
-			<MaskedInput
-				mask="11:11"
-				placeholder=""
+			initialValue={validateTime(inputValue)}>
+			<TimePicker
+				format={'HH:mm'}
+				placeholder="Selecione um horário"
 				style={{ width: '39.2%' }}
 				disabled={disabled}
 				onChange={onChange}
+				minuteStep={minute_step ? minute_step : undefined}
 			/>
 		</Form.Item>
 	)
@@ -61,10 +68,11 @@ const TimeField = ({
 TimeField.propTypes = {
 	pageFieldsData: shape({
 		label: string.isRequired,
-		variable: object.isRequired,
+		variable: PropTypes.oneOfType([object, string]),
+		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	listIndex: number,
 	inputValue: string,

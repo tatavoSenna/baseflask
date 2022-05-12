@@ -52,6 +52,10 @@ export const selectAnswer = (data, payload) => {
 				answers[answer[0]] = moment.isMoment(answer[1])
 					? answer[1].format()
 					: ''
+			} else if (fields[index]?.variable?.type === 'time') {
+				answers[answer[0]] = moment.isMoment(answer[1])
+					? answer[1].format('HH:mm')
+					: ''
 			} else {
 				answers[answer[0]] = answer[1]
 			}
