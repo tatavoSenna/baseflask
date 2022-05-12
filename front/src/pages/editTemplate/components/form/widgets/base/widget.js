@@ -27,7 +27,7 @@ const Widget = ({
 	formItems,
 	variableItems = true,
 	showConditions = true,
-	displayStyles = [],
+	displayStyles,
 	onValidate = () => {},
 	updateFormInfo,
 }) => {
@@ -87,29 +87,31 @@ const Widget = ({
 								label="Name"
 								placeholder="Nome da variável"
 								defaultValue={data.variable?.name || ''}
-								style={{ width: '70%' }}
+								style={{ width: displayStyles ? '70%' : '100%' }}
 								onBlur={(e) => updateVariable('name', e.target.value)}
 								$error={!validVariableName}
 								autoComplete="chrome-off"
 							/>
-							<ValidatedSelect
-								placeholder="Display Style"
-								style={{ width: '30%' }}
-								defaultValue={
-									data.variable?.doc_display_style
-										? data.variable?.doc_display_style.includes('|')
-											? null
-											: data.variable?.doc_display_style
-										: null
-								}
-								onChange={(v) => updateVariable('doc_display_style', v)}
-								$error={!validVariableStyle}>
-								{displayStyles.map(({ value, name }, i) => (
-									<Select.Option value={value} key={i}>
-										{name}
-									</Select.Option>
-								))}
-							</ValidatedSelect>
+							{displayStyles ? (
+								<ValidatedSelect
+									placeholder="Display Style"
+									style={{ width: '30%' }}
+									defaultValue={
+										data.variable?.doc_display_style
+											? data.variable?.doc_display_style.includes('|')
+												? null
+												: data.variable?.doc_display_style
+											: null
+									}
+									onChange={(v) => updateVariable('doc_display_style', v)}
+									$error={!validVariableStyle}>
+									{displayStyles.map(({ value, name }, i) => (
+										<Select.Option value={value} key={i}>
+											{name}
+										</Select.Option>
+									))}
+								</ValidatedSelect>
+							) : null}
 						</Input.Group>
 
 						{React.isValidElement(variableItems) ? variableItems : null}

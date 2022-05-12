@@ -136,6 +136,7 @@ def assign_company_to_new_user_controller(logged_user, company_id):
         deleted_user.company_id = local_user.company_id
         deleted_user.is_financial = local_user.is_financial
         deleted_user.sub = local_user.sub
+        deleted_user.username = local_user.username
         deleted_user.active = True
         db.session.add(deleted_user)
         db.session.commit()

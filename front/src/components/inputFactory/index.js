@@ -16,7 +16,6 @@ import CheckboxField from '~/components/checkboxField'
 import NumberField from '~/components/numberField'
 import PercentageField from '~/components/percentageField'
 import BankField from '~/components/bankField'
-import FileField from '~/components/fileField'
 import TimeField from '~/components/timeField'
 import TextAreaField from '~/components/textAreaField'
 import ImageField from '~/components/imageField'
@@ -289,15 +288,6 @@ function InputFactory({
 				)
 				break
 
-			case 'variable_file':
-				children.push(
-					<FileField
-						key={i}
-						pageFieldsData={pageFieldsData[i]}
-						className={isVisible}
-					/>
-				)
-				break
 			case 'text_area':
 				children.push(
 					<TextAreaField
