@@ -244,3 +244,9 @@ def duplicate_template(template, user_id, company_id=None, outside_duplication=F
         capture_exception(e)
 
     return True
+
+
+def undelete_template_controller(template):
+    template.deleted = False
+    template.deleted_at = None
+    db.session.commit()
