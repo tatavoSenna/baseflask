@@ -68,6 +68,7 @@ from .controllers import (
     edit_document_workflow_controller,
     validate_document_ids_controller,
     delete_multiple_documents_controller,
+    undelete_document_controller,
 )
 
 from app.d4sign.controllers import (
@@ -727,3 +728,20 @@ def delete_multiple_documents(current_user):
         abort(400, "Something went wrong while deleting the documents")
 
     return jsonify({}), 200
+
+
+@documents_bp.route("/<int:document_id>/undelete", methods=["PATCH"])
+@aws_auth.authentication_required
+@get_local_user
+def undelete_document(current_user, document_id):
+    try:
+        document = get_document_controller(document_id)
+    except Exception:
+        abort(404, "Document not Found")
+    try:
+        undelete_document_controller(document)
+    except Exception:
+        abort(400, "The document could not be undeleted")
+    msg_JSON = {"message": "The document was undeleted"}
+
+    return jsonify(msg_JSON), 200

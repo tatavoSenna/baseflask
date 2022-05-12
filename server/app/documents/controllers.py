@@ -693,3 +693,9 @@ def delete_multiple_documents_controller(document_ids):
         {"deleted": True, "deleted_at": datetime.utcnow()}
     )
     db.session.commit()
+
+
+def undelete_document_controller(document):
+    document.deleted = False
+    document.deleted_at = None
+    db.session.commit()
