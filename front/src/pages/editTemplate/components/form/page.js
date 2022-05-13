@@ -169,12 +169,12 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.fields = [
 					'cep',
 					'country',
+					'number',
+					'street',
+					'complement',
+					'district',
 					'state',
 					'city',
-					'district',
-					'street',
-					'number',
-					'complement',
 				]
 
 				delete newField['info']
