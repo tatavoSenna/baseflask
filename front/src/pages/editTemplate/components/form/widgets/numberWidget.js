@@ -122,10 +122,13 @@ NumberWidget.propTypes = {
 	updateFormInfo: func,
 }
 
-export const NumberInput = ({ onBlur, ...props }) => (
-	<InputNumber {...props} onBlur={(e) => onBlur(Number(e.target.value))} />
+export const NumberInput = ({ changeCallback, ...props }) => (
+	<InputNumber
+		{...props}
+		onBlur={(e) => changeCallback(Number(e.target.value))}
+	/>
 )
 
 NumberInput.propTypes = {
-	onBlur: func,
+	changeCallback: func,
 }

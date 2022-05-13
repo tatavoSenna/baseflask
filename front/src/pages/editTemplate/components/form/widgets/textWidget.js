@@ -58,10 +58,10 @@ TextWidget.propTypes = {
 	updateFormInfo: func,
 }
 
-export const TextInput = ({ onBlur, ...props }) => (
-	<Input {...props} onBlur={(e) => onBlur(e.target.value)} />
+export const TextInput = ({ changeCallback, ...props }) => (
+	<Input {...props} onBlur={(e) => changeCallback(e.target.value)} />
 )
 
 TextInput.propTypes = {
-	onBlur: func,
+	changeCallback: func,
 }
