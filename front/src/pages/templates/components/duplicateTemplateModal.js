@@ -47,7 +47,7 @@ const DuplicateTemplateModal = ({
 			<Form form={form}>
 				<StyledTitle level={4}>Duplicar Template</StyledTitle>
 				<NewDivider />
-				<Form.Item label="Template">
+				<Form.Item label="Empresa">
 					<Select
 						style={{ width: '90%' }}
 						defaultValue={`${currentCompany}`}
