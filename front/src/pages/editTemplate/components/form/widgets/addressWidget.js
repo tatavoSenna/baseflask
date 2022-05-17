@@ -16,12 +16,12 @@ export const AddressWidget = React.memo((props) => {
 	const fieldOptions = [
 		{ label: 'CEP', value: 'cep' },
 		{ label: 'País', value: 'country' },
-		{ label: 'Estado', value: 'state' },
-		{ label: 'Cidade', value: 'city' },
-		{ label: 'Bairro', value: 'district' },
-		{ label: 'Logradouro', value: 'street' },
 		{ label: 'Número', value: 'number' },
+		{ label: 'Logradouro', value: 'street' },
 		{ label: 'Complemento', value: 'complement' },
+		{ label: 'Estado', value: 'state' },
+		{ label: 'Bairro', value: 'district' },
+		{ label: 'Cidade', value: 'city' },
 	]
 
 	return (

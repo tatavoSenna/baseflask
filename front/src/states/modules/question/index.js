@@ -77,20 +77,23 @@ const { actions, reducer } = createSlice({
 						comparison = input <= value
 						break
 					case '=':
-					case '!=':
-						const compare =
-							operator === '=' ? (a, b) => a === b : (a, b) => a !== b
-
-						// If value is an array, OR logic is applied
-						if (typeof value === 'object') {
-							value.forEach((item) => {
-								if (compare(input, item)) {
-									comparison = true
-								}
-							})
+						if (Array.isArray(input)) {
+							comparison =
+								input.length === value.length &&
+								value.every((v) => input.includes(v))
 						} else {
-							comparison = compare(input, value)
+							comparison = compare(input, value, (a, b) => a === b)
 						}
+						break
+					case '!=':
+						comparison = compare(input, value, (a, b) => a !== b)
+						break
+
+					case 'contains':
+						comparison =
+							Array.isArray(input) &&
+							Array.isArray(value) &&
+							value.every((v) => input.includes(v))
 						break
 					default:
 						comparison = false
@@ -205,6 +208,19 @@ const { actions, reducer } = createSlice({
 		},
 	},
 })
+
+function compare(input, value, comparisonFn) {
+	// If value is an array, OR logic is applied
+	if (Array.isArray(value)) {
+		value.forEach((item) => {
+			if (comparisonFn(input, item)) {
+				return true
+			}
+		})
+	} else {
+		return comparisonFn(input, value)
+	}
+}
 
 export const {
 	listQuestion,

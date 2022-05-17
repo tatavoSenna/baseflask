@@ -16,6 +16,7 @@ import { DateWidget } from './widgets/dateWidget'
 import { EmailWidget } from './widgets/emailWidget'
 import { CheckboxWidget } from './widgets/checkboxWidget'
 import { RadioWidget } from './widgets/radioWidget'
+import { TimeWidget } from './widgets/timeWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
 import { AddressWidget } from './widgets/addressWidget'
@@ -28,6 +29,7 @@ const widgets = {
 	email: EmailWidget,
 	checkbox: CheckboxWidget,
 	radio: RadioWidget,
+	time: TimeWidget,
 	dropdown: DropdownWidget,
 	bank: BankWidget,
 	address: AddressWidget,
@@ -45,6 +47,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="cnpj">CNPJ</Menu.Item>
 			<Menu.Item key="email">Email</Menu.Item>
 			<Menu.Item key="date">Data</Menu.Item>
+			<Menu.Item key="time">Hora</Menu.Item>
 			<Menu.Item key="currency">Moeda</Menu.Item>
 			<Menu.Item key="bank">Banco</Menu.Item>
 			<Menu.Item key="cnae">CNAE</Menu.Item>
@@ -74,6 +77,10 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 		}
 
 		switch (type) {
+			case 'time':
+				newField.variable.type = 'time'
+				newField.minute_step = ''
+				break
 			case 'number':
 				newField.variable.type = 'number'
 				newField.variable.doc_display_style = 'plain | extended | ordinal'
@@ -162,12 +169,12 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.fields = [
 					'cep',
 					'country',
+					'number',
+					'street',
+					'complement',
+					'district',
 					'state',
 					'city',
-					'district',
-					'street',
-					'number',
-					'complement',
 				]
 
 				delete newField['info']

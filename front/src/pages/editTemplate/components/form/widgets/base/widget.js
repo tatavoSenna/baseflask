@@ -46,6 +46,7 @@ const Widget = ({
 
 			const style = data.variable.doc_display_style
 			let validStyle =
+				!displayStyles ||
 				!('doc_display_style' in data.variable) ||
 				displayStyles.map((s) => s.value).includes(style) ||
 				(displayStyles.length === 0 && style.length > 0 && !style.includes('|'))

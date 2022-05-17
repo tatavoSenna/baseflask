@@ -48,7 +48,7 @@ CurrencyWidget.propTypes = {
 	updateFormInfo: func,
 }
 
-export const CurrencyInput = ({ defaultValue, onBlur, style = {} }) => {
+export const CurrencyInput = ({ defaultValue, changeCallback, style = {} }) => {
 	const parser = currencyParser()
 
 	return (
@@ -58,7 +58,7 @@ export const CurrencyInput = ({ defaultValue, onBlur, style = {} }) => {
 			formatter={currencyFormatter()}
 			parser={parser}
 			style={{ width: '100%', currency: 'BRL', style: 'currency', ...style }}
-			onBlur={(e) => onBlur(Number(parser(e.target.value)))}
+			onBlur={(e) => changeCallback(Number(parser(e.target.value)))}
 			defaultValue={defaultValue}
 			autoComplete="off"
 		/>
@@ -67,6 +67,6 @@ export const CurrencyInput = ({ defaultValue, onBlur, style = {} }) => {
 
 CurrencyInput.propTypes = {
 	defaultValue: number,
-	onBlur: func,
+	changeCallback: func,
 	style: object,
 }

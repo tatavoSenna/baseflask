@@ -54,7 +54,7 @@ const DropdownField = ({
 			initialValue={!inputValue ? '' : inputValue}>
 			<Select
 				disabled={disabled}
-				onChange={onChange}
+				onChange={onChange ? (v) => onChange(v) : undefined}
 				allowClear={optional ? true : false}
 				notFoundContent={notFoundContent}>
 				{options.map((option, index) => (

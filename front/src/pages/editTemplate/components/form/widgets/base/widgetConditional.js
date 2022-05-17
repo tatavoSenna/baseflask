@@ -7,11 +7,30 @@ import { ListItem, ValidatedSelect } from './styles'
 import { TextInput } from '../textWidget'
 import { NumberInput } from '../numberWidget'
 import { CurrencyInput } from '../currencyWidget'
+import { ListInput } from '../checkboxWidget'
 
 const conditionalInputs = {
 	string: TextInput,
 	number: NumberInput,
 	currency: CurrencyInput,
+	list: ListInput,
+}
+
+const conditionalOperators = {
+	default: ['=', '!=', '>', '>=', '<', '<='].map((op) => ({
+		value: op,
+		label: op,
+	})),
+
+	string: ['=', '!='].map((op) => ({
+		value: op,
+		label: op,
+	})),
+
+	list: [
+		{ value: '=', label: 'Igual a' },
+		{ value: 'contains', label: 'Contém' },
+	],
 }
 
 const WidgetConditional = ({
@@ -22,6 +41,7 @@ const WidgetConditional = ({
 	onValidate,
 	updateFormInfo,
 }) => {
+	// Form variables
 	const variableNames = useMemo(() => {
 		let allVariables = []
 
@@ -34,7 +54,7 @@ const WidgetConditional = ({
 			}
 		}
 
-		return allVariables
+		return allVariables.sort()
 	}, [variables])
 
 	const variableOptions = useMemo(
@@ -46,6 +66,7 @@ const WidgetConditional = ({
 		[variableNames, data]
 	)
 
+	// Field conditions
 	const conditions = useMemo(
 		() =>
 			'condition' in data
@@ -56,6 +77,7 @@ const WidgetConditional = ({
 		[data]
 	)
 
+	// Validations
 	const [validConditionVars, setValidVars] = useState([])
 	useEffect(() => {
 		const validVars = conditions.map((c) => variableNames.includes(c.variable))
@@ -64,6 +86,7 @@ const WidgetConditional = ({
 		onValidate(validVars.every((c) => c))
 	}, [conditions, variableNames, onValidate])
 
+	// Condition creation/deletion callbacks
 	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
 
 	const addCondition = () => {
@@ -75,75 +98,90 @@ const WidgetConditional = ({
 		update({ condition: conditions.filter((x, i) => i !== index) })
 	}
 
-	const updateCondition = (property, value, index) =>
+	const updateCondition = (property, value, index) => {
+		const cond =
+			property !== 'variable'
+				? { ...conditions[index], [property]: value }
+				: { variable: value, operator: '=', value: '' }
+
 		update({
 			condition: [
 				...conditions.slice(0, index),
-				{ ...conditions[index], [property]: value },
+				cond,
 				...conditions.slice(index + 1),
 			],
 		})
+	}
 
 	return (
 		<div>
-			{conditions.map((condition, i) => (
-				<ListItem key={condition.variable + i}>
-					<Input.Group compact>
-						<ValidatedSelect
-							showSearch
-							allowClear
-							showArrow={false}
-							placeholder="Variável"
-							style={{
-								width: '44%',
-							}}
-							options={variableOptions}
-							defaultValue={condition?.variable || undefined}
-							notFoundContent={'Variável não encontrada'}
-							filterOption={(inputValue, option) =>
-								option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-								-1
-							}
-							onChange={(v) => updateCondition('variable', v, i)}
-							$error={!validConditionVars[i]}
+			{conditions.map((condition, i) => {
+				let conditionType = variables.find(
+					(x) => x && x.name === condition?.variable
+				)?.type
+
+				return (
+					<ListItem key={condition.variable + i}>
+						<Input.Group compact>
+							<ValidatedSelect
+								showSearch
+								allowClear
+								showArrow={false}
+								placeholder="Variável"
+								style={{
+									width: '41%',
+								}}
+								options={variableOptions}
+								defaultValue={condition?.variable || undefined}
+								notFoundContent={'Variável não encontrada'}
+								filterOption={(inputValue, option) =>
+									option.value
+										.toUpperCase()
+										.indexOf(inputValue.toUpperCase()) !== -1
+								}
+								onChange={(v) => updateCondition('variable', v, i)}
+								$error={!validConditionVars[i]}
+							/>
+
+							<Select
+								placeholder=""
+								style={{ width: '19%', textAlign: 'center' }}
+								value={condition?.operator}
+								onChange={(v) => updateCondition('operator', v, i)}>
+								{(() => {
+									const operatorType =
+										conditionType in conditionalOperators
+											? conditionType
+											: 'default'
+
+									return conditionalOperators[operatorType].map(
+										({ label, value }, key) => (
+											<Select.Option {...{ value, key }}>{label}</Select.Option>
+										)
+									)
+								})()}
+							</Select>
+
+							{(() => {
+								const inputType =
+									conditionType in conditionalInputs ? conditionType : 'string'
+
+								return React.createElement(conditionalInputs[inputType], {
+									style: { width: '40%' },
+									placeholder: 'Valor',
+									defaultValue: condition.value,
+									changeCallback: (v) => updateCondition('value', v, i),
+								})
+							})()}
+						</Input.Group>
+
+						<MinusCircleOutlined
+							onClick={() => removeCondition(i)}
+							style={{ padding: '0 10px' }}
 						/>
-
-						<Select
-							placeholder=""
-							style={{ width: '12%', textAlign: 'center' }}
-							defaultValue={condition?.operator}
-							onChange={(v) => updateCondition('operator', v, i)}>
-							<Select.Option value="=">=</Select.Option>
-							<Select.Option value="!=">!=</Select.Option>
-							<Select.Option value=">">&gt;</Select.Option>
-							<Select.Option value=">=">&gt;=</Select.Option>
-							<Select.Option value="<">&lt;</Select.Option>
-							<Select.Option value="<=">&lt;=</Select.Option>
-						</Select>
-
-						{(() => {
-							let conditionType = variables.find(
-								(x) => x && x.name === condition?.variable
-							)?.type
-
-							conditionType =
-								conditionType in conditionalInputs ? conditionType : 'string'
-
-							return conditionalInputs[conditionType]({
-								style: { width: '44%' },
-								defaultValue: condition.value,
-								placeholder: 'Valor',
-								onBlur: (v) => updateCondition('value', v, i),
-							})
-						})()}
-					</Input.Group>
-
-					<MinusCircleOutlined
-						onClick={() => removeCondition(i)}
-						style={{ padding: '0 10px' }}
-					/>
-				</ListItem>
-			))}
+					</ListItem>
+				)
+			})}
 
 			<Form.Item>
 				<Button

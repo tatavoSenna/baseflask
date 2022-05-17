@@ -15,8 +15,8 @@ const components = {
 	number: AddressNumber,
 	street: AddressStreet,
 	complement: AddressComplement,
-	state: AddressState,
 	district: AddressDistrict,
+	state: AddressState,
 	city: AddressCity,
 }
 
@@ -26,8 +26,8 @@ const classNames = {
 	number: styles['number'],
 	street: styles['street'],
 	complement: styles['complement'],
-	state: styles['state'],
 	district: styles['district'],
+	state: styles['state'],
 	city: styles['city'],
 }
 
