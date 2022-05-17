@@ -54,7 +54,7 @@ const WidgetConditional = ({
 			}
 		}
 
-		return allVariables
+		return allVariables.sort()
 	}, [variables])
 
 	const variableOptions = useMemo(
