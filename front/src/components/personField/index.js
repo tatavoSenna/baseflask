@@ -27,10 +27,12 @@ const PersonField = ({
 	const { label, variable, type, fields, id, person_type, optional } =
 		pageFieldsData
 
+	const _value = inputValue !== undefined ? inputValue['person_type'] : ''
+	const _personValue = inputValue !== undefined ? inputValue : {}
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const [person, setPerson] = useState('')
+	const [person, setPerson] = useState(_value)
 
 	useEffect(() => {
 		if (person_type.length === 1) {
@@ -65,7 +67,7 @@ const PersonField = ({
 			{person_type !== undefined && person_type.length > 1 ? (
 				<Form.Item
 					name={[variable.name, 'PERSON_TYPE']}
-					initialValue=""
+					initialValue={_value}
 					rules={[
 						{ required: !optional, message: 'Este campo é obrigatório!' },
 					]}>
@@ -92,7 +94,7 @@ const PersonField = ({
 						optional={optional}
 						onChange={onChange}
 						form={form}
-						inputValue={inputValue}
+						inputValue={_personValue}
 					/>
 				)}
 				{person === 'legal_person' && (
@@ -102,7 +104,7 @@ const PersonField = ({
 						disabled={disabled}
 						optional={optional}
 						onChange={onChange}
-						inputValue={inputValue}
+						inputValue={_personValue}
 						form={form}
 					/>
 				)}
@@ -122,7 +124,7 @@ PersonField.propTypes = {
 	className: string,
 	form: object,
 	disabled: bool,
-	inputValue: string,
+	inputValue: object,
 	onChange: func,
 }
 

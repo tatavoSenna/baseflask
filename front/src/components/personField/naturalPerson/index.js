@@ -1,4 +1,11 @@
-import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import PropTypes, {
+	array,
+	bool,
+	func,
+	number,
+	object,
+	string,
+} from 'prop-types'
 import { useState } from 'react'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
@@ -13,14 +20,14 @@ const NaturalPerson = ({
 }) => {
 	let fieldMarital = ''
 	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f?.field_type === 'marital_state')
-		if (field !== undefined) fieldMarital = field?.value
+		const field = fields.find((f) => f === 'marital_state')
+		if (field !== undefined) fieldMarital = inputValue[field]
 	}
 
 	let fieldState = ''
 	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f?.field_type === 'state')
-		if (field !== undefined) fieldState = field?.value
+		const field = fields.find((f) => f === 'state')
+		if (field !== undefined) fieldState = inputValue[field]
 	}
 
 	const components = getAllComponents()
@@ -45,7 +52,7 @@ const NaturalPerson = ({
 		}
 
 		if (typeof field === 'string') {
-			field = { field_type: field, value: '' }
+			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
 		for (let i = 0; i < componentsTypes.length; i++) {
@@ -91,7 +98,7 @@ NaturalPerson.propTypes = {
 	name: PropTypes.oneOfType([number, string]),
 	disabled: bool,
 	onChange: func,
-	inputValue: string,
+	inputValue: object,
 }
 
 export default NaturalPerson
