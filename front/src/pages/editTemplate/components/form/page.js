@@ -20,6 +20,7 @@ import { TimeWidget } from './widgets/timeWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
 import { AddressWidget } from './widgets/addressWidget'
+import { CnaeWidget } from './widgets/cnaeWidget'
 import { CpfWidget } from './widgets/CpfWidget'
 import { CnpjWidget } from './widgets/CnpjWidget'
 import { ParagraphWidget } from './widgets/paragraphWidget'
@@ -39,6 +40,7 @@ const widgets = {
 	dropdown: DropdownWidget,
 	bank: BankWidget,
 	address: AddressWidget,
+	cnae: CnaeWidget,
 }
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
