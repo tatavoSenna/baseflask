@@ -38,11 +38,13 @@ export const DropdownWidget = React.memo((props) => {
 							notFoundContent={''}
 							value={data.initialValue}
 							onChange={(v) => update({ initialValue: v })}>
-							{data.options.map(({ label, value }, index) => (
-								<Select.Option key={index} value={value}>
-									{label}
-								</Select.Option>
-							))}
+							{data.options
+								.filter((o) => o.value !== '')
+								.map(({ label, value }, index) => (
+									<Select.Option key={index} value={value}>
+										{label}
+									</Select.Option>
+								))}
 						</Select>
 					</FormItem>
 
