@@ -13,6 +13,7 @@ from .security import generate_hmac_sha256
 class MIME(Enum):
     DOCX = "application/vnd.openxmlformats-officedocument." "wordprocessingml.document"
     PDF = "application/pdf"
+    TXT = "text/plain"
 
 
 class D4SignAPI:
