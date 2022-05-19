@@ -20,9 +20,11 @@ import { TimeWidget } from './widgets/timeWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
 import { AddressWidget } from './widgets/addressWidget'
+import { ParagraphWidget } from './widgets/paragraphWidget'
 
 const widgets = {
 	text: TextWidget,
+	text_area: ParagraphWidget,
 	currency: CurrencyWidget,
 	number: NumberWidget,
 	date: DateWidget,
