@@ -22,6 +22,10 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loadingAnswer: true,
 			}),
+		answerModify: (state) =>
+			extend(state, {
+				loadingAnswer: true,
+			}),
 		answerSuccess: (state, { payload }) =>
 			extend(state, {
 				loadingAnswer: false,
@@ -44,6 +48,7 @@ const { actions, reducer } = createSlice({
 
 export const {
 	appendAnswer,
+	answerModify,
 	answerRequest,
 	answerSuccess,
 	answerFailure,

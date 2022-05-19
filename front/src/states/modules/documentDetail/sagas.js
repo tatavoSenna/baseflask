@@ -333,7 +333,7 @@ function* changeVariablesSaga({ payload = {} }) {
 		content: 'Alterando váriaveis do documento...',
 		updateKey: 'variablesDocument',
 	})
-	const { id, values } = payload
+	const { id, values, history } = payload
 	const { documentDetail } = yield select()
 	const { imgObj } = documentDetail.data
 
@@ -409,6 +409,7 @@ function* changeVariablesSaga({ payload = {} }) {
 			content: 'Alteração realizada com sucesso.',
 			updateKey: 'variablesDocument',
 		})
+		history.push(`/documents/${id}`)
 		yield put(changeVariablesSuccess({ ...data, ...response.data }))
 	} catch (error) {
 		errorMessage({

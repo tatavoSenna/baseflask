@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Layout, Result } from 'antd'
 import { useParams, useLocation } from 'react-router-dom'
 import { SmileOutlined, AlertOutlined } from '@ant-design/icons'
+import { createContractExternal } from '~/states/modules/externalContract'
 
 import FormFactory from '~/components/formFactory'
 
@@ -46,10 +47,20 @@ const AddContractExternal = () => {
 		dispatch(verifyToken({ token }))
 	}, [dispatch, token])
 
+	const handleFinish = useCallback(
+		(visible) => {
+			dispatch(createContractExternal({ token, visible }))
+		},
+		[dispatch, token]
+	)
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			{authorized && !created ? (
-				<FormFactory token={token} initialValues={filledVars} />
+				<FormFactory
+					onFinish={handleFinish}
+					initialValues={filledVars}
+					cancelRoute={'/'}
+				/>
 			) : (
 				getMessage(created)
 			)}
