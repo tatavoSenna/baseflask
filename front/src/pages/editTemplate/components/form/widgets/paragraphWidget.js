@@ -1,13 +1,13 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Input } from 'antd'
-import { FontSizeOutlined } from '@ant-design/icons'
+import { AlignLeftOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
 import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation } from './base/styles'
 
-export const TextWidget = React.memo((props) => {
+export const ParagraphWidget = React.memo((props) => {
 	const { data } = props
 
 	const update = useUpdate(props)
@@ -16,7 +16,7 @@ export const TextWidget = React.memo((props) => {
 	return (
 		<Widget
 			{...props}
-			type={'Texto'}
+			type={'Parágrafo'}
 			icon={<Icon $error={!valid} />}
 			onValidate={setValid}
 			formItems={
@@ -31,7 +31,7 @@ export const TextWidget = React.memo((props) => {
 					</FormItem>
 
 					<FormItem label="Valor inicial">
-						<Input
+						<Input.TextArea
 							onBlur={(e) => update({ initialValue: e.target.value })}
 							defaultValue={data.initialValue}
 							autoComplete="off"
@@ -49,19 +49,8 @@ export const TextWidget = React.memo((props) => {
 	)
 })
 
-const Icon = styleIconValidation(FontSizeOutlined)
+const Icon = styleIconValidation(AlignLeftOutlined)
 
-TextWidget.propTypes = {
+ParagraphWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
-}
-
-export const TextInput = ({ changeCallback, ...props }) => (
-	<Input {...props} onBlur={(e) => changeCallback(e.target.value)} />
-)
-
-TextInput.propTypes = {
-	changeCallback: func,
 }
