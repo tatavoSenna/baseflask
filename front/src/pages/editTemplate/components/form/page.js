@@ -20,6 +20,8 @@ import { TimeWidget } from './widgets/timeWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
 import { AddressWidget } from './widgets/addressWidget'
+import { CpfWidget } from './widgets/CpfWidget'
+import { CnpjWidget } from './widgets/CnpjWidget'
 import { ParagraphWidget } from './widgets/paragraphWidget'
 
 const widgets = {
@@ -27,6 +29,8 @@ const widgets = {
 	text_area: ParagraphWidget,
 	currency: CurrencyWidget,
 	number: NumberWidget,
+	cpf: CpfWidget,
+	cnpj: CnpjWidget,
 	date: DateWidget,
 	email: EmailWidget,
 	checkbox: CheckboxWidget,

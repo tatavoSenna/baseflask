@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Form, Typography, Collapse, Divider, Select, Input } from 'antd'
+import MaskedInput from 'antd-mask-input'
 
 export const Title = styled(Typography.Title)`
 	&& {
@@ -53,6 +54,16 @@ export const ListItem = styled.div`
 `
 
 export const ValidatedInput = styled(Input)`
+	${(props) =>
+		props.$error
+			? `
+				border-color: #ff4d4f;
+				z-index: 1;
+			`
+			: ''}
+`
+
+export const ValidatedMaskedInput = styled(MaskedInput)`
 	${(props) =>
 		props.$error
 			? `
