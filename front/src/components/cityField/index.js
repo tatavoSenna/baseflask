@@ -60,26 +60,18 @@ const CityField = ({
 			filteredCitys.map((name, index) => (cityName[index] = name.nome))
 		}
 
-		if (state !== undefined) {
-			if (inputValue !== '' && state !== '') {
-				value = findAndChangeValue(
-					data,
-					inputValue,
-					value,
-					inputValueState,
-					state
-				)
-			}
+		if (inputValue !== '' && (state !== '' || state !== undefined)) {
+			value = findAndChangeValue(
+				data,
+				inputValue,
+				value,
+				inputValueState,
+				state
+			)
+		}
 
-			if (state !== '' && thisValue !== '') {
-				value = findAndChangeValue(
-					data,
-					thisValue,
-					value,
-					inputValueState,
-					state
-				)
-			}
+		if ((state !== '' || state !== undefined) && thisValue !== '') {
+			value = findAndChangeValue(data, thisValue, value, inputValueState, state)
 		}
 	}
 

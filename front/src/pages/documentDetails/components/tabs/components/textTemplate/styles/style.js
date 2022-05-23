@@ -17,11 +17,5 @@ export const StyledLabel = styled(Paragraph)`
 export const StyledValue = styled(Paragraph)`
 	color: #646464;
 	font-size: 16px;
-	margin: 0 0 14px 0;
-`
-
-export const StyledWrapperBox = styled.div`
-	*:not(:last-child) {
-		margin: 0 0 2px 0 !important;
-	}
+	margin: 0 0 14px 0 !important;
 `
