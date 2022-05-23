@@ -33,7 +33,9 @@ const CityField = ({
 	const [thisValue, setThisValue] = useState('')
 
 	const handleOnChange = (value) => {
-		setThisValue(value)
+		if (state !== undefined) {
+			setThisValue(value)
+		}
 		onChange(value)
 	}
 
@@ -111,7 +113,7 @@ const CityField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={state === undefined ? onChange : handleOnChange}>
+				onChange={handleOnChange}>
 				{cityName.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
