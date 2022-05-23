@@ -181,9 +181,7 @@ def change_folder(current_user):
     document = Document.query.filter_by(id=document_id).first()
 
     folder_already_exists = Document.query.filter_by(
-        parent_id=destination_id, 
-        title=document.title,
-        is_folder=True
+        parent_id=destination_id, title=document.title, is_folder=True
     ).all()
     if folder_already_exists:
         abort(

@@ -200,7 +200,7 @@ def d4sign_upload_document_controller(
     ext = document_instance.text_type.replace(".", "")
     if ext in ["docx", "pdf"]:
         ext = "pdf"  # upload as pdf because D4Sign docx parsing is buggy
-        document_file = remote_document.download_pdf_from_documents(
+        document_file = remote_document.download_pdf_document(
             document=document_instance, version_id=version_id
         )
     else:  # ext = txt
