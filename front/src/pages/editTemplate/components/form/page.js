@@ -20,6 +20,7 @@ import { TimeWidget } from './widgets/timeWidget'
 import { DropdownWidget } from './widgets/dropdownWidget'
 import { BankWidget } from './widgets/bankWidget'
 import { AddressWidget } from './widgets/addressWidget'
+import { DatabaseWidget } from './widgets/databaseWidget'
 import { CnaeWidget } from './widgets/cnaeWidget'
 import { CpfWidget } from './widgets/CpfWidget'
 import { CnpjWidget } from './widgets/CnpjWidget'
@@ -40,6 +41,7 @@ const widgets = {
 	dropdown: DropdownWidget,
 	bank: BankWidget,
 	address: AddressWidget,
+	database: DatabaseWidget,
 	cnae: CnaeWidget,
 }
 
@@ -63,7 +65,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="radio">Rádio</Menu.Item>
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
-			<Menu.Item key="database">Base de dados</Menu.Item>
+			<Menu.Item key="database">API</Menu.Item>
 			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="address">Endereço</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
@@ -114,6 +116,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.type = 'database'
 				newField.variable.database_endpoint = ''
 				newField.variable.search_key = ''
+				newField.variable.display_key = ''
 				break
 			case 'variable_image':
 				newField.variable.type = 'variable_image'

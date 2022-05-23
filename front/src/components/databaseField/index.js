@@ -30,7 +30,7 @@ const DatabaseField = ({
 	const options = useMemo(
 		() =>
 			(data ?? []).map((d) => ({
-				label: d[display_key],
+				label: String(d[display_key]),
 				value: d[search_key],
 			})),
 		[data, display_key, search_key]
