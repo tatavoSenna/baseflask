@@ -52,7 +52,7 @@ const CnaeField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange}>
+				onChange={onChange ? (v) => onChange(v) : undefined}>
 				{cnaeDescription.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
