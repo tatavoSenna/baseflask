@@ -44,13 +44,15 @@ function InputFactory({
 	const children = []
 
 	// Call updateVisible after first render, so the default values are considered for visibility
+
 	useEffect(() => {
-		if (typeof form !== 'undefined')
+		if (typeof form !== 'undefined') {
 			dispatch(
 				updateVisible({
 					form,
 				})
 			)
+		}
 	}, [dispatch, form, currentFormStep])
 
 	const conditionals = useSelector(({ question }) => question.conditionals)
@@ -99,7 +101,7 @@ function InputFactory({
 								})
 							)
 				  }
-				: undefined
+				: () => {}
 
 		switch (type) {
 			case 'radio':

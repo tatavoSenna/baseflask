@@ -39,7 +39,7 @@ const BankField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange}>
+				onChange={onChange ? (v) => onChange(v) : undefined}>
 				{bank.names.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}

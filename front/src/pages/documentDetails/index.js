@@ -174,7 +174,7 @@ const DocumentDetails = () => {
 					handleAssign={handleAssign}
 					signers={data.signers}
 					showModal={showAssignModal}
-					infos={data.info}
+					infos={data.form}
 				/>
 				{Object.keys(data).length < 1 && <Spin spinning={loading} />}
 				{Object.keys(data).length > 0 && (
@@ -215,7 +215,7 @@ const DocumentDetails = () => {
 							signers={data.signers}
 							versions={data.versions}
 							showAssignModal={handleShowAssignModal}
-							infos={data.info}
+							infos={data}
 							variables={data.variables}
 							signed={data.sent}
 							sentAssign={handleSentAssign}

@@ -33,7 +33,9 @@ const CityField = ({
 	const [thisValue, setThisValue] = useState('')
 
 	const handleOnChange = (value) => {
-		setThisValue(value)
+		if (state !== undefined) {
+			setThisValue(value)
+		}
 		onChange(value)
 	}
 
@@ -58,18 +60,26 @@ const CityField = ({
 			filteredCitys.map((name, index) => (cityName[index] = name.nome))
 		}
 
-		if (inputValue !== '' && (state !== '' || state !== undefined)) {
-			value = findAndChangeValue(
-				data,
-				inputValue,
-				value,
-				inputValueState,
-				state
-			)
-		}
+		if (state !== undefined) {
+			if (inputValue !== '' && state !== '') {
+				value = findAndChangeValue(
+					data,
+					inputValue,
+					value,
+					inputValueState,
+					state
+				)
+			}
 
-		if ((state !== '' || state !== undefined) && thisValue !== '') {
-			value = findAndChangeValue(data, thisValue, value, inputValueState, state)
+			if (state !== '' && thisValue !== '') {
+				value = findAndChangeValue(
+					data,
+					thisValue,
+					value,
+					inputValueState,
+					state
+				)
+			}
 		}
 	}
 
@@ -103,7 +113,7 @@ const CityField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={state === undefined ? onChange : handleOnChange}>
+				onChange={handleOnChange}>
 				{cityName.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}

@@ -198,15 +198,12 @@ def d4sign_upload_document_controller(
     remote_document = RemoteDocument()
 
     ext = document_instance.text_type.replace(".", "")
-    if ext == "docx":
-        document_file = remote_document.download_docx_from_documents(
+    if ext in ["docx", "pdf"]:
+        ext = "pdf"  # upload as pdf because D4Sign docx parsing is buggy
+        document_file = remote_document.download_pdf_document(
             document=document_instance, version_id=version_id
         )
-    elif ext == "pdf":
-        document_file = remote_document.download_pdf_from_documents(
-            document=document_instance, version_id=version_id
-        )  # TODO: implement
-    else:
+    else:  # ext = txt
         document_file = remote_document.download_text_from_documents(
             document=document_instance, version_id=version_id
         )

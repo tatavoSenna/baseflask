@@ -51,7 +51,7 @@ const StateField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange}>
+				onChange={onChange ? (v) => onChange(v) : undefined}>
 				{stateName.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
