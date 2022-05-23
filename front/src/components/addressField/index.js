@@ -16,7 +16,6 @@ const AddressField = ({
 	form,
 }) => {
 	const { label, variable, type, fields, id, optional } = pageFieldsData
-	const _addressValue = inputValue !== undefined ? inputValue : {}
 
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
@@ -44,7 +43,7 @@ const AddressField = ({
 					disabled={disabled}
 					optional={optional}
 					onChange={onChange}
-					inputValue={_addressValue}
+					inputValue={inputValue}
 					form={form}
 				/>
 			</AddressContainer>
@@ -63,7 +62,7 @@ AddressField.propTypes = {
 	className: PropTypes.oneOfType([object, string]),
 	disabled: bool,
 	form: object,
-	inputValue: object,
+	inputValue: string,
 	onChange: func,
 }
 

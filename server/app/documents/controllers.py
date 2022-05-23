@@ -89,7 +89,7 @@ def create_document_controller(
 
     # Transforms received variables into specified variables with the current date
     current_date_dict = get_current_date_dict()
-    # received_variables.update(current_date_dict)
+    received_variables.update(current_date_dict)
 
     # Get global variables
     nome_contrato = received_variables.get("NOME_CONTRATO", None)

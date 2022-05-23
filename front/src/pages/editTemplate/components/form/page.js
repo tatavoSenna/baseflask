@@ -170,12 +170,9 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'attorney_district',
 					'attorney_city',
 				]
-				newField.initialValue = newField.fields.reduce(
-					(a, field) => ({ ...a, [field]: '' }),
-					{ person_type: '' }
-				)
 
 				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'address':
 				newField.variable.type = 'address'
@@ -191,12 +188,8 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'city',
 				]
 
-				newField.initialValue = newField.fields.reduce(
-					(a, field) => ({ ...a, [field]: '' }),
-					{}
-				)
-
 				delete newField['info']
+				delete newField['initialValue']
 				break
 			case 'structured_list':
 				newField.variable.type = type
