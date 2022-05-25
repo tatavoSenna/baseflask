@@ -7,12 +7,19 @@ import {
 	errorMessage,
 } from '~/services/messager'
 
-import { answerRequest, answerSuccess, answerFailure, setResetAnswer } from '.'
+import {
+	answerRequest,
+	answerModify,
+	answerSuccess,
+	answerFailure,
+	setResetAnswer,
+} from '.'
 
 import { setResetQuestion } from '~/states/modules/question'
 
 export default function* rootSaga() {
 	yield takeEvery(answerRequest, answerSaga)
+	yield takeEvery(answerModify, answerModifySaga)
 }
 
 function* answerSaga({ payload }) {
@@ -51,6 +58,39 @@ function* answerSaga({ payload }) {
 		yield put(answerFailure(error))
 		errorMessage({
 			content: 'A criação do documento falhou',
+			updateKey: 'answer',
+		})
+	}
+}
+
+function* answerModifySaga({ payload }) {
+	const { id, history, visible } = payload
+
+	loadingMessage({
+		content: 'Nossos robôs estão trabalhando para gerar seu documento',
+		updateKey: 'answer',
+	})
+
+	const answer = yield select(({ answer }) => answer)
+
+	try {
+		const { data } = yield call(api.post, `documents/${id}/modify`, {
+			variables: { ...answer.data, ...answer.dataImg },
+			visible,
+		})
+
+		yield put(answerSuccess(data))
+		successMessage({
+			content: 'Edição do documento feito com sucesso!',
+			updateKey: 'answer',
+		})
+		history.push(`/documents/${id}`)
+		yield put(setResetAnswer())
+		yield put(setResetQuestion())
+	} catch (error) {
+		yield put(answerFailure(error))
+		errorMessage({
+			content: 'A edição de documento falhou',
 			updateKey: 'answer',
 		})
 	}
