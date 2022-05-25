@@ -420,16 +420,13 @@ def test_fill_signing_date(fill_signing_date_mock):
     assert document.variables["SIGN_DATE"] == signing_date
 
 
-@patch("app.documents.controllers.RemoteDocument.delete_document")
-@patch("app.documents.controllers.RemoteDocument.delete_signed_document")
-def test_delete_document(delete_document_mock, delete_signed_document_mock):
+def test_delete_document():
     document = factories.DocumentFactory(id=73, signed=True)
     ret_document = get_document_controller(document.id)
     delete_document_controller(ret_document)
 
-    assert get_document_controller(73) == None
-    delete_document_mock.assert_called_once_with(ret_document)
-    delete_signed_document_mock.assert_called_once_with(ret_document)
+    assert get_document_controller(73).deleted == True
+    assert get_document_controller(73).deleted_at != None
 
 
 @patch("app.documents.controllers.update_variables")

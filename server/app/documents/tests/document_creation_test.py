@@ -548,3 +548,32 @@ class TestDocumentCreation:
             email_title,
             "d-83efa7b8d2fb4742a69dd9059324e148",
         )
+
+    def test_create_draft_document(
+        self,
+        test_user,
+        test_company,
+        test_txt_template,
+        test_variables,
+    ):
+
+        document_title = "default title"
+
+        document_txt = create_document_controller(
+            test_user.id,
+            test_user.email,
+            test_user.company.id,
+            test_txt_template.id,
+            document_title,
+            test_user.name,
+            test_variables,
+            None,
+            False,
+            True,
+        )
+
+        assert document_txt.id
+        assert document_txt.title == "Rascunho: " + document_title
+        assert document_txt.versions[0]["id"] == "-1"
+        assert document_txt.versions[0]["description"] == "Rascunho"
+        assert document_txt.draft == True

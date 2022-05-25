@@ -2,14 +2,25 @@ import json
 import logging
 import base64
 import io
-from operator import ne
 import boto3
 import requests
-import logging
-from datetime import datetime, timedelta
-from datetime import date
-import pytz
 import copy
+import convertapi
+
+from app import jinja_env
+from bs4 import BeautifulSoup
+from datetime import datetime, timedelta, date
+from docxtpl import DocxTemplate
+from docx import Document as docxDocument
+from docx.shared import Cm
+from flask import current_app, jsonify
+from operator import ne
+from PIL import Image
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from sqlalchemy import desc, nulls_last, select
+from unittest.mock import MagicMock
+from werkzeug.exceptions import Unauthorized, BadRequest
 
 from app import db
 from app.constants import months
@@ -20,28 +31,10 @@ from app.workflow.services import (
     format_workflow_responsible_group,
     format_workflow_responsible_users,
 )
-from .remote import RemoteDocument
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-import copy
-from flask import current_app, jsonify
-from unittest.mock import MagicMock
-from docxtpl import DocxTemplate, InlineImage
-from docx import Document as docxDocument
-from docx.shared import Cm
-from PIL import Image
-import docx
-from bs4 import BeautifulSoup
-from app import jinja_env
-import convertapi
-import sys, traceback
-from werkzeug.exceptions import Unauthorized
-from sqlalchemy import desc, nulls_last, select
-
 from app.documents.formatters.variables_formatter import (
     format_variables,
-    create_text_variable,
 )
+from .remote import RemoteDocument
 
 
 def get_document_template_list_controller(company_id):
@@ -77,6 +70,7 @@ def create_document_controller(
     received_variables,
     parent_id,
     is_folder,
+    draft=False,
 ):
     # Get document template from the database using template_id and company_id
     document_template = DocumentTemplate.query.get(document_template_id)
@@ -86,10 +80,6 @@ def create_document_controller(
         raise Unauthorized(
             description="You have reached the document limit offered by your plan"
         )
-
-    # Transforms received variables into specified variables with the current date
-    current_date_dict = get_current_date_dict()
-    received_variables.update(current_date_dict)
 
     # Get global variables
     nome_contrato = received_variables.get("NOME_CONTRATO", None)
@@ -101,16 +91,29 @@ def create_document_controller(
     # Specify version 0 to create Document object
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     current_user = User.query.filter_by(id=user_id).first()
-    version = [
-        {
-            "description": "Version 0",
-            "email": user_email,
-            "created_at": current_date,
-            "id": "0",
-            "comments": None,
-            "created_by": current_user.name,
-        }
-    ]
+    if draft:
+        version = [
+            {
+                "description": "Rascunho",
+                "email": user_email,
+                "created_at": current_date,
+                "id": "-1",
+                "comments": None,
+                "created_by": current_user.name,
+            }
+        ]
+        title = "Rascunho: " + title
+    else:
+        version = [
+            {
+                "description": "Version 0",
+                "email": user_email,
+                "created_at": current_date,
+                "id": "0",
+                "comments": None,
+                "created_by": current_user.name,
+            }
+        ]
     # Get workflow from the template and update it
     document_workflow = document_template.workflow
     document_workflow["created_by"] = username
@@ -149,74 +152,20 @@ def create_document_controller(
         valor_contrato=valor_contrato,
         parent_id=parent_id,
         due_date=due_date,
+        draft=draft,
     )
     # Add document to the database
     db.session.add(document)
     db.session.commit()
 
-    # Try to run everything after document addition to the database. If an error occurs, document is deleted.
-    try:
-        # Fill text with variables and upload it
-        remote_document = RemoteDocument()
-        variables = copy.deepcopy(received_variables)
-        variables = format_variables(variables, document_template_id)
-        variables.update(current_date_dict)
-        if document_template.text_type == ".txt":
-            text_template = remote_document.download_text_from_template(document)
-            filled_text = fill_text_with_variables(text_template, variables).encode()
-            remote_document.upload_filled_text_to_documents(document, filled_text)
-        else:
-            docx_io = remote_document.download_docx_from_template(
-                document_template, company_id
+    if not draft:
+        try:
+            create_remote_document(
+                document, received_variables, document_template, company_id
             )
-            filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
-            convert_docx_to_pdf_and_save(document, filled_docx_io)
-            remote_document.upload_filled_docx_to_documents(
-                document, filled_docx_io, document_template.text_type
-            )
-
-        # Call webhooks listed for the company
-        webhook_list = Webhook.query.filter_by(company_id=company_id).all()
-        sns = boto3.client("sns")
-        topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
-        for webhook in webhook_list:
-            if webhook.pdf:
-                webhook_text_type = ".pdf"
-            elif webhook.docx:
-                webhook_text_type = ".docx"
-            else:
-                webhook_text_type = None
-
-            message = {
-                "document_title": title,
-                "document_id": document.id,
-                "document_template_name": document_template.name,
-                "document_template_id": document_template_id,
-                "company_name": document_company.name,
-                "company_id": company_id,
-                "user_id": user_id,
-                "user_name": username,
-                "created_at": json.dumps(
-                    document.created_at, indent=4, sort_keys=True, default=str
-                ),
-                "valor_contrato": valor_contrato,
-                "data_inicio_contrato": data_inicio_contrato,
-                "data_final_contrato": data_final_contrato,
-                "data_assinatura": data_assinatura,
-                "nome_contrato": nome_contrato,
-                "webhook_url": webhook.webhook,
-                "text_type": webhook_text_type,
-            }
-
-            response = sns.publish(
-                TargetArn=topic_arn,
-                Message=json.dumps({"default": json.dumps(message)}),
-                MessageStructure="json",
-            )
-
-    except:
-        delete_document_controller(document)
-        raise
+        except:
+            delete_document_controller(document)
+            raise
 
     """ Disable the email while we don't have the correct sendgrid key 
     Will migrate this to a lambda with the new document sns hook
@@ -514,7 +463,7 @@ def convert_pdf_controller(text):
     return base64.b64decode(document_pdf)
 
 
-def change_variables_controller(document, new_variables, email, variables):
+def change_variables_controller(document, new_variables, email, variables, draft=False):
     document_template = DocumentTemplate.query.filter_by(
         id=document.document_template_id
     ).first()
@@ -524,7 +473,7 @@ def change_variables_controller(document, new_variables, email, variables):
     current_version = int(versions[0]["id"])
     new_version = current_version + 1
     version = {
-        "description": "Changed document variables",
+        "description": "Variáveis do documento foram editadas",
         "email": email,
         "created_at": current_date,
         "id": str(new_version),
@@ -538,7 +487,19 @@ def change_variables_controller(document, new_variables, email, variables):
     document.variables = variables
     db.session.add(document)
     db.session.commit()
-    update_variables(document, document_template, document.company_id, new_variables)
+    if draft:
+        try:
+            create_remote_document(
+                document, variables, document_template, document.company_id
+            )
+        except:
+            raise BadRequest(
+                description="Something went wrong while creating the remote document"
+            )
+    else:
+        update_variables(
+            document, document_template, document.company_id, new_variables
+        )
 
 
 def edit_document_workflow_controller(
@@ -658,7 +619,7 @@ def fill_docx_with_variables(document, docx_io, variables):
     filled_text_io.seek(0)
 
     separate_string(filled_text_io)
-    doc = docx.Document(filled_text_io)
+    doc = docxDocument(filled_text_io)
     for para in doc.paragraphs:
         if para.text == "" or len(para.text) < 2:
             soup = BeautifulSoup(para._p.xml, "xml")
@@ -699,3 +660,65 @@ def undelete_document_controller(document):
     document.deleted = False
     document.deleted_at = None
     db.session.commit()
+
+
+def create_remote_document(document, variables, document_template, company_id):
+    company = Company.query.filter_by(id=company_id).first()
+
+    current_date_dict = get_current_date_dict()
+    remote_document = RemoteDocument()
+    variables = copy.deepcopy(variables)
+    variables = format_variables(variables, document_template.id)
+    variables.update(current_date_dict)
+    if document_template.text_type == ".txt":
+        text_template = remote_document.download_text_from_template(document)
+        filled_text = fill_text_with_variables(text_template, variables).encode()
+        remote_document.upload_filled_text_to_documents(document, filled_text)
+    else:
+        docx_io = remote_document.download_docx_from_template(
+            document_template, company_id
+        )
+        filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
+        convert_docx_to_pdf_and_save(document, filled_docx_io)
+        remote_document.upload_filled_docx_to_documents(
+            document, filled_docx_io, document_template.text_type
+        )
+
+    # Call webhooks listed for the company
+    webhook_list = Webhook.query.filter_by(company_id=company_id).all()
+    sns = boto3.client("sns")
+    topic_arn = current_app.config["SNS_NEWDOCUMENT_ARN"]
+    for webhook in webhook_list:
+        if webhook.pdf:
+            webhook_text_type = ".pdf"
+        elif webhook.docx:
+            webhook_text_type = ".docx"
+        else:
+            webhook_text_type = None
+
+        message = {
+            "document_title": document.title,
+            "document_id": document.id,
+            "document_template_name": document_template.name,
+            "document_template_id": document_template.id,
+            "company_name": company.name,
+            "company_id": company.id,
+            "user_id": document.user.id,
+            "user_name": document.user.name,
+            "created_at": json.dumps(
+                document.created_at, indent=4, sort_keys=True, default=str
+            ),
+            "valor_contrato": document.valor_contrato,
+            "data_inicio_contrato": document.data_inicio_contrato,
+            "data_final_contrato": document.data_final_contrato,
+            "data_assinatura": document.data_assinatura,
+            "nome_contrato": document.nome_contrato,
+            "webhook_url": webhook.webhook,
+            "text_type": webhook_text_type,
+        }
+
+        response = sns.publish(
+            TargetArn=topic_arn,
+            Message=json.dumps({"default": json.dumps(message)}),
+            MessageStructure="json",
+        )
