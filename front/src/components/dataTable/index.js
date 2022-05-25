@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { string, shape, arrayOf, array, number, func, bool } from 'prop-types'
+import {
+	string,
+	shape,
+	arrayOf,
+	array,
+	number,
+	func,
+	bool,
+	object,
+} from 'prop-types'
 import { Table, Input, Button, Empty } from 'antd'
 
 const { Search } = Input
@@ -16,6 +25,7 @@ const DataTable = ({
 	placeholderNoData,
 	loading,
 	buttons,
+	rowSelection,
 }) => {
 	const [search, setSearch] = useState('')
 	return (
@@ -65,6 +75,7 @@ const DataTable = ({
 					cancelSort: 'Clique para cancelar ordenação',
 				}}
 				loading={loading}
+				rowSelection={rowSelection}
 			/>
 		</>
 	)
@@ -91,6 +102,7 @@ DataTable.propTypes = {
 	placeholderNoData: string,
 	loading: bool,
 	buttons: array,
+	rowSelection: object,
 }
 
 DataTable.defaultProps = {

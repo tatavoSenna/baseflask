@@ -14,6 +14,7 @@ import {
 	listContract,
 	deleteContract,
 	deleteFolder,
+	deleteSelected,
 	createLink,
 	setShowModal,
 	setShowLinkModal,
@@ -63,9 +64,7 @@ const Contracts = () => {
 
 	const { data: models } = useSelector(({ model }) => model)
 
-	const { is_admin, company_id, is_financial } = useSelector(
-		({ session }) => session
-	)
+	const { company_id, is_financial } = useSelector(({ session }) => session)
 
 	useEffect(() => {
 		dispatch(getCompanyInfo({ id: company_id }))
@@ -158,27 +157,28 @@ const Contracts = () => {
 		dispatch(setMoveFolderModal(value))
 	}
 
-	const handleToGo = (record) =>
-		history.push({
-			pathname: `/documents/${record.id}`,
-		})
+	const handleToGo = (record) => {
+		if (record.is_folder) {
+			dispatch(listContract({ parent: record.id }))
+			dispatch(setChooseFolder(record))
+		} else {
+			history.push({
+				pathname: `/documents/${record.id}`,
+			})
+		}
+	}
 
-	const handleDeleteContract = (record) =>
-		dispatch(deleteContract({ id: record.id, pages }))
-
-	const handleDeleteFolder = (record) =>
-		dispatch(deleteFolder({ id: record.id, pages }))
+	const handleDelete = (record) => {
+		if (Array.isArray(record)) dispatch(deleteSelected({ ids: record, pages }))
+		else if (record.is_folder) dispatch(deleteFolder({ id: record.id, pages }))
+		else dispatch(deleteContract({ id: record.id, pages }))
+	}
 
 	const getContracts = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent, order_by, order }))
 
 	const handleSearch = ({ page, perPage, search }) =>
 		dispatch(listContract({ page, perPage, search, parent, order_by, order }))
-
-	const handleFolderSelect = (folder) => {
-		dispatch(listContract({ parent: folder.id }))
-		dispatch(setChooseFolder(folder))
-	}
 
 	const sortTable = (parameter) => {
 		var currentOrder
@@ -251,6 +251,8 @@ const Contracts = () => {
 			  )
 	}, [dispatch, accessFolders])
 
+	const [selectedContracts, setSelectedContracts] = useState([])
+
 	return (
 		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
@@ -318,12 +320,10 @@ const Contracts = () => {
 					<DataTable
 						columns={getColumns(
 							handleToGo,
-							handleDeleteContract,
-							handleDeleteFolder,
-							handleFolderSelect,
-							is_admin,
+							handleDelete,
 							setMoveNode,
-							sortTable
+							sortTable,
+							selectedContracts
 						)}
 						dataSource={contracts}
 						pages={pages}
@@ -341,6 +341,19 @@ const Contracts = () => {
 							},
 						]}
 						sortTable={sortTable}
+						rowSelection={{
+							columnWidth: '64px',
+							selectedRowKeys: selectedContracts,
+							onChange: (keys) => setSelectedContracts(keys),
+							getCheckboxProps: (record) => {
+								if (record.is_folder) return { disabled: true }
+								else return {}
+							},
+							renderCell: (checked, record, index, originNode) => {
+								if (record.is_folder) return null
+								else return originNode
+							},
+						}}
 					/>
 				</Layout>
 			</Layout>

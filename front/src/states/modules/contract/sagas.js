@@ -14,11 +14,10 @@ import {
 	createLinkSuccess,
 	createLinkFailure,
 	deleteContract,
-	deleteContractSuccess,
-	deleteContractFailure,
 	deleteFolder,
-	deleteFolderSuccess,
-	deleteFolderFailure,
+	deleteSelected,
+	deleteSuccess,
+	deleteFailure,
 	viewContract,
 } from '.'
 
@@ -27,6 +26,7 @@ export default function* rootSaga() {
 	yield takeEvery(createLink, createLinkSaga)
 	yield takeEvery(deleteContract, deleteContractSaga)
 	yield takeEvery(deleteFolder, deleteFolderSaga)
+	yield takeEvery(deleteSelected, deleteSelectedSaga)
 	yield takeEvery(viewContract, viewSaga)
 }
 
@@ -108,15 +108,15 @@ function* deleteContractSaga({ payload = {} }) {
 			api.get,
 			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
 		)
-		yield put(deleteContractSuccess(data))
+		yield put(deleteSuccess(data))
 		successMessage({
 			content: 'Documento excluído com sucesso.',
 			updateKey: 'deleteContractSaga',
 		})
 	} catch (error) {
-		yield put(deleteContractFailure(error))
+		yield put(deleteFailure(error))
 		errorMessage({
-			content: 'Exclusão do documento falhou.',
+			content: 'Falha ao excluir documento.',
 			updateKey: 'deleteContractSaga',
 		})
 	}
@@ -135,16 +135,43 @@ function* deleteFolderSaga({ payload = {} }) {
 			api.get,
 			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
 		)
-		yield put(deleteFolderSuccess(data))
+		yield put(deleteSuccess(data))
 		successMessage({
 			content: 'Pasta excluída com sucesso.',
 			updateKey: 'deleteFolderSaga',
 		})
 	} catch (error) {
-		yield put(deleteFolderFailure(error))
+		yield put(deleteFailure(error))
 		errorMessage({
-			content: 'Pasta não está vazia. Apague o conteúdo primeiro',
+			content: 'Falha ao excluir pasta.',
 			updateKey: 'deleteFolderSaga',
+		})
+	}
+}
+
+function* deleteSelectedSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Excluindo itens selecionados...',
+		updateKey: 'deleteSelectedSaga',
+	})
+	const { ids, pages } = payload
+	const { perPage = 10, page = 1, search = '' } = pages
+	try {
+		yield call(api.delete, '/documents/', { data: { document_ids: ids } })
+		const { data } = yield call(
+			api.get,
+			`/documents/?per_page=${perPage}&page=${page}&search=${search}`
+		)
+		yield put(deleteSuccess(data))
+		successMessage({
+			content: 'Seleção excluída com sucesso.',
+			updateKey: 'deleteSelectedSaga',
+		})
+	} catch (error) {
+		yield put(deleteFailure(error))
+		errorMessage({
+			content: 'Falha ao excluir seleção.',
+			updateKey: 'deleteSelectedSaga',
 		})
 	}
 }
