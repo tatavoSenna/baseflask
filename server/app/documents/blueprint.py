@@ -323,7 +323,7 @@ def create(current_user):
         )
     else:
         # Check if document template and variables are being communicated
-        if not document_template_id or not variables:
+        if not document_template_id:
             error_msg = "Value is missing. Needs questions and document model id"
             return jsonify({"message": error_msg}), 400
 

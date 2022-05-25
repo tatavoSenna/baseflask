@@ -17,6 +17,7 @@ import Home from './pages/home'
 
 import AuthWrapper from '~/components/authWrapper'
 import RedirectNewUser from '~/components/redirectNewUser'
+import EditDocument from 'pages/editDocument'
 
 export const ROUTES = {
 	docusign: '/docusign-token',
@@ -29,6 +30,7 @@ export const ROUTES = {
 	newTemplate: '/templates/new',
 	editTemplate: '/templates/edit',
 	documentDetails: '/documents/:id(\\d+)',
+	editDocumentDetails: '/documents/:id/edit',
 	externalContract: '/documentcreate/:token',
 	settings: '/settings',
 	companies: '/companies',
@@ -60,6 +62,11 @@ function Routes() {
 							exact
 							path={ROUTES.documentDetails}
 							component={DocumentDetails}
+						/>
+						<Route
+							exact
+							path={ROUTES.editDocumentDetails}
+							component={EditDocument}
 						/>
 						<Route
 							exact

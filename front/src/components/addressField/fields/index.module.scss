@@ -20,20 +20,20 @@
 
 .complement {
 	order: 1;
-	flex: 1 0 238px;
-}
-
-.district {
-	order: 2;
-	flex: 1 0 238px;
+	flex: 0 238px;
 }
 
 .state {
 	order: 3;
-	flex: 1 0 238px;
+	flex: 0 238px;
+}
+
+.district {
+	order: 1;
+	flex: 0 238px;
 }
 
 .city {
 	order: 3;
-	flex: 1 0 238px;
+	flex: 0 238px;
 }

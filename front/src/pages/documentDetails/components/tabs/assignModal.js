@@ -36,16 +36,17 @@ const AssignModal = ({
 	// extract name, surname and email from infos and put in theirs respective arrays
 	const fields = infos?.map((info) => info.fields).flat()
 	const personFields = fields?.filter((field) => field?.type === 'person')
-	const itemsInfo = personFields?.map((field) => field?.items)
+	const itemsValue = personFields?.map((field) => field.initialValue).flat()
 
-	if (itemsInfo !== undefined) {
-		objArrayNameEmail = itemsInfo.reduce((a, value) => {
-			let nameSurname =
-				(value.find((f) => f.field_type === 'name')?.value ?? '') +
-				' ' +
-				(value.find((f) => f.field_type === 'surname')?.value ?? '')
+	if (itemsValue !== undefined) {
+		objArrayNameEmail = itemsValue.reduce((a, value) => {
+			let nameSurname = ''
+			let valueEmail = ''
+			if (value !== undefined) {
+				nameSurname = (value['name'] ?? '') + ' ' + (value['surname'] ?? '')
 
-			let valueEmail = value.find((f) => f.field_type === 'email')?.value
+				valueEmail = value['email'] ?? ''
+			}
 
 			return { ...a, [nameSurname.trim()]: valueEmail }
 		}, {})

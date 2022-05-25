@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Layout } from 'antd'
 import styled from 'styled-components'
+
+import { useDispatch } from 'react-redux'
+import { answerRequest } from '~/states/modules/answer'
 
 import FormFactory from '~/components/formFactory'
 
 function AddContract() {
 	const { loadingAnswer } = useSelector(({ answer }) => answer)
 	const { loading } = useSelector(({ question }) => question)
+	const dispatch = useDispatch()
+
+	const handleFinish = useCallback(
+		(visible, history) => {
+			dispatch(answerRequest({ history, visible }))
+		},
+		[dispatch]
+	)
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
@@ -23,7 +34,7 @@ function AddContract() {
 					/>
 				</LoadingContainer>
 			) : !loading ? (
-				<FormFactory />
+				<FormFactory onFinish={handleFinish} cancelRoute={'/documents'} />
 			) : null}
 		</Layout>
 	)
