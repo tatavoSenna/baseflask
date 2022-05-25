@@ -6,12 +6,10 @@ import Delete from '~/components/deleteConfirm'
 
 export const getColumns = (
 	handleToGo,
-	handleDeleteContract,
-	handleDeleteFolder,
-	handleFolderSelect,
-	is_admin,
+	handleDelete,
 	setMoveNode,
-	sortTable
+	sortTable,
+	selectedDocuments
 ) => [
 	{
 		title: 'Descrição',
@@ -20,11 +18,7 @@ export const getColumns = (
 		render: (text, row) => (
 			<Space size="small">
 				{row.is_folder ? <FolderOutlined /> : null}
-				<Button
-					type="link"
-					onClick={() =>
-						!row.is_folder ? handleToGo(row) : handleFolderSelect(row)
-					}>
+				<Button type="link" onClick={() => handleToGo(row)}>
 					{text}
 				</Button>
 			</Space>
@@ -155,31 +149,42 @@ export const getColumns = (
 		title: '',
 		dataIndex: 'action',
 		key: 'action',
-		render: (text, row) => (
-			<Space size="middle">
-				{!row.is_folder ? (
-					<Delete
-						title="Deseja excluir esse documento?"
-						handle={() => handleDeleteContract(row)}
-					/>
-				) : (
-					<Delete
-						title="Deseja excluir essa pasta?"
-						handle={() => handleDeleteFolder(row)}
-					/>
-				)}
-				<Tooltip title={'Mover para outra pasta'}>
-					<FolderOpenOutlined
-						style={{
-							fontSize: '20px',
-							color: '#1890FF',
-							verticalAlign: 'middle',
-							margin: 'auto',
-						}}
-						onClick={() => setMoveNode(row)}
-					/>
-				</Tooltip>
-			</Space>
-		),
+		render: (text, row) => {
+			const isSelected = selectedDocuments.includes(row.id)
+
+			return (
+				<Space size="middle">
+					{isSelected ? (
+						<Delete
+							title={`Deseja excluir os ${selectedDocuments.length} itens selecionados?`}
+							handle={() => handleDelete(selectedDocuments)}
+							tooltip={{
+								title: 'Deletar selecionados',
+							}}
+						/>
+					) : (
+						<Delete
+							title={
+								row.is_folder
+									? 'Deseja excluir essa pasta?'
+									: 'Deseja excluir esse documento?'
+							}
+							handle={() => handleDelete(row)}
+						/>
+					)}
+					<Tooltip title={isSelected ? '' : 'Mover para outra pasta'}>
+						<FolderOpenOutlined
+							style={{
+								fontSize: '20px',
+								color: isSelected ? 'lightgray' : '#1890FF',
+								verticalAlign: 'middle',
+								margin: 'auto',
+							}}
+							onClick={isSelected ? undefined : () => setMoveNode(row)}
+						/>
+					</Tooltip>
+				</Space>
+			)
+		},
 	},
 ]
