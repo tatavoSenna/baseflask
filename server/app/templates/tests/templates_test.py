@@ -38,15 +38,14 @@ def test_create_template_controller(upload_template_mock):
     assert template_id == 1
 
 
-@patch("app.templates.controllers.RemoteTemplate.delete_template")
-def test_delete_template(delete_template_mock):
+def test_delete_template():
     company = factories.CompanyFactory(id=17)
     template = factories.DocumentTemplateFactory(id=77, company=company)
     ret_template = get_template_controller(template.company.id, template.id)
     delete_template_controller(ret_template)
 
-    assert get_template_controller(17, 77) == None
-    delete_template_mock.assert_called_once_with(ret_template)
+    assert get_template_controller(17, 77).deleted == True
+    assert get_template_controller(17, 77).deleted_at != None
 
 
 @patch("app.templates.controllers.RemoteTemplate.download_file_template")

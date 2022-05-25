@@ -85,6 +85,7 @@ class Document(db.Model):
         db.Boolean, default=False, nullable=False, server_default="false"
     )
     deleted_at = db.Column(db.DateTime, nullable=True)
+    draft = db.Column(db.Boolean, default=False, nullable=False, server_default="false")
 
     d4sign_document_uuid = db.Column(db.String(255), unique=True, nullable=True)
 
