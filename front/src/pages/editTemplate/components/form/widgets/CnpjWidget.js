@@ -14,7 +14,7 @@ import { validateCNPJ } from 'utils'
 export const CnpjWidget = React.memo((props) => {
 	const { data } = props
 
-	const isValidCnpj = (value) => validateCNPJ(value) || value === ''
+	const isValidCnpj = (value) => !value || validateCNPJ(value)
 
 	const update = useUpdate(props)
 	const [valid, setValid] = useValidation(props)
