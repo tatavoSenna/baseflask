@@ -11,6 +11,7 @@ const NumberField = ({
 	onChange,
 	first,
 	disabled,
+	visible,
 }) => {
 	const {
 		label,
@@ -28,10 +29,6 @@ const NumberField = ({
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	return (
 		<Form.Item
@@ -42,7 +39,7 @@ const NumberField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{
 						required: !optional,
 						message: 'Este campo é obrigatório.',
@@ -78,12 +75,14 @@ NumberField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	visible: bool,
 }
 
 NumberField.defaultProps = {
 	inputValue: '',
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default NumberField

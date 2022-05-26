@@ -1,19 +1,10 @@
 import React from 'react'
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, number, string } from 'prop-types'
 import styled from 'styled-components'
+
 import CepField from 'components/cepField'
 
-const AttorneyCEP = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-}) => {
+const AttorneyCEP = ({ key, name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'cep',
@@ -30,15 +21,7 @@ const AttorneyCEP = ({
 	return (
 		<React.Fragment key={key}>
 			<Title>Endereço do procurador</Title>
-			<CepField
-				key={key}
-				first={first}
-				pageFieldsData={pageFieldsData}
-				inputValue={inputValue}
-				onChange={onChange}
-				disabled={disabled}
-				className={className}
-			/>
+			<CepField {...fieldProps} pageFieldsData={pageFieldsData} />
 		</React.Fragment>
 	)
 }
@@ -54,14 +37,9 @@ const Title = styled.p`
 
 AttorneyCEP.propTypes = {
 	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
 	fieldType: string,
-	className: string,
 }
 
 export default AttorneyCEP

@@ -9,8 +9,9 @@ const DatabaseField = ({
 	className,
 	onChange,
 	inputValue,
-	disabled,
 	form,
+	disabled,
+	visible,
 }) => {
 	const { variable } = pageFieldsData
 	const url = variable?.database_endpoint
@@ -40,7 +41,7 @@ const DatabaseField = ({
 		<DropdownField
 			notFoundContent={error ? 'Falha ao requisitar API externa' : undefined}
 			pageFieldsData={{ ...pageFieldsData, options }}
-			{...{ className, onChange, inputValue, disabled, form }}
+			{...{ className, onChange, inputValue, disabled, visible, form }}
 		/>
 	)
 }
@@ -57,10 +58,12 @@ DatabaseField.propTypes = {
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 DatabaseField.defaultProps = {
 	onChange: () => null,
+	visible: true,
 }
 
 export default DatabaseField

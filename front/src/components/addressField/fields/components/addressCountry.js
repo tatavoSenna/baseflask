@@ -1,19 +1,9 @@
 import React from 'react'
+import PropTypes, { bool, number, string } from 'prop-types'
+
 import TextField from 'components/textField'
 
-import PropTypes, { bool, func, number, string } from 'prop-types'
-
-const AddressCountry = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-}) => {
+const AddressCountry = ({ name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
@@ -27,29 +17,13 @@ const AddressCountry = ({
 		},
 	}
 
-	return (
-		<TextField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <TextField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 AddressCountry.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	fieldType: string,
-	className: string,
-	disabled: bool,
 	optional: bool,
+	fieldType: string,
 }
 
 export default AddressCountry

@@ -11,6 +11,7 @@ const AddressField = ({
 	pageFieldsData,
 	className,
 	disabled,
+	visible,
 	inputValue,
 	onChange,
 	form,
@@ -42,6 +43,7 @@ const AddressField = ({
 					fields={fields}
 					name={variable.name}
 					disabled={disabled}
+					visible={visible}
 					optional={optional}
 					onChange={onChange}
 					inputValue={_addressValue}
@@ -62,6 +64,7 @@ AddressField.propTypes = {
 	}).isRequired,
 	className: PropTypes.oneOfType([object, string]),
 	disabled: bool,
+	visible: bool,
 	form: object,
 	inputValue: object,
 	onChange: func,
@@ -70,6 +73,7 @@ AddressField.propTypes = {
 AddressField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default AddressField

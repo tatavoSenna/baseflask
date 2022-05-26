@@ -1,21 +1,9 @@
 import React from 'react'
+import PropTypes, { bool, number, string } from 'prop-types'
 
-import PropTypes, { bool, func, number, object, string } from 'prop-types'
 import CityField from 'components/cityField'
 
-const AddressCity = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-	state,
-	form,
-}) => {
+const AddressCity = ({ name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'city',
@@ -29,33 +17,13 @@ const AddressCity = ({
 		},
 	}
 
-	return (
-		<CityField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-			state={state}
-			form={form}
-		/>
-	)
+	return <CityField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 AddressCity.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	fieldType: string,
-	className: string,
-	form: object,
-	disabled: bool,
 	optional: bool,
-	state: string,
+	fieldType: string,
 }
 
 export default AddressCity

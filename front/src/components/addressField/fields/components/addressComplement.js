@@ -1,18 +1,9 @@
 import React from 'react'
+import PropTypes, { number, string } from 'prop-types'
+
 import TextField from 'components/textField'
 
-import PropTypes, { bool, func, number, string } from 'prop-types'
-
-const AddressComplement = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	fieldType,
-	className,
-}) => {
+const AddressComplement = ({ name, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
@@ -26,28 +17,12 @@ const AddressComplement = ({
 		},
 	}
 
-	return (
-		<TextField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <TextField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 AddressComplement.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
 	fieldType: string,
-	className: string,
-	disabled: bool,
 }
 
 export default AddressComplement

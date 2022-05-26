@@ -5,6 +5,7 @@ const Fields = ({
 	fields,
 	name,
 	disabled,
+	visible,
 	optional,
 	onChange,
 	inputValue,
@@ -30,6 +31,7 @@ const Fields = ({
 			name,
 			inputValue,
 			disabled,
+			visible,
 			optional,
 			form,
 		}
@@ -60,6 +62,10 @@ const Fields = ({
 
 		return null
 	})
+}
+
+Fields.defaultProps = {
+	visible: true,
 }
 
 export default Fields

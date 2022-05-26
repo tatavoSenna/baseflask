@@ -12,6 +12,7 @@ const RadioField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 	form,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
@@ -19,11 +20,6 @@ const RadioField = ({
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	const returnLabel = () => {
 		if (optional && label.length > 0) {
@@ -48,7 +44,7 @@ const RadioField = ({
 			className={`${className} ${styles['form-radio']}`}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -79,10 +75,12 @@ RadioField.propTypes = {
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 RadioField.defaultProps = {
 	onChange: () => null,
+	visible: true,
 }
 
 export default RadioField

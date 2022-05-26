@@ -12,11 +12,12 @@ import { getAllClasses, getAllComponents } from './utils/dictsImport'
 const LegalPerson = ({
 	fields,
 	name,
-	disabled,
-	optional,
-	onChange,
-	inputValue,
 	form,
+	inputValue,
+	onChange,
+	optional,
+	disabled,
+	visible,
 }) => {
 	let fieldState = ''
 	if (typeof fields !== 'string') {
@@ -46,6 +47,7 @@ const LegalPerson = ({
 			inputValue,
 			onChange,
 			disabled,
+			visible,
 			optional,
 			form,
 		}
@@ -89,8 +91,13 @@ LegalPerson.propTypes = {
 	fields: array,
 	name: PropTypes.oneOfType([number, string]),
 	disabled: bool,
+	visible: bool,
 	onChange: func,
 	inputValue: object,
+}
+
+LegalPerson.defaultProps = {
+	visible: true,
 }
 
 export default LegalPerson

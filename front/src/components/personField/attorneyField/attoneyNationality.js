@@ -1,19 +1,15 @@
 import React from 'react'
-import PropTypes, { bool, func, number, string } from 'prop-types'
-import TextField from 'components/textField'
-
+import PropTypes, { bool, number, string } from 'prop-types'
 import styled from 'styled-components'
+
+import TextField from 'components/textField'
 
 const AttorneyNationality = ({
 	key,
-	first,
 	name,
-	inputValue,
-	onChange,
-	disabled,
 	optional,
 	fieldType,
-	className,
+	...fieldProps
 }) => {
 	const pageFieldsData = {
 		info: '',
@@ -31,15 +27,7 @@ const AttorneyNationality = ({
 	return (
 		<React.Fragment key={key}>
 			<Title>Procurador</Title>
-			<TextField
-				key={key}
-				first={first}
-				pageFieldsData={pageFieldsData}
-				inputValue={inputValue}
-				onChange={onChange}
-				disabled={disabled}
-				className={className}
-			/>
+			<TextField {...fieldProps} pageFieldsData={pageFieldsData} />
 		</React.Fragment>
 	)
 }
@@ -55,14 +43,9 @@ const Title = styled.p`
 
 AttorneyNationality.propTypes = {
 	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
 	fieldType: string,
-	className: string,
 }
 
 export default AttorneyNationality

@@ -17,18 +17,15 @@ const DropdownField = ({
 	className,
 	onChange,
 	inputValue,
-	disabled,
 	notFoundContent,
+	disabled,
+	visible,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
 		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	const returnLabel = () => {
 		if (label.length > 0) {
@@ -45,7 +42,7 @@ const DropdownField = ({
 			hasFeedback
 			className={`${className} ${styles['form-dropdown']}`}
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -80,10 +77,12 @@ DropdownField.propTypes = {
 	inputValue: string,
 	notFoundContent: node,
 	disabled: bool,
+	visible: bool,
 }
 
 DropdownField.defaultProps = {
 	onChange: () => null,
+	visible: true,
 }
 
 export default DropdownField
