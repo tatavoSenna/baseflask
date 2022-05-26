@@ -12,15 +12,13 @@ const CpfField = ({
 	first,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	return (
 		<Form.Item
 			key={name}
@@ -30,7 +28,7 @@ const CpfField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -69,11 +67,13 @@ CpfField.propTypes = {
 	first: bool,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 CpfField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default CpfField

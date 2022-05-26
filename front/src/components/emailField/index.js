@@ -9,18 +9,15 @@ const EmailField = ({
 	className,
 	onChange,
 	first,
-	disabled,
 	placeHolderRequirement,
 	OutsideLabel,
+	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	const returnLabel = () => {
 		if (label.length > 0) {
@@ -39,7 +36,7 @@ const EmailField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ type, message: 'E-mail não é válido.' },
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
@@ -69,6 +66,7 @@ EmailField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	visible: bool,
 	OutsideLabel: string,
 	placeHolderRequirement: string,
 }
@@ -77,6 +75,7 @@ EmailField.defaultProps = {
 	onChange: () => null,
 	placeHolderRequirement: '',
 	OutsideLabel: '',
+	visible: true,
 }
 
 export default EmailField

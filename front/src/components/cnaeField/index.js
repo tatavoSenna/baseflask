@@ -12,15 +12,13 @@ const CnaeField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	const dispatch = useDispatch()
 	const cnaeDescription = []
 	useEffect(() => {
@@ -41,7 +39,7 @@ const CnaeField = ({
 			hasFeedback
 			className={className}
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -74,11 +72,13 @@ CnaeField.propTypes = {
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 CnaeField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default CnaeField

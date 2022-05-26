@@ -1,5 +1,5 @@
 import React from 'react'
-import { string, object, func, shape, number } from 'prop-types'
+import { string, object, func, shape, number, bool } from 'prop-types'
 import { Card, Form, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
@@ -11,6 +11,7 @@ const StructuredList = ({
 	onChange,
 	pageIndex,
 	fieldIndex,
+	visible,
 }) => {
 	const { label, variable, structure, type, id, info, optional } =
 		pageFieldsData
@@ -24,7 +25,11 @@ const StructuredList = ({
 			hasFeedback
 			type={type}
 			colon={false}
-			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}>
+			rules={
+				visible && [
+					{ required: !optional, message: 'Este campo é obrigatório.' },
+				]
+			}>
 			<Card>
 				<Form.List name={`structured_list_${pageIndex}_${fieldIndex}`}>
 					{(fields, { add, remove }) => {
@@ -71,11 +76,13 @@ StructuredList.propTypes = {
 	onChange: func,
 	pageIndex: number,
 	fieldIndex: number,
+	visible: bool,
 }
 
 StructuredList.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default StructuredList

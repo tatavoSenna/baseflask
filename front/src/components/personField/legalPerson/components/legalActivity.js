@@ -1,18 +1,9 @@
 import React from 'react'
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, number, string } from 'prop-types'
+
 import TextField from 'components/textField'
 
-const LegalActivity = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-}) => {
+const LegalActivity = ({ name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'text',
@@ -26,29 +17,13 @@ const LegalActivity = ({
 		},
 	}
 
-	return (
-		<TextField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <TextField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 LegalActivity.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
 	fieldType: string,
-	className: string,
 }
 
 export default LegalActivity

@@ -12,11 +12,12 @@ import { getAllClasses, getAllComponents } from './utils/dictsImport'
 const NaturalPerson = ({
 	fields,
 	name,
-	disabled,
-	optional,
-	onChange,
-	inputValue,
 	form,
+	inputValue,
+	onChange,
+	optional,
+	disabled,
+	visible,
 }) => {
 	let fieldMarital = ''
 	if (typeof fields !== 'string') {
@@ -47,6 +48,7 @@ const NaturalPerson = ({
 			inputValue,
 			onChange,
 			disabled,
+			visible,
 			optional,
 			form,
 		}
@@ -97,8 +99,13 @@ NaturalPerson.propTypes = {
 	fields: array,
 	name: PropTypes.oneOfType([number, string]),
 	disabled: bool,
+	visible: bool,
 	onChange: func,
 	inputValue: object,
+}
+
+NaturalPerson.defaultProps = {
+	visible: true,
 }
 
 export default NaturalPerson

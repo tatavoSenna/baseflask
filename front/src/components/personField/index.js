@@ -19,10 +19,11 @@ import NaturalPerson from './naturalPerson'
 const PersonField = ({
 	pageFieldsData,
 	className,
-	disabled,
 	inputValue,
 	onChange,
 	form,
+	disabled,
+	visible,
 }) => {
 	const { label, variable, type, fields, id, person_type, optional } =
 		pageFieldsData
@@ -68,9 +69,11 @@ const PersonField = ({
 				<Form.Item
 					name={[variable.name, 'PERSON_TYPE']}
 					initialValue={_value}
-					rules={[
-						{ required: !optional, message: 'Este campo é obrigatório!' },
-					]}>
+					rules={
+						visible && [
+							{ required: !optional, message: 'Este campo é obrigatório!' },
+						]
+					}>
 					<SBtnGroup onChange={personChange} btnProps={person}>
 						<SBtnRadio value="natural_person">Pessoa física</SBtnRadio>
 						<SBtnRadio value="legal_person">Pessoa jurídica</SBtnRadio>
@@ -91,6 +94,7 @@ const PersonField = ({
 						fields={fields}
 						name={variable.name}
 						disabled={disabled}
+						visible={visible}
 						optional={optional}
 						onChange={onChange}
 						form={form}
@@ -102,6 +106,7 @@ const PersonField = ({
 						fields={fields}
 						name={variable.name}
 						disabled={disabled}
+						visible={visible}
 						optional={optional}
 						onChange={onChange}
 						inputValue={_personValue}
@@ -124,8 +129,13 @@ PersonField.propTypes = {
 	className: string,
 	form: object,
 	disabled: bool,
+	visible: bool,
 	inputValue: object,
 	onChange: func,
+}
+
+PersonField.defaultProps = {
+	visible: true,
 }
 
 export default PersonField

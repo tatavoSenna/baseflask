@@ -1,19 +1,9 @@
 import React from 'react'
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, number, string } from 'prop-types'
 
 import DropdownField from 'components/dropdownField'
 
-const Pronoun = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-}) => {
+const Pronoun = ({ name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'dropdown',
@@ -41,29 +31,13 @@ const Pronoun = ({
 		],
 	}
 
-	return (
-		<DropdownField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <DropdownField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 Pronoun.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	fieldType: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
-	className: string,
+	fieldType: string,
 }
 
 export default Pronoun

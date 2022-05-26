@@ -1,19 +1,14 @@
 import React from 'react'
-import PropTypes, { bool, func, number, object, string } from 'prop-types'
+import PropTypes, { bool, number, string } from 'prop-types'
 
 import DropdownField from 'components/dropdownField'
 
 const PersonMaritalState = ({
-	key,
-	first,
 	name,
-	inputValue,
-	onChange,
-	disabled,
 	optional,
 	fieldType,
-	className,
 	pronoun,
+	...fieldProps
 }) => {
 	const flexPronuon = (type, string) => {
 		switch (type) {
@@ -61,31 +56,14 @@ const PersonMaritalState = ({
 		],
 	}
 
-	return (
-		<DropdownField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <DropdownField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 PersonMaritalState.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
 	fieldType: string,
-	className: string,
 	pronoun: string,
-	form: object,
 }
 
 export default PersonMaritalState

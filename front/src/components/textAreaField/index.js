@@ -10,16 +10,14 @@ const TextAreaField = ({
 	onChange,
 	first,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, placeholder, optional } =
 		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	const { TextArea } = Input
 	return (
 		<Form.Item
@@ -31,7 +29,7 @@ const TextAreaField = ({
 			onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -59,12 +57,14 @@ TextAreaField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	visible: bool,
 }
 
 TextAreaField.defaultProps = {
 	inputValue: '',
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default TextAreaField

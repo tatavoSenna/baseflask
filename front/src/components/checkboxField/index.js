@@ -9,6 +9,7 @@ const CheckboxField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, options, id, info, list, optional } =
 		pageFieldsData
@@ -24,12 +25,14 @@ const CheckboxField = ({
 			hasFeedback
 			type={type}
 			colon={false}
-			rules={[
-				{
-					required: !optional,
-					message: 'Este campo é obrigatório.',
-				},
-			]}
+			rules={
+				visible && [
+					{
+						required: !optional,
+						message: 'Este campo é obrigatório.',
+					},
+				]
+			}
 			initialValue={
 				!inputValue ? '' : Array.isArray(inputValue) ? inputValue : [inputValue]
 			}>
@@ -56,10 +59,12 @@ CheckboxField.propTypes = {
 	onChange: func,
 	inputValue: PropTypes.oneOfType([array, string]),
 	disabled: bool,
+	visible: bool,
 }
 
 CheckboxField.defaultProps = {
 	onChange: () => null,
+	visible: true,
 }
 
 export default CheckboxField

@@ -10,15 +10,13 @@ const DateField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	return (
 		<Form.Item
 			key={name}
@@ -28,7 +26,7 @@ const DateField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -55,6 +53,11 @@ DateField.propTypes = {
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
+}
+
+DateField.defaultProps = {
+	visible: true,
 }
 
 export default DateField
