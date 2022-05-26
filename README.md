@@ -4,36 +4,17 @@
 
 ### Development setup
 
-1) Build and start Docker images
+1. Build and start Docker images
+
 ```
 $ cd server
 $ docker-compose up --build -d
 ```
 
-2) Make your own copy of .env file  
+2. Make your own copy of .env file
+
 ```
 $ cp .env.sample .env
 ```
 
-3) Enter app container
-```
-$ docker exec -it server_app_1 /bin/sh
-```
-
-4) Execute migrations
-```
-$ flask db upgrade --directory /opt/app/migrations;
-```
-
-5) Run tests (optional)
-```
-$ pytest
-```
-
-6) Run flask server
-```
-$ flask run
-```
-
-7) Point your browser to *http://127.0.0.0:5000*
-
+3. Point your browser to *http://127.0.0.0:5000*
