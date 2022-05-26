@@ -14,7 +14,7 @@ import { validateCPF } from 'utils'
 export const CpfWidget = React.memo((props) => {
 	const { data } = props
 
-	const isValidCpf = (value) => validateCPF(value) || value === ''
+	const isValidCpf = (value) => !value || validateCPF(value)
 
 	const update = useUpdate(props)
 	const [valid, setValid] = useValidation(props)
