@@ -1,12 +1,30 @@
 version: "3.7"
 
 services:
+  app:
+    build:
+      context: .
+      dockerfile: ./devops/Dockerfile.dev
+    image: lawing_flask:latest
+    restart: always
+    tty: true
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/opt
+    working_dir: /opt
+    networks:
+      - dev-network
+    tmpfs:
+      - /tmp
+    command: bash -c "flask db upgrade --directory app/migrations && flask run"
+
   postgres:
     image: postgres:12.2
-    environment:
-      POSTGRES_MULTIPLE_DATABASES:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
     environment:
         - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
         - POSTGRES_USER=lawing_user
@@ -29,38 +47,22 @@ services:
       - 9000:9000
     networks:
         - dev-network
-    depends_on:
-      - postgres
-  app:
-    build:
-      context: .
-      dockerfile: ./devops/Dockerfile.dev
-    image: lawing_flask:latest
-    restart: always
-    tty: true
-    depends_on:
-      - postgres
-    ports:
-      - 5000:5000
-    volumes:
-      - ./:/opt
-    working_dir: /opt
-    networks:
-      - dev-network
-    tmpfs:
-      - /tmp
-  
-  metabase-app:
-    image: metabase/metabase
-    restart: always
-    ports:
-      - 3001:3000
-    depends_on:
-      - postgres
     links:
       - postgres
-    networks:
-      - dev-network
+    depends_on:
+      - postgres
+
+  # metabase-app:
+  #   image: metabase/metabase
+  #   restart: always
+  #   ports:
+  #     - 3001:3000
+  #   depends_on:
+  #     - postgres
+  #   links:
+  #     - postgres
+  #   networks:
+  #     - dev-network
 
 networks:
   dev-network:
