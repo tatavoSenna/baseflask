@@ -1,15 +1,14 @@
 import React from 'react'
-import { object, string } from 'prop-types'
+import { func, object, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Button, Typography, PageHeader } from 'antd'
-import { appendAnswer, answerRequest } from '~/states/modules/answer'
+import { appendAnswer } from '~/states/modules/answer'
 import { nextPage, previousPage } from 'states/modules/question'
-import { createContractExternal } from '~/states/modules/externalContract'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
 
-const FormFactory = ({ token, initialValues = {} }) => {
+const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 	const dispatch = useDispatch()
 
 	const {
@@ -54,11 +53,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 		if (!isLastPage) {
 			dispatch(nextPage())
 		} else {
-			if (token) {
-				dispatch(createContractExternal({ token, visible }))
-			} else {
-				dispatch(answerRequest({ history, visible }))
-			}
+			onFinish(visible, history)
 		}
 	}
 
@@ -106,7 +101,7 @@ const FormFactory = ({ token, initialValues = {} }) => {
 									htmlType="button"
 									className={styles.button}
 									onClick={() => {
-										token ? handleGoTo('/') : handleGoTo('/documents')
+										handleGoTo(cancelRoute)
 									}}>
 									Cancelar
 								</Button>
@@ -140,4 +135,6 @@ export default FormFactory
 FormFactory.propTypes = {
 	token: string,
 	initialValues: object,
+	onFinish: func,
+	cancelRoute: string,
 }

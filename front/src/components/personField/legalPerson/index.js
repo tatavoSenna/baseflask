@@ -1,25 +1,34 @@
-import PropTypes, { array, bool, func, number, string } from 'prop-types'
+import PropTypes, {
+	array,
+	bool,
+	func,
+	number,
+	object,
+	string,
+} from 'prop-types'
 import { useState } from 'react'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
 const LegalPerson = ({
 	fields,
 	name,
-	disabled,
-	optional,
-	onChange,
-	inputValue,
 	form,
+	inputValue,
+	onChange,
+	optional,
+	disabled,
+	visible,
 }) => {
 	let fieldState = ''
 	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f?.field_type === 'state')
-		if (field !== undefined) fieldState = field?.value
+		const field = fields.find((f) => f === 'state')
+		if (field !== undefined) fieldState = inputValue[field]
 	}
+
 	let fieldStateAttorney = ''
 	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f?.field_type === 'attorney_state')
-		if (field !== undefined) fieldState = field?.value
+		const field = fields.find((f) => f === 'attorney_state')
+		if (field !== undefined) fieldStateAttorney = inputValue[field]
 	}
 
 	const components = getAllComponents()
@@ -38,12 +47,13 @@ const LegalPerson = ({
 			inputValue,
 			onChange,
 			disabled,
+			visible,
 			optional,
 			form,
 		}
 
 		if (typeof field === 'string') {
-			field = { field_type: field, value: '' }
+			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
 		for (let i = 0; i < componentsTypes.length; i++) {
@@ -81,8 +91,13 @@ LegalPerson.propTypes = {
 	fields: array,
 	name: PropTypes.oneOfType([number, string]),
 	disabled: bool,
+	visible: bool,
 	onChange: func,
-	inputValue: string,
+	inputValue: object,
+}
+
+LegalPerson.defaultProps = {
+	visible: true,
 }
 
 export default LegalPerson

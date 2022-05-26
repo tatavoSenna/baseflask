@@ -11,15 +11,13 @@ const BankField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	return (
 		<Form.Item
 			key={name}
@@ -28,7 +26,7 @@ const BankField = ({
 			hasFeedback
 			className={className}
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -61,11 +59,13 @@ BankField.propTypes = {
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 BankField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default BankField

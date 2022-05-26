@@ -31,7 +31,7 @@ const Widget = ({
 	onValidate = () => {},
 	updateFormInfo,
 }) => {
-	const variableNames = variables.map((x) => x?.name)
+	const variableNames = variables.map((x) => x?.name || x?.main?.name)
 
 	const [validVariableName, setValidVariableName] = useState(false)
 	const [validVariableStyle, setValidVariableStyle] = useState(false)

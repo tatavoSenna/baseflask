@@ -18,15 +18,12 @@ const TimeField = ({
 	listIndex,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, minute_step, optional } =
 		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const name = isObj ? variable.name : variable
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	return (
 		<Form.Item
@@ -37,8 +34,7 @@ const TimeField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden &&
-				className.slice(0, 19) !== 'inputFactory_hidden' && [
+				visible && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -77,11 +73,13 @@ TimeField.propTypes = {
 	listIndex: number,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 }
 
 TimeField.defaultProps = {
 	className: '',
 	onChange: () => null,
+	visible: true,
 }
 
 export default TimeField

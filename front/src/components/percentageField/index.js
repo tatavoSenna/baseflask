@@ -10,6 +10,7 @@ const PercentageField = ({
 	onChange,
 	first,
 	disabled,
+	visible,
 }) => {
 	const {
 		label,
@@ -27,10 +28,7 @@ const PercentageField = ({
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	return (
 		<Form.Item
 			key={name}
@@ -40,7 +38,7 @@ const PercentageField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -75,12 +73,14 @@ PercentageField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	visible: bool,
 }
 
 PercentageField.defaultProps = {
 	inputValue: '',
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default PercentageField

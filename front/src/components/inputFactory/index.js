@@ -44,13 +44,15 @@ function InputFactory({
 	const children = []
 
 	// Call updateVisible after first render, so the default values are considered for visibility
+
 	useEffect(() => {
-		if (typeof form !== 'undefined')
+		if (typeof form !== 'undefined') {
 			dispatch(
 				updateVisible({
 					form,
 				})
 			)
+		}
 	}, [dispatch, form, currentFormStep])
 
 	const conditionals = useSelector(({ question }) => question.conditionals)
@@ -99,7 +101,7 @@ function InputFactory({
 								})
 							)
 				  }
-				: undefined
+				: () => {}
 
 		switch (type) {
 			case 'radio':
@@ -110,6 +112,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						form={form}
 						onChange={onchange((e) => e.target.value)}
 					/>
@@ -123,6 +126,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 						first={first}
 					/>
@@ -136,6 +140,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 						first={first}
 					/>
@@ -149,6 +154,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 						first={first}
 					/>
@@ -162,6 +168,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -174,6 +181,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						form={form}
 						onChange={onchange()}
 					/>
@@ -187,6 +195,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -199,6 +208,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange((e) => e.target.value)}
 					/>
 				)
@@ -211,6 +221,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -223,6 +234,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -235,6 +247,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -247,6 +260,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -259,6 +273,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -271,6 +286,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -283,6 +299,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -296,6 +313,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 					/>
 				)
@@ -307,6 +325,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						onChange={onchange()}
+						visible={visible[i]}
 					/>
 				)
 				break
@@ -318,6 +337,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						disabled={disabled}
+						visible={visible[i]}
 						inputValue={defaultValue()}
 						fieldIndex={i}
 						form={form}
@@ -333,6 +353,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						disabled={disabled}
+						visible={visible[i]}
 						inputValue={defaultValue()}
 						fieldIndex={i}
 						form={form}
@@ -348,6 +369,7 @@ function InputFactory({
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
+						visible={visible[i]}
 					/>
 				)
 				break
@@ -360,6 +382,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						onChange={onchange((e) => e.target.value)}
+						visible={visible[i]}
 					/>
 				)
 				break
@@ -371,6 +394,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						form={form}
 						onChange={onchange()}
 					/>
@@ -391,6 +415,7 @@ function InputFactory({
 						className={isVisible}
 						inputValue={defaultValue()}
 						disabled={disabled}
+						visible={visible[i]}
 						onChange={onchange()}
 						first={first}
 					/>

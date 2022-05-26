@@ -103,7 +103,7 @@ const Editor = ({
 			],
 		},
 		licenseKey: 'mboC54zxmZJKbEk7qX54q1Do7KHIuLn2fwPhCh4EsmrFlMGa2wi/lfvS',
-		extraPlugins: [CommentsIntegration],
+		// extraPlugins: [CommentsIntegration],
 		exportPdf: {
 			stylesheets: ['EDITOR_STYLES'],
 			fileName: title,

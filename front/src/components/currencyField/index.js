@@ -10,15 +10,12 @@ const CurrencyField = ({
 	onChange,
 	inputValue,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	const locale = 'pt-br'
 	const currency = 'BRAZIL::BRL'
@@ -32,7 +29,7 @@ const CurrencyField = ({
 			className={className}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					() => ({
 						validator(rule, value) {
 							if (!value) {
@@ -72,11 +69,13 @@ CurrencyField.propTypes = {
 	onChange: func,
 	inputValue: number,
 	disabled: bool,
+	visible: bool,
 }
 
 CurrencyField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default CurrencyField

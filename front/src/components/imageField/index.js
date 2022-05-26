@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { string, shape, object, func } from 'prop-types'
+import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Upload, message, Modal, Input } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
-const ImageField = ({ pageFieldsData, className, onChange }) => {
+const ImageField = ({ pageFieldsData, className, visible, onChange }) => {
 	const { label, variable, info, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const [fileList, setFileList] = useState('')
-	const [visible, setVisible] = useState(false)
+	const [modalVisible, setModalVisible] = useState(false)
 	const [loading, setLoading] = useState('')
 
 	const uploadButton = (
@@ -44,7 +44,11 @@ const ImageField = ({ pageFieldsData, className, onChange }) => {
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			colon={false}
-			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}
+			rules={
+				visible && [
+					{ required: !optional, message: 'Este campo é obrigatório.' },
+				]
+			}
 			value={fileList.length > 0 ? fileList[0].url : ''}>
 			<div style={{ display: 'flex', marginBottom: '1rem' }}>
 				<Input
@@ -58,15 +62,15 @@ const ImageField = ({ pageFieldsData, className, onChange }) => {
 					multiple={false}
 					beforeUpload={beforeUpload}
 					onChange={onChange}
-					onPreview={() => setVisible(true)}
+					onPreview={() => setModalVisible(true)}
 					onRemove={() => setFileList([])}>
 					{fileList.length === 0 && uploadButton}
 				</Upload>
 				<Modal
-					visible={visible}
+					visible={modalVisible}
 					title={fileList.length > 0 ? fileList[0].name : ''}
 					footer={null}
-					onCancel={() => setVisible(false)}>
+					onCancel={() => setModalVisible(false)}>
 					<img
 						alt="imagem"
 						style={{ width: '100%' }}
@@ -86,6 +90,11 @@ ImageField.propTypes = {
 	}).isRequired,
 	onChange: func,
 	className: string,
+	visible: bool,
+}
+
+ImageField.defaultProps = {
+	visible: true,
 }
 
 export default ImageField

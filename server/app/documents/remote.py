@@ -84,6 +84,16 @@ class RemoteDocument:
 
         return docx_io
 
+    def download_pdf_from_documents(self, document, version_id):
+        pdf_io = io.BytesIO()
+        remote_path = f'{document.company_id}/{current_app.config["AWS_S3_DOCUMENTS_ROOT"]}/{document.id}/{version_id}.pdf'
+
+        self.s3_client.download_fileobj(
+            current_app.config["AWS_S3_DOCUMENTS_BUCKET"], remote_path, pdf_io
+        )
+
+        return pdf_io
+
     def download_text_from_template(self, document):
         text_file_io = io.BytesIO()
         remote_path = (

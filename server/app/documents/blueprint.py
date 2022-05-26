@@ -297,6 +297,7 @@ def create(current_user):
     title = content.get("title", None)
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", None)
+    draft = content.get("draft", False)
 
     # Check if content being created is a folder
     if is_folder:
@@ -322,7 +323,7 @@ def create(current_user):
         )
     else:
         # Check if document template and variables are being communicated
-        if not document_template_id or not variables:
+        if not document_template_id:
             error_msg = "Value is missing. Needs questions and document model id"
             return jsonify({"message": error_msg}), 400
 
@@ -338,6 +339,7 @@ def create(current_user):
                 variables,
                 parent,
                 is_folder,
+                draft,
             )
         # Logs errors if user is admin
         except jinja2.TemplateSyntaxError as e:
@@ -630,6 +632,8 @@ def modify_document(current_user, document_id):
     if not variables:
         return jsonify({"message": "Didn't receive new variables to replace"}), 400
 
+    draft = content.get("draft", False)
+
     document = get_document_controller(document_id)
 
     if not document:
@@ -646,7 +650,11 @@ def modify_document(current_user, document_id):
 
     try:
         change_variables_controller(
-            document, spec_variables, current_user["email"], variables
+            document,
+            spec_variables,
+            current_user["email"],
+            variables,
+            draft,
         )
     except Exception as e:
         logging.exception("Could not change document variables")

@@ -11,18 +11,16 @@ const CityField = ({
 	className,
 	onChange,
 	inputValue,
-	disabled,
 	state,
 	form,
+	disabled,
+	visible,
 }) => {
 	const { label, variable, type, id, info, list, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
+
 	const dispatch = useDispatch()
 	const cityName = []
 	useEffect(() => {
@@ -60,18 +58,26 @@ const CityField = ({
 			filteredCitys.map((name, index) => (cityName[index] = name.nome))
 		}
 
-		if (inputValue !== '' && (state !== '' || state !== undefined)) {
-			value = findAndChangeValue(
-				data,
-				inputValue,
-				value,
-				inputValueState,
-				state
-			)
-		}
+		if (state !== undefined) {
+			if (inputValue !== '' && state !== '') {
+				value = findAndChangeValue(
+					data,
+					inputValue,
+					value,
+					inputValueState,
+					state
+				)
+			}
 
-		if ((state !== '' || state !== undefined) && thisValue !== '') {
-			value = findAndChangeValue(data, thisValue, value, inputValueState, state)
+			if (state !== '' && thisValue !== '') {
+				value = findAndChangeValue(
+					data,
+					thisValue,
+					value,
+					inputValueState,
+					state
+				)
+			}
 		}
 	}
 
@@ -93,7 +99,7 @@ const CityField = ({
 			hasFeedback
 			className={className}
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -128,12 +134,14 @@ CityField.propTypes = {
 	form: object,
 	inputValue: string,
 	disabled: bool,
+	visible: bool,
 	state: string,
 }
 
 CityField.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default CityField

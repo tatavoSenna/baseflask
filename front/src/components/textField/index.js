@@ -10,6 +10,7 @@ const TextField = ({
 	onChange,
 	first,
 	disabled,
+	visible,
 	OutsideLabel,
 }) => {
 	const { label, variable, type, id, info, list, placeholder, optional } =
@@ -17,10 +18,6 @@ const TextField = ({
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const hidden =
-		typeof className === 'string'
-			? className.slice(0, 19) === 'inputFactory_hidden'
-			: false
 
 	const returnLabel = () => {
 		if (label.length > 0) {
@@ -41,7 +38,7 @@ const TextField = ({
 			onChange={onChange ? (e) => onChange(e.target.value) : undefined}
 			hasFeedback
 			rules={
-				!hidden && [
+				visible && [
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}
@@ -64,6 +61,7 @@ TextField.propTypes = {
 	onChange: func,
 	first: bool,
 	disabled: bool,
+	visible: bool,
 	typeOfText: string,
 	OutsideLabel: string,
 }
@@ -72,6 +70,7 @@ TextField.defaultProps = {
 	inputValue: '',
 	onChange: () => null,
 	OutsideLabel: '',
+	visible: true,
 }
 
 export default TextField

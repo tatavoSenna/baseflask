@@ -27,4 +27,4 @@ RUN pipenv install --dev --system --verbose
 
 COPY . .
 
-CMD ["/bin/sh"]
+CMD ["python", "-m", "flask", "run"]

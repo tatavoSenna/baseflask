@@ -5,6 +5,7 @@ const Fields = ({
 	fields,
 	name,
 	disabled,
+	visible,
 	optional,
 	onChange,
 	inputValue,
@@ -17,8 +18,8 @@ const Fields = ({
 
 	let fieldState = ''
 	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f?.field_type === 'state')
-		if (field !== undefined) fieldState = field?.value
+		const field = fields.find((f) => f === 'state')
+		if (field !== undefined) fieldState = inputValue[field]
 	}
 
 	const [state, setState] = useState(fieldState)
@@ -30,12 +31,13 @@ const Fields = ({
 			name,
 			inputValue,
 			disabled,
+			visible,
 			optional,
 			form,
 		}
 
 		if (typeof field === 'string') {
-			field = { field_type: field, value: '' }
+			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
 		for (let i = 0; i < componentsTypes.length; i++) {
@@ -60,6 +62,10 @@ const Fields = ({
 
 		return null
 	})
+}
+
+Fields.defaultProps = {
+	visible: true,
 }
 
 export default Fields

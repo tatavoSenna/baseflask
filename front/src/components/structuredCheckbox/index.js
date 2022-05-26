@@ -11,17 +11,20 @@ const StructuredCheckbox = ({
 	pageIndex,
 	fieldIndex,
 	disabled,
+	visible,
 }) => {
 	const { label, variable, structure, options, type, id, info, optional } =
 		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const listName = `structured_checkbox_${pageIndex}_${fieldIndex}`
 	const name = isObj ? variable.name : variable
-	const [visible, setVisible] = useState(Array(options.length).fill(false))
-	const updateVisible = (value, index) => {
-		const newVisible = [...visible]
+	const [visibleFields, setVisibleFields] = useState(
+		Array(options.length).fill(false)
+	)
+	const updateVisibleFields = (value, index) => {
+		const newVisible = [...visibleFields]
 		newVisible[index] = value
-		setVisible(newVisible)
+		setVisibleFields(newVisible)
 	}
 	const selected = []
 	options.forEach((option) => {
@@ -40,7 +43,11 @@ const StructuredCheckbox = ({
 			type={type}
 			initialValue={selected}
 			colon={false}
-			rules={[{ required: !optional, message: 'Este campo é obrigatório.' }]}>
+			rules={
+				visible && [
+					{ required: !optional, message: 'Este campo é obrigatório.' },
+				]
+			}>
 			<Checkbox.Group>
 				<Card>
 					{options.map((option, index) => {
@@ -62,7 +69,7 @@ const StructuredCheckbox = ({
 										style={{ marginTop: '10px', marginBottom: '10px' }}
 										disabled={disabled}
 										onChange={(value) =>
-											updateVisible(value.target.checked, index)
+											updateVisibleFields(value.target.checked, index)
 										}>
 										{option.label}
 									</Checkbox>
@@ -70,7 +77,7 @@ const StructuredCheckbox = ({
 								{pageFieldsData.map((field) => (
 									<InputFactory
 										data={[field]}
-										visible={Array(visible[index])}
+										visible={Array(visibleFields[index])}
 										disabled={disabled}
 										initialValues={
 											option.checked && field.type !== 'separator'
@@ -104,11 +111,13 @@ StructuredCheckbox.propTypes = {
 	fieldIndex: number,
 	listIndex: number,
 	disabled: bool,
+	visible: bool,
 }
 
 StructuredCheckbox.defaultProps = {
 	className: {},
 	onChange: () => null,
+	visible: true,
 }
 
 export default StructuredCheckbox

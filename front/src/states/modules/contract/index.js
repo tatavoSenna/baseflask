@@ -71,27 +71,15 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loading: true,
 			}),
-		deleteContractSuccess: (state, { payload }) =>
-			extend(state, {
-				data: selectAllContracts(payload.items),
-				pages: {
-					page: payload.page,
-					per_page: payload.per_page,
-					total: payload.total,
-				},
-				error: null,
-				loading: false,
-			}),
-		deleteContractFailure: (state, { payload }) =>
-			extend(state, {
-				error: payload.error,
-				loading: false,
-			}),
 		deleteFolder: (state) =>
 			extend(state, {
 				loading: true,
 			}),
-		deleteFolderSuccess: (state, { payload }) =>
+		deleteSelected: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		deleteSuccess: (state, { payload }) =>
 			extend(state, {
 				data: selectAllContracts(payload.items),
 				pages: {
@@ -102,7 +90,7 @@ const { actions, reducer } = createSlice({
 				error: null,
 				loading: false,
 			}),
-		deleteFolderFailure: (state, { payload }) =>
+		deleteFailure: (state, { payload }) =>
 			extend(state, {
 				error: payload.error,
 				loading: false,
@@ -129,11 +117,10 @@ export const {
 	createLinkSuccess,
 	createLinkFailure,
 	deleteContract,
-	deleteContractSuccess,
-	deleteContractFailure,
 	deleteFolder,
-	deleteFolderSuccess,
-	deleteFolderFailure,
+	deleteSelected,
+	deleteSuccess,
+	deleteFailure,
 	listContractSuccess,
 	listContractFailure,
 	viewContract,

@@ -1,19 +1,9 @@
 import React from 'react'
-import PropTypes, { bool, func, number, string } from 'prop-types'
+import PropTypes, { bool, number, string } from 'prop-types'
 
 import CpfField from 'components/cpfField'
 
-const CPF = ({
-	key,
-	first,
-	name,
-	inputValue,
-	onChange,
-	disabled,
-	optional,
-	fieldType,
-	className,
-}) => {
+const CPF = ({ name, optional, fieldType, ...fieldProps }) => {
 	const pageFieldsData = {
 		info: '',
 		type: 'cpf',
@@ -27,29 +17,13 @@ const CPF = ({
 		},
 	}
 
-	return (
-		<CpfField
-			key={key}
-			first={first}
-			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
-			onChange={onChange}
-			disabled={disabled}
-			className={className}
-		/>
-	)
+	return <CpfField {...fieldProps} pageFieldsData={pageFieldsData} />
 }
 
 CPF.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
-	inputValue: string,
-	onChange: func,
-	disabled: bool,
 	optional: bool,
 	fieldType: string,
-	className: string,
 }
 
 export default CPF

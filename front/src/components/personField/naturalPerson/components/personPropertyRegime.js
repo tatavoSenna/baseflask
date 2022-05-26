@@ -4,16 +4,14 @@ import PropTypes, { bool, func, number, object, string } from 'prop-types'
 import DropdownField from 'components/dropdownField'
 
 const PersonPropertyRegime = ({
-	key,
-	first,
 	name,
 	inputValue,
 	disabled,
 	fieldType,
-	className,
 	onChange,
 	maritalState,
 	form,
+	...fieldProps
 }) => {
 	const [thisValue, setThisValue] = useState('')
 
@@ -78,29 +76,22 @@ const PersonPropertyRegime = ({
 
 	return (
 		<DropdownField
-			key={key}
-			first={first}
+			{...fieldProps}
 			pageFieldsData={pageFieldsData}
-			inputValue={inputValue}
 			onChange={handleOnChange}
 			disabled={_disabled}
-			className={className}
 		/>
 	)
 }
 
 PersonPropertyRegime.propTypes = {
-	key: number,
-	first: bool,
 	name: PropTypes.oneOfType([number, string]),
 	inputValue: string,
-	onChange: func,
 	disabled: bool,
-	optional: bool,
+	fieldType: string,
+	onChange: func,
 	maritalState: string,
 	form: object,
-	fieldType: string,
-	className: string,
 }
 
 export default PersonPropertyRegime
