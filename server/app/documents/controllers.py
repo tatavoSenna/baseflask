@@ -485,9 +485,11 @@ def change_variables_controller(document, new_variables, email, variables, draft
     document.versions = copy.deepcopy(document.versions)
     document.versions.insert(0, version)
     document.variables = variables
-    db.session.add(document)
-    db.session.commit()
-    if draft:
+
+    # Document is being finished, create remote document and update title/draft
+    if not draft and document.draft:
+        document.draft = draft
+        document.title = document.title.replace("Rascunho: ", "")
         try:
             create_remote_document(
                 document, variables, document_template, document.company_id
@@ -496,10 +498,13 @@ def change_variables_controller(document, new_variables, email, variables, draft
             raise BadRequest(
                 description="Something went wrong while creating the remote document"
             )
+    # Document is already finished and is updating it's variables
     else:
         update_variables(
             document, document_template, document.company_id, new_variables
         )
+    db.session.add(document)
+    db.session.commit()
 
 
 def edit_document_workflow_controller(
