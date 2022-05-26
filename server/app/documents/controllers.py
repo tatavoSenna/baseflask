@@ -499,7 +499,7 @@ def change_variables_controller(document, new_variables, email, variables, draft
                 description="Something went wrong while creating the remote document"
             )
     # Document is already finished and is updating it's variables
-    else:
+    elif not document.draft:
         update_variables(
             document, document_template, document.company_id, new_variables
         )
