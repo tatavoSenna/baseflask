@@ -27,6 +27,13 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 		return history.push(path)
 	}
 
+	const hendlePreventDefault = (e) => {
+		if (e.key === 'Enter' && e.target.type !== 'textarea') {
+			return e.preventDefault()
+		}
+		return null
+	}
+
 	const onPrevious = () => {
 		dispatch(previousPage())
 	}
@@ -42,6 +49,7 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 				delete data[key]
 			}
 		}
+
 		dispatch(
 			appendAnswer({
 				data,
@@ -68,7 +76,7 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 				layout="vertical"
 				hideRequiredMark
 				onFinish={onSubmit}
-				onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+				onKeyDown={hendlePreventDefault}
 				className={styles['form-container']}>
 				{pageFieldsData && (
 					<div className={styles['form']}>
