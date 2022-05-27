@@ -48,12 +48,6 @@ export const CpfWidget = React.memo((props) => {
 					</FormItem>
 				</div>
 			}
-			displayStyles={[
-				{ value: 'plain', name: 'Plain' },
-				{ value: 'uppercase', name: 'Uppercase' },
-				{ value: 'lowercase', name: 'Lowercase' },
-				{ value: 'sentence_case', name: 'Sentence case' },
-			]}
 		/>
 	)
 })

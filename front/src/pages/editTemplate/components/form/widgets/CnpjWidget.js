@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { object } from 'prop-types'
 import { CreditCardOutlined } from '@ant-design/icons'
 
@@ -9,27 +9,18 @@ import {
 	styleIconValidation,
 	ValidatedMaskedInput,
 } from './base/styles'
-import { validateCNPJ } from 'utils'
 
 export const CnpjWidget = React.memo((props) => {
 	const { data } = props
 
-	const isValidCnpj = (value) => !value || validateCNPJ(value)
-
 	const update = useUpdate(props)
 	const [valid, setValid] = useValidation(props)
-	const [cnpjValue, setCnpjValue] = useState(isValidCnpj(data.initialValue))
-	const [validWidget, setValidWidget] = useState(false)
-
-	useEffect(() => {
-		setValid(cnpjValue && validWidget)
-	}, [setValid, cnpjValue, validWidget])
 
 	return (
 		<Widget
 			{...props}
 			icon={<Icon $error={!valid} />}
-			onValidate={setValidWidget}
+			onValidate={setValid}
 			type={'CNPJ'}
 			formItems={
 				<div>
@@ -37,23 +28,13 @@ export const CnpjWidget = React.memo((props) => {
 
 					<FormItem label="Valor inicial" $width={'50%'}>
 						<ValidatedMaskedInput
-							$error={!cnpjValue}
-							onBlur={(e) => {
-								setCnpjValue(isValidCnpj(e.target.value))
-								return update({ initialValue: e.target.value })
-							}}
+							onBlur={(e) => update({ initialValue: e.target.value })}
 							defaultValue={data.initialValue}
 							mask="11.111.111/1111-11"
 						/>
 					</FormItem>
 				</div>
 			}
-			displayStyles={[
-				{ value: 'plain', name: 'Plain' },
-				{ value: 'uppercase', name: 'Uppercase' },
-				{ value: 'lowercase', name: 'Lowercase' },
-				{ value: 'sentence_case', name: 'Sentence case' },
-			]}
 		/>
 	)
 })
