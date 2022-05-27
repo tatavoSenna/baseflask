@@ -37,7 +37,6 @@ const TextAreaField = ({
 			initialValue={!inputValue ? '' : inputValue}>
 			<TextArea
 				autoFocus={first}
-				autoSize={true}
 				placeholder={placeholder}
 				disabled={disabled}
 			/>
