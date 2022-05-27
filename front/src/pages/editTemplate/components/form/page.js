@@ -25,6 +25,7 @@ import { CnaeWidget } from './widgets/cnaeWidget'
 import { CpfWidget } from './widgets/CpfWidget'
 import { CnpjWidget } from './widgets/CnpjWidget'
 import { ParagraphWidget } from './widgets/paragraphWidget'
+import { SeparatorWidget } from './widgets/separatorWidget'
 
 const widgets = {
 	text: TextWidget,
@@ -43,6 +44,7 @@ const widgets = {
 	address: AddressWidget,
 	database: DatabaseWidget,
 	cnae: CnaeWidget,
+	separator: SeparatorWidget,
 }
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
