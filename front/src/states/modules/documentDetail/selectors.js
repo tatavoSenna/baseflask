@@ -4,18 +4,20 @@ export const selectAllDocumentDetail = (payload) => {
 	let formatingInitialValue
 	formatingInitialValue = payload.form.map((form, j) => {
 		form.fields.map((field) => {
-			if (!field.variable.type.includes('structured_list')) {
-				if (payload.variables[field.variable.name]) {
-					if (
-						typeof payload.variables[field.variable.name] === 'object' &&
-						!Array.isArray(payload.variables[field.variable.name])
-					) {
-						payload.variables[field.variable.name] = _.mapKeys(
-							payload.variables[field.variable.name],
-							(value, key) => key.toLowerCase()
-						)
+			if (field.type !== 'separator') {
+				if (!field.variable.type.includes('structured_list')) {
+					if (payload.variables[field.variable.name]) {
+						if (
+							typeof payload.variables[field.variable.name] === 'object' &&
+							!Array.isArray(payload.variables[field.variable.name])
+						) {
+							payload.variables[field.variable.name] = _.mapKeys(
+								payload.variables[field.variable.name],
+								(value, key) => key.toLowerCase()
+							)
+						}
+						field.initialValue = payload.variables[field.variable.name]
 					}
-					field.initialValue = payload.variables[field.variable.name]
 				}
 			}
 			return field
