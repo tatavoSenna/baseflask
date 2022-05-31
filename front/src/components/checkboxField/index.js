@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes, { string, shape, array, object, func, bool } from 'prop-types'
-import { Form, Checkbox } from 'antd'
+import { Form, Checkbox, Space } from 'antd'
 import InfoField from '~/components/infoField'
 
 const CheckboxField = ({
@@ -37,11 +37,13 @@ const CheckboxField = ({
 				!inputValue ? '' : Array.isArray(inputValue) ? inputValue : [inputValue]
 			}>
 			<Checkbox.Group disabled={disabled} onChange={onChange}>
-				{options.map((option, index) => (
-					<Checkbox key={index} value={option.value}>
-						{option.label}
-					</Checkbox>
-				))}
+				<Space direction="vertical" size={12}>
+					{options.map((option, index) => (
+						<Checkbox key={index} value={option.value}>
+							{option.label}
+						</Checkbox>
+					))}
+				</Space>
 			</Checkbox.Group>
 		</Form.Item>
 	)
