@@ -50,6 +50,7 @@ export const ListInput = ({ changeCallback, defaultValue, ...props }) => {
 			{...props}
 			defaultValue={defaultValue !== '' ? defaultValue : undefined}
 			mode="multiple"
+			size="default"
 			options={options}
 			filterOption={false}
 			onSearch={(s) => setOptions([{ label: s, value: s }])}

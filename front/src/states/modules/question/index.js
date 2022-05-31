@@ -212,11 +212,9 @@ const { actions, reducer } = createSlice({
 function compare(input, value, comparisonFn) {
 	// If value is an array, OR logic is applied
 	if (Array.isArray(value)) {
-		value.forEach((item) => {
-			if (comparisonFn(input, item)) {
-				return true
-			}
-		})
+		for (let item of value) {
+			if (comparisonFn(input, item)) return true
+		}
 	} else {
 		return comparisonFn(input, value)
 	}
