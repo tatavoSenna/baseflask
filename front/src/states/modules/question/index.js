@@ -62,6 +62,8 @@ const { actions, reducer } = createSlice({
 			const compareCondition = (condition, input) => {
 				const { operator, value } = condition
 
+				// Type coercion is used here to compare strings and numbers
+				/* eslint-disable eqeqeq*/
 				let comparison
 				switch (operator) {
 					case '>':
@@ -82,11 +84,11 @@ const { actions, reducer } = createSlice({
 								input.length === value.length &&
 								value.every((v) => input.includes(v))
 						} else {
-							comparison = compare(input, value, (a, b) => a === b)
+							comparison = compare(input, value, (a, b) => a == b)
 						}
 						break
 					case '!=':
-						comparison = compare(input, value, (a, b) => a !== b)
+						comparison = compare(input, value, (a, b) => a != b)
 						break
 
 					case 'contains':
@@ -99,6 +101,7 @@ const { actions, reducer } = createSlice({
 						comparison = false
 						break
 				}
+				/* eslint-enable eqeqeq*/
 
 				return comparison
 			}
@@ -212,11 +215,9 @@ const { actions, reducer } = createSlice({
 function compare(input, value, comparisonFn) {
 	// If value is an array, OR logic is applied
 	if (Array.isArray(value)) {
-		value.forEach((item) => {
-			if (comparisonFn(input, item)) {
-				return true
-			}
-		})
+		for (let item of value) {
+			if (comparisonFn(input, item)) return true
+		}
 	} else {
 		return comparisonFn(input, value)
 	}

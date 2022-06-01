@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes, { string, shape, array, object, func, bool } from 'prop-types'
 import InfoField from '~/components/infoField'
 
-import { Form, Radio } from 'antd'
+import { Form, Radio, Space } from 'antd'
 import { InfoOptionalField } from 'components/infoField'
 import styles from './index.module.scss'
 
@@ -52,11 +52,13 @@ const RadioField = ({
 			colon={false}
 			initialValue={!inputValue ? '' : inputValue}>
 			<Radio.Group disabled={disabled}>
-				{options.map((option, index) => (
-					<Radio key={index} value={option.value} onChange={onChange}>
-						{option.label}
-					</Radio>
-				))}
+				<Space direction="vertical" size={12}>
+					{options.map((option, index) => (
+						<Radio key={index} value={option.value} onChange={onChange}>
+							{option.label}
+						</Radio>
+					))}
+				</Space>
 			</Radio.Group>
 		</Form.Item>
 	)
