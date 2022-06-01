@@ -22,11 +22,6 @@ const conditionalOperators = {
 		label: op,
 	})),
 
-	string: ['=', '!='].map((op) => ({
-		value: op,
-		label: op,
-	})),
-
 	list: [
 		{ value: '=', label: 'Igual a' },
 		{ value: 'contains', label: 'Contém' },
