@@ -92,6 +92,7 @@ def create_document_from_token():
     token = content.get("token", None)
     parent = content.get("parent", None)
     is_folder = content.get("is_folder", False)
+    draft = content.get("draft", False)
     if not variables or not token:
         abort(400, "Need to provide variables and template id")
 
@@ -115,6 +116,7 @@ def create_document_from_token():
             variables,
             parent,
             is_folder,
+            draft,
         )
         # Marks token as used
         mark_token_as_used_controller(creation_token.token)
