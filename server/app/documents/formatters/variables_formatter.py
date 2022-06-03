@@ -62,7 +62,7 @@ def format_variables(variables, document_template_id):
                 except Exception as e:
                     logging.exception(e)
 
-            elif specs["doc_display_style"] == "plain":
+            else:
                 try:
                     return variables[variable]
                 except Exception as e:
