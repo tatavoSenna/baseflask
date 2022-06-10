@@ -629,8 +629,6 @@ def modify_document(current_user, document_id):
 
     content = request.json
     variables = content.get("variables", None)
-    if not variables:
-        return jsonify({"message": "Didn't receive new variables to replace"}), 400
 
     draft = content.get("draft", False)
 
@@ -638,11 +636,12 @@ def modify_document(current_user, document_id):
 
     if not document:
         abort(404, "Document not Found")
-    if document.text_type != ".docx":
-        abort(400, "Can only change variables of Word documents(.docx)")
+
     spec_variables = copy.deepcopy(variables)
     try:
         format_variables(spec_variables, document.document_template_id)
+    except BadRequest as e:
+        return jsonify({"Can only change variables of Word documents(.docx)"}), 400
     except Exception as e:
         logging.exception(e)
         error_msg = "Variable specification is incorrect"
