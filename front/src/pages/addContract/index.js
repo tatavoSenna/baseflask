@@ -1,17 +1,21 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Layout } from 'antd'
-import styled from 'styled-components'
 
 import { useDispatch } from 'react-redux'
 import { answerRequest } from '~/states/modules/answer'
-
 import FormFactory from '~/components/formFactory'
+
+import { useHistory } from 'react-router-dom'
+import { listQuestion } from 'states/modules/question'
+import styled from 'styled-components'
 
 function AddContract() {
 	const { loadingAnswer } = useSelector(({ answer }) => answer)
 	const { loading } = useSelector(({ question }) => question)
 	const dispatch = useDispatch()
+
+	const { modelId, title, parent } = useHistory().location.state
 
 	const handleFinish = useCallback(
 		(visible, history) => {
@@ -19,6 +23,16 @@ function AddContract() {
 		},
 		[dispatch]
 	)
+
+	useEffect(() => {
+		dispatch(
+			listQuestion({
+				modelId: modelId,
+				title: title,
+				parent: parent,
+			})
+		)
+	}, [dispatch, modelId, title, parent])
 
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
