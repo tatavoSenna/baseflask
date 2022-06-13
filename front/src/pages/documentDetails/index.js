@@ -32,6 +32,7 @@ import {
 
 import styles from '../contracts/index.module.scss'
 import MainLayout from '~/components/mainLayout'
+import DraftIndicator from './components/draftIndicator'
 
 const DocumentDetails = () => {
 	const { id } = useParams()
@@ -129,6 +130,11 @@ const DocumentDetails = () => {
 		history.push('/')
 	}
 
+	const handleEditDocument = () =>
+		history.push({
+			pathname: `/documents/${id}/edit`,
+		})
+
 	var listFolders = accessFolders.map((folder, index) => (
 		<Breadcrumb.Item
 			key={index}
@@ -185,9 +191,12 @@ const DocumentDetails = () => {
 							height: 'calc(100vh - 155px)',
 							overflowY: 'hidden',
 						}}>
-						{file ? (
+						{data.draft ? (
+							<DraftIndicator title={data.title} onClick={handleEditDocument} />
+						) : file ? (
 							<div
 								style={{
+									marginLeft: '10px',
 									display: 'flex',
 									width: '60%',
 								}}>

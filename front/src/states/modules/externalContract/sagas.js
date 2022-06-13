@@ -57,13 +57,14 @@ function* createContractExternalSaga({ payload }) {
 		return answer
 	})
 
-	const { token, visible } = payload
+	const { token, visible, draft } = payload
 
 	try {
 		yield call(api.post, '/external/create', {
 			token,
 			variables: { ...data, ...dataImg },
 			visible,
+			draft,
 		})
 		yield put(createContractExternalSuccess())
 		successMessage({

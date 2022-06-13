@@ -18,6 +18,10 @@ const { actions, reducer } = createSlice({
 				data: selectAnswer(state.data, payload),
 				dataImg: selectImages(state.dataImg, payload),
 			}),
+		appendAnswerEdit: (state, { payload }) =>
+			extend(state, {
+				data: extend(state.data, payload.answer),
+			}),
 		answerRequest: (state) =>
 			extend(state, {
 				loadingAnswer: true,
@@ -48,6 +52,7 @@ const { actions, reducer } = createSlice({
 
 export const {
 	appendAnswer,
+	appendAnswerEdit,
 	answerModify,
 	answerRequest,
 	answerSuccess,

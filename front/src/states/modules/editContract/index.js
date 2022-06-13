@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	error: null,
 	loading: false,
+	draft: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -14,10 +15,11 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				loading: true,
 			}),
-		editContractSuccess: (state) =>
+		editContractSuccess: (state, { payload }) =>
 			extend(state, {
 				error: null,
 				loading: false,
+				draft: payload.draft,
 			}),
 		editContractFailure: (state, { payload }) =>
 			extend(state, {
