@@ -71,7 +71,6 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="address">Endereço</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
-			<Menu.Item key="structured_checkbox">Checkbox Estruturado</Menu.Item>
 			<Menu.Item key="separator">Separador</Menu.Item>
 		</Menu>
 	)

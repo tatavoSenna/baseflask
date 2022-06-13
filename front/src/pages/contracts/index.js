@@ -21,7 +21,6 @@ import {
 	setShowStripeModal,
 } from '~/states/modules/contract'
 import { getCompanyInfo } from '~/states/modules/companies'
-import { listQuestion } from '~/states/modules/question'
 
 import {
 	setShowModalFolder,
@@ -73,16 +72,13 @@ const Contracts = () => {
 	const handleCreate = (values) => {
 		dispatch(setShowModal(false))
 		if (companyInfo['remainingDocuments'] > 0) {
-			dispatch(
-				listQuestion({
+			return history.push({
+				pathname: `/documents/new`,
+				state: {
 					modelId: values.modelId,
 					title: values.title,
 					parent: values.parent,
-				})
-			)
-			return history.push({
-				pathname: `/documents/new`,
-				state: { current: 0 },
+				},
 			})
 		} else {
 			dispatch(setShowStripeModal(true))
@@ -91,16 +87,14 @@ const Contracts = () => {
 
 	const handleCreateInFolder = (values) => {
 		dispatch(setShowModal(false))
-		dispatch(
-			listQuestion({
+
+		return history.push({
+			pathname: `/documents/new`,
+			state: {
 				modelId: values.modelId,
 				title: values.title,
 				parent: accessFolders[accessFolders.length - 1].id,
-			})
-		)
-		return history.push({
-			pathname: `/documents/new`,
-			state: { current: 0 },
+			},
 		})
 	}
 

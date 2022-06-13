@@ -2,27 +2,41 @@ import _ from 'lodash'
 
 export const selectAllDocumentDetail = (payload) => {
 	let formatingInitialValue
-	formatingInitialValue = payload.form.map((form, j) => {
-		form.fields.map((field) => {
-			if (field.type !== 'separator') {
-				if (!field.variable.type.includes('structured_list')) {
-					if (payload.variables[field.variable.name]) {
+	formatingInitialValue = payload.form.map((page) => {
+		return {
+			...page,
+			fields: page.fields
+				.map((field) => {
+					if (
+						![
+							'structured_list',
+							'structured_checkbox',
+							'variable_image',
+						].includes(field.type)
+					) {
 						if (
-							typeof payload.variables[field.variable.name] === 'object' &&
-							!Array.isArray(payload.variables[field.variable.name])
+							field.variable?.name &&
+							payload.variables[field.variable.name]
 						) {
-							payload.variables[field.variable.name] = _.mapKeys(
-								payload.variables[field.variable.name],
-								(value, key) => key.toLowerCase()
-							)
+							if (
+								typeof payload.variables[field.variable.name] === 'object' &&
+								!Array.isArray(payload.variables[field.variable.name])
+							) {
+								field.initialValue = _.mapKeys(
+									payload.variables[field.variable.name],
+									(value, key) => key.toLowerCase()
+								)
+							} else {
+								field.initialValue = payload.variables[field.variable.name]
+							}
 						}
-						field.initialValue = payload.variables[field.variable.name]
+
+						return field
 					}
-				}
-			}
-			return field
-		})
-		return form
+					return null
+				})
+				.filter((x) => x !== null),
+		}
 	})
 
 	return {

@@ -489,7 +489,6 @@ def change_variables_controller(document, new_variables, email, variables, draft
     # Document is being finished, create remote document and update title/draft
     if not draft and document.draft:
         document.draft = draft
-        document.title = document.title.replace("Rascunho: ", "")
         try:
             create_remote_document(
                 document, variables, document_template, document.company_id
@@ -500,6 +499,9 @@ def change_variables_controller(document, new_variables, email, variables, draft
             )
     # Document is already finished and is updating it's variables
     elif not document.draft:
+        if document.text_type != ".docx":
+            raise BadRequest()
+
         update_variables(
             document, document_template, document.company_id, new_variables
         )

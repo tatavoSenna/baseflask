@@ -4,6 +4,7 @@ import api from '~/services/api'
 import { editContract, editContractSuccess, editContractFailure } from '.'
 import { selectAllDocumentDetail } from '../documentDetail/selectors'
 import { listQuestionSuccess } from '../question'
+import { appendAnswerEdit } from '../answer'
 
 export default function* rootSaga() {
 	yield takeEvery(editContract, editContractSaga)
@@ -17,11 +18,14 @@ function* editContractSaga({ payload = {} }) {
 
 		const modelId = id
 		const title = data.title
+		const draft = data.draft
 		const parent = data.parent
 		const format = selectAllDocumentDetail(data)
 
+		yield put(appendAnswerEdit({ answer: data.variables }))
+
 		yield put(listQuestionSuccess({ modelId, title, parent, data: format }))
-		yield put(editContractSuccess())
+		yield put(editContractSuccess({ draft }))
 	} catch (error) {
 		yield put(editContractFailure(error))
 	}

@@ -68,13 +68,16 @@ function* getDocumentDetailSaga({ payload = {} }) {
 	const { id } = payload
 	try {
 		const { data } = yield call(api.get, `/documents/${id}`)
+
 		let response
-		if (data.text_type === '.docx') {
-			response = yield call(api.get, `/documents/${id}/pdf`)
-		} else {
-			response = yield call(api.get, `/documents/${id}/text`)
+		if (!data.draft) {
+			if (data.text_type === '.docx') {
+				response = yield call(api.get, `/documents/${id}/pdf`)
+			} else {
+				response = yield call(api.get, `/documents/${id}/text`)
+			}
 		}
-		yield put(getDocumentDetailSuccess({ ...data, ...response.data }))
+		yield put(getDocumentDetailSuccess({ ...data, ...(response?.data || {}) }))
 	} catch (error) {
 		errorMessage({
 			content:

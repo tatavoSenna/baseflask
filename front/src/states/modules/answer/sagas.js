@@ -23,7 +23,7 @@ export default function* rootSaga() {
 }
 
 function* answerSaga({ payload }) {
-	const { history, visible } = payload
+	const { history, visible, draft } = payload
 
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
@@ -44,6 +44,7 @@ function* answerSaga({ payload }) {
 			parent: parent,
 			title,
 			visible,
+			draft,
 			variables: { ...answer.data, ...answer.dataImg },
 		})
 		yield put(answerSuccess(data))
@@ -64,7 +65,7 @@ function* answerSaga({ payload }) {
 }
 
 function* answerModifySaga({ payload }) {
-	const { id, history, visible } = payload
+	const { id, history, visible, draft } = payload
 
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
@@ -77,6 +78,7 @@ function* answerModifySaga({ payload }) {
 		const { data } = yield call(api.post, `documents/${id}/modify`, {
 			variables: { ...answer.data, ...answer.dataImg },
 			visible,
+			draft,
 		})
 
 		yield put(answerSuccess(data))

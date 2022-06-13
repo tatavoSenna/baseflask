@@ -4,14 +4,8 @@ import moment from 'moment'
 export const selectAnswer = (data, payload) => {
 	const answers = {}
 
-	// Remove the non variable items from the visible array, to keep it in sync with the variables
-	const variableItems = payload.pageFieldsData.fields.map(
-		(item) => item['type'] !== 'separator' // separators have no variables.
-	)
-
-	const itemsWithVariables = (_, index) => variableItems[index]
-	const visible = payload.visible.filter(itemsWithVariables)
-	const fields = payload.pageFieldsData.fields.filter(itemsWithVariables)
+	const visible = payload.visible
+	const fields = payload.pageFieldsData.fields
 
 	Object.entries(payload.data).forEach((answer) => {
 		var index
@@ -21,9 +15,7 @@ export const selectAnswer = (data, payload) => {
 		) {
 			index = Number(answer[0].split('_').slice(-1))
 		} else {
-			index = payload.pageFieldsData.fields.findIndex(
-				(f) => f?.variable?.name === answer[0]
-			)
+			index = fields.findIndex((f) => f?.variable?.name === answer[0])
 		}
 
 		if (visible[index]) {
@@ -46,11 +38,9 @@ export const selectAnswer = (data, payload) => {
 					}
 				})
 				answers[answer[0]] = items
-			}
-			// Convert date variables from moment objects to text to keep local timezone offsets
-			else if (fields[index]?.variable?.type === 'date') {
+			} else if (fields[index]?.variable?.type === 'date') {
 				answers[answer[0]] = moment.isMoment(answer[1])
-					? answer[1].format()
+					? answer[1].format('YYYY-MM-DD')
 					: ''
 			} else if (fields[index]?.variable?.type === 'time') {
 				answers[answer[0]] = moment.isMoment(answer[1])
@@ -61,7 +51,7 @@ export const selectAnswer = (data, payload) => {
 			}
 		}
 	})
-	return extend(data, answers)
+	return filterEmptyValues(extend(data, answers))
 }
 
 export const selectImages = (dataImg, payload) => {
@@ -79,4 +69,30 @@ export const selectImages = (dataImg, payload) => {
 		index++
 	}
 	return dataImg
+}
+
+// Creates a new data object, filtering empty values recursively
+const filterEmptyValues = (data) => {
+	let filteredData = {}
+
+	const isEmptyValue = (v) =>
+		v === '' || v === undefined || v === null || v?.length === 0
+
+	const isObject = (v) =>
+		typeof v === 'object' && Object.getPrototypeOf(v).isPrototypeOf(Object)
+
+	for (const key in data) {
+		if (!isEmptyValue(data[key])) {
+			let value = data[key]
+
+			if (isObject(value)) {
+				value = filterEmptyValues(value)
+				if (Object.keys(value).length === 0) continue
+			}
+
+			filteredData[key] = value
+		}
+	}
+
+	return filteredData
 }

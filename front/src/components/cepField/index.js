@@ -3,7 +3,7 @@ import { string, shape, object, func, bool } from 'prop-types'
 import { MaskedInput } from 'antd-mask-input'
 import InfoField from 'components/infoField'
 import React from 'react'
-import { validateOptionalCep } from 'utils'
+import { validateCep } from 'utils'
 
 const CepField = ({
 	pageFieldsData,
@@ -31,16 +31,15 @@ const CepField = ({
 				visible && [
 					() => ({
 						validator(rule, value) {
-							if (!validateOptionalCep(value, optional)) {
-								return Promise.reject('Cep inválido')
-							}
 							if (!optional) {
 								if (!value) {
 									return Promise.reject('Este campo é obrigatório')
 								}
-								if (!validateOptionalCep(value, optional)) {
+								if (!validateCep(value, optional)) {
 									return Promise.reject('Cep inválido')
 								}
+							} else if (value.length > 0 && !validateCep(value)) {
+								return Promise.reject('Cep inválido')
 							}
 							return Promise.resolve()
 						},
