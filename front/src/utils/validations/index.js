@@ -95,19 +95,6 @@ export const validateCep = (cep) => {
 	return false
 }
 
-export const validateOptionalCep = (cep, optional) => {
-	cep = cep.replace(/[^\d]+/g, '')
-	if (optional) {
-		if (cep.length > 0) {
-			if (cep.length === 8) return true
-			return false
-		}
-		return true
-	}
-	if (cep.length === 8) return true
-	return false
-}
-
 export const validateDate = (date, format = 'DD-MM-YYYY') => {
 	const _date =
 		date !== ''

@@ -15,11 +15,11 @@ const EditDocument = () => {
 		dispatch(editContract({ id }))
 	}, [dispatch, id])
 
-	const { loading } = useSelector(({ editContract }) => editContract)
+	const { loading, draft } = useSelector(({ editContract }) => editContract)
 
 	const handleFinish = useCallback(
-		(visible, history) => {
-			dispatch(answerModify({ id, history, visible }))
+		(visible, draft, history) => {
+			dispatch(answerModify({ id, history, visible, draft }))
 		},
 		[dispatch, id]
 	)
@@ -27,7 +27,11 @@ const EditDocument = () => {
 	return (
 		<Layout style={{ backgroundColor: '#fff' }}>
 			{!loading ? (
-				<FormFactory onFinish={handleFinish} cancelRoute={`/documents/${id}`} />
+				<FormFactory
+					onFinish={handleFinish}
+					cancelRoute={`/documents/${id}`}
+					allowDraft={draft}
+				/>
 			) : null}
 		</Layout>
 	)

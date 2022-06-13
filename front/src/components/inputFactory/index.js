@@ -60,6 +60,7 @@ function InputFactory({
 	for (let i = 0; i < pageFieldsData.length; i++) {
 		const { type, initialValue, variable } = pageFieldsData[i]
 		const isVisible = visible[i] ? styles['default-style'] : styles.hidden
+		const key = currentFormStep + '_' + i
 
 		let isConditional, subConditions
 		if (variable?.name !== undefined) {
@@ -107,7 +108,7 @@ function InputFactory({
 			case 'radio':
 				children.push(
 					<RadioField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -121,7 +122,7 @@ function InputFactory({
 			case 'cnpj':
 				children.push(
 					<CnpjField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -135,7 +136,7 @@ function InputFactory({
 			case 'cpf':
 				children.push(
 					<CpfField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -149,7 +150,7 @@ function InputFactory({
 			case 'email':
 				children.push(
 					<EmailField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -163,7 +164,7 @@ function InputFactory({
 			case 'currency':
 				children.push(
 					<CurrencyField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -176,7 +177,7 @@ function InputFactory({
 			case 'dropdown':
 				children.push(
 					<DropdownField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -190,7 +191,7 @@ function InputFactory({
 			case 'date':
 				children.push(
 					<DateField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -203,7 +204,7 @@ function InputFactory({
 			case 'time':
 				children.push(
 					<TimeField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -216,7 +217,7 @@ function InputFactory({
 			case 'state':
 				children.push(
 					<StateField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -229,7 +230,7 @@ function InputFactory({
 			case 'checkbox':
 				children.push(
 					<CheckboxField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -242,7 +243,7 @@ function InputFactory({
 			case 'cnae':
 				children.push(
 					<CnaeField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -255,7 +256,7 @@ function InputFactory({
 			case 'city':
 				children.push(
 					<CityField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -268,7 +269,7 @@ function InputFactory({
 			case 'number':
 				children.push(
 					<NumberField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -281,7 +282,7 @@ function InputFactory({
 			case 'percentage':
 				children.push(
 					<PercentageField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -294,7 +295,7 @@ function InputFactory({
 			case 'bank':
 				children.push(
 					<BankField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -308,7 +309,7 @@ function InputFactory({
 			case 'text_area':
 				children.push(
 					<TextAreaField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -321,7 +322,7 @@ function InputFactory({
 			case 'variable_image':
 				children.push(
 					<ImageField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						onChange={onchange()}
@@ -332,7 +333,7 @@ function InputFactory({
 			case 'person':
 				children.push(
 					<PersonField
-						key={i}
+						key={key}
 						pageIndex={currentFormStep}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
@@ -348,7 +349,7 @@ function InputFactory({
 			case 'address':
 				children.push(
 					<AddressField
-						key={i}
+						key={key}
 						pageIndex={currentFormStep}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
@@ -364,7 +365,7 @@ function InputFactory({
 			case 'structured_list':
 				children.push(
 					<StructuredList
-						key={i}
+						key={key}
 						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
@@ -376,7 +377,7 @@ function InputFactory({
 			case 'structured_checkbox':
 				children.push(
 					<StructuredCheckbox
-						key={i}
+						key={key}
 						pageIndex={currentFormStep}
 						fieldIndex={i}
 						pageFieldsData={pageFieldsData[i]}
@@ -389,7 +390,7 @@ function InputFactory({
 			case 'database':
 				children.push(
 					<DatabaseField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}
@@ -402,7 +403,10 @@ function InputFactory({
 				break
 			case 'separator':
 				children.push(
-					<Divider className={isVisible} style={{ alignSelf: 'center' }}>
+					<Divider
+						key={key}
+						className={isVisible}
+						style={{ alignSelf: 'center' }}>
 						{pageFieldsData[i].title}
 					</Divider>
 				)
@@ -410,7 +414,7 @@ function InputFactory({
 			default:
 				children.push(
 					<TextField
-						key={i}
+						key={key}
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						inputValue={defaultValue()}

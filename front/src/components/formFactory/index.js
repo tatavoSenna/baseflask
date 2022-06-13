@@ -1,5 +1,5 @@
 import React from 'react'
-import { func, object, string } from 'prop-types'
+import { bool, func, object, string } from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Button, Typography, PageHeader } from 'antd'
@@ -8,7 +8,12 @@ import { nextPage, previousPage } from 'states/modules/question'
 import InputFactory from '../inputFactory'
 import styles from './index.module.scss'
 
-const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
+const FormFactory = ({
+	initialValues = {},
+	onFinish,
+	cancelRoute,
+	allowDraft = true,
+}) => {
 	const dispatch = useDispatch()
 
 	const {
@@ -38,18 +43,7 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 		dispatch(previousPage())
 	}
 
-	const onSubmit = (data) => {
-		for (const key in data) {
-			if (
-				data[key] === '' ||
-				data[key] === undefined ||
-				data[key] === null ||
-				data[key].length === 0
-			) {
-				delete data[key]
-			}
-		}
-
+	const onSubmit = (data, draft) => {
 		dispatch(
 			appendAnswer({
 				data,
@@ -58,10 +52,10 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 			})
 		)
 
-		if (!isLastPage) {
+		if (!isLastPage && !draft) {
 			dispatch(nextPage())
 		} else {
-			onFinish(visible, history)
+			onFinish(visible, draft, history)
 		}
 	}
 
@@ -131,6 +125,21 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 								{isLastPage ? 'Enviar' : 'Próximo'}
 							</Button>
 						</Form.Item>
+
+						{allowDraft && (
+							<Form.Item>
+								<Button
+									block
+									ghost
+									type="primary"
+									className={styles.button}
+									onClick={() => {
+										onSubmit(form.getFieldsValue(true), true)
+									}}>
+									Rascunho
+								</Button>
+							</Form.Item>
+						)}
 					</div>
 				)}
 			</Form>
@@ -141,8 +150,8 @@ const FormFactory = ({ initialValues = {}, onFinish, cancelRoute }) => {
 export default FormFactory
 
 FormFactory.propTypes = {
-	token: string,
 	initialValues: object,
 	onFinish: func,
 	cancelRoute: string,
+	allowDraft: bool,
 }

@@ -77,6 +77,7 @@ const PersonPropertyRegime = ({
 	return (
 		<DropdownField
 			{...fieldProps}
+			inputValue={inputValue}
 			pageFieldsData={pageFieldsData}
 			onChange={handleOnChange}
 			disabled={_disabled}

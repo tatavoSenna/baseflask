@@ -18,8 +18,8 @@ function AddContract() {
 	const { modelId, title, parent } = useHistory().location.state
 
 	const handleFinish = useCallback(
-		(visible, history) => {
-			dispatch(answerRequest({ history, visible }))
+		(visible, draft, history) => {
+			dispatch(answerRequest({ history, visible, draft }))
 		},
 		[dispatch]
 	)
