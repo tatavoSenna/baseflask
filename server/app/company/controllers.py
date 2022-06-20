@@ -1,11 +1,14 @@
-from sqlalchemy import true
-from app import db
 import os
-from app.models.company import Company, Webhook
-from app.models.user import User
-from .remote import RemoteCompany
 import stripe
-from werkzeug.exceptions import BadRequest, Forbidden
+
+from werkzeug.exceptions import BadRequest, Forbidden, NotFound
+from sqlalchemy import desc, asc, delete
+
+from app import db
+from app.models.company import Company, Tag, Webhook
+from app.models.user import User
+from app.models.internal_database import TextItemTag
+from .remote import RemoteCompany
 
 stripe.api_key = os.environ.get("STRIPE_API_SECRET_KEY")
 
@@ -147,3 +150,102 @@ def assign_company_to_new_user_controller(logged_user, company_id):
     db.session.commit()
     logged_user["created"] = True
     return local_user
+
+
+def get_tag_controller(user, tag_id):
+    tag = Tag.query.get(tag_id)
+
+    if not tag:
+        raise NotFound()
+
+    if user.company_id != tag.company_id:
+        raise Forbidden()
+
+    return tag
+
+
+def list_tags_from_company_controller(
+    user, page, per_page, search_term, order_by, order
+):
+    tags_query = Tag.query.filter_by(company_id=user.company_id)
+
+    if search_term:
+        tags_query = tags_query.filter(Tag.title.ilike(f"%{search_term}%"))
+
+    order_by_dict = {
+        "title": Tag.title,
+        "created_at": Tag.created_at,
+        "created_by": User.name,
+    }
+    order_dict = {
+        "ascend": asc(order_by_dict[order_by]),
+        "descend": desc(order_by_dict[order_by]),
+    }
+
+    if order_by == "created_by":
+        tags_query = tags_query.join(Tag.created_by)
+
+    tags_query = tags_query.order_by(order_dict[order])
+
+    return tags_query.paginate(page=page, per_page=per_page)
+
+
+def create_tag_controller(user, data):
+    title = data.get("title", None)
+    if not title:
+        raise BadRequest()
+
+    config = data.get("config", {})
+
+    tag = Tag(
+        company_id=user.company_id,
+        title=title,
+        config=config,
+        created_by_id=user.id,
+    )
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return tag
+
+
+def update_tag_controller(user, tag_id, data):
+    title = data.get("title", None)
+    config = data.get("config", {})
+
+    if not title and config == {}:
+        raise BadRequest()
+
+    tag = Tag.query.get(tag_id)
+
+    if not tag:
+        raise NotFound()
+
+    if user.company_id != tag.company_id:
+        raise Forbidden()
+
+    if title:
+        tag.title = title
+
+    if config != {}:
+        tag.config = config
+
+    db.session.commit()
+
+    return tag
+
+
+def delete_tag_controller(user, tag_id):
+    tag = Tag.query.get(tag_id)
+
+    if not tag:
+        raise NotFound()
+
+    if user.company_id != tag.company_id:
+        raise Forbidden()
+
+    db.session.execute(delete(TextItemTag).where(TextItemTag.text_item_id == tag.id))
+
+    db.session.delete(tag)
+    db.session.commit()

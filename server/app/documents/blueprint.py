@@ -1,14 +1,8 @@
-from datetime import datetime
-import os
 import io
 import logging
-import base64
 import json
 import jinja2
 import copy
-
-import boto3
-import pdfrw
 import ast
 
 from flask import request, Blueprint, abort, jsonify, current_app

@@ -1,4 +1,5 @@
 from sqlalchemy.dialects.postgresql.json import JSON
+from datetime import datetime
 
 from app import db
 from app.models.fields import StringChoiceField
@@ -18,6 +19,10 @@ class Company(db.Model):
     groups = db.relationship("Group", back_populates="company")
     templates = db.relationship("DocumentTemplate", back_populates="company")
     documents = db.relationship("Document", back_populates="company")
+    internal_dbs = db.relationship(
+        "InternalDatabase", back_populates="company", lazy="dynamic"
+    )
+    tags = db.relationship("Tag", back_populates="company", lazy="dynamic")
 
     signatures_provider = db.Column(
         StringChoiceField(["docusign", "d4sign"]),
@@ -50,3 +55,27 @@ class Webhook(db.Model):
 
     def __repr__(self):
         return "<Webhook %r>" % self.webhook
+
+
+class Tag(db.Model):
+    __tablename__ = "tag"
+    __table_args__ = (db.UniqueConstraint("title", "company_id"),)
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), unique=False, nullable=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
+    config = db.Column(JSON, nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    created_by_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    # Belongs to
+    company = db.relationship("Company", back_populates="tags")
+    created_by = db.relationship("User", back_populates="tags")
+
+    # Has many
+    text_item_tags = db.relationship(
+        "TextItemTag", back_populates="tag", lazy="dynamic"
+    )
+
+    def __repr__(self):
+        return "<Tag %r>" % self.title
