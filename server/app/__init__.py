@@ -96,4 +96,8 @@ def create_app():
 
     app.register_blueprint(d4sign_bp, url_prefix="/d4sign")
 
+    from .internal_database.blueprint import internal_db_bp
+
+    app.register_blueprint(internal_db_bp, url_prefix="/internaldbs")
+
     return app

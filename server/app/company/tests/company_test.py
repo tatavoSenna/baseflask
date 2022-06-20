@@ -10,9 +10,15 @@ from app.company.controllers import (
     get_download_url_controller,
     assign_company_to_new_user_controller,
     create_company_controller,
+    get_tag_controller,
+    list_tags_from_company_controller,
+    create_tag_controller,
+    update_tag_controller,
+    delete_tag_controller,
 )
 from app.test import factories
 from app.models import User, Company
+from app.models.company import Tag
 
 import pytest
 import io
@@ -20,7 +26,7 @@ from flask import current_app
 from unittest.mock import patch
 import copy
 from faker import Faker
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest, NotFound
 
 
 def test_save_keys():
@@ -221,3 +227,118 @@ def test_assign_company_to_new_user(session):
     assert user.email == test_user["email"]
     assert test_user["created"] == True
     assert user.company_id == company.id
+
+
+def test_get_tag_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    same_company_user = factories.UserFactory(company=company_1)
+    different_company_user = factories.UserFactory(company=company_2)
+    tag = factories.TagFactory(company=company_1, created_by=same_company_user)
+
+    response = get_tag_controller(same_company_user, tag.id)
+    assert response.id == tag.id
+
+    try:
+        response = get_tag_controller(different_company_user, tag.id)
+    except Exception as e:
+        assert type(e) is Forbidden
+
+    try:
+        response = get_tag_controller(different_company_user, tag.id + 1)
+    except Exception as e:
+        assert type(e) is NotFound
+
+
+def test_list_tags_from_company_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    same_company_user = factories.UserFactory(company_id=company_1.id)
+    different_company_user = factories.UserFactory(company_id=company_2.id)
+    tag = factories.TagFactory(
+        company_id=company_1.id, company=company_1, created_by=same_company_user
+    )
+
+    response = list_tags_from_company_controller(
+        same_company_user, 1, 2, None, "created_at", "ascend"
+    )
+
+    assert response.total == 1
+    assert response.items[0] == tag
+
+
+def test_create_tag_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    same_company_user = factories.UserFactory(
+        company_id=company_1.id, company=company_1
+    )
+    different_company_user = factories.UserFactory(
+        company_id=company_2.id, company=company_2
+    )
+
+    data = {"title": "Test", "config": {}}
+    response = create_tag_controller(same_company_user, data)
+
+    assert response.title == data["title"]
+    assert response.company_id == same_company_user.company_id
+
+    response = create_tag_controller(different_company_user, data)
+    assert response.company_id == different_company_user.company_id
+
+    data.pop("title")
+    try:
+        response = create_tag_controller(same_company_user, data)
+    except Exception as e:
+        assert type(e) is BadRequest
+
+
+def test_update_tag_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    same_company_user = factories.UserFactory(company=company_1)
+    different_company_user = factories.UserFactory(company=company_2)
+    tag = factories.TagFactory(company=company_1, created_by=same_company_user)
+
+    data = {"title": "Test", "config": {"abc": 123}}
+    response = update_tag_controller(same_company_user, tag.id, data)
+    assert response.title == data["title"]
+    assert response.config == data["config"]
+
+    data = {"config": {}}
+    try:
+        response = update_tag_controller(same_company_user, tag.id, data)
+    except Exception as e:
+        assert type(e) is BadRequest
+
+    data = {"title": "Teste 123"}
+    try:
+        response = update_tag_controller(same_company_user, tag.id + 1, data)
+    except Exception as e:
+        assert type(e) is NotFound
+
+    try:
+        response = update_tag_controller(different_company_user, tag.id, data)
+    except Exception as e:
+        assert type(e) is Forbidden
+
+
+def test_delete_tag_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    same_company_user = factories.UserFactory(company=company_1)
+    different_company_user = factories.UserFactory(company=company_2)
+    tag = factories.TagFactory(company=company_1, created_by=same_company_user)
+
+    try:
+        response = delete_tag_controller(same_company_user, tag.id + 1)
+    except Exception as e:
+        assert type(e) is NotFound
+
+    try:
+        response = delete_tag_controller(different_company_user, tag.id)
+    except Exception as e:
+        assert type(e) is Forbidden
+
+    response = delete_tag_controller(same_company_user, tag.id)
+    assert Tag.query.filter_by().first() == None

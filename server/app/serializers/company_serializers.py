@@ -1,5 +1,5 @@
 from app import ma
-from app.models.company import Company, Webhook
+from app.models.company import Company, Webhook, Tag
 
 
 class CompanySerializer(ma.SQLAlchemyAutoSchema):
@@ -27,3 +27,18 @@ class WebhookSerializer(ma.SQLAlchemyAutoSchema):
     class Meta:
         exclude = ("company_id",)
         model = Webhook
+
+
+class TagSerializer(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        exclude = ("company_id",)
+        model = Tag
+
+
+class TagListSerializer(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        exclude = (
+            "company_id",
+            "config",
+        )
+        model = Tag

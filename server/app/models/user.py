@@ -31,6 +31,13 @@ class User(db.Model):
     templates = db.relationship("DocumentTemplate", back_populates="user")
     participates_on = db.relationship("ParticipatesOn", back_populates="user")
     external_tokens = db.relationship("ExternalToken", back_populates="user")
+    internal_dbs = db.relationship(
+        "InternalDatabase", back_populates="created_by", lazy="dynamic"
+    )
+    text_items = db.relationship(
+        "TextItem", back_populates="created_by", lazy="dynamic"
+    )
+    tags = db.relationship("Tag", back_populates="created_by", lazy="dynamic")
 
     def __repr__(self):
         return "<User %r>" % self.username
