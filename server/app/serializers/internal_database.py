@@ -9,6 +9,17 @@ class InternalDBSerializer(ma.SQLAlchemyAutoSchema):
         model = InternalDatabase
 
 
+class InternalDBListSerializer(ma.SQLAlchemyAutoSchema):
+    text_count = ma.Method("get_text_count")
+
+    class Meta:
+        exclude = ("company_id",)
+        model = InternalDatabase
+
+    def get_text_count(self, obj):
+        return len(obj.text_items)
+
+
 class TextItemSerializer(ma.SQLAlchemyAutoSchema):
     tags = ma.Nested(TagSerializer, many=True)
 

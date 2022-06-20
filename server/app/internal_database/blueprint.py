@@ -50,7 +50,9 @@ def list_internal_dbs(current_user):
                 "page": internal_db_query.page,
                 "per_page": internal_db_query.per_page,
                 "total": internal_db_query.total,
-                "items": InternalDBSerializer(many=True).dump(internal_db_query.items),
+                "items": InternalDBListSerializer(many=True).dump(
+                    internal_db_query.items
+                ),
             }
         ),
         200,
