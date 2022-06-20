@@ -17,7 +17,7 @@ class InternalDBListSerializer(ma.SQLAlchemyAutoSchema):
         model = InternalDatabase
 
     def get_text_count(self, obj):
-        return len(obj.text_items)
+        return obj.text_items.count()
 
 
 class TextItemSerializer(ma.SQLAlchemyAutoSchema):
