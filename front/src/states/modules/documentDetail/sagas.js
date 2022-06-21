@@ -5,6 +5,7 @@ import {
 	errorMessage,
 } from '~/services/messager'
 import api from '~/services/api'
+import DocumentDetailsService from '~/services/DocumentDetailsService'
 import {
 	getDocumentDetail,
 	getDocumentDetailSuccess,
@@ -38,6 +39,9 @@ import {
 	changeVariablesFailure,
 	getDocumentCertificate,
 	getDocumentCertificateFailure,
+	downloadTextDocumentVersion,
+	downloadTextDocumentVersionSuccess,
+	downloadTextDocumentVersionFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -52,6 +56,7 @@ export default function* rootSaga() {
 	yield takeEvery(getDocumentWordDownload, getDocumentWordDownloadSaga)
 	yield takeEvery(changeVariables, changeVariablesSaga)
 	yield takeEvery(getDocumentCertificate, getDocumentCertificateSaga)
+	yield takeEvery(downloadTextDocumentVersion, downloadTextDocumentVersionSaga)
 }
 
 function* getDocumentCertificateSaga({ payload = {} }) {
@@ -420,5 +425,17 @@ function* changeVariablesSaga({ payload = {} }) {
 			updateKey: 'variablesDocument',
 		})
 		yield put(changeVariablesFailure(error))
+	}
+}
+
+function* downloadTextDocumentVersionSaga({ payload }) {
+	try {
+		const data = yield call(
+			DocumentDetailsService.downloadTextDocumentVersion,
+			payload
+		)
+		yield put(downloadTextDocumentVersionSuccess(data))
+	} catch (error) {
+		yield put(downloadTextDocumentVersionFailure(error))
 	}
 }

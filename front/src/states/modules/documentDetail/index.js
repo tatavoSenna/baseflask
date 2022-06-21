@@ -24,6 +24,15 @@ const initialState = {
 	loadingSign: false,
 	loadingVersion: false,
 	version_id: '0',
+	/**
+	 * This object stores the details from a specific version of a text document.
+	 * It can be accessed using useSelector(({documentDetail})=> documentDetail.textDocumentVersion) (Retuns a object with the data, error and loading values from this state)
+	 */
+	textDocumentVersion: {
+		data: null,
+		error: null,
+		loading: false,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -244,6 +253,30 @@ const { actions, reducer } = createSlice({
 				loading: false,
 				loadingSign: false,
 			}),
+		downloadTextDocumentVersion: (state) =>
+			extend(state, {
+				textDocumentVersion: {
+					...state.textDocumentVersion,
+					loading: true,
+					error: null,
+				},
+			}),
+		downloadTextDocumentVersionSuccess: (state, { payload }) =>
+			extend(state, {
+				textDocumentVersion: {
+					data: payload,
+					loading: false,
+					error: null,
+				},
+			}),
+		downloadTextDocumentVersionFailure: (state, { payload }) =>
+			extend(state, {
+				textDocumentVersion: {
+					...state.textDocumentVersion,
+					loading: false,
+					error: payload,
+				},
+			}),
 	},
 })
 
@@ -285,6 +318,9 @@ export const {
 	changeVariablesFailure,
 	getDocumentCertificate,
 	getDocumentCertificateFailure,
+	downloadTextDocumentVersion,
+	downloadTextDocumentVersionSuccess,
+	downloadTextDocumentVersionFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'
