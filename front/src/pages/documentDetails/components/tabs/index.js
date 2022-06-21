@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { Form, Typography, Button, Spin, Menu, Steps as StepsAntd } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
-
 import {
 	array,
 	bool,
@@ -19,7 +20,14 @@ import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 import styled from 'styled-components'
+import { downloadTextDocumentVersion } from '~/states/modules/documentDetail'
 import InfoView from './infoView'
+
+import {
+	successMessage,
+	loadingMessage,
+	errorMessage,
+} from '~/services/messager'
 
 moment.locale('pt-br')
 
@@ -55,8 +63,51 @@ const Tabs = ({
 	versionLoading,
 	downloadButton,
 }) => {
+	const dispatch = useDispatch()
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
+	const { id } = useParams()
+
+	const downloadVersionHandler = (event, item) => {
+		event.stopPropagation()
+		const versionInfo = {
+			id,
+			versionId: item.id,
+			versionName: item.description,
+			documentTitle: documentDetailData.title,
+		}
+
+		dispatch(downloadTextDocumentVersion(versionInfo))
+	}
+
+	const { data, loading, error } = useSelector(
+		({ documentDetail }) => documentDetail.textDocumentVersion
+	)
+
+	const { data: documentDetailData } = useSelector(
+		({ documentDetail }) => documentDetail
+	)
+
+	useEffect(() => {
+		if (loading === true) {
+			loadingMessage({
+				content: 'Realizando download do documento...',
+				updateKey: 'downloadWordVersion',
+			})
+		}
+		if (loading === false && error === null && data !== null) {
+			successMessage({
+				content: 'Documento baixado com sucesso!',
+				updateKey: 'downloadWordVersion',
+			})
+		}
+		if (loading === false && error !== null && data === null) {
+			errorMessage({
+				content: 'Ocorreu um erro ao baixar o seu documento.',
+				updateKey: 'downloadWordVersion',
+			})
+		}
+	}, [loading, error, data])
 
 	const tab = (option) => {
 		if (option === '1') {
@@ -125,8 +176,14 @@ const Tabs = ({
 										<StyledText style={{ fontSize: 14 }}>
 											{item.description}
 										</StyledText>
+										<Button
+											shape="circle"
+											icon={<DownloadOutlined />}
+											htmlType="button"
+											onClick={(event) => downloadVersionHandler(event, item)}
+											onMouseDown={(event) => event.preventDefault()}
+										/>
 									</ContainerIcon>
-
 									<StyledText style={{ display: 'block', padding: '5px 0' }}>
 										Por: <StyledText>{item.created_by}</StyledText>
 									</StyledText>
