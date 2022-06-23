@@ -11,6 +11,7 @@ import {
 	SettingOutlined,
 	IdcardOutlined,
 	FileTextOutlined,
+	DatabaseOutlined,
 } from '@ant-design/icons'
 import { getSettings } from '~/states/modules/settings'
 import styles from './index.module.scss'
@@ -108,17 +109,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							}>
 							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
 						</Menu.Item>
-						<Menu.Item
-							key="users"
-							icon={
-								<TeamOutlined
-									className={styles.icons}
-									style={{ fontSize: 18 }}
-								/>
-							}
-							onClick={() => handleGoTo('/users')}>
-							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
-						</Menu.Item>
+
 						<Menu.Item
 							key="templates"
 							icon={
@@ -131,10 +122,26 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							<Tooltip className={styles.tooltip}>Templates</Tooltip>
 						</Menu.Item>
 						<Menu.Item
-							key="settings"
-							icon={<SettingOutlined />}
-							onClick={() => handleGoTo('/settings')}>
-							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
+							key="databases"
+							icon={
+								<DatabaseOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}
+							onClick={() => handleGoTo('/databases')}>
+							<Tooltip className={styles.tooltip}>Bancos de Textos</Tooltip>
+						</Menu.Item>
+						<Menu.Item
+							key="users"
+							icon={
+								<TeamOutlined
+									className={styles.icons}
+									style={{ fontSize: 18 }}
+								/>
+							}
+							onClick={() => handleGoTo('/users')}>
+							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
 						</Menu.Item>
 						{is_admin && (
 							<Menu.Item
@@ -162,6 +169,12 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								<Tooltip className={styles.tooltip}>Docs</Tooltip>
 							</Menu.Item>
 						)}
+						<Menu.Item
+							key="settings"
+							icon={<SettingOutlined />}
+							onClick={() => handleGoTo('/settings')}>
+							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
+						</Menu.Item>
 					</Menu>
 				</Sider>
 			) : (

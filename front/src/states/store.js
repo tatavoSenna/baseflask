@@ -31,6 +31,7 @@ import companies, { companiesSaga } from './modules/companies'
 import session, { sessionSaga } from './modules//session'
 import folder, { folderSaga } from './modules/folder'
 import editContract, { editContractSaga } from './modules/editContract'
+import database, { databaseSaga } from './modules/databases'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -61,6 +62,7 @@ const reducers = combineReducers({
 	session,
 	folder,
 	editContract,
+	database,
 })
 
 const store = configureStore({
@@ -93,6 +95,7 @@ const rootSaga = function* () {
 		sessionSaga(),
 		folderSaga(),
 		editContractSaga(),
+		databaseSaga(),
 	])
 }
 

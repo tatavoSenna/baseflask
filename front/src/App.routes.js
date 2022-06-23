@@ -18,6 +18,7 @@ import Home from './pages/home'
 import AuthWrapper from '~/components/authWrapper'
 import RedirectNewUser from '~/components/redirectNewUser'
 import EditDocument from 'pages/editDocument'
+import Databases from 'pages/databases'
 
 export const ROUTES = {
 	docusign: '/docusign-token',
@@ -32,6 +33,7 @@ export const ROUTES = {
 	documentDetails: '/documents/:id(\\d+)',
 	editDocumentDetails: '/documents/:id/edit',
 	externalContract: '/documentcreate/:token',
+	databases: '/databases',
 	settings: '/settings',
 	companies: '/companies',
 	documentation: '/docs',
@@ -68,6 +70,7 @@ function Routes() {
 							path={ROUTES.editDocumentDetails}
 							component={EditDocument}
 						/>
+						<Route exact path={ROUTES.databases} component={Databases} />
 						<Route
 							exact
 							path={ROUTES.companies}
