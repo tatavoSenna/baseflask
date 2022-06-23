@@ -18,6 +18,7 @@ const LegalPerson = ({
 	optional,
 	disabled,
 	visible,
+	first,
 }) => {
 	let fieldState = ''
 	if (typeof fields !== 'string') {
@@ -39,7 +40,7 @@ const LegalPerson = ({
 
 	const componentsTypes = Object.keys(components)
 
-	return fields.map((field, i) => {
+	return componentsTypes.map((field, i) => {
 		const dict = {
 			key: i,
 			first: i === 0,
@@ -56,8 +57,12 @@ const LegalPerson = ({
 			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
-		for (let i = 0; i < componentsTypes.length; i++) {
-			if (field.field_type === componentsTypes[i]) {
+		if (i === 0 && first) {
+			dict.first = first
+		}
+
+		for (let i = 0; i < fields.length; i++) {
+			if (field.field_type === fields[i]) {
 				dict.inputValue = field.value
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type

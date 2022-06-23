@@ -26,6 +26,7 @@ import { CpfWidget } from './widgets/CpfWidget'
 import { CnpjWidget } from './widgets/CnpjWidget'
 import { ParagraphWidget } from './widgets/paragraphWidget'
 import { SeparatorWidget } from './widgets/separatorWidget'
+import { PersonWidget } from './widgets/personWidget'
 
 const widgets = {
 	text: TextWidget,
@@ -42,6 +43,7 @@ const widgets = {
 	dropdown: DropdownWidget,
 	bank: BankWidget,
 	address: AddressWidget,
+	person: PersonWidget,
 	database: DatabaseWidget,
 	cnae: CnaeWidget,
 	separator: SeparatorWidget,
@@ -141,6 +143,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'marital_state',
 					'property_regime',
 					'profession',
+					'legal_nationality',
 					'cnpj',
 					'society_name',
 					'activity',

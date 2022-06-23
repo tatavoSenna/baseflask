@@ -82,7 +82,7 @@ const Widget = ({
 				<>
 					<ThinDivider orientation="left">Variável</ThinDivider>
 
-					<div style={{ display: 'flex' }}>
+					<div style={{ display: 'flex', marginBottom: '24px' }}>
 						<Input.Group compact>
 							<ValidatedInput
 								label="Name"

@@ -15,6 +15,7 @@ const AddressField = ({
 	inputValue,
 	onChange,
 	form,
+	first,
 }) => {
 	const { label, variable, type, fields, id, optional } = pageFieldsData
 	const _addressValue = inputValue !== undefined ? inputValue : {}
@@ -48,6 +49,7 @@ const AddressField = ({
 					onChange={onChange}
 					inputValue={_addressValue}
 					form={form}
+					first={first}
 				/>
 			</AddressContainer>
 		</Form.Item>
@@ -68,6 +70,7 @@ AddressField.propTypes = {
 	form: object,
 	inputValue: object,
 	onChange: func,
+	first: bool,
 }
 
 AddressField.defaultProps = {
