@@ -25,7 +25,7 @@ import AttorneyNationality from 'components/personField/attorneyField/attoneyNat
 import LegalNationality from '../components/legalNationality'
 
 const components = {
-	nationality: LegalNationality,
+	legal_nationality: LegalNationality,
 	cnpj: LegalCNPJ,
 	society_name: LegalName,
 	activity: LegalActivity,

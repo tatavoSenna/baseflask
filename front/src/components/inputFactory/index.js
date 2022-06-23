@@ -116,6 +116,7 @@ function InputFactory({
 						visible={visible[i]}
 						form={form}
 						onChange={onchange((e) => e.target.value)}
+						first={first}
 					/>
 				)
 				break
@@ -171,6 +172,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -185,6 +187,7 @@ function InputFactory({
 						visible={visible[i]}
 						form={form}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -198,6 +201,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -211,6 +215,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange((e) => e.target.value)}
+						first={first}
 					/>
 				)
 				break
@@ -224,6 +229,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -237,6 +243,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -250,6 +257,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -263,6 +271,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -276,6 +285,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -289,6 +299,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -302,6 +313,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -316,6 +328,7 @@ function InputFactory({
 						disabled={disabled}
 						visible={visible[i]}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -327,6 +340,7 @@ function InputFactory({
 						className={isVisible}
 						onChange={onchange()}
 						visible={visible[i]}
+						first={first}
 					/>
 				)
 				break
@@ -343,6 +357,7 @@ function InputFactory({
 						fieldIndex={i}
 						form={form}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -359,6 +374,7 @@ function InputFactory({
 						fieldIndex={i}
 						form={form}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
@@ -371,6 +387,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						visible={visible[i]}
+						first={first}
 					/>
 				)
 				break
@@ -384,6 +401,7 @@ function InputFactory({
 						className={isVisible}
 						onChange={onchange((e) => e.target.value)}
 						visible={visible[i]}
+						first={first}
 					/>
 				)
 				break
@@ -398,6 +416,7 @@ function InputFactory({
 						visible={visible[i]}
 						form={form}
 						onChange={onchange()}
+						first={first}
 					/>
 				)
 				break
