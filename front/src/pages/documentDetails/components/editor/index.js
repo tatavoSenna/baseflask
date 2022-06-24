@@ -1,4 +1,5 @@
 import React from 'react'
+// import { useSelector } from 'react-redux'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import DecoupledDocumentEditor from 'ckeditor5-custom-build/build/ckeditor'
 import { string, func, bool, array } from 'prop-types'
@@ -11,9 +12,33 @@ const Editor = ({
 	onUpdateText,
 	block,
 	versionLoading,
-	comments,
+	// comments,
 	title,
 }) => {
+	// const { userList } = useSelector(({ users }) => users)
+	// const loggedUser = useSelector(({ session }) => session)
+	// class CommentsIntegration {
+	// 	constructor(editor) {
+	// 		this.editor = editor
+	// 	}
+
+	// 	init() {
+	// 		const usersPlugin = this.editor.plugins.get('Users')
+	// 		const commentsRepositoryPlugin =
+	// 			this.editor.plugins.get('CommentsRepository')
+
+	// 		for (let user of userList) {
+	// 			usersPlugin.addUser(user)
+	// 		}
+
+	// 		usersPlugin.defineMe(loggedUser.id.toString())
+
+	// 		for (const commentThread of comments) {
+	// 			commentsRepositoryPlugin.addCommentThread(commentThread)
+	// 		}
+	// 	}
+	// }
+
 	const editorConfiguration = {
 		toolbar: {
 			items: [

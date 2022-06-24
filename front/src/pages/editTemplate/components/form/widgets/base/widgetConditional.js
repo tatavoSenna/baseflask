@@ -116,7 +116,9 @@ const WidgetConditional = ({
 				)?.type
 
 				return (
-					<ListItem key={condition.variable + i}>
+					<ListItem
+						key={condition.variable + i}
+						style={{ marginBottom: '24px' }}>
 						<Input.Group compact>
 							<ValidatedSelect
 								showSearch
