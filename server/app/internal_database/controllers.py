@@ -1,9 +1,11 @@
+from app.models import internal_database
 from werkzeug.exceptions import BadRequest, NotFound, Forbidden
 from sqlalchemy import desc, asc, select, delete
 
 from app import db
 from app.models.user import User
 from app.models.internal_database import *
+from app.models.company import Tag
 
 
 def get_internal_db_controller(user, db_id):
@@ -116,12 +118,23 @@ def get_text_item_controller(user, text_item_id):
 
 
 def list_text_items_from_internal_db_controller(
-    user, db_id, page, per_page, search_term, order_by, order
+    user, db_id, page, per_page, search_term, order_by, order, tag_ids
 ):
-    db = InternalDatabase.query.filter_by(company_id=user.company_id, id=db_id).first()
+    internal_db = InternalDatabase.query.filter_by(
+        company_id=user.company_id, id=db_id
+    ).first()
 
-    if db:
-        text_items_query = db.text_items
+    if tag_ids:
+        text_item_ids = (
+            db.session.query(TextItemTag.text_item_id)
+            .filter(TextItemTag.tag_id.in_(tag_ids))
+            .distinct()
+        )
+        text_items_query = db.session.query(TextItem).filter(
+            TextItem.id.in_(text_item_ids)
+        )
+    elif internal_db:
+        text_items_query = TextItem.query.filter_by(internal_database_id=db_id)
     else:
         return TextItem.query.filter_by(id=None).paginate(page=page, per_page=per_page)
 

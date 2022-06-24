@@ -72,11 +72,14 @@ def list_text_items_from_internal_db(current_user, db_id):
 
         order_by = str(request.args.get("order_by", "created_at"))
         order = str(request.args.get("order", "descend"))
+        tag_ids = request.args.get("tag_ids", None)
+        if tag_ids:
+            tag_ids = int(tag_ids)
     except Exception as e:
         return BadRequest(description="Malformed parameters")
 
     text_items_query = list_text_items_from_internal_db_controller(
-        current_user, db_id, page, per_page, search_term, order_by, order
+        current_user, db_id, page, per_page, search_term, order_by, order, tag_ids
     )
 
     if not text_items_query:

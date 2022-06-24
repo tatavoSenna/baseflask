@@ -55,7 +55,7 @@ class TextItem(db.Model):
     )
 
     def __repr__(self):
-        return "<TextItem %r>" % self.title
+        return "<TextItem %r>" % self.description
 
 
 class TextItemTag(db.Model):

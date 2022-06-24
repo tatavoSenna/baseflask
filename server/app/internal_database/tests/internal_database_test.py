@@ -163,7 +163,6 @@ def test_list_text_items_from_internal_db_controller():
     company_1 = factories.CompanyFactory()
     company_2 = factories.CompanyFactory()
     same_company_user = factories.UserFactory(company_id=company_1.id)
-    different_company_user = factories.UserFactory(company_id=company_2.id)
     db = factories.InternalDatabaseFactory(
         company=company_1, created_by=same_company_user
     )
@@ -175,14 +174,14 @@ def test_list_text_items_from_internal_db_controller():
     )
 
     response = list_text_items_from_internal_db_controller(
-        same_company_user, db.id, 1, 2, None, "created_at", "ascend"
+        same_company_user, db.id, 1, 2, None, "created_at", "ascend", None
     )
 
     assert response.total == 1
     assert response.items[0] == text_item
 
     response = list_text_items_from_internal_db_controller(
-        same_company_user, db_2.id, 1, 2, None, "created_at", "ascend"
+        same_company_user, db_2.id, 1, 2, None, "created_at", "ascend", None
     )
 
     assert response.total == 0
@@ -335,3 +334,58 @@ def test_delete_text_item_controller():
 
     response = delete_text_item_controller(same_company_user, text_item.id)
     assert TextItem.query.filter_by().first() == None
+
+
+def test_list_text_items_from_internal_db_based_on_tag_ids_controller():
+    company_1 = factories.CompanyFactory()
+    company_2 = factories.CompanyFactory()
+    user = factories.UserFactory(company_id=company_1.id)
+    db = factories.InternalDatabaseFactory(company=company_1, created_by=user)
+    db_2 = factories.InternalDatabaseFactory(company=company_1, created_by=user)
+    text_item = factories.TextItemFactory(
+        internal_database_id=db.id, internal_database=db, created_by=user
+    )
+    text_item_2 = factories.TextItemFactory(
+        internal_database_id=db.id, internal_database=db, created_by=user
+    )
+    tag = factories.TagFactory(company=company_1, created_by=user)
+    tag_2 = factories.TagFactory(company=company_1, created_by=user)
+    tag_3 = factories.TagFactory(company=company_1, created_by=user)
+    text_item_tag_1 = factories.TextItemTagFactory(text_item=text_item, tag=tag)
+    text_item_tag_2 = factories.TextItemTagFactory(text_item=text_item, tag=tag_2)
+    text_item_2_tag_3 = factories.TextItemTagFactory(text_item=text_item_2, tag=tag_3)
+
+    response = list_text_items_from_internal_db_controller(
+        user, db.id, 1, 2, None, "created_at", "ascend", [tag.id, tag_2.id]
+    )
+
+    assert response.total == 1
+    assert response.items[0] == text_item
+
+    response = list_text_items_from_internal_db_controller(
+        user, db.id, 1, 2, None, "created_at", "ascend", [tag.id]
+    )
+
+    assert response.total == 1
+    assert response.items[0] == text_item
+
+    response = list_text_items_from_internal_db_controller(
+        user, db.id, 1, 2, None, "created_at", "ascend", [tag_3.id]
+    )
+
+    assert response.total == 1
+    assert response.items[0] == text_item_2
+
+    text_item_tag_3 = factories.TextItemTagFactory(text_item=text_item, tag=tag_3)
+
+    response = list_text_items_from_internal_db_controller(
+        user, db.id, 1, 2, None, "created_at", "ascend", [tag_3.id]
+    )
+
+    assert response.total == 2
+
+    response = list_text_items_from_internal_db_controller(
+        user, db.id, 1, 2, None, "created_at", "ascend", [tag.id, tag_3.id]
+    )
+
+    assert response.total == 2
