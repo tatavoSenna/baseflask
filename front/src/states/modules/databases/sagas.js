@@ -54,7 +54,7 @@ function* createDatabaseSaga({ payload = {} }) {
 	const { title, history } = payload
 	loadingMessage({
 		content: 'Criando banco de textos...',
-		updateKey: 'databaseDetail',
+		updateKey: 'createDatabase',
 	})
 
 	try {
@@ -65,7 +65,7 @@ function* createDatabaseSaga({ payload = {} }) {
 		yield put(createDatabaseSuccess())
 		successMessage({
 			content: 'Banco de textos criado com sucesso!',
-			updateKey: 'databaseDetail',
+			updateKey: 'createDatabase',
 		})
 
 		history.push({
@@ -75,7 +75,7 @@ function* createDatabaseSaga({ payload = {} }) {
 		yield put(createDatabaseFailure(error))
 		errorMessage({
 			content: 'A criação do banco de textos falhou',
-			updateKey: 'databaseDetail',
+			updateKey: 'createDatabase',
 		})
 	}
 }
@@ -83,7 +83,7 @@ function* createDatabaseSaga({ payload = {} }) {
 function* deleteDatabaseSaga({ payload = {} }) {
 	loadingMessage({
 		content: 'Excluindo base de textos...',
-		updateKey: 'deleteDatabaseSaga',
+		updateKey: 'deleteDatabase',
 	})
 	const { id, pages } = payload
 	const { perPage = 10, page = 1, search = '' } = pages
@@ -96,13 +96,13 @@ function* deleteDatabaseSaga({ payload = {} }) {
 		yield put(deleteDatabaseSuccess(data))
 		successMessage({
 			content: 'Base de textos excluído com sucesso.',
-			updateKey: 'deleteDatabaseSaga',
+			updateKey: 'deleteDatabase',
 		})
 	} catch (error) {
 		yield put(deleteDatabaseFailure(error))
 		errorMessage({
 			content: 'Exclusão da base de textos falhou.',
-			updateKey: 'deleteDatabaseSaga',
+			updateKey: 'deleteDatabase',
 		})
 	}
 }

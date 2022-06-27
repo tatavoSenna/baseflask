@@ -181,7 +181,7 @@ def get_text_item_detail(current_user, text_item_id):
     except Exception as e:
         return jsonify({"Internal Error"}), 500
 
-    return jsonify(InternalDBSerializer(many=False).dump(text_item)), 200
+    return jsonify(TextItemSerializer(many=False).dump(text_item)), 200
 
 
 # Create text item related to internal db

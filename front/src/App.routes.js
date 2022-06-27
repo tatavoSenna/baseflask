@@ -1,6 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
+import AuthWrapper from '~/components/authWrapper'
+import RedirectNewUser from '~/components/redirectNewUser'
+
 import Contracts from './pages/contracts'
 import AddContract from './pages/addContract'
 import Docusign from './pages/docusign'
@@ -14,11 +17,9 @@ import Settings from './pages/settings'
 import Companies from './pages/companies'
 import Documentation from './pages/documentation'
 import Home from './pages/home'
-
-import AuthWrapper from '~/components/authWrapper'
-import RedirectNewUser from '~/components/redirectNewUser'
 import EditDocument from 'pages/editDocument'
 import Databases from 'pages/databases'
+import DatabaseDetails from 'pages/databaseDetails'
 
 export const ROUTES = {
 	docusign: '/docusign-token',
@@ -34,6 +35,7 @@ export const ROUTES = {
 	editDocumentDetails: '/documents/:id/edit',
 	externalContract: '/documentcreate/:token',
 	databases: '/databases',
+	databaseDetails: '/databases/:id(\\d+)',
 	settings: '/settings',
 	companies: '/companies',
 	documentation: '/docs',
@@ -71,6 +73,11 @@ function Routes() {
 							component={EditDocument}
 						/>
 						<Route exact path={ROUTES.databases} component={Databases} />
+						<Route
+							exact
+							path={ROUTES.databaseDetails}
+							component={DatabaseDetails}
+						/>
 						<Route
 							exact
 							path={ROUTES.companies}
