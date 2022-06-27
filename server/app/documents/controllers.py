@@ -31,9 +31,7 @@ from app.workflow.services import (
     format_workflow_responsible_group,
     format_workflow_responsible_users,
 )
-from app.documents.formatters.variables_formatter import (
-    format_variables,
-)
+from app.documents.formatters.variables_formatter import format_variables
 from .remote import RemoteDocument
 
 

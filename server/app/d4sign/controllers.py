@@ -188,6 +188,9 @@ def d4sign_upload_document_controller(
     Controls D4Sign document uploading.
     docs: https://docapi.d4sign.com.br/pt-br/v1/api/endpoints-post
     """
+    # This should get the latest version of the document
+    version_id = len(document_instance.versions) - 1
+
     control = {"status_code": 200, "message": "", "data": {}}
 
     if document_instance.d4sign_document_uuid is not None:
