@@ -192,6 +192,20 @@ const { actions, reducer } = createSlice({
 				error: payload.error,
 				loading: false,
 			}),
+		editStep: (state) =>
+			extend(state, {
+				loading: true,
+			}),
+		editStepSuccess: (state, { payload }) =>
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+				loading: false,
+			}),
+		editStepFailure: (state, { payload }) =>
+			extend(state, {
+				error: payload.error,
+				loading: false,
+			}),
 		setShowModal: (state, { payload }) =>
 			extend(state, {
 				showModal: payload,
@@ -294,6 +308,9 @@ export const {
 	nextStep,
 	nextStepSuccess,
 	nextStepFailure,
+	editStep,
+	editStepSuccess,
+	editStepFailure,
 	setShowModal,
 	setShowAssignModal,
 	updateDescription,

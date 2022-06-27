@@ -25,6 +25,7 @@ from app.documents.controllers import (
 )
 from app.serializers.document_serializers import DocumentListSerializer
 from app.serializers.document_serializers import DocumentListSerializer
+from app.serializers.document_serializers import DocumentListSerializer
 
 
 def test_retrieve_document():
