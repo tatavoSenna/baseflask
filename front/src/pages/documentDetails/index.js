@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout, PageHeader, Spin, Breadcrumb } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +17,7 @@ import {
 	updateTextVersion,
 	previousStep,
 	nextStep,
+	editStep,
 	setShowModal,
 	setShowAssignModal,
 	setShowConnectModal,
@@ -29,10 +30,13 @@ import {
 	changeVariables,
 	getDocumentCertificate,
 } from '~/states/modules/documentDetail'
+import { getGroupList } from '~/states/modules/groups'
+import { getUserList } from '~/states/modules/users'
 
 import styles from '../contracts/index.module.scss'
 import MainLayout from '~/components/mainLayout'
 import DraftIndicator from './components/draftIndicator'
+import StepModal from './components/tabs/stepModal'
 
 const DocumentDetails = () => {
 	const { id } = useParams()
@@ -55,6 +59,16 @@ const DocumentDetails = () => {
 	} = useSelector(({ documentDetail }) => documentDetail)
 
 	const { accessFolders } = useSelector(({ folder }) => folder)
+	const { groupsList } = useSelector(({ groups }) => groups)
+	const { userList } = useSelector(({ users }) => users)
+
+	useEffect(() => {
+		dispatch(getGroupList())
+	}, [dispatch])
+
+	useEffect(() => {
+		dispatch(getUserList())
+	}, [dispatch])
 
 	const createDocumentVersion = (form) => {
 		dispatch(newVersion({ id, description, text: textUpdate }))
@@ -134,6 +148,29 @@ const DocumentDetails = () => {
 		history.push({
 			pathname: `/documents/${id}/edit`,
 		})
+	const [stepModal, setStepModal] = useState(false)
+
+	const showStepModal = () => {
+		setStepModal(true)
+	}
+
+	const handleCancelStepModal = () => {
+		setStepModal(false)
+	}
+
+	const handleSaveStepChanges = (values) => {
+		dispatch(
+			editStep({
+				id,
+				group: { id: values.group },
+				responsible_users: values.responsibleUsers.map((user) => {
+					return { id: user }
+				}),
+				due_date: values.dueDate,
+			})
+		)
+		setStepModal(false)
+	}
 
 	var listFolders = accessFolders.map((folder, index) => (
 		<Breadcrumb.Item
@@ -182,6 +219,17 @@ const DocumentDetails = () => {
 					showModal={showAssignModal}
 					infos={data.form}
 				/>
+				{stepModal && (
+					<StepModal
+						showModal={stepModal}
+						handleCancel={handleCancelStepModal}
+						handleSave={handleSaveStepChanges}
+						stepData={data.workflow.steps}
+						current={data.workflow.current}
+						groups={groupsList}
+						users={userList}
+					/>
+				)}
 				{Object.keys(data).length < 1 && <Spin spinning={loading} />}
 				{Object.keys(data).length > 0 && (
 					<div
@@ -225,6 +273,7 @@ const DocumentDetails = () => {
 							versions={data.versions}
 							showAssignModal={handleShowAssignModal}
 							infos={data}
+							showStepModal={showStepModal}
 							variables={data.variables}
 							signed={data.sent}
 							sentAssign={handleSentAssign}

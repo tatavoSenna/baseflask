@@ -19,6 +19,9 @@ import {
 	nextStep,
 	nextStepSuccess,
 	nextStepFailure,
+	editStep,
+	editStepSuccess,
+	editStepFailure,
 	newAssign,
 	newAssignSuccess,
 	newAssignFailure,
@@ -49,6 +52,7 @@ export default function* rootSaga() {
 	yield takeEvery(newVersion, newVersionSaga)
 	yield takeEvery(previousStep, previousStepSaga)
 	yield takeEvery(nextStep, nextStepSaga)
+	yield takeEvery(editStep, editStepSaga)
 	yield takeEvery(newAssign, newAssignSaga)
 	yield takeEvery(sentAssign, sentAssignSaga)
 	yield takeEvery(selectVersion, selectVersionSaga)
@@ -294,6 +298,32 @@ function* nextStepSaga({ payload = {} }) {
 			updateKey: 'status',
 		})
 		yield put(nextStepFailure(error))
+	}
+}
+
+function* editStepSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Mudando o status do documento. Por favor aguarde.',
+		updateKey: 'status',
+	})
+	const { id, group, responsible_users, due_date } = payload
+	try {
+		const response = yield call(api.patch, `documents/${id}/edit_workflow`, {
+			group: group,
+			responsible_users: responsible_users,
+			due_date: due_date,
+		})
+		yield put(editStepSuccess(response.data))
+		successMessage({
+			content: 'Alteração do status do documento realizada com sucesso.',
+			updateKey: 'status',
+		})
+	} catch (error) {
+		errorMessage({
+			content: 'Alteração do status do documento falhou.',
+			updateKey: 'status',
+		})
+		yield put(editStepFailure(error))
 	}
 }
 

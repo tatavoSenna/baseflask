@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Typography, Button, Spin, Menu, Steps as StepsAntd } from 'antd'
-import { DownloadOutlined } from '@ant-design/icons'
+import { DownloadOutlined, EditOutlined } from '@ant-design/icons'
 import {
 	array,
 	bool,
@@ -44,6 +44,7 @@ const Tabs = ({
 	versions,
 	infos,
 	showAssignModal,
+	showStepModal,
 	signed,
 	handleVersion,
 	sentAssign,
@@ -250,7 +251,7 @@ const Tabs = ({
 					}
 
 					var yearMonth = date.split('-')
-					var day = yearMonth[2].split(' ')
+					var day = yearMonth[2].split('T')
 					return day[0] + '/' + yearMonth[1] + '/' + yearMonth[0]
 				}
 				const dateNow = () => {
@@ -284,7 +285,7 @@ const Tabs = ({
 						<br />
 						Grupo: <span style={{ fontWeight: 'bold' }}>{item.group.name}</span>
 						<br />
-						Responsável:{' '}
+						Responsáveis:{' '}
 						<span style={{ fontWeight: 'bold' }}>
 							{responsibleUsers.join(', ')}
 						</span>
@@ -295,7 +296,7 @@ const Tabs = ({
 				<span style={{ fontSize: 12, lineHeight: 1.5 }}>
 					Grupo: <span style={{ fontWeight: 'bold' }}>{item.group.name}</span>
 					<br />
-					Responsável:{' '}
+					Responsáveis:{' '}
 					<span style={{ fontWeight: 'bold' }}>
 						{responsibleUsers.join(', ')}
 					</span>
@@ -308,7 +309,11 @@ const Tabs = ({
 		if (index === current) {
 			return (
 				<span style={{ color: '#1890ff', fontSize: 18, fontWeight: '500' }}>
-					{item.title}
+					{item.title}{' '}
+					<EditOutlined
+						style={{ padding: 2 }}
+						onClick={() => showStepModal()}
+					/>
 				</span>
 			)
 		}
@@ -558,6 +563,7 @@ Tabs.propTypes = {
 	versions: array,
 	infos: object,
 	showAssignModal: func,
+	showStepModal: func,
 	handleVersion: func,
 	signed: bool,
 	sentAssign: func,

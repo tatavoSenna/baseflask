@@ -1,10 +1,13 @@
-import io
+from datetime import datetime
 import logging
-import json
 import jinja2
 import copy
+import arrow
+import boto3
+import pdfrw
 import ast
 
+from werkzeug.exceptions import BadRequest
 from flask import request, Blueprint, abort, jsonify, current_app
 from botocore.exceptions import ClientError
 from docusign_esign import (
@@ -664,6 +667,10 @@ def edit_document_workflow(current_user, document_id):
     new_group = content.get("group", None)
     new_responsible_users = content.get("responsible_users", None)
     new_due_date = content.get("due_date", None)
+
+    if new_due_date:
+        if arrow.get(new_due_date).date() <= arrow.now().date():
+            raise BadRequest(description="New due date not valid")
 
     if new_group or new_responsible_users or new_due_date:
         document = get_document_controller(document_id)
