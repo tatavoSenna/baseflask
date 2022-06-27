@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Layout, PageHeader } from 'antd'
 import BreadCrumb from '~/components/breadCrumb'
 import DataTable from '~/components/dataTable'
-import DatabaseModal from './components/modal'
+import CreationModal from 'components/creationModal/modal'
 import { getColumns } from './columns'
 import {
 	setShowModal,
@@ -64,7 +64,8 @@ const Databases = () => {
 					<BreadCrumb current="Bancos de textos" />
 				</PageHeader>
 				<Layout style={{ backgroundColor: '#fff' }}>
-					<DatabaseModal
+					<CreationModal
+						title="Novo banco de textos"
 						handleCancel={handleCancel}
 						handleCreate={handleCreate}
 						showModal={showModal}

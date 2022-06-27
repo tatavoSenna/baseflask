@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Menu, Form, Button, PageHeader, Layout, Spin, Input } from 'antd'
+import { Menu, Form, Button, PageHeader, Layout, Spin } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
 	FileTextOutlined,
 	TeamOutlined,
-	EditOutlined,
-	CheckOutlined,
 } from '@ant-design/icons'
 import {
 	getTemplateDetail,
@@ -37,7 +35,6 @@ const EditTemplate = () => {
 	const dispatch = useDispatch()
 	const [form] = Form.useForm()
 	const [current, setCurrent] = useState('form')
-	const [editTitle, setEditTitle] = useState(false)
 	const [inputsFilled, setInputsFilled] = useState({
 		form: edit,
 		workflow: true,
@@ -46,7 +43,6 @@ const EditTemplate = () => {
 	})
 	const [files, postFiles] = useState([])
 	const [checked, setChecked] = useState(false)
-	const [title, setTitle] = useState(data.title)
 
 	const editDOCX = () => {
 		setChecked(true)
@@ -61,10 +57,8 @@ const EditTemplate = () => {
 		setCurrent(e.key)
 	}
 
-	const handleEditTitle = (e) => {
-		const title = e.target.value
-		setTitle(title)
-		dispatch(editTemplateTitle({ title: title }))
+	const handleEditTitleButton = (title) => {
+		dispatch(editTemplateTitle({ title }))
 	}
 
 	const setDownloadButton = () => {
@@ -156,18 +150,7 @@ const EditTemplate = () => {
 		})
 	}
 
-	const allValueSpace = (data) => {
-		return data.trim().length === 0
-	}
-
-	const handleClickTitleButton = () => {
-		setEditTitle(false)
-		const _title = title === '' ? data.title : title
-		dispatch(editTemplateTitle({ title: _title.trim() }))
-	}
-
-	const disabledTitleTemplate =
-		data.title.length < 1 || allValueSpace(data.title)
+	const disabledTitleTemplate = data.title.trim().length === 0
 
 	return (
 		<MainLayout>
@@ -175,36 +158,9 @@ const EditTemplate = () => {
 				<PageHeader>
 					<BreadCrumb
 						parent="Templates"
-						current={
-							editTitle ? (
-								<>
-									<Input
-										style={{
-											maxWidth: '300px',
-											borderColor: disabledTitleTemplate ? '#ff4d4f' : null,
-										}}
-										defaultValue={data.title}
-										onChange={handleEditTitle}
-										placeholder="Título em branco"
-									/>
-									<Button
-										onClick={handleClickTitleButton}
-										icon={<CheckOutlined style={{ fontSize: '18px' }} />}
-										style={{ border: 'none', marginLeft: '5px' }}
-										disabled={disabledTitleTemplate}
-									/>
-								</>
-							) : (
-								<>
-									{data.title}
-									<Button
-										onClick={() => setEditTitle(true)}
-										icon={<EditOutlined style={{ fontSize: '18px' }} />}
-										style={{ border: 'none', marginLeft: '5px' }}
-									/>
-								</>
-							)
-						}
+						editable={true}
+						current={data.title}
+						onEdit={handleEditTitleButton}
 					/>
 				</PageHeader>
 				<Menu

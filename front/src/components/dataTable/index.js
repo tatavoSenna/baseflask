@@ -8,6 +8,8 @@ import {
 	func,
 	bool,
 	object,
+	oneOfType,
+	node,
 } from 'prop-types'
 import { Table, Input, Button, Empty } from 'antd'
 
@@ -69,7 +71,11 @@ const DataTable = ({
 					locale: { items_per_page: '' },
 				}}
 				locale={{
-					emptyText: <Empty description={placeholderNoData} />,
+					emptyText: React.isValidElement(placeholderNoData) ? (
+						placeholderNoData
+					) : (
+						<Empty description={placeholderNoData} />
+					),
 					triggerAsc: 'Clique para ordenar ascendente',
 					triggerDesc: 'Clique para ordenar descendente',
 					cancelSort: 'Clique para cancelar ordenação',
@@ -99,7 +105,7 @@ DataTable.propTypes = {
 	textButton: string.isRequired,
 	onSearch: func.isRequired,
 	onClickButton: func.isRequired,
-	placeholderNoData: string,
+	placeholderNoData: oneOfType([string, node]),
 	loading: bool,
 	buttons: array,
 	rowSelection: object,
