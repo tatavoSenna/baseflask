@@ -145,14 +145,43 @@ class D4SignAPI:
             filename += f".{ext}"
 
         payload = {"uuid_folder": ""}  # TODO: Implement folder when necessary
-
         mime = getattr(MIME, ext.upper()).value
-        files = [("file", (filename, file.getvalue(), mime))]
+        if ext == "txt":
+            # 1: Get the html string from the file bytes
+            txt_file_string = file.decode("utf-8")
 
-        response = requests.post(url, data=payload, files=files)
-        response_payload = response.json()
+            # 2: Pass the html string to the lambda to get .docx file (will need to update the filename variable here)
+            lambda_url = "https://nqq34a754i.execute-api.us-east-1.amazonaws.com/dev/generate-document"
+            lambda_headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            }
+            lambda_data = {"text": txt_file_string}
+            lambda_data = json.dumps(lambda_data)
 
-        return response_payload
+            response_with_docx = requests.post(
+                lambda_url, data=lambda_data, headers=lambda_headers
+            )
+
+            # 3: fix mime, filename for .docx format
+            mime = getattr(MIME, "DOCX").value
+            filename = filename.replace(".txt", ".docx")
+            filename = filename.replace(" ", "-")
+
+            # 4: send the .docx file to d4sign API
+            files = [("file", (filename, response_with_docx.content, mime))]
+
+            response = requests.post(url, data=payload, files=files)
+            response_payload = response.json()
+
+            return response_payload
+        else:
+            files = [("file", (filename, file.getvalue(), mime))]
+
+            response = requests.post(url, data=payload, files=files)
+            response_payload = response.json()
+
+            return response_payload
 
     def get_document_file_download_info(
         self,
