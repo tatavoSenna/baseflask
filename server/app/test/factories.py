@@ -1,4 +1,3 @@
-from werkzeug.exceptions import PreconditionFailed
 import factory
 
 from factory.alchemy import SQLAlchemyModelFactory
@@ -87,3 +86,39 @@ class WebhookFactory(BaseFactory):
     company_id = factory.SubFactory(CompanyFactory)
     pdf = factory.Faker("pybool")
     docx = factory.Faker("pybool")
+
+
+class InternalDatabaseFactory(BaseFactory):
+    class Meta:
+        model = models.internal_database.InternalDatabase
+
+    id = factory.Sequence(lambda n: n)
+    title = factory.Faker("first_name_nonbinary")
+    company = factory.SubFactory(CompanyFactory)
+
+
+class TextItemFactory(BaseFactory):
+    class Meta:
+        model = models.internal_database.TextItem
+
+    id = factory.Sequence(lambda n: n)
+    text = factory.Faker("first_name_nonbinary")
+    internal_database = factory.SubFactory(InternalDatabaseFactory)
+
+
+class TagFactory(BaseFactory):
+    class Meta:
+        model = models.company.Tag
+
+    id = factory.Sequence(lambda n: n)
+    company = factory.SubFactory(CompanyFactory)
+    title = factory.Faker("first_name_nonbinary")
+
+
+class TextItemTagFactory(BaseFactory):
+    class Meta:
+        model = models.internal_database.TextItemTag
+
+    id = factory.Sequence(lambda n: n)
+    text_item = factory.SubFactory(TextItemFactory)
+    tag = factory.SubFactory(TagFactory)

@@ -24,6 +24,7 @@ const PersonField = ({
 	form,
 	disabled,
 	visible,
+	first,
 }) => {
 	const { label, variable, type, fields, id, person_type, optional } =
 		pageFieldsData
@@ -98,6 +99,7 @@ const PersonField = ({
 						optional={optional}
 						onChange={onChange}
 						form={form}
+						first={first}
 						inputValue={_personValue}
 					/>
 				)}
@@ -111,6 +113,7 @@ const PersonField = ({
 						onChange={onChange}
 						inputValue={_personValue}
 						form={form}
+						first={first}
 					/>
 				)}
 			</PersonContainer>
@@ -132,6 +135,7 @@ PersonField.propTypes = {
 	visible: bool,
 	inputValue: object,
 	onChange: func,
+	first: bool,
 }
 
 PersonField.defaultProps = {

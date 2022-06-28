@@ -12,6 +12,9 @@ from app.models.documents import DocumentTemplate
 from app.documents.formatters.structured_list_formatter import StructuredListFormatter
 from app.documents.formatters.number_formatter import NumberFormatter
 from app.documents.formatters.time_formatter import TimeFormatter
+from app.documents.formatters.internal_database_formatter import (
+    InternalDatabaseFormatter,
+)
 from app.documents.formatters.person_variable_text import (
     LegalPersonText,
     LegalPersonTextVariable,
@@ -173,6 +176,9 @@ def format_variables(variables, document_template_id):
 
         elif variable_type[0:11] == "structured_":
             return StructuredListFormatter(variables[struct_name], specs)
+
+        elif variable_type == "internal_database":
+            return InternalDatabaseFormatter(variables[variable])
 
     if not variables_specification:
         return variables

@@ -10,6 +10,7 @@ const Fields = ({
 	onChange,
 	inputValue,
 	form,
+	first,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -24,10 +25,9 @@ const Fields = ({
 
 	const [state, setState] = useState(fieldState)
 
-	return fields.map((field, i) => {
+	return componentsTypes.map((field, i) => {
 		const dict = {
 			key: i,
-			first: i === 0,
 			name,
 			inputValue,
 			disabled,
@@ -40,8 +40,12 @@ const Fields = ({
 			field = { field_type: field, value: inputValue[field] ?? '' }
 		}
 
-		for (let i = 0; i < componentsTypes.length; i++) {
-			if (field.field_type === componentsTypes[i]) {
+		if (i === 0 && first) {
+			dict.first = first
+		}
+
+		for (let i = 0; i < fields.length; i++) {
+			if (field.field_type === fields[i]) {
 				dict.className = classNames[field.field_type]
 				dict.inputValue = field.value
 				dict.fieldType = field.field_type

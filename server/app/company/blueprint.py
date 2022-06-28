@@ -1,13 +1,8 @@
-from os import abort
-import logging
-from re import sub
-from sqlalchemy import desc
-from werkzeug.exceptions import BadRequest, Unauthorized
-from flask import request, Blueprint, jsonify, current_app, abort, redirect
-from sqlalchemy.sql.expression import false
 import stripe
 import os
-from werkzeug.exceptions import BadRequest, NotFound
+
+from werkzeug.exceptions import BadRequest, Unauthorized, NotFound, Forbidden
+from flask import request, Blueprint, jsonify, current_app, abort, redirect
 from sentry_sdk import capture_exception
 
 from app import aws_auth, db
@@ -16,22 +11,8 @@ from app.models.company import Company
 from app.models.user import User
 from app.serializers.user_serializers import UserSerializer
 from app.models.company import Company, Webhook
-from app.serializers.company_serializers import (
-    CompanySerializer,
-    CompanyListSerializer,
-    WebhookSerializer,
-)
-
-from .controllers import (
-    create_company_controller,
-    save_company_keys_controller,
-    update_webhook_controller,
-    upload_logo_controller,
-    get_download_url_controller,
-    create_webhook_controller,
-    get_webhook_controller,
-    assign_company_to_new_user_controller,
-)
+from app.serializers.company_serializers import *
+from .controllers import *
 
 company_bp = Blueprint("company", __name__)
 stripe.api_key = os.environ.get("STRIPE_API_SECRET_KEY")
@@ -54,7 +35,6 @@ def save_keys(logged_user):
             docusign_account_id=docusign_account_id,
         )
     except Exception as e:
-        logging.exception(e)
         return {}, 500
 
     return jsonify({"company": CompanySerializer().dump(company)})
@@ -404,3 +384,110 @@ def get_company_info(logged_user):
         return company_info
     except:
         raise NotFound(description="Company not found")
+
+
+# Get specific Tag based on id
+@company_bp.route("/tag/<int:tag_id>", methods=["GET"])
+@authenticated_user
+def get_tag_detail(current_user, tag_id):
+    try:
+        tag = get_tag_controller(current_user, tag_id)
+    except NotFound as e:
+        return jsonify({"Tag not found"}), 404
+    except Forbidden as e:
+        return jsonify({"User does not have access to this Tag"}), 403
+    except Exception as e:
+        return jsonify({"Internal Error"}), 500
+
+    return jsonify(TagSerializer(many=False).dump(tag)), 200
+
+
+# List all Tags from user's company
+@company_bp.route("/tags", methods=["GET"])
+@authenticated_user
+def list_tags_from_company(current_user):
+    try:
+        page = int(request.args.get("page", current_app.config["PAGE_DEFAULT"]))
+        per_page = int(
+            request.args.get("per_page", current_app.config["PER_PAGE_DEFAULT"])
+        )
+        search_term = str(request.args.get("search", ""))
+
+        order_by = str(request.args.get("order_by", "created_at"))
+        order = str(request.args.get("order", "descend"))
+    except Exception as e:
+        return BadRequest(description="Malformed parameters")
+
+    text_items_query = list_tags_from_company_controller(
+        current_user, page, per_page, search_term, order_by, order
+    )
+
+    return (
+        jsonify(
+            {
+                "page": text_items_query.page,
+                "per_page": text_items_query.per_page,
+                "total": text_items_query.total,
+                "items": TagListSerializer(many=True).dump(text_items_query.items),
+            }
+        ),
+        200,
+    )
+
+
+# Create tag
+@company_bp.route("/tag", methods=["POST"])
+@authenticated_user
+def create_tag(current_user):
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    try:
+        tag = create_tag_controller(current_user, request.json)
+    except BadRequest as e:
+        return jsonify({"Missing fields"}), 400
+    except NotFound as e:
+        return jsonify({"Tag not found"}), 404
+    except Forbidden as e:
+        return jsonify({"User does not have access to this Tag"}), 403
+    except Exception as e:
+        return jsonify({"Internal Error"}), 500
+
+    return jsonify(TagSerializer(many=False).dump(tag)), 201
+
+
+# Update tag's title or config
+@company_bp.route("/tag/<int:tag_id>", methods=["PATCH"])
+@authenticated_user
+def update_tag(current_user, tag_id):
+    if not request.is_json:
+        return jsonify({"message": "Accepts only content-type json."}), 400
+
+    try:
+        tag = update_tag_controller(current_user, tag_id, request.json)
+    except BadRequest as e:
+        return jsonify({"Missing fields"}), 400
+    except NotFound as e:
+        return jsonify({"Tag not found"}), 404
+    except Forbidden as e:
+        return jsonify({"User does not have access to this Tag"}), 403
+    except Exception as e:
+        return jsonify({"Internal Error"}), 500
+
+    return jsonify(TagSerializer(many=False).dump(tag)), 200
+
+
+# Delete tag and relations text-tag
+@company_bp.route("/tag/<int:tag_id>", methods=["DELETE"])
+@authenticated_user
+def delete_tag(current_user, tag_id):
+    try:
+        delete_tag_controller(current_user, tag_id)
+    except NotFound as e:
+        return jsonify({"Tag not found"}), 404
+    except Forbidden as e:
+        return jsonify({"User does not have access to this Tag"}), 403
+    except Exception as e:
+        return jsonify({"Internal Error"}), 500
+
+    return jsonify({}), 200

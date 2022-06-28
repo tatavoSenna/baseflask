@@ -13,6 +13,39 @@ export const Title = styled(Typography.Title)`
 	}
 `
 
+export const CollapseFields = styled(Collapse)`
+	border: 1px solid #d9d9d9;
+	margin-bottom: 24px;
+`
+
+export const ValidateCollapseFields = styled(Collapse)`
+	border: 1px solid ${({ $error }) => ($error ? `#ff0000` : `#d9d9d9`)};
+	margin-bottom: 24px;
+`
+
+export const HeaderFieldsTitle = styled.p`
+	display: flex;
+	width: 100%;
+	margin: 0;
+`
+
+export const PanelWrapper = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	column-gap: 12px;
+`
+
+export const FormItemFields = styled(Form.Item)`
+	flex-direction: column;
+	flex: ${({ $flex = '1 0 100%' }) => $flex};
+
+	.ant-form-item-label {
+		width: 100%;
+		text-align: left;
+	}
+`
+
 export const Panel = styled(Collapse.Panel)`
 	&& .ant-collapse-header {
 		align-items: center;
@@ -35,9 +68,11 @@ export const ThinDivider = styled(Divider)`
 `
 
 export const FormItem = styled(Form.Item)`
-	margin-bottom: 4px;
+	margin-bottom: 16px;
 
 	width: ${({ $width = '100%' }) => $width};
+
+	flex-direction: ${({ $formDirection = 'row' }) => $formDirection};
 
 	.ant-form-item-label {
 		width: ${({ $labelWidth = '94px' }) => $labelWidth};
@@ -74,6 +109,15 @@ export const ValidatedMaskedInput = styled(MaskedInput)`
 `
 
 export const ValidatedSelect = styled(Select)`
+	&& .ant-select-selection-placeholder {
+		${({ $placeholderError }) =>
+			$placeholderError
+				? `
+				color: #ff0000;
+				opacity: 0.4;
+			`
+				: ''}
+	}
 	&& .ant-select-selector {
 		${(props) =>
 			props.$error

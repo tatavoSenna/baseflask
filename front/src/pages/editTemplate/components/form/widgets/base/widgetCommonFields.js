@@ -9,7 +9,12 @@ export const CommonFields = ({ hasDescription, ...props }) => {
 
 	return (
 		<>
-			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					marginTop: '24px',
+				}}>
 				<FormItem label="Título" $width={'70%'}>
 					<Input
 						onBlur={(e) => update({ label: e.target.value })}

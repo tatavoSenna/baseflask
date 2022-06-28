@@ -26,6 +26,8 @@ import { CpfWidget } from './widgets/CpfWidget'
 import { CnpjWidget } from './widgets/CnpjWidget'
 import { ParagraphWidget } from './widgets/paragraphWidget'
 import { SeparatorWidget } from './widgets/separatorWidget'
+import InternalDatabaseWidget from './widgets/internalDatabaseWidget'
+import { PersonWidget } from './widgets/personWidget'
 
 const widgets = {
 	text: TextWidget,
@@ -42,9 +44,11 @@ const widgets = {
 	dropdown: DropdownWidget,
 	bank: BankWidget,
 	address: AddressWidget,
+	person: PersonWidget,
 	database: DatabaseWidget,
 	cnae: CnaeWidget,
 	separator: SeparatorWidget,
+	internal_database: InternalDatabaseWidget,
 }
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
@@ -68,6 +72,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
 			<Menu.Item key="database">API</Menu.Item>
+			<Menu.Item key="internal_database">Banco de dados</Menu.Item>
 			<Menu.Item key="person">Pessoa</Menu.Item>
 			<Menu.Item key="address">Endereço</Menu.Item>
 			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
@@ -119,6 +124,14 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 				newField.variable.search_key = ''
 				newField.variable.display_key = ''
 				break
+			case 'internal_database':
+				newField.variable.type = 'internal_database'
+				newField.databaseId = ''
+				newField.filter = []
+
+				delete newField['initialValue']
+				delete newField['info']
+				break
 			case 'variable_image':
 				newField.variable.type = 'variable_image'
 				newField.variable.doc_display_style = 'image'
@@ -141,6 +154,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					'marital_state',
 					'property_regime',
 					'profession',
+					'legal_nationality',
 					'cnpj',
 					'society_name',
 					'activity',

@@ -31,7 +31,7 @@ const InfoOptionalField = ({ label, info, onClick }) => {
 const InfoField = ({ label, info }) => {
 	return (
 		<div>
-			<Text>{label} </Text>
+			<Text style={{ fontWeight: 500 }}>{label} </Text>
 			{info && (
 				<Tooltip title={info}>
 					<InfoCircleOutlined style={{ color: '#1890ff' }} />

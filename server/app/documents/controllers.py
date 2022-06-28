@@ -1,5 +1,4 @@
 import json
-import logging
 import base64
 import io
 import boto3
@@ -13,14 +12,14 @@ from datetime import datetime, timedelta, date
 from docxtpl import DocxTemplate
 from docx import Document as docxDocument
 from docx.shared import Cm
-from flask import current_app, jsonify
-from operator import ne
+from flask import current_app
 from PIL import Image
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from sqlalchemy import desc, nulls_last, select
+from sqlalchemy import desc, nulls_last
 from unittest.mock import MagicMock
 from werkzeug.exceptions import Unauthorized, BadRequest
+import arrow
 
 from app import db
 from app.constants import months
@@ -31,9 +30,7 @@ from app.workflow.services import (
     format_workflow_responsible_group,
     format_workflow_responsible_users,
 )
-from app.documents.formatters.variables_formatter import (
-    format_variables,
-)
+from app.documents.formatters.variables_formatter import format_variables
 from .remote import RemoteDocument
 
 
@@ -119,9 +116,12 @@ def create_document_controller(
     document_workflow["created_by"] = username
     current_node = document_workflow["current_node"]
     try:
-        document_workflow["nodes"][current_node]["due_date"] = str(
+        deadline = str(
             datetime.today()
             + timedelta(days=document_workflow["nodes"][current_node]["deadline"])
+        )
+        document_workflow["nodes"][current_node]["due_date"] = (
+            deadline[0:10] + "T00:00:00"
         )
         due_date = document_workflow["nodes"][current_node]["due_date"]
     except:
@@ -314,9 +314,12 @@ def next_status_controller(document_id, username):
     document.workflow["current_node"] = next_node
     document.current_step = document.workflow["nodes"][next_node]["title"]
     try:
-        document.workflow["nodes"][next_node]["due_date"] = str(
+        next_deadline = str(
             datetime.today()
             + timedelta(days=document.workflow["nodes"][next_node]["deadline"])
+        )
+        document.workflow["nodes"][next_node]["due_date"] = (
+            next_deadline[0:10] + "T00:00:00"
         )
         document.due_date = document.workflow["nodes"][next_node]["due_date"]
     except:
@@ -349,9 +352,12 @@ def previous_status_controller(document_id):
     document.workflow["current_node"] = previous_node
     document.current_step = document.workflow["nodes"][previous_node]["title"]
     try:
-        document.workflow["nodes"][previous_node]["due_date"] = str(
+        previous_deadline = str(
             datetime.today()
             + timedelta(days=document.workflow["nodes"][previous_node]["deadline"])
+        )
+        document.workflow["nodes"][previous_node]["due_date"] = (
+            previous_deadline[0:10] + "T00:00:00"
         )
         document.due_date = document.workflow["nodes"][previous_node]["due_date"]
     except:
@@ -516,7 +522,8 @@ def edit_document_workflow_controller(
     new_due_date: str = None,
 ):
     new_workflow = copy.deepcopy(document.workflow)
-    current_node = document.current_step
+    current_node = document.workflow["current_node"]
+
     new_node = new_workflow["nodes"][current_node]
 
     if new_group and new_group.get("id", None):
@@ -530,7 +537,7 @@ def edit_document_workflow_controller(
 
     # Overwrite due_date column with new_workflow due_date for possible changes
     if new_due_date:
-        new_due_date_converted = datetime.fromisoformat(new_due_date)
+        new_due_date_converted = arrow.get(new_due_date).date()
         new_node["due_date"] = new_due_date_converted.isoformat()
         document.due_date = new_due_date_converted
 
@@ -706,6 +713,7 @@ def create_remote_document(document, variables, document_template, company_id):
         message = {
             "document_title": document.title,
             "document_id": document.id,
+            "document_variables": document.variables,
             "document_template_name": document_template.name,
             "document_template_id": document_template.id,
             "company_name": company.name,

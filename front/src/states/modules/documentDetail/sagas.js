@@ -5,6 +5,7 @@ import {
 	errorMessage,
 } from '~/services/messager'
 import api from '~/services/api'
+import DocumentDetailsService from '~/services/DocumentDetailsService'
 import {
 	getDocumentDetail,
 	getDocumentDetailSuccess,
@@ -18,6 +19,9 @@ import {
 	nextStep,
 	nextStepSuccess,
 	nextStepFailure,
+	editStep,
+	editStepSuccess,
+	editStepFailure,
 	newAssign,
 	newAssignSuccess,
 	newAssignFailure,
@@ -38,6 +42,9 @@ import {
 	changeVariablesFailure,
 	getDocumentCertificate,
 	getDocumentCertificateFailure,
+	downloadTextDocumentVersion,
+	downloadTextDocumentVersionSuccess,
+	downloadTextDocumentVersionFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -45,6 +52,7 @@ export default function* rootSaga() {
 	yield takeEvery(newVersion, newVersionSaga)
 	yield takeEvery(previousStep, previousStepSaga)
 	yield takeEvery(nextStep, nextStepSaga)
+	yield takeEvery(editStep, editStepSaga)
 	yield takeEvery(newAssign, newAssignSaga)
 	yield takeEvery(sentAssign, sentAssignSaga)
 	yield takeEvery(selectVersion, selectVersionSaga)
@@ -52,6 +60,7 @@ export default function* rootSaga() {
 	yield takeEvery(getDocumentWordDownload, getDocumentWordDownloadSaga)
 	yield takeEvery(changeVariables, changeVariablesSaga)
 	yield takeEvery(getDocumentCertificate, getDocumentCertificateSaga)
+	yield takeEvery(downloadTextDocumentVersion, downloadTextDocumentVersionSaga)
 }
 
 function* getDocumentCertificateSaga({ payload = {} }) {
@@ -292,6 +301,32 @@ function* nextStepSaga({ payload = {} }) {
 	}
 }
 
+function* editStepSaga({ payload = {} }) {
+	loadingMessage({
+		content: 'Mudando o status do documento. Por favor aguarde.',
+		updateKey: 'status',
+	})
+	const { id, group, responsible_users, due_date } = payload
+	try {
+		const response = yield call(api.patch, `documents/${id}/edit_workflow`, {
+			group: group,
+			responsible_users: responsible_users,
+			due_date: due_date,
+		})
+		yield put(editStepSuccess(response.data))
+		successMessage({
+			content: 'Alteração do status do documento realizada com sucesso.',
+			updateKey: 'status',
+		})
+	} catch (error) {
+		errorMessage({
+			content: 'Alteração do status do documento falhou.',
+			updateKey: 'status',
+		})
+		yield put(editStepFailure(error))
+	}
+}
+
 function* downloadLinkSaga({ payload = {} }) {
 	const { id } = payload
 	try {
@@ -420,5 +455,17 @@ function* changeVariablesSaga({ payload = {} }) {
 			updateKey: 'variablesDocument',
 		})
 		yield put(changeVariablesFailure(error))
+	}
+}
+
+function* downloadTextDocumentVersionSaga({ payload }) {
+	try {
+		const data = yield call(
+			DocumentDetailsService.downloadTextDocumentVersion,
+			payload
+		)
+		yield put(downloadTextDocumentVersionSuccess(data))
+	} catch (error) {
+		yield put(downloadTextDocumentVersionFailure(error))
 	}
 }

@@ -12,6 +12,7 @@ import { ContainerTabs, ScrollContent } from '../styles'
 import { object, string } from 'prop-types'
 import StructureListFieldText from './components/structureListFieldText'
 import CheckBoxFieldText from './components/checkboxFieldText'
+import DatabaseFieldText from './components/databaseFieldText'
 
 const { Title } = Typography
 
@@ -69,6 +70,8 @@ const InfoView = ({ infos, textType }) => {
 					return <CheckBoxFieldText data={item} key={item.type + index} />
 				case 'variable_image':
 					return null
+				case 'internal_database':
+					return <DatabaseFieldText data={item} key={item.type + index} />
 				default:
 					return defaultView(item, item.type + index)
 			}
