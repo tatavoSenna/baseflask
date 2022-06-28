@@ -68,7 +68,7 @@ export const ThinDivider = styled(Divider)`
 `
 
 export const FormItem = styled(Form.Item)`
-	margin-bottom: 24px;
+	margin-bottom: 16px;
 
 	width: ${({ $width = '100%' }) => $width};
 
@@ -109,6 +109,15 @@ export const ValidatedMaskedInput = styled(MaskedInput)`
 `
 
 export const ValidatedSelect = styled(Select)`
+	&& .ant-select-selection-placeholder {
+		${({ $placeholderError }) =>
+			$placeholderError
+				? `
+				color: #ff0000;
+				opacity: 0.4;
+			`
+				: ''}
+	}
 	&& .ant-select-selector {
 		${(props) =>
 			props.$error
