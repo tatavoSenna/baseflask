@@ -713,6 +713,7 @@ def create_remote_document(document, variables, document_template, company_id):
         message = {
             "document_title": document.title,
             "document_id": document.id,
+            "document_variables": document.variables,
             "document_template_name": document_template.name,
             "document_template_id": document_template.id,
             "company_name": company.name,
