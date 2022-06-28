@@ -32,6 +32,9 @@ import session, { sessionSaga } from './modules//session'
 import folder, { folderSaga } from './modules/folder'
 import editContract, { editContractSaga } from './modules/editContract'
 import database, { databaseSaga } from './modules/databases'
+import internalDatabaseField, {
+	internalDatabaseFieldSaga,
+} from './modules/internalDatabasesField'
 import databaseDetail, { databaseDetailSaga } from './modules/databaseDetail'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -64,6 +67,7 @@ const reducers = combineReducers({
 	folder,
 	editContract,
 	database,
+	internalDatabaseField,
 	databaseDetail,
 })
 
@@ -98,6 +102,7 @@ const rootSaga = function* () {
 		folderSaga(),
 		editContractSaga(),
 		databaseSaga(),
+		internalDatabaseFieldSaga(),
 		databaseDetailSaga(),
 	])
 }

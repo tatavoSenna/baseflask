@@ -31,6 +31,7 @@ import { updateVisible } from '~/states/modules/question'
 
 import styles from './index.module.scss'
 import './styles.css'
+import InternalDatabaseField from 'components/internalDatabaseField'
 
 function InputFactory({
 	data: pageFieldsData,
@@ -417,6 +418,20 @@ function InputFactory({
 						form={form}
 						onChange={onchange()}
 						first={first}
+					/>
+				)
+				break
+			case 'internal_database':
+				children.push(
+					<InternalDatabaseField
+						key={key}
+						pageFieldsData={pageFieldsData[i]}
+						form={form}
+						onChange={onchange()}
+						inputValue={defaultValue()}
+						className={isVisible}
+						disabled={disabled}
+						visible={visible[i]}
 					/>
 				)
 				break
