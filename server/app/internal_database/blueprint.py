@@ -74,7 +74,7 @@ def list_text_items_from_internal_db(current_user, db_id):
         order = str(request.args.get("order", "descend"))
         tag_ids = request.args.get("tag_ids", None)
         if tag_ids:
-            tag_ids = int(tag_ids)
+            tag_ids = tag_ids.split(',')
     except Exception as e:
         return BadRequest(description="Malformed parameters")
 
