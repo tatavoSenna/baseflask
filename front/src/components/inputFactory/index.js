@@ -338,10 +338,12 @@ function InputFactory({
 					<ImageField
 						key={key}
 						pageFieldsData={pageFieldsData[i]}
+						inputValue={defaultValue()}
 						className={isVisible}
 						onChange={onchange()}
 						visible={visible[i]}
 						first={first}
+						form={form}
 					/>
 				)
 				break

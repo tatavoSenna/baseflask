@@ -594,9 +594,11 @@ def fill_docx_with_variables(document, docx_io, variables):
                                 width_size = field["variable"].get("width", 8)
                                 height_size = width_size * proportion
                                 r = para.add_run()
+
                                 r.add_picture(
                                     image, width=Cm(width_size), height=Cm(height_size)
                                 )
+                                del variables[key]
                                 break
     doc.save(docx_io)
     docx_template = DocxTemplate(docx_io)
