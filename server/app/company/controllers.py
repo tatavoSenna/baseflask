@@ -98,6 +98,17 @@ def create_company_controller(logged_user, new_company_name):
     return new_company
 
 
+def create_stripe_account_and_subscription(name: str, email: str):
+    stripe.Customer.create(email=email, name=name)
+    customer = stripe.Customer.list(email=email)
+    customer_id = customer.data[0]["id"]
+    if os.environ.get("ENVIRONMENT_TAG") == "production":
+        price_id = "price_1Kfv9LHIZcJ4D4nawRSfC6t6"
+    else:
+        price_id = "price_1KP85XHIZcJ4D4nayv0Sx6dc"
+    stripe.Subscription.create(customer=customer_id, items=[{"price": price_id}])
+
+
 def assign_company_to_new_user_controller(logged_user, company_id):
     local_user = User.query.filter_by(sub=logged_user["sub"], active=True).first()
     default_company = Company.query.filter_by(id="1").first()
@@ -122,14 +133,7 @@ def assign_company_to_new_user_controller(logged_user, company_id):
         company = Company.query.filter_by(id=company_id).first()
         company.stripe_company_email = local_user.email
         local_user.is_financial = True
-        stripe.Customer.create(email=local_user.email, name=local_user.name)
-        customer = stripe.Customer.list(email=local_user.email)
-        customer_id = customer.data[0]["id"]
-        if os.environ.get("ENVIRONMENT_TAG") == "production":
-            price_id = "price_1Kfv9LHIZcJ4D4nawRSfC6t6"
-        else:
-            price_id = "price_1KP85XHIZcJ4D4nayv0Sx6dc"
-        stripe.Subscription.create(customer=customer_id, items=[{"price": price_id}])
+        create_stripe_account_and_subscription(local_user.name, local_user.email)
 
     deleted_user = User.query.filter_by(
         email=logged_user["email"], active=False

@@ -84,7 +84,14 @@ def list_text_items_from_internal_db(current_user, db_id):
 
     if not text_items_query:
         return (
-            jsonify({"page": page, "per_page": per_page, "total": 0, "items": [],}),
+            jsonify(
+                {
+                    "page": page,
+                    "per_page": per_page,
+                    "total": 0,
+                    "items": [],
+                }
+            ),
             200,
         )
 

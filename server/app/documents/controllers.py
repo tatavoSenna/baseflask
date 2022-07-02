@@ -167,17 +167,6 @@ def create_document_controller(
             delete_document_controller(document)
             raise
 
-    """ Disable the email while we don't have the correct sendgrid key 
-    Will migrate this to a lambda with the new document sns hook
-    # Send email informing document creation
-    if step_name != None:
-        try:
-            document_creation_email_controller(title, company_id)
-        except Exception as e:
-            logging.exception(
-                "Failed to send emails on document creation. One or more emails is bad formated or invalid"
-            )
-    """
     return document
 
 
@@ -365,21 +354,6 @@ def previous_status_controller(document_id):
     db.session.add(document)
     db.session.commit()
     return document, 0
-
-
-def document_creation_email_controller(title, company_id):
-    company_users = User.query.filter_by(company_id=company_id, active=True)
-    email_list = []
-    for user in company_users:
-        email_list.append(user.email)
-    response = send_email_controller(
-        "app@lawing.com.br",
-        email_list,
-        "New Document created",
-        title,
-        "d-83efa7b8d2fb4742a69dd9059324e148",
-    )
-    return response
 
 
 def workflow_status_change_email_controller(document_id, name):
