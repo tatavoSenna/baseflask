@@ -81,34 +81,9 @@ const Tabs = ({
 		dispatch(downloadTextDocumentVersion(versionInfo))
 	}
 
-	const { data, loading, error } = useSelector(
-		({ documentDetail }) => documentDetail.textDocumentVersion
-	)
-
 	const { data: documentDetailData } = useSelector(
 		({ documentDetail }) => documentDetail
 	)
-
-	useEffect(() => {
-		if (loading === true) {
-			loadingMessage({
-				content: 'Realizando download do documento...',
-				updateKey: 'downloadWordVersion',
-			})
-		}
-		if (loading === false && error === null && data !== null) {
-			successMessage({
-				content: 'Documento baixado com sucesso!',
-				updateKey: 'downloadWordVersion',
-			})
-		}
-		if (loading === false && error !== null && data === null) {
-			errorMessage({
-				content: 'Ocorreu um erro ao baixar o seu documento.',
-				updateKey: 'downloadWordVersion',
-			})
-		}
-	}, [loading, error, data])
 
 	const tab = (option) => {
 		if (option === '1') {
