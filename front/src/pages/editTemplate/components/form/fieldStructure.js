@@ -169,6 +169,14 @@ export const fieldStructure = (type) => {
 				title: '',
 			}
 			break
+		case 'internal_database':
+			field.variable.type = 'internal_database'
+			field.databaseId = ''
+			field.filter = []
+
+			delete field['initialValue']
+			delete field['info']
+			break
 		case 'text':
 			field.placeholder = ''
 			field.variable.type = 'string'

@@ -17,6 +17,7 @@ import { ParagraphWidget } from './paragraphWidget'
 import { SeparatorWidget } from './separatorWidget'
 import { StructuredListWidget } from './structuredListWidget'
 import { PersonWidget } from './personWidget'
+import { InternalDatabaseWidget } from './internalDatabaseWidget'
 
 export const widgets = {
 	text: TextWidget,
@@ -38,4 +39,5 @@ export const widgets = {
 	cnae: CnaeWidget,
 	separator: SeparatorWidget,
 	structured_list: StructuredListWidget,
+	internal_database: InternalDatabaseWidget,
 }
