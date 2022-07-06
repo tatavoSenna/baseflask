@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { BankOutlined } from '@ant-design/icons'
 import { Select } from 'antd'
 
@@ -55,7 +55,4 @@ const Icon = styleIconValidation(BankOutlined)
 
 BankWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

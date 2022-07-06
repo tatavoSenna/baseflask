@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { CheckCircleOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
@@ -39,7 +39,4 @@ const Icon = styleIconValidation(CheckCircleOutlined)
 
 RadioWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

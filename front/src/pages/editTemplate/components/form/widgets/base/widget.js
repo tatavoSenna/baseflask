@@ -9,10 +9,8 @@ import {
 	bool,
 	oneOfType,
 } from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
 import { Input, Select } from 'antd'
 
-import { editTemplateFieldValid } from '~/states/modules/editTemplate'
 import { WidgetCard } from './widgetCard'
 import { WidgetConditional } from './widgetConditional'
 import { ThinDivider, ValidatedSelect, ValidatedInput } from './styles'
@@ -29,7 +27,9 @@ const Widget = ({
 	showConditions = true,
 	displayStyles,
 	onValidate = () => {},
-	updateFormInfo,
+	onUpdate,
+	compact = false,
+	onRemove,
 }) => {
 	const variableNames = variables.map((x) => x?.name || x?.main?.name)
 
@@ -60,7 +60,7 @@ const Widget = ({
 		onValidate(validVariableName && validVariableStyle && validConditionals)
 	}, [validVariableName, validVariableStyle, validConditionals, onValidate])
 
-	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
+	const update = useUpdate({ data, pageIndex, fieldIndex, onUpdate })
 
 	const updateVariable = useCallback(
 		(property, value) => {
@@ -74,13 +74,17 @@ const Widget = ({
 		[data, update]
 	)
 
-	return (
-		<WidgetCard {...{ data, type, icon, pageIndex, fieldIndex }}>
+	const widgetInfo = (
+		<>
 			<div>{formItems}</div>
 
 			{variableItems ? (
 				<>
-					<ThinDivider orientation="left">Variável</ThinDivider>
+					{!compact ? (
+						<ThinDivider orientation="left">Variável</ThinDivider>
+					) : (
+						<p style={{ padding: 4, marginBottom: 6 }}>Variavel:</p>
+					)}
 
 					<div style={{ display: 'flex', marginBottom: '24px' }}>
 						<Input.Group compact>
@@ -119,8 +123,14 @@ const Widget = ({
 					</div>
 				</>
 			) : null}
+		</>
+	)
 
-			{showConditions ? (
+	return (
+		<WidgetCard
+			{...{ data, type, icon, pageIndex, fieldIndex, onRemove, compact }}>
+			{widgetInfo}
+			{!compact && showConditions ? (
 				<>
 					<ThinDivider orientation="left">Condicionais</ThinDivider>
 
@@ -131,7 +141,7 @@ const Widget = ({
 							pageIndex,
 							fieldIndex,
 							onValidate: setValidConditionals,
-							updateFormInfo,
+							onUpdate,
 						}}
 					/>
 				</>
@@ -151,33 +161,30 @@ Widget.propTypes = {
 	variableItems: oneOfType([node, bool]),
 	showConditions: bool,
 	displayStyles: array,
-	updateFormInfo: func,
+	onUpdate: func,
 	onValidate: func,
+	compact: bool,
+	onRemove: func,
 }
 
-function useValidation({ pageIndex, fieldIndex }) {
-	const dispatch = useDispatch()
-	const valid = useSelector(
-		({ editTemplate }) => editTemplate.data.form[pageIndex].valid[fieldIndex]
-	)
-
+function useValidation({ valid, pageIndex, fieldIndex, onValidate }) {
 	const setValid = (v) => {
 		if (v !== valid) {
-			dispatch(editTemplateFieldValid({ value: v, pageIndex, fieldIndex }))
+			onValidate(v, pageIndex, fieldIndex)
 		}
 	}
 
 	return [valid, setValid]
 }
 
-function useUpdate({ data, pageIndex, fieldIndex, updateFormInfo }) {
+function useUpdate({ data, pageIndex, fieldIndex, onUpdate }) {
 	const update = useCallback(
 		(diff) => {
 			if (!subObjectComparison(data, diff)) {
-				updateFormInfo({ ...data, ...diff }, 'field', pageIndex, fieldIndex)
+				onUpdate({ ...data, ...diff }, pageIndex, fieldIndex)
 			}
 		},
-		[data, pageIndex, fieldIndex, updateFormInfo]
+		[data, pageIndex, fieldIndex, onUpdate]
 	)
 
 	return update

@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Input } from 'antd'
 import { MailOutlined } from '@ant-design/icons'
 
@@ -45,7 +45,4 @@ const Icon = styleIconValidation(MailOutlined)
 
 EmailWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }
