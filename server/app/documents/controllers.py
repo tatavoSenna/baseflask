@@ -97,6 +97,7 @@ def create_document_controller(
                 "id": "-1",
                 "comments": None,
                 "created_by": current_user.name,
+                "only_updated_variables": True,
             }
         ]
         title = "Rascunho: " + title
@@ -109,6 +110,7 @@ def create_document_controller(
                 "id": "0",
                 "comments": None,
                 "created_by": current_user.name,
+                "only_updated_variables": True,
             }
         ]
     # Get workflow from the template and update it
@@ -459,6 +461,7 @@ def change_variables_controller(document, new_variables, email, variables, draft
         "id": str(new_version),
         "comments": "",
         "created_by": current_user.name,
+        "only_updated_variables": True,
     }
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
@@ -479,14 +482,23 @@ def change_variables_controller(document, new_variables, email, variables, draft
             )
     # Document is already finished and is updating it's variables
     elif not document.draft:
-        if document.text_type != ".docx":
+        # If the document is of type .txt, we can only update its variables values if it never had any change on its content.
+        if document.text_type != ".docx" and not only_has_variables_changes(
+            document.versions
+        ):
             raise BadRequest()
-
         update_variables(
             document, document_template, document.company_id, new_variables
         )
     db.session.add(document)
     db.session.commit()
+
+
+def only_has_variables_changes(versions):
+    for version in versions:
+        if not "only_updated_variables" in version:
+            return False
+    return True
 
 
 def edit_document_workflow_controller(
@@ -565,13 +577,21 @@ def convert_docx_to_pdf_and_save(document, filled_docx_io):
 
 def update_variables(document, document_template, company_id, variables):
     remote_document = RemoteDocument()
-    docx_io = remote_document.download_docx_from_template(document_template, company_id)
-    filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
 
-    convert_docx_to_pdf_and_save(document, filled_docx_io)
-    remote_document.upload_filled_docx_to_documents(
-        document, filled_docx_io, document_template.text_type
-    )
+    if document.text_type == ".docx":
+        docx_io = remote_document.download_docx_from_template(
+            document_template, company_id
+        )
+        filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
+
+        convert_docx_to_pdf_and_save(document, filled_docx_io)
+        remote_document.upload_filled_docx_to_documents(
+            document, filled_docx_io, document_template.text_type
+        )
+    else:
+        text_template = remote_document.download_text_from_template(document)
+        filled_text = fill_text_with_variables(text_template, variables).encode()
+        remote_document.upload_filled_text_to_documents(document, filled_text)
 
 
 def fill_docx_with_variables(document, docx_io, variables):

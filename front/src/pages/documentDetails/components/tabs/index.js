@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Typography, Button, Spin, Menu, Steps as StepsAntd } from 'antd'
@@ -22,12 +22,6 @@ import 'moment/locale/pt-br'
 import styled from 'styled-components'
 import { downloadTextDocumentVersion } from '~/states/modules/documentDetail'
 import InfoView from './infoView'
-
-import {
-	successMessage,
-	loadingMessage,
-	errorMessage,
-} from '~/services/messager'
 
 moment.locale('pt-br')
 
@@ -85,9 +79,33 @@ const Tabs = ({
 		({ documentDetail }) => documentDetail
 	)
 
+	/**
+	 * Checks if we can change the variables values of a .txt document.
+	 *
+	 * Currently, we only allow the update of variables in a txt document if the document has never received a update that changes its content.
+	 *
+	 * @param {*} versions
+	 *
+	 */
+	const canDocumentChangeVariables = (versions) => {
+		for (let i = 0; i < versions.length; i++) {
+			// If the version is not the "Version 0" and changes something other than the document variables values...
+			if (!versions[i].only_updated_variables) {
+				return false
+			}
+		}
+		return true
+	}
+
 	const tab = (option) => {
 		if (option === '1') {
-			return <InfoView infos={infos} textType={textType} />
+			return (
+				<InfoView
+					infos={infos}
+					textType={textType}
+					cantItChangeVariablesValues={canDocumentChangeVariables(versions)}
+				/>
+			)
 		} else if (option === '2') {
 			return version()
 		} else if (option === '3') {

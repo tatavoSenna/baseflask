@@ -16,7 +16,7 @@ import DatabaseFieldText from './components/databaseFieldText'
 
 const { Title } = Typography
 
-const InfoView = ({ infos, textType }) => {
+const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 	const history = useHistory()
 	const { id } = useParams()
 
@@ -98,7 +98,8 @@ const InfoView = ({ infos, textType }) => {
 					</ContainerTabs>
 				</div>
 			))}
-			{textType === '.docx' && buttonEditForm()}
+			{(textType === '.docx' || cantItChangeVariablesValues) &&
+				buttonEditForm()}
 		</ScrollContent>
 	)
 }
