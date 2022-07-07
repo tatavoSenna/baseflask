@@ -482,23 +482,13 @@ def d4sign_document_webhook_controller(
         return control
 
     if type_post == "3":  # Cancelled
-        document.signed = False
-        document.data_assinatura = None
-        for signer in document.signers:
-            signer["status"] = ""
-            signer["signing_date"] = ""
+        control = d4sign_delete_document_certificate_file_controller(document)
 
-        flag_modified(document, "signers")
-        db.session.add(document)
-        db.session.commit()
+        if control["status_code"] == 400:
+            return control
 
-        d4sign_update_document_certificate_file_controller(document)
+        update_document_values_after_cancel(document)
 
-        control["message"] = (
-            f"Signatures for document "
-            f"with d4sign_document_uuid <{d4sign_document_uuid}> "
-            f"were cancelled"
-        )
         return control
 
     if type_post == "4":  # Signed
@@ -612,4 +602,79 @@ def d4sign_generate_document_certificate_file_presigned_url_controller(
         control["message"] = "Certificate file not found"
     else:
         control["data"]["url"] = presigned_url
+    return control
+
+
+def d4sign_cancel_document(user, document_id) -> dict:
+    """Cancels a document on d4sign API"""
+
+    control = {"status_code": 200, "message": "", "data": {}}
+
+    document = Document.query.get(document_id)
+
+    d4sign_api = D4SignAPI(company=document.company)
+
+    if document.company != user.company:
+        control["message"] = "Document does not belong to this user's company"
+        control["status_code"] = 403
+        return control
+
+    response = d4sign_api.cancel_document(document_uuid=document.d4sign_document_uuid)
+
+    # D4sign API returns to us a valid response if we send a document_uuid of a document that has already been canceled.
+    # However, their response object changes its properties, so here I check if the response contains the property 'message'.
+    # If it contains it, we should send a error status code to the front. If it doesn't, we continue with the logic on the except clause.
+    try:
+        control["data"] = response["message"]
+        control["status_code"] = 400
+        return control
+    except TypeError:
+        control = d4sign_delete_document_certificate_file_controller(document)
+
+        # After we delete the document in the d4sign API, we need to update its values on our database.
+        update_document_values_after_cancel(document)
+
+        # Once the document values are properly updated, retrieve all the updated data of the document from the database and send it back as a response.
+        retrieved_updated_document = Document.query.get(document_id)
+        control["data"] = retrieved_updated_document
+        return control
+
+
+def update_document_values_after_cancel(document) -> dict:
+    """Executes a query on the database to update the document values after it is cancelled on the D4sign API"""
+    document.signed = False
+    document.sent = False
+    document.data_assinatura = None
+    document.current_step = None
+    document.d4sign_document_uuid = None
+    for signer in document.signers:
+        signer["status"] = ""
+        signer["signing_date"] = ""
+
+    flag_modified(document, "signers")
+    db.session.add(document)
+    db.session.commit()
+
+
+def d4sign_delete_document_certificate_file_controller(document) -> dict:
+    """
+    Controls generating an accessible url for the document's certificate file.
+    """
+    control = {"status_code": 200, "message": "", "data": {}}
+
+    try:
+        s3_client = boto3.client("s3")
+        bucket = current_app.config["AWS_S3_DOCUMENTS_BUCKET"]
+        filepath = f"{document.company.id}/certificates/{document.id}/certificate.pdf"
+        s3_client.delete_object(
+            Bucket=bucket,
+            Key=filepath,
+        )
+        control["message"] = f"Document was successfuly canceled!"
+    except:
+        control["status_code"] = 400
+        control[
+            "message"
+        ] = "Something went wrong when we tryed to delete your document certificate."
+
     return control
