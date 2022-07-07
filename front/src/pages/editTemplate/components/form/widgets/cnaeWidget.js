@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { ShopOutlined } from '@ant-design/icons'
 import { Select } from 'antd'
@@ -65,7 +65,4 @@ const Icon = styleIconValidation(ShopOutlined)
 
 CnaeWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

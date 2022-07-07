@@ -9,14 +9,14 @@ import { StyledLabel, StyledValue } from './components/styles/style'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { ContainerTabs, ScrollContent } from '../styles'
-import { object, string } from 'prop-types'
+import { object, string, boolean } from 'prop-types'
 import StructureListFieldText from './components/structureListFieldText'
 import CheckBoxFieldText from './components/checkboxFieldText'
 import DatabaseFieldText from './components/databaseFieldText'
 
 const { Title } = Typography
 
-const InfoView = ({ infos, textType }) => {
+const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 	const history = useHistory()
 	const { id } = useParams()
 
@@ -98,7 +98,8 @@ const InfoView = ({ infos, textType }) => {
 					</ContainerTabs>
 				</div>
 			))}
-			{textType === '.docx' && buttonEditForm()}
+			{(textType === '.docx' || cantItChangeVariablesValues) &&
+				buttonEditForm()}
 		</ScrollContent>
 	)
 }
@@ -108,4 +109,5 @@ export default InfoView
 InfoView.propTypes = {
 	infos: object,
 	textType: string,
+	cantItChangeVariablesValues: boolean,
 }

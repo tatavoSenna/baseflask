@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { DatePicker } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 
@@ -45,7 +45,4 @@ const Icon = styleIconValidation(CalendarOutlined)
 
 DateWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

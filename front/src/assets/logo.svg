@@ -9,7 +9,7 @@
    viewBox="0 0 1729.89 538.75011"
    xml:space="preserve"
    sodipodi:docname="logo.svg"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
    width="1729.89"
    height="538.75012"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -25,20 +25,22 @@
    inkscape:pageopacity="0"
    inkscape:pagecheckerboard="0"
    showgrid="false"
-   inkscape:zoom="0.2536922"
-   inkscape:cx="746.96818"
-   inkscape:cy="502.57753"
+   inkscape:zoom="0.5073844"
+   inkscape:cx="1269.2546"
+   inkscape:cy="280.85215"
    inkscape:window-width="1920"
    inkscape:window-height="1001"
    inkscape:window-x="-9"
    inkscape:window-y="-9"
    inkscape:window-maximized="1"
-   inkscape:current-layer="g976"
+   inkscape:current-layer="g974"
    width="1995.68px"
    fit-margin-top="50"
    fit-margin-left="50"
    fit-margin-right="50"
-   fit-margin-bottom="50" />
+   fit-margin-bottom="50"
+   inkscape:showpageshadow="0"
+   inkscape:deskcolor="#505050" />
 <style
    type="text/css"
    id="style942">
@@ -88,7 +90,8 @@
    id="polygon960"
    style="fill:#00287f"
    class="st0"
-   d="m 1019.85,273.99 2.35,6.99 20.84,60.67 41.4,120.69 0.21,0.64 h 45.89 l 13.06,-42.82 24.06,-78.51 h 2.42 v -67.66 h -26.48 l -2.14,6.99 -18.55,60.67 -16.35,53.31 -18.27,-53.31 -20.84,-60.67 -2.43,-6.99 z m 300.47,0 -2.35,6.99 -20.85,60.67 -41.39,120.69 -0.22,0.64 h -45.89 l -13.06,-42.82 -24.05,-78.51 h -2.43 v -67.66 h 26.48 l 2.14,6.99 18.56,60.67 16.34,53.31 18.28,-53.31 20.84,-60.67 2.42,-6.99 z" />
+   d="m 1019.8509,273.98912 64.5899,188.35157 0.209,0.63867 h 45.8906 l 13.0605,-42.82031 24.0586,-78.50977 h 4.8496 l 24.0508,78.50977 13.0606,42.82031 h 45.8886 l 0.2207,-0.63867 64.5899,-188.35157 H 1275.14 l -41.5391,120.97071 -37.041,-120.97071 h -52.959 l -37.041,120.97071 -41.539,-120.97071 z"
+   sodipodi:nodetypes="ccccccccccccccccccc" />
 		<path
    class="st0"
    d="m 1598.31,348.79 v 114.19 h -42.82 V 355.57 c 0,-23.41 -20.77,-42.47 -46.39,-42.47 -25.62,0 -46.39,19.06 -46.39,42.47 v 107.41 h -42.82 V 348.79 c 0,-41.32 39.97,-74.8 89.21,-74.8 49.24,0 89.21,33.47 89.21,74.8 z"

@@ -35,13 +35,13 @@ const components = {
 	marital_state: PersonMaritalState,
 	property_regime: PersonPropertyRegime,
 	profession: Profession,
-	country: AddressCountry,
 	cep: AddressCEP,
+	country: AddressCountry,
 	number: AddressNumber,
 	street: AddressStreet,
 	complement: AddressComplement,
-	state: AddressState,
 	district: AddressDistrict,
+	state: AddressState,
 	city: AddressCity,
 }
 

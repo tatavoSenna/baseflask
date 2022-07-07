@@ -34,8 +34,8 @@ const components = {
 	number: AddressNumber,
 	street: AddressStreet,
 	complement: AddressComplement,
-	state: AddressState,
 	district: AddressDistrict,
+	state: AddressState,
 	city: AddressCity,
 	attorney_nationality: AttorneyNationality,
 	attorney_cpf: CPF,
@@ -52,13 +52,13 @@ const components = {
 	attorney_number: AddressNumber,
 	attorney_street: AddressStreet,
 	attorney_complement: AddressComplement,
-	attorney_state: AddressState,
 	attorney_district: AddressDistrict,
+	attorney_state: AddressState,
 	attorney_city: AddressCity,
 }
 
 const classNames = {
-	nationality: styles['nationality'],
+	legal_nationality: styles['nationality'],
 	society_name: styles['society-name'],
 	cnpj: styles['cnpj'],
 	activity: styles['activity'],
@@ -80,13 +80,13 @@ const classNames = {
 	attorney_identity_date: styles['attorney-identity-date'],
 	attorney_email: styles['attorney-email'],
 	attorney_profession: styles['attorney-profession'],
-	attorney_country: styles['attorney-country'],
 	attorney_cep: styles['attorney-cep'],
+	attorney_country: styles['attorney-country'],
 	attorney_number: styles['attorney-number'],
 	attorney_street: styles['attorney-street'],
 	attorney_complement: styles['attorney-complement'],
-	attorney_state: styles['attorney-state'],
 	attorney_district: styles['attorney-district'],
+	attorney_state: styles['attorney-state'],
 	attorney_city: styles['attorney-city'],
 }
 

@@ -1,11 +1,13 @@
 export const alphabeticalOrder = (payload) => {
-	return payload.sort((a, b) => {
-		if (a.nome > b.nome) {
-			return 1
-		}
-		if (a.nome < b.nome) {
-			return -1
-		}
-		return 0
-	})
+	return payload
+		.map((item) => ({ state: item.nome, stateInitials: item.sigla }))
+		.sort((a, b) => {
+			if (a.state > b.state) {
+				return 1
+			}
+			if (a.state < b.state) {
+				return -1
+			}
+			return 0
+		})
 }

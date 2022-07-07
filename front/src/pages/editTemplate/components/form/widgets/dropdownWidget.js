@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Select } from 'antd'
 import { DownSquareOutlined } from '@ant-design/icons'
 
@@ -65,7 +65,4 @@ const Icon = styleIconValidation(DownSquareOutlined)
 
 DropdownWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

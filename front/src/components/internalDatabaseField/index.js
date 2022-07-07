@@ -1,14 +1,21 @@
-import { Form, Select, Typography } from 'antd'
-import { string, shape, object, func, bool } from 'prop-types'
 import React, { useEffect, useState } from 'react'
+import { string, shape, object, func, bool } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { filterText } from 'services/filter'
-import { getDatabaseTexts } from 'states/modules/internalDatabasesField'
-import styled from 'styled-components'
+import { sortableContainer, sortableElement } from 'react-sortable-hoc'
+import { Form, Select, Typography } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
+import styled from 'styled-components'
+
+import { getDatabaseTexts } from 'states/modules/internalDatabasesField'
+import { filterText } from 'services/filter'
 import InfoField from 'components/infoField'
 
 const { Paragraph } = Typography
+
+const SortableElement = sortableElement(({ children }) => children)
+const SortableContainer = sortableContainer(({ children }) => (
+	<div>{children}</div>
+))
 
 const InternalDatabaseField = ({
 	pageFieldsData,
@@ -27,33 +34,15 @@ const InternalDatabaseField = ({
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
 
-	const database = useSelector(
-		({ internalDatabaseField }) => internalDatabaseField
-	)
-	const dataItem = database.data[databaseId]
+	const [values, setValues] = useState(inputValue || [])
 
-	const [values, setValues] = useState(inputValue ?? [])
+	const dataItem = useSelector(
+		({ internalDatabaseField }) => internalDatabaseField.data[databaseId]
+	)
 
 	useEffect(() => {
 		dispatch(getDatabaseTexts({ id: databaseId }))
 	}, [dispatch, databaseId])
-
-	const handleChangeSelect = (e) => {
-		let exist = 0
-		values.forEach((val) => {
-			if (val === e) {
-				exist = 1
-			}
-		})
-		if (exist === 0) {
-			setValues([...values, e])
-			onChange(values)
-		}
-	}
-
-	const handleDeleteSelectedText = (e) => {
-		setValues(values.filter((item) => item !== e))
-	}
 
 	useEffect(() => {
 		if (form !== undefined) {
@@ -63,17 +52,36 @@ const InternalDatabaseField = ({
 		}
 	}, [form, name, values])
 
-	const dataItemExist = dataItem !== undefined
+	const handleChangeSelect = (e) => {
+		setValues([...values, e])
+		onChange(values)
+	}
 
-	// removing selected options
+	const handleDeleteSelectedText = (e) => {
+		setValues(values.filter((item) => item !== e))
+	}
+
+	const handleSort = ({ oldIndex, newIndex }) => {
+		let newValues = [...values]
+		newValues.splice(newIndex, 0, newValues.splice(oldIndex, 1)[0])
+
+		setValues(newValues)
+	}
+
 	const options =
-		dataItem?.texts?.filter((item) => !values.includes(item.id)) ?? []
+		dataItem?.texts?.filter((item) => !values.includes(item.id)) ?? [] // filter selected options
 
-	const notFoundContentText = !dataItemExist
-		? 'Nenhum dado encontrado'
-		: dataItem?.loading
-		? 'Dados sendo carregados'
-		: 'Todos os dados foram ultilizados'
+	const selectedItems =
+		(dataItem?.texts &&
+			values.map((id) => dataItem.texts.find((x) => x.id === id))) ||
+		[]
+
+	const notFoundContentText =
+		dataItem === undefined
+			? 'Nenhum dado encontrado'
+			: dataItem.loading
+			? 'Dados sendo carregados'
+			: 'Todos os dados foram ultilizados'
 
 	return (
 		<Form.Item
@@ -98,22 +106,20 @@ const InternalDatabaseField = ({
 			}
 			colon={false}>
 			<>
-				{values.length > 0 &&
-					values.map(
-						(i) =>
-							dataItemExist &&
-							dataItem?.texts && (
-								<TextSelected key={i}>
-									<TextTitle>
-										{dataItem?.texts?.find((item) => item.id === i).description}
-									</TextTitle>
-									<DeleteOutlined
-										style={{ height: '100%', color: '#1890FF', fontSize: 20 }}
-										onClick={() => handleDeleteSelectedText(i)}
-									/>
-								</TextSelected>
-							)
-					)}
+				<SortableContainer onSortEnd={handleSort} distance={15}>
+					{selectedItems.map(({ id, description }, index) => (
+						<SortableElement key={id} index={index}>
+							<TextSelected>
+								<TextTitle>{description}</TextTitle>
+								<DeleteOutlined
+									style={{ height: '100%', color: '#1890FF', fontSize: 20 }}
+									onClick={() => handleDeleteSelectedText(id)}
+								/>
+							</TextSelected>
+						</SortableElement>
+					))}
+				</SortableContainer>
+
 				<Select
 					showSearch
 					value={null}
@@ -160,6 +166,7 @@ const TextSelected = styled.div`
 	border: 1px solid #d9d9d9;
 	padding: 20px;
 	margin-bottom: 15px;
+	background: white;
 `
 
 const TextTitle = styled(Paragraph)`

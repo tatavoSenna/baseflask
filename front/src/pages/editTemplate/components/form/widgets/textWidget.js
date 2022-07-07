@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { object, number, func, array, string, oneOfType } from 'prop-types'
-import { Input, Select } from 'antd'
+import React from 'react'
+import { object } from 'prop-types'
+import { Input } from 'antd'
 import { FontSizeOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
@@ -53,42 +53,4 @@ const Icon = styleIconValidation(FontSizeOutlined)
 
 TextWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
-}
-
-export const TextInput = ({ changeCallback, defaultValue, ...props }) => {
-	const [options, setOptions] = useState([])
-	return (
-		<Select
-			{...props}
-			defaultValue={defaultValue !== '' ? defaultValue : undefined}
-			mode="multiple"
-			size="default"
-			options={options}
-			filterOption={false}
-			onSearch={(s) => setOptions([{ label: s, value: s }])}
-			onChange={(v) => {
-				setOptions([])
-
-				switch (v.length) {
-					case 0:
-						changeCallback('')
-						break
-					case 1:
-						changeCallback(v[0])
-						break
-					default:
-						changeCallback(v)
-				}
-			}}
-			notFoundContent={null}
-		/>
-	)
-}
-
-TextInput.propTypes = {
-	changeCallback: func,
-	defaultValue: oneOfType([array, string]),
 }

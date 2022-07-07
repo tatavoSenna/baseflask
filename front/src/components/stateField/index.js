@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getStateField } from '~/states/modules/stateField'
@@ -10,6 +10,8 @@ const StateField = ({
 	pageFieldsData,
 	className,
 	onChange,
+	form,
+	addressData,
 	inputValue,
 	disabled,
 	visible,
@@ -20,14 +22,20 @@ const StateField = ({
 	const name = id !== undefined ? `${varname}_${id}` : varname
 
 	const dispatch = useDispatch()
-	const stateName = []
+
 	useEffect(() => {
 		dispatch(getStateField())
 	}, [dispatch])
-	const data = useSelector(({ stateField }) => stateField)
-	if (data.data !== undefined) {
-		data.data.map((name, index) => (stateName[index] = name.nome))
-	}
+
+	const { data } = useSelector(({ stateField }) => stateField)
+
+	const stateOptions = useMemo(() => {
+		if (data) {
+			return data.map((item) => item.state)
+		}
+
+		return []
+	}, [data])
 
 	return (
 		<Form.Item
@@ -49,8 +57,8 @@ const StateField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={onChange ? (v) => onChange(v) : undefined}>
-				{stateName.map((option, index) => (
+				onChange={onChange}>
+				{stateOptions.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
 					</Select.Option>
@@ -72,6 +80,8 @@ StateField.propTypes = {
 	inputValue: string,
 	disabled: bool,
 	visible: bool,
+	form: object,
+	addressData: object,
 }
 
 StateField.defaultProps = {

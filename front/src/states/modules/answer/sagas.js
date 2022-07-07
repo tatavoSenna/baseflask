@@ -45,7 +45,7 @@ function* answerSaga({ payload }) {
 			title,
 			visible,
 			draft,
-			variables: { ...answer.data, ...answer.dataImg },
+			variables: answer.data,
 		})
 		yield put(answerSuccess(data))
 		successMessage({

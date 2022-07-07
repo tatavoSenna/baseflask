@@ -1,3 +1,4 @@
+import { useCepAutocomplete } from 'components/addressField/fields/utils/addressChanges'
 import PropTypes, {
 	array,
 	bool,
@@ -7,6 +8,7 @@ import PropTypes, {
 	string,
 } from 'prop-types'
 import { useState } from 'react'
+
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
 const LegalPerson = ({
@@ -20,23 +22,35 @@ const LegalPerson = ({
 	visible,
 	first,
 }) => {
-	let fieldState = ''
-	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f === 'state')
-		if (field !== undefined) fieldState = inputValue[field]
-	}
-
-	let fieldStateAttorney = ''
-	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f === 'attorney_state')
-		if (field !== undefined) fieldStateAttorney = inputValue[field]
-	}
-
 	const components = getAllComponents()
 	const classNames = getAllClasses()
 
+	let fieldState = ''
+	let fieldStateAttorney = ''
+
+	if (fields.includes('state')) {
+		if (!Array.isArray(inputValue)) {
+			fieldState = inputValue['state']
+		}
+	}
+
+	if (fields.includes('attorney_state')) {
+		if (!Array.isArray(inputValue)) {
+			fieldState = inputValue['attorney_state']
+		}
+	}
+
 	const [state, setState] = useState(fieldState)
-	const [stateAttorney, setStateAttorney] = useState(fieldStateAttorney)
+	const [attorneyState, setStateAttorney] = useState(fieldStateAttorney)
+
+	const setCep = useCepAutocomplete(form, fields, name, setState)
+	const setAttorneyCep = useCepAutocomplete(
+		form,
+		fields,
+		name,
+		setStateAttorney,
+		'attorney_'
+	)
 
 	const componentsTypes = Object.keys(components)
 
@@ -69,20 +83,35 @@ const LegalPerson = ({
 
 				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
 
-				if (field.field_type === 'state')
+				if (field.field_type === 'city') {
+					dict.state = state
+				}
+
+				if (field.field_type === 'attorney_city') {
+					dict.state = attorneyState
+				}
+
+				if (field.field_type === 'cep') {
+					dict.onChange = (v) => {
+						setCep(v)
+						changeCallback(v)
+					}
+				} else if (field.field_type === 'state') {
 					dict.onChange = (v) => {
 						setState(v)
 						changeCallback(v)
 					}
-				else if (field.field_type === 'attorney_state')
+				} else if (field.field_type === 'attorney_state') {
 					dict.onChange = (v) => {
 						setStateAttorney(v)
 						changeCallback(v)
 					}
-				else dict.onChange = changeCallback
-
-				if (field.field_type === 'city') dict.state = state
-				if (field.field_type === 'attorney_city') dict.state = stateAttorney
+				} else if (field.field_type === 'attorney_cep') {
+					dict.onChange = (v) => {
+						setAttorneyCep(v)
+						changeCallback(v)
+					}
+				} else dict.onChange = changeCallback
 
 				return components[field.field_type](dict)
 			}

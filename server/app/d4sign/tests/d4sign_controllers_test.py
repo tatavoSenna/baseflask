@@ -1,7 +1,7 @@
 import pytest
 
 from datetime import date
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from app.test import factories
 
@@ -51,14 +51,34 @@ def variables():
 
 
 @pytest.fixture
-def document(company, user, signers, variables):
+def versions():
+    return [
+        {
+            "description": "Changed document variables",
+            "email": "luiz.senna@parafernalia.net.br",
+            "created_at": "2021-09-08T22:31:47-03:00",
+            "id": "1",
+        },
+        {
+            "description": "Version 0",
+            "email": "luiz.senna@parafernalia.net.br",
+            "created_at": "2021-09-08T22:17:48-03:00",
+            "id": "0",
+        },
+    ]
+
+
+@pytest.fixture
+def document(company, user, signers, variables, versions):
     return factories.DocumentFactory(
         company=company,
         user=user,
         signers=signers,
         variables=variables,
+        versions=versions,
         d4sign_document_uuid="a1-b2-c3",
         text_type=".docx",
+        current_step=0,
     )
 
 
@@ -174,14 +194,14 @@ def test_d4sign_upload_document_controller_already_uploaded(document):
     assert document.d4sign_document_uuid == original_d4sign_document_uuid
 
 
-@patch("app.d4sign.controllers.RemoteDocument.download_docx_from_documents")
+@patch("app.d4sign.controllers.RemoteDocument.download_pdf_from_documents")
 @patch("app.d4sign.controllers.D4SignAPI.upload_document_file")
 def test_d4sign_upload_document_controller_successfully_uploaded(
-    upload_document_file, download_docx_from_documents, document
+    upload_document_file: MagicMock, download_pdf_from_documents: MagicMock, document
 ):
     document.d4sign_document_uuid = None
 
-    download_docx_from_documents.return_value = None
+    download_pdf_from_documents.return_value = None
     upload_document_file.return_value = {"uuid": "a1-b2-c3"}
 
     control = d4sign_upload_document_controller(
@@ -189,6 +209,12 @@ def test_d4sign_upload_document_controller_successfully_uploaded(
     )
     assert control["status_code"] == 200
     assert document.d4sign_document_uuid == "a1-b2-c3"
+    upload_document_file.assert_called_once_with(
+        file=None,
+        filename=document.title,
+        safe_name=document.company.d4sign_safe_name,
+        ext="pdf",
+    )
 
 
 # Test d4sign_register_document_webhook_controller
@@ -286,21 +312,23 @@ def test_d4sign_send_document_for_signing_controller_successfully_sent(
 
 
 # Test d4sign_upload_and_send_document_for_signing_controller
-@patch("app.d4sign.controllers.RemoteDocument.download_docx_from_documents")
+@patch("app.d4sign.controllers.RemoteDocument.download_pdf_from_documents")
 @patch("app.d4sign.controllers.D4SignAPI.upload_document_file")
 @patch("app.d4sign.controllers.D4SignAPI.register_document_webhook")
 @patch("app.d4sign.controllers.D4SignAPI.register_document_signer")
 @patch("app.d4sign.controllers.D4SignAPI.send_document_for_signing")
+@patch("app.d4sign.controllers.d4sign_update_document_certificate_file_controller")
 def test_d4sign_upload_and_send_document_for_signing_controller(
+    update_document_certificate,
     send_document_for_signing,
     register_document_signer,
     register_document_webhook,
     upload_document_file,
-    download_docx_from_documents,
+    download_pdf_from_documents,
     document,
 ):
 
-    download_docx_from_documents.return_value = None
+    download_pdf_from_documents.return_value = None
     upload_document_file.return_value = {"uuid": "a1-b2-c3"}
     register_document_webhook.return_value = {
         "message": "Success",
@@ -359,7 +387,10 @@ def test_d4sign_upload_and_send_document_for_signing_controller_invalid_signatur
 
 
 # Test d4sign_document_webhook_controller
-def test_d4sign_document_webhook_controller_finished(document):
+@patch("app.d4sign.controllers.d4sign_update_document_certificate_file_controller")
+def test_d4sign_document_webhook_controller_finished(
+    update_certificate_controller, document
+):
     type_post = "1"
     d4sign_document_webhook_controller(document=document, type_post=type_post)
     assert document.signed
@@ -379,7 +410,10 @@ def test_d4sign_document_webhook_controller_email_not_sent(document):
     assert document.signers[1]["status"] == "sent"
 
 
-def test_d4sign_document_webhook_controller_cancelled(document):
+@patch("app.d4sign.controllers.d4sign_update_document_certificate_file_controller")
+def test_d4sign_document_webhook_controller_cancelled(
+    update_certificate_controller, document
+):
     type_post = "3"
     d4sign_document_webhook_controller(
         document=document,
@@ -390,7 +424,10 @@ def test_d4sign_document_webhook_controller_cancelled(document):
         assert signer["signing_date"] == ""
 
 
-def test_d4sign_document_webhook_controller_signed(document):
+@patch("app.d4sign.controllers.d4sign_update_document_certificate_file_controller")
+def test_d4sign_document_webhook_controller_signed(
+    d4sign_update_certificate_controller, document
+):
     for signer in document.signers:
         signer["status"] = "sent"
 

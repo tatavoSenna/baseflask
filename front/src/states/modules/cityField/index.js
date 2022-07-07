@@ -4,6 +4,7 @@ import { alphabeticalOrderCitys } from './selectors'
 
 const initialState = {
 	loading: false,
+	data: null,
 }
 
 const { actions, reducer } = createSlice({

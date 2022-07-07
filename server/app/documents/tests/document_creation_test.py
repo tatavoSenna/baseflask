@@ -7,10 +7,8 @@ from app.test import factories
 from flask import jsonify
 from datetime import datetime, timedelta
 from app.models.documents import Document, DocumentTemplate
-from app.documents.controllers import (
-    create_document_controller,
-    document_creation_email_controller,
-)
+from app.documents.controllers import create_document_controller
+
 from app.serializers.document_serializers import DocumentListSerializer
 
 
@@ -367,10 +365,8 @@ class TestDocumentCreation:
     @patch("app.documents.controllers.RemoteDocument.upload_filled_text_to_documents")
     @patch("app.documents.controllers.RemoteDocument.download_text_from_template")
     @patch("app.documents.controllers.fill_text_with_variables")
-    @patch("app.documents.controllers.document_creation_email_controller")
     def test_send_email_on_document_creation_with_workflow(
         self,
-        document_creation_email_controller,
         fill_text_with_variables,
         download_text_from_template,
         upload_filled_text_to_documents,
@@ -394,17 +390,11 @@ class TestDocumentCreation:
             False,
         )
 
-        document_creation_email_controller.assert_called_once_with(
-            document_title, test_company.id
-        )
-
     @patch("app.documents.controllers.RemoteDocument.upload_filled_text_to_documents")
     @patch("app.documents.controllers.RemoteDocument.download_text_from_template")
     @patch("app.documents.controllers.fill_text_with_variables")
-    @patch("app.documents.controllers.document_creation_email_controller")
     def test_send_email_on_document_creation_without_workflow(
         self,
-        document_creation_email_controller,
         fill_text_with_variables,
         download_text_from_template,
         upload_filled_text_to_documents,
@@ -427,8 +417,6 @@ class TestDocumentCreation:
             False,
         )
 
-        document_creation_email_controller.assert_not_called()
-
     @patch("app.documents.controllers.RemoteDocument.upload_filled_text_to_documents")
     @patch("app.documents.controllers.RemoteDocument.upload_filled_docx_to_documents")
     @patch("app.documents.controllers.RemoteDocument.download_text_from_template")
@@ -436,10 +424,8 @@ class TestDocumentCreation:
     @patch("app.documents.controllers.convert_docx_to_pdf_and_save")
     @patch("app.documents.controllers.fill_text_with_variables")
     @patch("app.documents.controllers.fill_docx_with_variables")
-    @patch("app.documents.controllers.document_creation_email_controller")
     def test_create_document(
         self,
-        mock_email_controller,
         upload_filled_text_to_documents,
         upload_filled_docx_to_documents,
         download_text_from_template,
@@ -510,7 +496,7 @@ class TestDocumentCreation:
         assert (
             datetime.strptime(
                 document_txt.workflow["nodes"]["544"]["due_date"],
-                "%Y-%m-%d %H:%M:%S.%f",
+                "%Y-%m-%dT%H:%M:%S",
             ).day
             == (datetime.today() + timedelta(days=1)).day
         )
@@ -521,14 +507,13 @@ class TestDocumentCreation:
         assert (
             datetime.strptime(
                 document_docx.workflow["nodes"]["544"]["due_date"],
-                "%Y-%m-%d %H:%M:%S.%f",
+                "%Y-%m-%dT%H:%M:%S",
             ).day
             == (datetime.today() + timedelta(days=1)).day
         )
         assert document_docx.due_date.day == (datetime.today() + timedelta(days=1)).day
 
-    @patch("app.documents.controllers.send_email_controller")
-    def test_email_create_document(self, send_email_on_document_creation_mock):
+    def test_email_create_document(self):
         company_id = 134
         company = factories.CompanyFactory(id=company_id)
         user = factories.UserFactory(company=company, email="testemail@gmail.com")
@@ -538,16 +523,6 @@ class TestDocumentCreation:
         email_list = []
         email_list.append(user.email)
         email_list.append(user2.email)
-
-        document_creation_email_controller(email_title, company_id)
-
-        send_email_on_document_creation_mock.assert_called_once_with(
-            "app@lawing.com.br",
-            email_list,
-            "New Document created",
-            email_title,
-            "d-83efa7b8d2fb4742a69dd9059324e148",
-        )
 
     def test_create_draft_document(
         self,

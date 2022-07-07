@@ -97,6 +97,7 @@ def create_document_controller(
                 "id": "-1",
                 "comments": None,
                 "created_by": current_user.name,
+                "only_updated_variables": True,
             }
         ]
         title = "Rascunho: " + title
@@ -109,6 +110,7 @@ def create_document_controller(
                 "id": "0",
                 "comments": None,
                 "created_by": current_user.name,
+                "only_updated_variables": True,
             }
         ]
     # Get workflow from the template and update it
@@ -167,17 +169,6 @@ def create_document_controller(
             delete_document_controller(document)
             raise
 
-    """ Disable the email while we don't have the correct sendgrid key 
-    Will migrate this to a lambda with the new document sns hook
-    # Send email informing document creation
-    if step_name != None:
-        try:
-            document_creation_email_controller(title, company_id)
-        except Exception as e:
-            logging.exception(
-                "Failed to send emails on document creation. One or more emails is bad formated or invalid"
-            )
-    """
     return document
 
 
@@ -367,21 +358,6 @@ def previous_status_controller(document_id):
     return document, 0
 
 
-def document_creation_email_controller(title, company_id):
-    company_users = User.query.filter_by(company_id=company_id, active=True)
-    email_list = []
-    for user in company_users:
-        email_list.append(user.email)
-    response = send_email_controller(
-        "app@lawing.com.br",
-        email_list,
-        "New Document created",
-        title,
-        "d-83efa7b8d2fb4742a69dd9059324e148",
-    )
-    return response
-
-
 def workflow_status_change_email_controller(document_id, name):
     document = get_document_controller(document_id)
     workflow = document.workflow
@@ -485,6 +461,7 @@ def change_variables_controller(document, new_variables, email, variables, draft
         "id": str(new_version),
         "comments": "",
         "created_by": current_user.name,
+        "only_updated_variables": True,
     }
 
     # need to make a copy to track changes to JSON, otherwise the changes are not updated
@@ -505,14 +482,23 @@ def change_variables_controller(document, new_variables, email, variables, draft
             )
     # Document is already finished and is updating it's variables
     elif not document.draft:
-        if document.text_type != ".docx":
+        # If the document is of type .txt, we can only update its variables values if it never had any change on its content.
+        if document.text_type != ".docx" and not only_has_variables_changes(
+            document.versions
+        ):
             raise BadRequest()
-
         update_variables(
             document, document_template, document.company_id, new_variables
         )
     db.session.add(document)
     db.session.commit()
+
+
+def only_has_variables_changes(versions):
+    for version in versions:
+        if not "only_updated_variables" in version:
+            return False
+    return True
 
 
 def edit_document_workflow_controller(
@@ -591,13 +577,21 @@ def convert_docx_to_pdf_and_save(document, filled_docx_io):
 
 def update_variables(document, document_template, company_id, variables):
     remote_document = RemoteDocument()
-    docx_io = remote_document.download_docx_from_template(document_template, company_id)
-    filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
 
-    convert_docx_to_pdf_and_save(document, filled_docx_io)
-    remote_document.upload_filled_docx_to_documents(
-        document, filled_docx_io, document_template.text_type
-    )
+    if document.text_type == ".docx":
+        docx_io = remote_document.download_docx_from_template(
+            document_template, company_id
+        )
+        filled_docx_io = fill_docx_with_variables(document, docx_io, variables)
+
+        convert_docx_to_pdf_and_save(document, filled_docx_io)
+        remote_document.upload_filled_docx_to_documents(
+            document, filled_docx_io, document_template.text_type
+        )
+    else:
+        text_template = remote_document.download_text_from_template(document)
+        filled_text = fill_text_with_variables(text_template, variables).encode()
+        remote_document.upload_filled_text_to_documents(document, filled_text)
 
 
 def fill_docx_with_variables(document, docx_io, variables):
@@ -620,9 +614,11 @@ def fill_docx_with_variables(document, docx_io, variables):
                                 width_size = field["variable"].get("width", 8)
                                 height_size = width_size * proportion
                                 r = para.add_run()
+
                                 r.add_picture(
                                     image, width=Cm(width_size), height=Cm(height_size)
                                 )
+                                del variables[key]
                                 break
     doc.save(docx_io)
     docx_template = DocxTemplate(docx_io)

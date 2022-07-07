@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react'
-import { object, func, number } from 'prop-types'
+import { object, number } from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { Input, Divider } from 'antd'
 import styled from 'styled-components'
@@ -112,5 +112,4 @@ SeparatorWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
-	updateFormInfo: func,
 }
