@@ -75,7 +75,6 @@ CepField.propTypes = {
 }
 
 CepField.defaultProps = {
-	onChange: () => null,
 	visible: true,
 }
 

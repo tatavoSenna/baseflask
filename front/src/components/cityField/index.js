@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import PropTypes, { string, shape, object, func, bool } from 'prop-types'
 import { Form, Select } from 'antd'
 import { getCityField } from '~/states/modules/cityField'
@@ -9,10 +9,10 @@ import { filterText } from '~/services/filter'
 const CityField = ({
 	pageFieldsData,
 	className,
-	onChange,
 	inputValue,
 	state,
 	form,
+	onChange,
 	disabled,
 	visible,
 }) => {
@@ -22,74 +22,38 @@ const CityField = ({
 	const name = id !== undefined ? `${varname}_${id}` : varname
 
 	const dispatch = useDispatch()
-	const cityName = []
+
+	const { data } = useSelector(({ cityField }) => cityField)
+
 	useEffect(() => {
 		dispatch(getCityField())
 	}, [dispatch])
-	const data = useSelector(({ cityField }) => cityField)
 
-	const [thisValue, setThisValue] = useState('')
-
-	const handleOnChange = (value) => {
-		if (state !== undefined) {
-			setThisValue(value)
-		}
-		onChange(value)
-	}
-
-	const findAndChangeValue = (data, value, _value, stateValue, state) => {
-		const _fieldValue = data.data.find((d) => d.nome === value)
-		if (_fieldValue !== undefined)
-			stateValue =
-				_fieldValue['regiao-imediata']['regiao-intermediaria'].UF.nome
-		if (stateValue !== state) _value = ''
-		return _value
-	}
-
-	let inputValueState = state
-	let value = thisValue === '' ? inputValue : thisValue
-	if (data.data !== undefined) {
-		if (state === '' || state === undefined) {
-			data.data.map((name, index) => (cityName[index] = name.nome))
-		} else {
-			const filteredCitys = data.data.filter(
-				(d) => d['regiao-imediata']['regiao-intermediaria'].UF.nome === state
-			)
-			filteredCitys.map((name, index) => (cityName[index] = name.nome))
-		}
-
-		if (state !== undefined) {
-			if (inputValue !== '' && state !== '') {
-				value = findAndChangeValue(
-					data,
-					inputValue,
-					value,
-					inputValueState,
-					state
-				)
-			}
-
-			if (state !== '' && thisValue !== '') {
-				value = findAndChangeValue(
-					data,
-					thisValue,
-					value,
-					inputValueState,
-					state
-				)
+	const cityOptions = useMemo(() => {
+		if (data) {
+			if (state) {
+				return data
+					.filter((item) => item.state === state)
+					.map((item) => item.city)
+			} else {
+				return data.map((item) => item.city)
 			}
 		}
-	}
+
+		return []
+	}, [data, state])
 
 	useEffect(() => {
-		if (form !== undefined) {
-			form.setFieldsValue({
-				[list]: {
-					[name]: value,
-				},
-			})
+		if (form) {
+			const value = form.getFieldsValue()[list][name] ?? ''
+			if (data && value) {
+				const city = data.find((item) => value === item.city)
+				if (state && city?.state !== state) {
+					form.setFieldsValue({ [list]: { [name]: '' } })
+				}
+			}
 		}
-	}, [form, state, inputValueState, list, name, value])
+	}, [state, data, form, list, name])
 
 	return (
 		<Form.Item
@@ -111,8 +75,10 @@ const CityField = ({
 				showSearch={true}
 				disabled={disabled}
 				filterOption={filterText}
-				onChange={handleOnChange}>
-				{cityName.map((option, index) => (
+				onChange={(e) => {
+					onChange(e)
+				}}>
+				{cityOptions.map((option, index) => (
 					<Select.Option key={index} value={option}>
 						{option}
 					</Select.Option>
@@ -136,6 +102,7 @@ CityField.propTypes = {
 	disabled: bool,
 	visible: bool,
 	state: string,
+	addressData: object,
 }
 
 CityField.defaultProps = {

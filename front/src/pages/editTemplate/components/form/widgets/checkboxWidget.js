@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { object, number, func, array, oneOfType, string } from 'prop-types'
-import { Select } from 'antd'
+import React from 'react'
+import { object } from 'prop-types'
 import { CheckSquareOutlined } from '@ant-design/icons'
 
 import { Widget, useUpdate, useValidation } from './base/widget'
@@ -38,32 +37,4 @@ const Icon = styleIconValidation(CheckSquareOutlined)
 
 CheckboxWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
-}
-
-export const ListInput = ({ changeCallback, defaultValue, ...props }) => {
-	const [options, setOptions] = useState([])
-	return (
-		<Select
-			{...props}
-			defaultValue={defaultValue !== '' ? defaultValue : undefined}
-			mode="multiple"
-			size="default"
-			options={options}
-			filterOption={false}
-			onSearch={(s) => setOptions([{ label: s, value: s }])}
-			onChange={(v) => {
-				setOptions([])
-				changeCallback(v)
-			}}
-			notFoundContent={null}
-		/>
-	)
-}
-
-ListInput.propTypes = {
-	changeCallback: func,
-	defaultValue: oneOfType([array, string]),
 }

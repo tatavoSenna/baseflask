@@ -638,7 +638,10 @@ def modify_document(current_user, document_id):
     try:
         format_variables(spec_variables, document.document_template_id)
     except BadRequest as e:
-        return jsonify({"Can only change variables of Word documents(.docx)"}), 400
+        return (
+            jsonify({"Can only change variables of Word documents(.docx)"}),
+            400,
+        )  # ? Currently, sending a .txt file to this endpoint does not cause an exception. Is this a bug?
     except Exception as e:
         logging.exception(e)
         error_msg = "Variable specification is incorrect"

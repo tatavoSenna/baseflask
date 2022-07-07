@@ -4,17 +4,7 @@ import { Form, Input, Select, Button } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useUpdate } from './widget'
 import { ListItem, ValidatedSelect } from './styles'
-import { TextInput } from '../textWidget'
-import { NumberInput } from '../numberWidget'
-import { CurrencyInput } from '../currencyWidget'
-import { ListInput } from '../checkboxWidget'
-
-const conditionalInputs = {
-	string: TextInput,
-	number: NumberInput,
-	currency: CurrencyInput,
-	list: ListInput,
-}
+import { conditionalInputs } from './conditionalInputs'
 
 const conditionalOperators = {
 	default: ['=', '!=', '>', '>=', '<', '<='].map((op) => ({
@@ -34,7 +24,7 @@ const WidgetConditional = ({
 	pageIndex,
 	fieldIndex,
 	onValidate,
-	updateFormInfo,
+	onUpdate,
 }) => {
 	// Form variables
 	const variableNames = useMemo(() => {
@@ -82,7 +72,7 @@ const WidgetConditional = ({
 	}, [conditions, variableNames, onValidate])
 
 	// Condition creation/deletion callbacks
-	const update = useUpdate({ data, pageIndex, fieldIndex, updateFormInfo })
+	const update = useUpdate({ data, pageIndex, fieldIndex, onUpdate })
 
 	const addCondition = () => {
 		let newCondition = { variable: '', operator: '=', value: '' }
@@ -199,7 +189,7 @@ WidgetConditional.propTypes = {
 	pageIndex: number,
 	fieldIndex: number,
 	onValidate: func,
-	updateFormInfo: func,
+	onUpdate: func,
 }
 
 export { WidgetConditional }

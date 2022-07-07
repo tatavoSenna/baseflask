@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { InputNumber, TimePicker } from 'antd'
 import { ClockCircleOutlined } from '@ant-design/icons'
 import moment from 'moment'
@@ -76,7 +76,4 @@ const Icon = styleIconValidation(ClockCircleOutlined)
 
 TimeWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

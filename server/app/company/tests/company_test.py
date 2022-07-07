@@ -1,4 +1,5 @@
 from cgi import test
+from unittest import mock
 from sqlalchemy import exc
 
 from app import db
@@ -23,7 +24,7 @@ from app.models.company import Tag
 import pytest
 import io
 from flask import current_app
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import copy
 from faker import Faker
 from werkzeug.exceptions import Forbidden, BadRequest, NotFound
@@ -202,7 +203,8 @@ def test_create_company_already_exists(session):
         create_company_controller(created_admin_user, company_name)
 
 
-def test_assign_company_to_new_user(session):
+@patch("app.company.controllers.create_stripe_account_and_subscription")
+def test_assign_company_to_new_user(create_stripe_controller: mock.MagicMock, session):
     fake = Faker()
 
     test_user = {
@@ -227,6 +229,9 @@ def test_assign_company_to_new_user(session):
     assert user.email == test_user["email"]
     assert test_user["created"] == True
     assert user.company_id == company.id
+    create_stripe_controller.assert_called_once_with(
+        test_user["name"], test_user["email"]
+    )
 
 
 def test_get_tag_controller():

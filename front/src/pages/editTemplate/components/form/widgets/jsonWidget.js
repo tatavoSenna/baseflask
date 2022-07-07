@@ -7,7 +7,7 @@ import { Widget, useValidation } from './base/widget'
 import { FormItem, TextIcon } from './base/styles'
 
 export const JSONWidget = React.memo((props) => {
-	const { data, pageIndex, fieldIndex, updateFormInfo } = props
+	const { data, pageIndex, fieldIndex, onUpdate } = props
 	const [error, setError] = useState(false)
 	const [valid, setValid] = useValidation(props)
 
@@ -32,12 +32,7 @@ export const JSONWidget = React.memo((props) => {
 						id={`json_${pageIndex}_${fieldIndex}`}
 						onBlur={(e) => {
 							try {
-								updateFormInfo(
-									JSON.parse(e.json),
-									'field',
-									pageIndex,
-									fieldIndex
-								)
+								onUpdate(JSON.parse(e.json), 'field', pageIndex, fieldIndex)
 								setError(false)
 							} catch {
 								setError(true)
@@ -69,5 +64,5 @@ JSONWidget.propTypes = {
 	data: object,
 	pageIndex: number,
 	fieldIndex: number,
-	updateFormInfo: func,
+	onUpdate: func,
 }

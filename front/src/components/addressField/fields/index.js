@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useCepAutocomplete } from './utils/addressChanges'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
 const Fields = ({
@@ -15,15 +16,19 @@ const Fields = ({
 	const components = getAllComponents()
 	const classNames = getAllClasses()
 
-	const componentsTypes = Object.keys(components)
-
 	let fieldState = ''
-	if (typeof fields !== 'string') {
-		const field = fields.find((f) => f === 'state')
-		if (field !== undefined) fieldState = inputValue[field]
+
+	if (fields.includes('state')) {
+		if (!Array.isArray(inputValue)) {
+			fieldState = inputValue['state']
+		}
 	}
 
 	const [state, setState] = useState(fieldState)
+
+	const setCep = useCepAutocomplete(form, fields, name, setState)
+
+	const componentsTypes = Object.keys(components)
 
 	return componentsTypes.map((field, i) => {
 		const dict = {
@@ -52,10 +57,18 @@ const Fields = ({
 
 				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
 
-				if (field.field_type === 'city') dict.state = state
+				if (field.field_type === 'city') {
+					dict.state = state
+				}
+
 				if (field.field_type === 'state')
 					dict.onChange = (v) => {
 						setState(v)
+						changeCallback(v)
+					}
+				else if (field.field_type === 'cep')
+					dict.onChange = (v) => {
+						setCep(v)
 						changeCallback(v)
 					}
 				else dict.onChange = changeCallback

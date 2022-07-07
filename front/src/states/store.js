@@ -30,6 +30,7 @@ import databaseField, { databaseFieldSaga } from './modules/databaseField'
 import companies, { companiesSaga } from './modules/companies'
 import session, { sessionSaga } from './modules//session'
 import folder, { folderSaga } from './modules/folder'
+import addressInfo, { addressInfoSaga } from './modules/addressField'
 import editContract, { editContractSaga } from './modules/editContract'
 import database, { databaseSaga } from './modules/databases'
 import internalDatabaseField, {
@@ -65,6 +66,7 @@ const reducers = combineReducers({
 	companies,
 	session,
 	folder,
+	addressInfo,
 	editContract,
 	database,
 	internalDatabaseField,
@@ -100,6 +102,7 @@ const rootSaga = function* () {
 		companiesSaga(),
 		sessionSaga(),
 		folderSaga(),
+		addressInfoSaga(),
 		editContractSaga(),
 		databaseSaga(),
 		internalDatabaseFieldSaga(),

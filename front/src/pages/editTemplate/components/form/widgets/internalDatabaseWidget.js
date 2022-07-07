@@ -9,7 +9,7 @@ import { FormItem, styleIconValidation, ValidatedSelect } from './base/styles'
 import { object } from 'prop-types'
 import { listAllDatabases } from 'states/modules/databases'
 
-const InternalDatabaseWidget = React.memo((props) => {
+export const InternalDatabaseWidget = React.memo((props) => {
 	const { data } = props
 	const database = useSelector(({ database }) => database)
 	const dataItems = database.data
@@ -72,5 +72,3 @@ const Icon = styleIconValidation(DatabaseOutlined)
 InternalDatabaseWidget.propTypes = {
 	data: object,
 }
-
-export default InternalDatabaseWidget

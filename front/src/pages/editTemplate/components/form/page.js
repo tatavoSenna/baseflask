@@ -8,48 +8,14 @@ import {
 	editTemplateFieldAdd,
 	editTemplateFormInfo,
 } from '~/states/modules/editTemplate'
-import { JSONWidget } from './widgets/jsonWidget'
-import { TextWidget } from './widgets/textWidget'
-import { NumberWidget } from './widgets/numberWidget'
-import { CurrencyWidget } from './widgets/currencyWidget'
-import { DateWidget } from './widgets/dateWidget'
-import { EmailWidget } from './widgets/emailWidget'
-import { CheckboxWidget } from './widgets/checkboxWidget'
-import { RadioWidget } from './widgets/radioWidget'
-import { TimeWidget } from './widgets/timeWidget'
-import { DropdownWidget } from './widgets/dropdownWidget'
-import { BankWidget } from './widgets/bankWidget'
-import { AddressWidget } from './widgets/addressWidget'
-import { DatabaseWidget } from './widgets/databaseWidget'
-import { CnaeWidget } from './widgets/cnaeWidget'
-import { CpfWidget } from './widgets/CpfWidget'
-import { CnpjWidget } from './widgets/CnpjWidget'
-import { ParagraphWidget } from './widgets/paragraphWidget'
-import { SeparatorWidget } from './widgets/separatorWidget'
-import InternalDatabaseWidget from './widgets/internalDatabaseWidget'
-import { PersonWidget } from './widgets/personWidget'
+import { fieldStructure } from './fieldStructure'
 
-const widgets = {
-	text: TextWidget,
-	text_area: ParagraphWidget,
-	currency: CurrencyWidget,
-	number: NumberWidget,
-	cpf: CpfWidget,
-	cnpj: CnpjWidget,
-	date: DateWidget,
-	email: EmailWidget,
-	checkbox: CheckboxWidget,
-	radio: RadioWidget,
-	time: TimeWidget,
-	dropdown: DropdownWidget,
-	bank: BankWidget,
-	address: AddressWidget,
-	person: PersonWidget,
-	database: DatabaseWidget,
-	cnae: CnaeWidget,
-	separator: SeparatorWidget,
-	internal_database: InternalDatabaseWidget,
-}
+import { widgets } from './widgets'
+import { JSONWidget } from './widgets/jsonWidget'
+import {
+	editTemplateFieldRemove,
+	editTemplateFieldValid,
+} from 'states/modules/editTemplate'
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
@@ -81,218 +47,38 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	)
 
 	const handleAddField = (type) => {
-		let newField = {
-			type: `${type}`,
-			label: '',
-			info: '',
-			variable: {
-				name: '',
-			},
-			initialValue: '',
-			optional: false,
-		}
-
-		switch (type) {
-			case 'time':
-				newField.variable.type = 'time'
-				newField.minute_step = ''
-				break
-			case 'number':
-				newField.variable.type = 'number'
-				newField.variable.doc_display_style = 'plain | extended | ordinal'
-				newField.decimals = ''
-				newField.min = ''
-				newField.max = ''
-				newField.step = ''
-				break
-			case 'date':
-				newField.variable.type = 'date'
-				newField.variable.doc_display_style = '%d/%m/%Y | extended'
-				break
-			case 'checkbox':
-				newField.variable.type = 'list'
-				newField.variable.doc_display_style = 'commas | bullets'
-				break
-			case 'currency':
-				newField.initialValue = 0
-				newField.variable.type = 'currency'
-				newField.variable.doc_display_style = 'plain | extended'
-				break
-			case 'database':
-				newField.variable.type = 'database'
-				newField.variable.database_endpoint = ''
-				newField.variable.search_key = ''
-				newField.variable.display_key = ''
-				break
-			case 'internal_database':
-				newField.variable.type = 'internal_database'
-				newField.databaseId = ''
-				newField.filter = []
-
-				delete newField['initialValue']
-				delete newField['info']
-				break
-			case 'variable_image':
-				newField.variable.type = 'variable_image'
-				newField.variable.doc_display_style = 'image'
-				newField.variable.width = 8.0
-				break
-			case 'person':
-				newField.variable.type = 'person'
-				newField.label = ''
-				newField.person_type = ['legal_person', 'natural_person']
-				newField.fields = [
-					'nationality',
-					'cpf',
-					'pronoun',
-					'name',
-					'surname',
-					'identity',
-					'identity_org',
-					'identity_date',
-					'email',
-					'marital_state',
-					'property_regime',
-					'profession',
-					'legal_nationality',
-					'cnpj',
-					'society_name',
-					'activity',
-					'cep',
-					'country',
-					'number',
-					'street',
-					'complement',
-					'state',
-					'district',
-					'city',
-					'attorney_nationality',
-					'attorney_cpf',
-					'attorney_pronoun',
-					'attorney_name',
-					'attorney_surname',
-					'attorney_identity',
-					'attorney_identity_org',
-					'attorney_identity_date',
-					'attorney_email',
-					'attorney_profession',
-					'attorney_cep',
-					'attorney_country',
-					'attorney_number',
-					'attorney_street',
-					'attorney_complement',
-					'attorney_state',
-					'attorney_district',
-					'attorney_city',
-				]
-				newField.initialValue = newField.fields.reduce(
-					(a, field) => ({ ...a, [field]: '' }),
-					{ person_type: '' }
-				)
-
-				delete newField['info']
-				break
-			case 'address':
-				newField.variable.type = 'address'
-				newField.label = ''
-				newField.fields = [
-					'cep',
-					'country',
-					'number',
-					'street',
-					'complement',
-					'district',
-					'state',
-					'city',
-				]
-
-				newField.initialValue = newField.fields.reduce(
-					(a, field) => ({ ...a, [field]: '' }),
-					{}
-				)
-
-				delete newField['info']
-				break
-			case 'structured_list':
-				newField.variable.type = type
-				newField.variable.doc_display_style = 'text'
-				newField.variable.extra_style_params = {
-					row_template: '',
-					separator: '',
-				}
-				newField.structure = [
-					{
-						type: 'text',
-						label: '',
-						info: '',
-						variable: {
-							name: '',
-							type: '',
-							doc_display_style: '',
-						},
-					},
-				]
-				break
-			case 'structured_checkbox':
-				newField.variable.type = type
-				newField.variable.doc_display_style = 'text'
-				newField.variable.extra_style_params = {
-					row_template: '',
-					separator: '',
-				}
-				newField.structure = [
-					{
-						type: 'text',
-						label: '',
-						info: '',
-						variable: {
-							name: '',
-							type: '',
-							doc_display_style: '',
-						},
-					},
-				]
-				break
-			case 'separator':
-				newField = {
-					type: 'separator',
-					title: '',
-				}
-				break
-			case 'text':
-				newField.placeholder = ''
-				newField.variable.type = 'string'
-				newField.variable.doc_display_style =
-					'plain | sentence_case | uppercase | lowercase'
-				break
-			case 'text_area':
-				newField.placeholder = ''
-				newField.variable.type = 'string'
-				newField.variable.doc_display_style =
-					'plain | sentence_case | uppercase | lowercase'
-				break
-			default:
-				newField.variable.type = 'string'
-				newField.variable.doc_display_style =
-					'plain | sentence_case | uppercase | lowercase'
-				break
-		}
-
-		const hasOptions = ['dropdown', 'radio', 'checkbox', 'structured_checkbox']
-		if (hasOptions.includes(type)) {
-			newField.options = [
-				{ label: '', value: '' },
-				{ label: '', value: '' },
-				{ label: '', value: '' },
-			]
-		}
-
+		const newField = fieldStructure(type)
 		dispatch(editTemplateFieldAdd({ newField, pageIndex }))
 	}
 
-	const updateFormInfo = useCallback(
-		(value, name, pageIndex, fieldIndex) => {
-			dispatch(editTemplateFormInfo({ value, name, pageIndex, fieldIndex }))
+	const handleUpdateTitle = useCallback(
+		(value, pageIndex, fieldIndex) => {
+			dispatch(
+				editTemplateFormInfo({ value, name: 'title', pageIndex, fieldIndex })
+			)
+		},
+		[dispatch]
+	)
+
+	const handleRemoveField = useCallback(
+		(pageIndex, fieldIndex) => {
+			dispatch(editTemplateFieldRemove({ pageIndex, fieldIndex }))
+		},
+		[dispatch]
+	)
+
+	const handleUpdateField = useCallback(
+		(value, pageIndex, fieldIndex) => {
+			dispatch(
+				editTemplateFormInfo({ value, name: 'field', pageIndex, fieldIndex })
+			)
+		},
+		[dispatch]
+	)
+
+	const handleVadidationField = useCallback(
+		(value, pageIndex, fieldIndex) => {
+			dispatch(editTemplateFieldValid({ value, pageIndex, fieldIndex }))
 		},
 		[dispatch]
 	)
@@ -317,7 +103,7 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 					name={`title_${pageIndex}`}
 					label="Título"
 					style={{ width: '50%', margin: '0 0 0 8px' }}
-					onChange={(e) => updateFormInfo(e.target.value, 'title', pageIndex)}
+					onChange={(e) => handleUpdateTitle(e.target.value, pageIndex)}
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 					<Input autoFocus value={data.title} />
 				</Form.Item>
@@ -337,7 +123,10 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 						variables,
 						pageIndex,
 						fieldIndex,
-						updateFormInfo,
+						onUpdate: handleUpdateField,
+						onRemove: handleRemoveField,
+						onValidate: handleVadidationField,
+						valid: data.valid[fieldIndex],
 					}
 
 					return React.createElement(el, props)

@@ -1,3 +1,4 @@
+import { useCepAutocomplete } from 'components/addressField/fields/utils/addressChanges'
 import PropTypes, {
 	array,
 	bool,
@@ -20,6 +21,9 @@ const NaturalPerson = ({
 	visible,
 	first,
 }) => {
+	const components = getAllComponents()
+	const classNames = getAllClasses()
+
 	let fieldMarital = ''
 	if (typeof fields !== 'string') {
 		const field = fields.find((f) => f === 'marital_state')
@@ -32,12 +36,11 @@ const NaturalPerson = ({
 		if (field !== undefined) fieldState = inputValue[field]
 	}
 
-	const components = getAllComponents()
-	const classNames = getAllClasses()
-
 	const [pronoun, setPronoun] = useState('')
 	const [maritalState, setMaritalState] = useState(fieldMarital)
 	const [state, setState] = useState(fieldState)
+
+	const setCep = useCepAutocomplete(form, fields, name, setState)
 
 	const componentsTypes = Object.keys(components)
 
@@ -83,6 +86,11 @@ const NaturalPerson = ({
 					dict.pronoun = pronoun
 					dict.onChange = (v) => {
 						setMaritalState(v)
+						changeCallback(v)
+					}
+				} else if (field.field_type === 'cep') {
+					dict.onChange = (v) => {
+						setCep(v)
 						changeCallback(v)
 					}
 				} else dict.onChange = changeCallback

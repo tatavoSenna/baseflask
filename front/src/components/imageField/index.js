@@ -1,14 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { string, shape, object, func, bool } from 'prop-types'
 import { Form, Upload, message, Modal, Input } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import InfoField from '~/components/infoField'
-const ImageField = ({ pageFieldsData, className, visible, onChange }) => {
+const ImageField = ({
+	pageFieldsData,
+	inputValue,
+	className,
+	visible,
+	form,
+	onChange,
+}) => {
 	const { label, variable, info, optional } = pageFieldsData
 	const isObj = typeof variable === 'object'
-	const [fileList, setFileList] = useState('')
+	const varname = `image_${isObj ? variable.name : variable}`
 	const [modalVisible, setModalVisible] = useState(false)
 	const [loading, setLoading] = useState('')
+	const [fileList, setFileList] = useState(
+		inputValue
+			? [
+					{
+						url: inputValue,
+					},
+			  ]
+			: ''
+	)
+
+	useEffect(() => {
+		form.setFieldsValue({
+			[varname]: fileList.length > 0 ? fileList[0].url : undefined,
+		})
+	}, [fileList, form, varname])
 
 	const uploadButton = (
 		<div>
@@ -40,7 +62,7 @@ const ImageField = ({ pageFieldsData, className, visible, onChange }) => {
 	return (
 		<Form.Item
 			key={`imageField_${isObj ? variable.name : variable}`}
-			name={`image_${isObj ? variable.name : variable}`}
+			name={varname}
 			label={<InfoField label={label} info={info} />}
 			className={className}
 			colon={false}
@@ -90,6 +112,8 @@ ImageField.propTypes = {
 	}).isRequired,
 	onChange: func,
 	className: string,
+	form: object,
+	inputValue: string,
 	visible: bool,
 }
 

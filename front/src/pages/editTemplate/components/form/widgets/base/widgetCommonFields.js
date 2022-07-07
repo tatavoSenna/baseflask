@@ -24,7 +24,7 @@ export const CommonFields = ({ hasDescription, ...props }) => {
 					/>
 				</FormItem>
 
-				<FormItem label="Opcional" $width={'27%'} $labelTop={'1px'}>
+				<FormItem label="Opcional" $width={'fit-content'} $labelTop={'1px'}>
 					<Switch
 						defaultChecked={data.optional}
 						onChange={(e) => update({ optional: e })}

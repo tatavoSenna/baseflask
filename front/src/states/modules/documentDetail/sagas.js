@@ -460,12 +460,24 @@ function* changeVariablesSaga({ payload = {} }) {
 
 function* downloadTextDocumentVersionSaga({ payload }) {
 	try {
+		loadingMessage({
+			content: 'Realizando download do documento...',
+			updateKey: 'downloadWordVersion',
+		})
 		const data = yield call(
 			DocumentDetailsService.downloadTextDocumentVersion,
 			payload
 		)
 		yield put(downloadTextDocumentVersionSuccess(data))
+		successMessage({
+			content: 'Documento baixado com sucesso!',
+			updateKey: 'downloadWordVersion',
+		})
 	} catch (error) {
+		errorMessage({
+			content: 'Ocorreu um erro ao baixar o seu documento.',
+			updateKey: 'downloadWordVersion',
+		})
 		yield put(downloadTextDocumentVersionFailure(error))
 	}
 }

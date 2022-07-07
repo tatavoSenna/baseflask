@@ -1,5 +1,5 @@
 import React from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Input, InputNumber } from 'antd'
 import { FieldNumberOutlined } from '@ant-design/icons'
 
@@ -117,18 +117,4 @@ const Icon = styleIconValidation(FieldNumberOutlined)
 
 NumberWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
-}
-
-export const NumberInput = ({ changeCallback, ...props }) => (
-	<InputNumber
-		{...props}
-		onBlur={(e) => changeCallback(Number(e.target.value))}
-	/>
-)
-
-NumberInput.propTypes = {
-	changeCallback: func,
 }

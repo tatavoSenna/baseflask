@@ -318,7 +318,7 @@ def test_change_document_status_next():
     assert (
         datetime.strptime(
             retrieved_document.workflow["nodes"]["3485"]["due_date"],
-            "%Y-%m-%d %H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S",
         ).day
         == (datetime.today() + timedelta(days=1)).day
     )
@@ -373,7 +373,7 @@ def test_change_document_status_previous():
     assert (
         datetime.strptime(
             retrieved_document.workflow["nodes"]["544"]["due_date"],
-            "%Y-%m-%d %H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S",
         ).day
         == (datetime.today() + timedelta(days=1)).day
     )
@@ -465,6 +465,8 @@ def test_change_document_variables(update_variables_mock):
         user_id=user.id,
         variables=variables,
         versions=versions,
+        draft=False,
+        text_type=".docx",
     )
 
     new_variables = {"variable_teste": "bbb"}
@@ -496,6 +498,7 @@ def test_edit_document_workflow_controller():
 
     current_step = "3485"
     workflow = {
+        "current_node": current_step,
         "nodes": {
             "544": {
                 "next_node": current_step,
@@ -521,7 +524,7 @@ def test_edit_document_workflow_controller():
 
     new_group = {"id": group3.id, "name": group3.name}
     new_responsible_users = [{"id": user3.id, "email": user3.email, "name": user3.name}]
-    new_due_date = "2021-09-20T11:35:38.387630"
+    new_due_date = "2021-09-20"
 
     document = edit_document_workflow_controller(
         document,

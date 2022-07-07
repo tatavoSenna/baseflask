@@ -64,7 +64,7 @@ AddressField.propTypes = {
 		type: string.isRequired,
 		optional: bool,
 	}).isRequired,
-	className: PropTypes.oneOfType([object, string]),
+	className: string,
 	disabled: bool,
 	visible: bool,
 	form: object,

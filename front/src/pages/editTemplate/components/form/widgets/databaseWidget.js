@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { object, number, func } from 'prop-types'
+import { object } from 'prop-types'
 import { Input } from 'antd'
 import { ApiOutlined } from '@ant-design/icons'
 
@@ -75,7 +75,4 @@ const Icon = styleIconValidation(ApiOutlined)
 
 DatabaseWidget.propTypes = {
 	data: object,
-	pageIndex: number,
-	fieldIndex: number,
-	updateFormInfo: func,
 }

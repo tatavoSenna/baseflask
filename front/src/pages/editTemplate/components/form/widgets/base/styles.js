@@ -47,6 +47,13 @@ export const FormItemFields = styled(Form.Item)`
 `
 
 export const Panel = styled(Collapse.Panel)`
+	${({ $compact }) =>
+		$compact &&
+		`
+	 border: 1px solid #d9d9d9;
+	 margin-bottom: 24px;
+	 border-bottom:  1px solid #d9d9d9 !important;
+	`}
 	&& .ant-collapse-header {
 		align-items: center;
 		display: flex;

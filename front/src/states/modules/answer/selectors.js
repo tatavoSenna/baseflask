@@ -14,6 +14,8 @@ export const selectAnswer = (data, payload) => {
 			answer[0].slice(0, 19) === 'structured_checkbox'
 		) {
 			index = Number(answer[0].split('_').slice(-1))
+		} else if (answer[0].slice(0, 6) === 'image_') {
+			index = fields.findIndex((f) => 'image_' + f.variable.name === answer[0])
 		} else {
 			index = fields.findIndex((f) => f?.variable?.name === answer[0])
 		}
@@ -52,23 +54,6 @@ export const selectAnswer = (data, payload) => {
 		}
 	})
 	return filterEmptyValues(extend(data, answers))
-}
-
-export const selectImages = (dataImg, payload) => {
-	let index = 0
-	for (var [key] of Object.entries(payload.data)) {
-		if (payload.visible[index]) {
-			if (key.includes('image_')) {
-				const image = document
-					.getElementById(key)
-					.getElementsByTagName('input')[0].value
-
-				extend(dataImg, { [key]: image })
-			}
-		}
-		index++
-	}
-	return dataImg
 }
 
 // Creates a new data object, filtering empty values recursively

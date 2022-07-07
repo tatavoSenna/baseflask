@@ -8,26 +8,27 @@ export const selectAllDocumentDetail = (payload) => {
 			fields: page.fields
 				.map((field) => {
 					if (
-						![
-							'structured_list',
-							'structured_checkbox',
-							'variable_image',
-						].includes(field.type)
+						!['structured_list', 'structured_checkbox'].includes(field.type)
 					) {
-						if (
-							field.variable?.name &&
-							payload.variables[field.variable.name]
-						) {
-							if (
-								typeof payload.variables[field.variable.name] === 'object' &&
-								!Array.isArray(payload.variables[field.variable.name])
+						if (field.variable?.name) {
+							if (payload.variables[field.variable.name]) {
+								if (
+									typeof payload.variables[field.variable.name] === 'object' &&
+									!Array.isArray(payload.variables[field.variable.name])
+								) {
+									field.initialValue = _.mapKeys(
+										payload.variables[field.variable.name],
+										(value, key) => key.toLowerCase()
+									)
+								} else {
+									field.initialValue = payload.variables[field.variable.name]
+								}
+							} else if (
+								field.type === 'variable_image' &&
+								payload.variables['image_' + field.variable.name]
 							) {
-								field.initialValue = _.mapKeys(
-									payload.variables[field.variable.name],
-									(value, key) => key.toLowerCase()
-								)
-							} else {
-								field.initialValue = payload.variables[field.variable.name]
+								field.initialValue =
+									payload.variables['image_' + field.variable.name]
 							}
 						}
 
