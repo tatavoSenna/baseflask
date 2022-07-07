@@ -33,6 +33,11 @@ const initialState = {
 		error: null,
 		loading: false,
 	},
+	cancelledDocument: {
+		data: null,
+		error: null,
+		loading: false,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -291,6 +296,33 @@ const { actions, reducer } = createSlice({
 					error: payload,
 				},
 			}),
+		cancelDocument: (state, { payload }) =>
+			extend(state, {
+				cancelledDocument: {
+					loading: true,
+					error: null,
+					data: null,
+				},
+			}),
+		cancelDocumentSuccess: (state, { payload }) => {
+			extend(state, {
+				data: selectAllDocumentDetail(payload),
+				cancelledDocument: {
+					...state.cancelledDocument,
+					loading: false,
+					error: null,
+					data: payload,
+				},
+			})
+		},
+		cancelDocumentFailure: (state, { payload }) =>
+			extend(state, {
+				cancelledDocument: {
+					...state.cancelledDocument,
+					loading: false,
+					error: payload,
+				},
+			}),
 	},
 })
 
@@ -338,6 +370,9 @@ export const {
 	downloadTextDocumentVersion,
 	downloadTextDocumentVersionSuccess,
 	downloadTextDocumentVersionFailure,
+	cancelDocument,
+	cancelDocumentSuccess,
+	cancelDocumentFailure,
 } = actions
 
 export { default as documentDetailSaga } from './sagas'
