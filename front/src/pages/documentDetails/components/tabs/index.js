@@ -419,14 +419,14 @@ const Tabs = ({
 						<Title
 							level={4}
 							style={{ marginTop: 30, marginBottom: 10, fontSize: 18 }}>
-							Parte {item.party}
+							{item.party}
 						</Title>
 					) : null}
 					{signers[index - 1] && item.party !== signers[index - 1].party ? (
 						<Title
 							level={4}
 							style={{ marginTop: 10, marginBottom: 10, fontSize: 18 }}>
-							Parte {item.party}
+							{item.party}
 						</Title>
 					) : null}
 					<DivContainer

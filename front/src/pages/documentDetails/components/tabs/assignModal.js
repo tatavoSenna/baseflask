@@ -86,12 +86,12 @@ const AssignModal = ({
 					<div key={index}>
 						{index === 0 ? (
 							<Title level={4} style={{ marginBottom: 10 }}>
-								Parte: {item.party}
+								{item.party}
 							</Title>
 						) : null}
 						{signers[index - 1] && item.party !== signers[index - 1].party ? (
 							<Title level={4} style={{ marginTop: 40, marginBottom: 10 }}>
-								Parte: {item.party}
+								{item.party}
 							</Title>
 						) : null}
 						<Title
