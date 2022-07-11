@@ -591,6 +591,7 @@ Tabs.propTypes = {
 	showStepModal: func,
 	handleVersion: func,
 	signed: bool,
+	sent: bool,
 	sentAssign: func,
 	loadingSign: bool,
 	versionId: string,
