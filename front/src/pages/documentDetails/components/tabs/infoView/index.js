@@ -78,7 +78,11 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 		})
 
 	const buttonEditForm = () => {
-		return <Button onClick={handleEdit}>Editar</Button>
+		return (
+			<Button onClick={handleEdit} disabled={infos.sent}>
+				Editar
+			</Button>
+		)
 	}
 
 	return (
