@@ -33,7 +33,7 @@ export const getColumns = (
 		},
 	},
 	{
-		title: 'Template',
+		title: 'Modelo',
 		dataIndex: 'template_name',
 		key: 'template_name',
 		sorter: true,

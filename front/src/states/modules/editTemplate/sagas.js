@@ -57,7 +57,7 @@ function* getTemplateDetailSaga({ payload = {} }) {
 }
 
 function* editTemplateSaga({ payload = {} }) {
-	loadingMessage({ content: 'Enviando template...', updateKey: 'editTemplate' })
+	loadingMessage({ content: 'Enviando modelo...', updateKey: 'editTemplate' })
 
 	const { id, files, history } = payload
 	const data = yield select((state) => {
@@ -172,14 +172,14 @@ function* editTemplateSaga({ payload = {} }) {
 
 			yield put(editTemplateSuccess())
 			successMessage({
-				content: 'Template criado com sucesso!',
+				content: 'Modelo criado com sucesso!',
 				updateKey: 'editTemplate',
 			})
-			history.push('/templates')
+			history.push('/models')
 		} catch (error) {
 			yield put(editTemplateFailure(error))
 			errorMessage({
-				content: 'A criação do template falhou',
+				content: 'A criação do modelo falhou',
 				updateKey: 'editTemplate',
 			})
 		}
@@ -205,15 +205,15 @@ function* editTemplateSaga({ payload = {} }) {
 
 			yield put(editTemplateSuccess(patch))
 			successMessage({
-				content: 'Template atualizado com sucesso!',
+				content: 'Modelo atualizado com sucesso!',
 				updateKey: 'editTemplate',
 			})
-			history.push('/templates')
+			history.push('/models')
 		} catch (error) {
 			yield put(editTemplateFailure(error))
 			console.log(error)
 			errorMessage({
-				content: 'A atualização do template falhou',
+				content: 'A atualização do modelo falhou',
 				updateKey: 'editTemplate',
 			})
 		}
@@ -222,7 +222,7 @@ function* editTemplateSaga({ payload = {} }) {
 
 function* getTemplateDownloadSaga({ payload = {} }) {
 	loadingMessage({
-		content: 'Realizando download do template...',
+		content: 'Realizando download do modelo...',
 		updateKey: 'downloadTemplate',
 	})
 	const { id } = payload

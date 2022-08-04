@@ -38,14 +38,14 @@ const Templates = () => {
 		dispatch(resetTemplateState())
 		dispatch(editTemplateTitle({ title }))
 		return history.push({
-			pathname: `/templates/new/`,
+			pathname: `/models/new/`,
 			state: { id: 'new' },
 		})
 	}
 
 	const handleToGo = (template) =>
 		history.push({
-			pathname: `templates/edit`,
+			pathname: `models/edit`,
 			state: { id: template.id },
 		})
 
@@ -106,7 +106,7 @@ const Templates = () => {
 		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
-					<BreadCrumb parent="Templates" current="Lista" />
+					<BreadCrumb parent="Modelos" current="Lista" />
 				</PageHeader>
 				<Layout style={{ backgroundColor: '#fff' }}>
 					<TemplateModal
@@ -135,8 +135,8 @@ const Templates = () => {
 						onChangePageNumber={getTemplates}
 						onSearch={handleSearch}
 						onClickButton={handleShowModal}
-						textButton="Novo Template"
-						placeholderNoData={!loading ? 'Nenhum template encontrado' : ''}
+						textButton="Novo Modelo"
+						placeholderNoData={!loading ? 'Nenhum modelo encontrado' : ''}
 						loading={loading}
 					/>
 				</Layout>

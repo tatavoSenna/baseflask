@@ -5,7 +5,7 @@ import { bool, func, string } from 'prop-types'
 
 const Duplicate = ({ handle, title, isAdmin }) => {
 	return (
-		<Tooltip title={'Duplicar documento'}>
+		<Tooltip title={'Duplicar'}>
 			{isAdmin ? (
 				<CopyOutlined
 					style={{

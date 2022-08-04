@@ -53,7 +53,7 @@ function* publishTemplateSaga({ payload = {} }) {
 		: ['Despublicando', 'despublicado', 'Despublicação']
 
 	loadingMessage({
-		content: `${message[0]} template...`,
+		content: `${message[0]} modelo...`,
 		updateKey: 'publishTemplateSaga',
 	})
 
@@ -63,13 +63,13 @@ function* publishTemplateSaga({ payload = {} }) {
 		})
 		yield put(publishTemplateSuccess(data))
 		successMessage({
-			content: `Template ${message[1]} com sucesso.`,
+			content: `Modelo ${message[1]} com sucesso.`,
 			updateKey: 'publishTemplateSaga',
 		})
 	} catch (error) {
 		yield put(publishTemplateFailure(error))
 		errorMessage({
-			content: `${message[2]} do template falhou.`,
+			content: `${message[2]} do modelo falhou.`,
 			updateKey: 'publishTemplateSaga',
 		})
 	}
@@ -91,13 +91,13 @@ function* duplicateTemplateSaga({ payload = {} }) {
 		}
 		yield put(duplicateTemplateSuccess(response.data))
 		successMessage({
-			content: `Template duplicado com sucesso.`,
+			content: `Modelo duplicado com sucesso.`,
 			updateKey: 'duplicateTemplateSaga',
 		})
 	} catch (error) {
 		yield put(duplicateTemplateFailure(error))
 		errorMessage({
-			content: `Erro ao duplicar o template.`,
+			content: `Erro ao duplicar o modelo.`,
 			updateKey: 'duplicateTemplateSaga',
 		})
 	}
@@ -110,7 +110,7 @@ function* favoriteTemplateSaga({ payload = {} }) {
 		: ['Removendo', 'removido', 'Remoção']
 
 	loadingMessage({
-		content: `${message[0]} template favorito...`,
+		content: `${message[0]} modelo favorito...`,
 		updateKey: 'favoriteTemplateSaga',
 	})
 
@@ -120,13 +120,13 @@ function* favoriteTemplateSaga({ payload = {} }) {
 		})
 		yield put(favoriteTemplateSuccess(data))
 		successMessage({
-			content: `Template favorito ${message[1]} com sucesso.`,
+			content: `Modelo favorito ${message[1]} com sucesso.`,
 			updateKey: 'favoriteTemplateSaga',
 		})
 	} catch (error) {
 		yield put(favoriteTemplateFailure(error))
 		errorMessage({
-			content: `${message[2]} do template favorito falhou.`,
+			content: `${message[2]} do modelo favorito falhou.`,
 			updateKey: 'favoriteTemplateSaga',
 		})
 	}
@@ -134,7 +134,7 @@ function* favoriteTemplateSaga({ payload = {} }) {
 
 function* deleteTemplateSaga({ payload = {} }) {
 	loadingMessage({
-		content: 'Excluindo template...',
+		content: 'Excluindo modelo...',
 		updateKey: 'deleteTemplateSaga',
 	})
 	const { id, pages } = payload
@@ -147,13 +147,13 @@ function* deleteTemplateSaga({ payload = {} }) {
 		)
 		yield put(deleteTemplateSuccess(data))
 		successMessage({
-			content: 'Template excluído com sucesso.',
+			content: 'Modelo excluído com sucesso.',
 			updateKey: 'deleteTemplateSaga',
 		})
 	} catch (error) {
 		yield put(deleteTemplateFailure(error))
 		errorMessage({
-			content: 'Exclusão do template falhou.',
+			content: 'Exclusão do modelo falhou.',
 			updateKey: 'deleteTemplateSaga',
 		})
 	}
