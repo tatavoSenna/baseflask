@@ -23,7 +23,7 @@ const TemplateModal = ({ handleCreate, handleCancel, showModal }) => {
 				</Button>,
 			]}>
 			<Form form={form} id="newTemplateForm">
-				<Form.Item label="Novo Template"></Form.Item>
+				<Form.Item label="Novo Modelo"></Form.Item>
 				<Form.Item label="Título" name="title">
 					<Input
 						autoFocus

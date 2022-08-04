@@ -45,7 +45,7 @@ const DuplicateTemplateModal = ({
 			footer={null}
 			width={450}>
 			<Form form={form}>
-				<StyledTitle level={4}>Duplicar Template</StyledTitle>
+				<StyledTitle level={4}>Duplicar Modelo</StyledTitle>
 				<NewDivider />
 				<Form.Item label="Empresa">
 					<Select

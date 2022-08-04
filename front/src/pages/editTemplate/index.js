@@ -157,7 +157,7 @@ const EditTemplate = () => {
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<BreadCrumb
-						parent="Templates"
+						parent="Modelos"
 						editable={true}
 						current={data.title}
 						onEdit={handleEditTitleButton}

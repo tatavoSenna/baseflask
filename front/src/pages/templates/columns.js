@@ -73,12 +73,12 @@ export const getColumns = (
 		render: (text, row) => (
 			<Space size="middle">
 				<Delete
-					title="Deseja excluir essa template?"
+					title="Deseja excluir esse modelo?"
 					handle={() => handleDeleteTemplate(row)}
 				/>
 				<Duplicate
 					isAdmin={isAdmin}
-					title="Deseja duplicar esse template?"
+					title="Deseja duplicar esse modelo?"
 					handle={() => handleDuplicateTemplate(row)}
 				/>
 			</Space>

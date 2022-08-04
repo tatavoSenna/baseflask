@@ -118,8 +118,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 									style={{ fontSize: 18 }}
 								/>
 							}
-							onClick={() => handleGoTo('/templates')}>
-							<Tooltip className={styles.tooltip}>Templates</Tooltip>
+							onClick={() => handleGoTo('/models')}>
+							<Tooltip className={styles.tooltip}>Modelos</Tooltip>
 						</Menu.Item>
 						<Menu.Item
 							key="databases"
@@ -215,8 +215,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						<Menu.Item
 							key="templates"
 							icon={<LayoutOutlined />}
-							onClick={() => handleGoTo('/templates')}>
-							Templates
+							onClick={() => handleGoTo('/models')}>
+							Modelos
 						</Menu.Item>
 						<Menu.Item
 							key="settings"
