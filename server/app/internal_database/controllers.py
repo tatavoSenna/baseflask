@@ -118,25 +118,15 @@ def get_text_item_controller(user, text_item_id):
 
 
 def list_text_items_from_internal_db_controller(
-    user, db_id, page, per_page, search_term, order_by, order, tag_ids
+    user, db_id, page, per_page, search_term, order_by, order, tag_ids=[]
 ):
-    internal_db = InternalDatabase.query.filter_by(
-        company_id=user.company_id, id=db_id
-    ).first()
 
-    if tag_ids:
-        text_item_ids = (
-            db.session.query(TextItemTag.text_item_id)
-            .filter(TextItemTag.tag_id.in_(tag_ids))
-            .distinct()
+    text_items_query = TextItem.query.filter_by(internal_database_id=db_id)
+
+    for tag_id in tag_ids:
+        text_items_query = text_items_query.filter(
+            TextItem.text_item_tags.any(tag_id=tag_id)
         )
-        text_items_query = db.session.query(TextItem).filter(
-            TextItem.id.in_(text_item_ids)
-        )
-    elif internal_db:
-        text_items_query = TextItem.query.filter_by(internal_database_id=db_id)
-    else:
-        return TextItem.query.filter_by(id=None).paginate(page=page, per_page=per_page)
 
     if search_term:
         text_items_query = text_items_query.filter(
@@ -158,7 +148,7 @@ def list_text_items_from_internal_db_controller(
 
     text_items_query = text_items_query.order_by(order_dict[order])
 
-    return text_items_query.paginate(page=page, per_page=per_page)
+    return text_items_query.distinct().paginate(page=page, per_page=per_page)
 
 
 def create_text_item_controller(user, data):
