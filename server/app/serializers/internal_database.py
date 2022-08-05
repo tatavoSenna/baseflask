@@ -20,8 +20,17 @@ class InternalDBListSerializer(ma.SQLAlchemyAutoSchema):
         return obj.text_items.count()
 
 
+class TextItemTagSerializer(ma.SQLAlchemyAutoSchema):
+    id = ma.Function(lambda obj: obj.tag.id)
+    title = ma.Function(lambda obj: obj.tag.title)
+    config = ma.Function(lambda obj: obj.tag.config)
+
+    class Meta:
+        model = TextItemTag
+
+
 class TextItemSerializer(ma.SQLAlchemyAutoSchema):
-    tags = ma.Nested(TagSerializer, many=True)
+    text_item_tags = ma.Nested(TextItemTagSerializer, many=True, data_key="tags")
 
     class Meta:
         exclude = ("internal_database_id",)
@@ -29,6 +38,8 @@ class TextItemSerializer(ma.SQLAlchemyAutoSchema):
 
 
 class TextItemListSerializer(ma.SQLAlchemyAutoSchema):
+    text_item_tags = ma.Nested(TextItemTagSerializer, many=True, data_key="tags")
+
     class Meta:
         exclude = (
             "internal_database_id",

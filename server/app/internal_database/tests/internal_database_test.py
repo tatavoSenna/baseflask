@@ -174,14 +174,14 @@ def test_list_text_items_from_internal_db_controller():
     )
 
     response = list_text_items_from_internal_db_controller(
-        same_company_user, db.id, 1, 2, None, "created_at", "ascend", None
+        same_company_user, db.id, 1, 2, None, "created_at", "ascend"
     )
 
     assert response.total == 1
     assert response.items[0] == text_item
 
     response = list_text_items_from_internal_db_controller(
-        same_company_user, db_2.id, 1, 2, None, "created_at", "ascend", None
+        same_company_user, db_2.id, 1, 2, None, "created_at", "ascend"
     )
 
     assert response.total == 0
@@ -343,49 +343,48 @@ def test_list_text_items_from_internal_db_based_on_tag_ids_controller():
     db = factories.InternalDatabaseFactory(company=company_1, created_by=user)
     db_2 = factories.InternalDatabaseFactory(company=company_1, created_by=user)
     text_item = factories.TextItemFactory(
-        internal_database_id=db.id, internal_database=db, created_by=user
+        description="What is Lorem Ipsum?",
+        internal_database=db,
+        created_by=user,
+        created_at=datetime(year=2022, month=2, day=13),
     )
     text_item_2 = factories.TextItemFactory(
-        internal_database_id=db.id, internal_database=db, created_by=user
+        description="Neque porro quisquam est qui",
+        internal_database=db,
+        created_by=user,
+        created_at=datetime(year=2022, month=1, day=5),
+    )
+    text_item_3 = factories.TextItemFactory(
+        description="sit amet, consectetur, adipisci velit",
+        internal_database=db,
+        created_by=user,
+        created_at=datetime(year=2022, month=4, day=15),
     )
     tag = factories.TagFactory(company=company_1, created_by=user)
     tag_2 = factories.TagFactory(company=company_1, created_by=user)
     tag_3 = factories.TagFactory(company=company_1, created_by=user)
-    text_item_tag_1 = factories.TextItemTagFactory(text_item=text_item, tag=tag)
+    text_item_tag = factories.TextItemTagFactory(text_item=text_item, tag=tag)
     text_item_tag_2 = factories.TextItemTagFactory(text_item=text_item, tag=tag_2)
     text_item_2_tag_3 = factories.TextItemTagFactory(text_item=text_item_2, tag=tag_3)
+    text_item_3_tag = factories.TextItemTagFactory(text_item=text_item_3, tag=tag)
 
+    # test returns item thas has all tags. Items with only one of the tags in the list should no be returned
     response = list_text_items_from_internal_db_controller(
         user, db.id, 1, 2, None, "created_at", "ascend", [tag.id, tag_2.id]
     )
-
     assert response.total == 1
     assert response.items[0] == text_item
 
+    # test returns items with 1 tag. Also takes the chance to test if order is working fine.
     response = list_text_items_from_internal_db_controller(
-        user, db.id, 1, 2, None, "created_at", "ascend", [tag.id]
+        user, db.id, 1, 2, None, "created_at", "descend", [tag.id]
     )
-
-    assert response.total == 1
-    assert response.items[0] == text_item
-
-    response = list_text_items_from_internal_db_controller(
-        user, db.id, 1, 2, None, "created_at", "ascend", [tag_3.id]
-    )
-
-    assert response.total == 1
-    assert response.items[0] == text_item_2
-
-    text_item_tag_3 = factories.TextItemTagFactory(text_item=text_item, tag=tag_3)
-
-    response = list_text_items_from_internal_db_controller(
-        user, db.id, 1, 2, None, "created_at", "ascend", [tag_3.id]
-    )
-
     assert response.total == 2
+    assert response.items[0] == text_item_3
 
+    # test search works together with tags
     response = list_text_items_from_internal_db_controller(
-        user, db.id, 1, 2, None, "created_at", "ascend", [tag.id, tag_3.id]
+        user, db.id, 1, 2, "adipisci", "created_at", "ascend", [tag.id]
     )
-
-    assert response.total == 2
+    assert response.total == 1
+    assert response.items[0] == text_item_3
