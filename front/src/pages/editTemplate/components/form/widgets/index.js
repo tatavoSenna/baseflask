@@ -18,6 +18,7 @@ import { SeparatorWidget } from './separatorWidget'
 import { StructuredListWidget } from './structuredListWidget'
 import { PersonWidget } from './personWidget'
 import { InternalDatabaseWidget } from './internalDatabaseWidget'
+import { ImageWidget } from './imageWidget'
 
 export const widgets = {
 	text: TextWidget,
@@ -40,4 +41,5 @@ export const widgets = {
 	separator: SeparatorWidget,
 	structured_list: StructuredListWidget,
 	internal_database: InternalDatabaseWidget,
+	variable_image: ImageWidget,
 }
