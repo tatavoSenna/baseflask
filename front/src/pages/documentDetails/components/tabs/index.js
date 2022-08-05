@@ -592,6 +592,7 @@ Tabs.propTypes = {
 	handleVersion: func,
 	sent: bool,
 	signed: bool,
+	sent: bool,
 	sentAssign: func,
 	loadingSign: bool,
 	versionId: string,
