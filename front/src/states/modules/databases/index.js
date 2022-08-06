@@ -1,7 +1,7 @@
 import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { selectAllDatabases } from './selectors'
+import { selectAllDatabases, selectAllTags } from './selectors'
 
 const initialState = {
 	data: [],
@@ -13,6 +13,7 @@ const initialState = {
 	},
 	error: null,
 	loading: false,
+	tags: { data: [], loading: false, error: null },
 }
 
 const { actions, reducer } = createSlice({
@@ -82,6 +83,22 @@ const { actions, reducer } = createSlice({
 			extend(state, {
 				showModal: payload,
 			}),
+		listTags: (state) =>
+			extend(state, {
+				tags: { ...state.tags, data: [], loading: true },
+			}),
+		listTagsSuccess: (state, { payload }) =>
+			extend(state, {
+				tags: {
+					...state.tags,
+					data: selectAllTags(payload.items),
+					loading: false,
+				},
+			}),
+		listTagsFailure: (state, { payload }) =>
+			extend(state, {
+				tags: { ...state.tags, error: payload.error, loading: false },
+			}),
 	},
 })
 
@@ -97,6 +114,9 @@ export const {
 	deleteDatabaseSuccess,
 	deleteDatabaseFailure,
 	setShowModal,
+	listTags,
+	listTagsSuccess,
+	listTagsFailure,
 } = actions
 
 export { default as databaseSaga } from './sagas'

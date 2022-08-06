@@ -7,12 +7,13 @@ import { useUpdate, useValidation, Widget } from './base/widget'
 import { CommonFields } from './base/widgetCommonFields'
 import { FormItem, styleIconValidation, ValidatedSelect } from './base/styles'
 import { object } from 'prop-types'
-import { listAllDatabases } from 'states/modules/databases'
+import { listAllDatabases, listTags } from 'states/modules/databases'
 
 export const InternalDatabaseWidget = React.memo((props) => {
 	const { data } = props
 	const database = useSelector(({ database }) => database)
 	const dataItems = database.data
+	const dataTags = database.tags.data
 
 	const dispatch = useDispatch()
 
@@ -26,10 +27,18 @@ export const InternalDatabaseWidget = React.memo((props) => {
 	}, [dispatch])
 
 	useEffect(() => {
+		dispatch(listTags({ perPage: 8 }))
+	}, [dispatch])
+
+	useEffect(() => {
 		setDatabaseValid(dataItems ? dataItems.length > 0 : false)
 
 		setValid(databaseValid && widget)
 	}, [databaseValid, widget, setValid, dataItems])
+
+	const handleSearch = (value) => {
+		dispatch(listTags({ perPage: 8, search: value }))
+	}
 
 	return (
 		<Widget
@@ -55,6 +64,28 @@ export const InternalDatabaseWidget = React.memo((props) => {
 							{dataItems
 								? dataItems.map((item, i) => (
 										<Select.Option key={i} value={item.id}>
+											{item.title}
+										</Select.Option>
+								  ))
+								: null}
+						</ValidatedSelect>
+					</FormItem>
+					<FormItem label="Filtros" $labelWidth="fit-content">
+						<ValidatedSelect
+							mode="multiple"
+							value={data.filter === '' ? undefined : data.filter}
+							onChange={(v) => update({ filter: v })}
+							onSearch={handleSearch}
+							filterOption={false}
+							loading={database.tags.loading}
+							notFoundContent={
+								database.tags.loading
+									? 'Carregando...'
+									: 'Nenhum item encontrado'
+							}>
+							{dataTags
+								? dataTags.map((item) => (
+										<Select.Option key={item.id} value={item.id}>
 											{item.title}
 										</Select.Option>
 								  ))

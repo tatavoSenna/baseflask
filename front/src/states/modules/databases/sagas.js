@@ -17,6 +17,9 @@ import {
 	deleteDatabase,
 	deleteDatabaseSuccess,
 	deleteDatabaseFailure,
+	listTags,
+	listTagsSuccess,
+	listTagsFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -24,6 +27,7 @@ export default function* rootSaga() {
 	yield takeEvery(listAllDatabases, fetchAllDatabases)
 	yield takeEvery(createDatabase, createDatabaseSaga)
 	yield takeEvery(deleteDatabase, deleteDatabaseSaga)
+	yield takeEvery(listTags, listTagsSaga)
 }
 
 function* fetchDatabases({ payload = {} }) {
@@ -104,5 +108,19 @@ function* deleteDatabaseSaga({ payload = {} }) {
 			content: 'Exclusão da base de textos falhou.',
 			updateKey: 'deleteDatabase',
 		})
+	}
+}
+
+function* listTagsSaga({ payload = {} }) {
+	const { perPage = 10, page = 1, search = '' } = payload
+	try {
+		const { data } = yield call(
+			api.get,
+			`/company/tags?per_page=${perPage}&page=${page}&search=${search}`
+		)
+
+		yield put(listTagsSuccess(data))
+	} catch (error) {
+		yield put(listTagsFailure(error))
 	}
 }
