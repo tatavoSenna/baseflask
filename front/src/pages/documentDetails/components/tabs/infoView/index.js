@@ -1,18 +1,18 @@
 import React from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { object, string, bool } from 'prop-types'
 import { Button, Divider, Typography } from 'antd'
 
-import AddressFieldText from './components/addressFieldText'
+import DefaultText from './components/defaultText'
 import DateFieldText from './components/dateFieldText'
+import AddressFieldText from './components/addressFieldText'
 import PersonFieldText from './components/personFieldText'
-import { StyledLabel, StyledValue } from './components/styles/style'
-
-import { useHistory, useParams } from 'react-router-dom'
-
-import { ContainerTabs, ScrollContent } from '../styles'
-import { object, string, boolean } from 'prop-types'
-import StructureListFieldText from './components/structureListFieldText'
 import CheckBoxFieldText from './components/checkboxFieldText'
 import DatabaseFieldText from './components/databaseFieldText'
+import StructureListFieldText from './components/structureListFieldText'
+import ImageFieldText from './components/imageFieldText'
+
+import { ContainerTabs, ScrollContent } from '../styles'
 
 const { Title } = Typography
 
@@ -24,16 +24,14 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 
 	for (let i = 0; i < infos.form.length; i++) {
 		let page = infos.form[i]
-		let fields = []
-		for (let j = 0; j < page.fields.length; j++) {
-			let f = infos.form[i].fields[j]
-			if (
-				f.variable?.name !== undefined &&
-				f.variable.name in infos.variables
-			) {
-				fields.push(f)
+
+		let fields = page.fields.reduce((a, field) => {
+			if (field.variable?.name !== undefined && field.initialValue) {
+				return [...a, field]
+			} else {
+				return a
 			}
-		}
+		}, [])
 
 		if (fields.length > 0) form.push({ fields, title: page.title })
 	}
@@ -45,35 +43,30 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 		})
 	}
 
-	const defaultView = (item, index) => {
-		const label = item.label || item?.variable?.name
-		return (
-			<div key={index}>
-				{label && <StyledLabel>{label}:</StyledLabel>}
-				<StyledValue>{item.initialValue}</StyledValue>
-			</div>
-		)
-	}
-
 	const textView = (item) =>
 		item.fields?.map((item, index) => {
+			const props = {
+				data: item,
+				key: item.type + index,
+			}
+
 			switch (item.type) {
 				case 'address':
-					return <AddressFieldText data={item} key={item.type + index} />
+					return <AddressFieldText {...props} />
 				case 'person':
-					return <PersonFieldText data={item} key={item.type + index} />
+					return <PersonFieldText {...props} />
 				case 'date':
-					return <DateFieldText data={item} key={item.type + index} />
+					return <DateFieldText {...props} />
 				case 'structured_list':
-					return <StructureListFieldText data={item} key={item.type + index} />
+					return <StructureListFieldText {...props} />
 				case 'checkbox':
-					return <CheckBoxFieldText data={item} key={item.type + index} />
+					return <CheckBoxFieldText {...props} />
 				case 'variable_image':
-					return null
+					return <ImageFieldText {...props} />
 				case 'internal_database':
-					return <DatabaseFieldText data={item} key={item.type + index} />
+					return <DatabaseFieldText {...props} />
 				default:
-					return defaultView(item, item.type + index)
+					return <DefaultText {...props} />
 			}
 		})
 
@@ -87,16 +80,16 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 
 	return (
 		<ScrollContent>
-			{form.map((item, index) => (
+			{form.map((page, index) => (
 				<div key={index}>
 					<ContainerTabs key={index}>
 						<Title
 							key={index}
 							level={4}
 							style={{ marginTop: 20, fontSize: 18 }}>
-							{item.title}
+							{page.title}
 						</Title>
-						{textView(item)}
+						{textView(page)}
 
 						{form.length - 1 !== index && <Divider />}
 					</ContainerTabs>
@@ -113,5 +106,5 @@ export default InfoView
 InfoView.propTypes = {
 	infos: object,
 	textType: string,
-	cantItChangeVariablesValues: boolean,
+	cantItChangeVariablesValues: bool,
 }
