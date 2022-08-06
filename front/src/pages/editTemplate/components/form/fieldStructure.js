@@ -43,6 +43,7 @@ export const fieldStructure = (type) => {
 			field.variable.display_key = ''
 			break
 		case 'variable_image':
+			field.multiple = false
 			field.variable.type = 'variable_image'
 			field.variable.doc_display_style = 'image'
 			field.variable.width = 8.0

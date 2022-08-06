@@ -1,5 +1,5 @@
-import React from 'react'
-import { string, shape, object, func, bool } from 'prop-types'
+import React, { useEffect, useMemo } from 'react'
+import { string, shape, object, func, bool, oneOfType, array } from 'prop-types'
 import { Form } from 'antd'
 
 import InfoField from '~/components/infoField'
@@ -13,7 +13,7 @@ const ImageField = ({
 	form,
 	onChange,
 }) => {
-	const { label, variable, info, optional } = pageFieldsData
+	const { label, variable, info, optional, multiple } = pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = `image_${isObj ? variable.name : variable}`
 
@@ -25,6 +25,19 @@ const ImageField = ({
 
 		if (onChange) onChange(value)
 	}
+
+	// Sets the initial value in form
+	useEffect(() => {
+		if (form.getFieldValue(varname) === undefined) {
+			form.setFieldsValue({
+				[varname]: inputValue,
+			})
+		}
+	}, [form, inputValue, varname])
+
+	let initialValue = useMemo(() => {
+		return form.getFieldValue(varname) ?? inputValue
+	}, [form, varname, inputValue])
 
 	return (
 		<Form.Item
@@ -38,7 +51,11 @@ const ImageField = ({
 					{ required: !optional, message: 'Este campo é obrigatório.' },
 				]
 			}>
-			<ImageUpload initialValue={inputValue} onChange={handleChange} />
+			<ImageUpload
+				initialValue={initialValue}
+				onChange={handleChange}
+				multiple={multiple ?? false}
+			/>
 		</Form.Item>
 	)
 }
@@ -52,7 +69,7 @@ ImageField.propTypes = {
 	onChange: func,
 	className: string,
 	form: object,
-	inputValue: string,
+	inputValue: oneOfType([string, array]),
 	visible: bool,
 }
 

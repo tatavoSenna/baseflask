@@ -600,26 +600,40 @@ def fill_docx_with_variables(document, docx_io, variables):
 
     for key in list(variables):
         if key.startswith("image_") and variables[key]:
-            img_bytes = base64.decodebytes(
-                variables[key].split("base64,")[1].encode("ascii")
+            base64_images = (
+                variables[key] if isinstance(variables[key], list) else [variables[key]]
             )
-            image = io.BytesIO(img_bytes)
-            image_obj = Image.open(io.BytesIO(img_bytes))
-            proportion = float(image_obj.size[1] / image_obj.size[0])
+
+            images = []
+            for b64 in base64_images:
+                data = io.BytesIO(
+                    base64.decodebytes(b64.split("base64,")[1].encode("ascii"))
+                )
+                image_obj = Image.open(data)
+                proportion = float(image_obj.size[1] / image_obj.size[0])
+
+                images.append({"data": data, "proportion": proportion})
+
             for para in doc.paragraphs:
                 if key.split("image_")[1] in para.text:
                     for page in document.form:
                         for field in page["fields"]:
                             if field["variable"]["name"] == key.strip("image_"):
-                                width_size = field["variable"].get("width", 8)
-                                height_size = width_size * proportion
                                 r = para.add_run()
+                                for image in images:
+                                    width_size = field["variable"].get("width", 8)
+                                    height_size = width_size * image["proportion"]
 
-                                r.add_picture(
-                                    image, width=Cm(width_size), height=Cm(height_size)
-                                )
-                                del variables[key]
+                                    r.add_picture(
+                                        image["data"],
+                                        width=Cm(width_size),
+                                        height=Cm(height_size),
+                                    )
+
                                 break
+
+            del variables[key]
+
     doc.save(docx_io)
     docx_template = DocxTemplate(docx_io)
     docx_template.render(variables)
