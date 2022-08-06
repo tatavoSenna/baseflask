@@ -25,22 +25,35 @@ const ImageUpload = ({
 			: []
 	)
 
-	const firstUpdate = useRef(true)
+	const changedFiles = useRef(false)
+	const lastMultiple = useRef(multiple)
+
+	// Removes extra images from filesList when multiple is disabled
 	useEffect(() => {
-		if (firstUpdate.current) {
-			firstUpdate.current = false
-		} else {
-			if (onChange) {
-				onChange(
-					fileList.length > 0
-						? multiple
-							? fileList.map((image) => image.url)
-							: fileList[0].url
-						: undefined
-				)
-			}
+		if (multiple !== lastMultiple.current) {
+			lastMultiple.current = multiple
+			changedFiles.current = true
+
+			setFileList((files) =>
+				!multiple && files.length > 0 ? [files[0]] : files
+			)
 		}
-	}, [fileList, firstUpdate, multiple, onChange])
+	}, [multiple, setFileList])
+
+	// Calls onChange when filesList changes
+	useEffect(() => {
+		if (changedFiles.current && onChange) {
+			changedFiles.current = false
+
+			onChange(
+				fileList.length > 0
+					? multiple
+						? fileList.map((image) => image.url)
+						: fileList[0].url
+					: undefined
+			)
+		}
+	}, [fileList, multiple, onChange])
 
 	const beforeUpload = (file) => {
 		const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
@@ -50,8 +63,10 @@ const ImageUpload = ({
 			setLoading(true)
 			getBase64(file, (imageUrl) => {
 				file.url = imageUrl
-				setLoading(false)
+
+				changedFiles.current = true
 				setFileList(multiple ? [...fileList, file] : [file])
+				setLoading(false)
 			})
 		}
 		return false
@@ -80,7 +95,10 @@ const ImageUpload = ({
 				multiple={multiple}
 				beforeUpload={beforeUpload}
 				onPreview={(img) => setModalImage(img)}
-				onRemove={(img) => setFileList(fileList.filter((v, i) => v !== img))}>
+				onRemove={(img) => {
+					changedFiles.current = true
+					setFileList(fileList.filter((v, i) => v !== img))
+				}}>
 				{(fileList.length === 0 || multiple) && uploadButton}
 			</Upload>
 			<Modal

@@ -1,6 +1,6 @@
 import React from 'react'
 import { object } from 'prop-types'
-import { Form, InputNumber } from 'antd'
+import { Checkbox, Form, InputNumber } from 'antd'
 import { FileImageOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 
@@ -28,10 +28,21 @@ export const ImageWidget = React.memo((props) => {
 				<div>
 					<CommonFields data={data} update={update} />
 
+					<FormItem
+						label="Permitir múltiplas imagens"
+						$labelWidth="200px"
+						style={{ alignItems: 'center' }}>
+						<Checkbox
+							checked={data.multiple ?? false}
+							onChange={(e) => update({ multiple: e.target.checked })}
+						/>
+					</FormItem>
+
 					<FormItem label="Valor inicial">
 						<StyledImageUpload
 							initialValue={data.initialValue}
 							onChange={(v) => update({ initialValue: v ?? '' })}
+							multiple={data.multiple}
 						/>
 					</FormItem>
 				</div>
