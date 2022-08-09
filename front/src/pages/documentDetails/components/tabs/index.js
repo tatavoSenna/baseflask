@@ -615,6 +615,7 @@ Tabs.propTypes = {
 	downloadButton: func,
 	block: bool,
 	signedWorkflow: bool,
+	sent: bool,
 }
 
 export default Tabs

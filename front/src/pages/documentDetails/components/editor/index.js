@@ -1,138 +1,12 @@
 import React from 'react'
-// import { useSelector } from 'react-redux'
-import CKEditor from '@ckeditor/ckeditor5-react'
-import DecoupledDocumentEditor from 'ckeditor5-custom-build/build/ckeditor'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import { string, func, bool, array } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import { Spin } from 'antd'
 
-const Editor = ({
-	text,
-	onUpdateText,
-	block,
-	versionLoading,
-	// comments,
-	title,
-}) => {
-	// const { userList } = useSelector(({ users }) => users)
-	// const loggedUser = useSelector(({ session }) => session)
-	// class CommentsIntegration {
-	// 	constructor(editor) {
-	// 		this.editor = editor
-	// 	}
-
-	// 	init() {
-	// 		const usersPlugin = this.editor.plugins.get('Users')
-	// 		const commentsRepositoryPlugin =
-	// 			this.editor.plugins.get('CommentsRepository')
-
-	// 		for (let user of userList) {
-	// 			usersPlugin.addUser(user)
-	// 		}
-
-	// 		usersPlugin.defineMe(loggedUser.id.toString())
-
-	// 		for (const commentThread of comments) {
-	// 			commentsRepositoryPlugin.addCommentThread(commentThread)
-	// 		}
-	// 	}
-	// }
-
-	const editorConfiguration = {
-		toolbar: {
-			items: [
-				'exportPdf',
-				'exportWord',
-				'heading',
-				'|',
-				'fontSize',
-				'fontFamily',
-				'fontColor',
-				'fontBackgroundColor',
-				'|',
-				'bold',
-				'italic',
-				'underline',
-				'strikethrough',
-				'highlight',
-				'|',
-				'alignment',
-				'|',
-				'numberedList',
-				'bulletedList',
-				'|',
-				'indent',
-				'outdent',
-				'|',
-				'todoList',
-				'link',
-				'blockQuote',
-				'imageUpload',
-				'insertTable',
-				'horizontalLine',
-				'mediaEmbed',
-				'|',
-				'undo',
-				'redo',
-				'comment',
-			],
-		},
-		language: 'pt-br',
-		image: {
-			styles: ['alignLeft', 'alignCenter', 'alignRight'],
-			toolbar: [
-				'imageStyle:alignLeft',
-				'imageStyle:alignCenter',
-				'imageStyle:alignRight',
-				'|',
-				'imageResize',
-				'|',
-				'imageTextAlternative',
-				'|',
-				'linkImage',
-			],
-		},
-		table: {
-			contentToolbar: [
-				'tableColumn',
-				'tableRow',
-				'mergeTableCells',
-				'tableProperties',
-				'tableCellProperties',
-			],
-		},
-		licenseKey: 'mboC54zxmZJKbEk7qX54q1Do7KHIuLn2fwPhCh4EsmrFlMGa2wi/lfvS',
-		exportPdf: {
-			stylesheets: ['EDITOR_STYLES'],
-			fileName: title,
-			converterOptions: {
-				format: 'A4',
-				margin_top: '12.7mm',
-				margin_bottom: '12.5mm',
-				margin_right: '12.7mm',
-				margin_left: '12.5mm',
-				page_orientation: 'portrait',
-			},
-		},
-		exportWord: {
-			stylesheets: ['EDITOR_STYLES'],
-			fileName: title,
-			converterOptions: {
-				format: 'A4',
-				margin_top: '12.7mm',
-				margin_bottom: '12.5mm',
-				margin_right: '12.7mm',
-				margin_left: '12.5mm',
-				page_orientation: 'portrait',
-			},
-		},
-		fontSize: {
-			options: [8, 10, 12, 'default', 18, 20, 22],
-			supportAllValues: true,
-		},
-	}
-
+const Editor = ({ text, onUpdateText, block, versionLoading, title }) => {
 	return (
 		<div
 			style={{
@@ -160,26 +34,31 @@ const Editor = ({
 							</div>
 						)}
 						<CKEditor
-							onInit={(editor) => {
+							onReady={(editor) => {
 								const toolbarContainer =
 									document.querySelector('#toolbar-container')
+
 								if (toolbarContainer) {
 									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 								}
 							}}
-							editor={DecoupledDocumentEditor}
-							config={editorConfiguration}
+							editor={DecoupledEditor}
+							config={{
+								removePlugins: [
+									'ImageToolbar',
+									'CKFinder',
+									'MediaEmbed',
+									'ImageToolbar',
+									'ImageUpload',
+									'EasyImage',
+									'uploadImage',
+									'mediaEmbed',
+									'Link',
+									'Autoformat',
+								],
+							}}
 							onChange={(event, editor) => {
-								const commentsRepository =
-									editor.plugins.get('CommentsRepository')
-								const commentThreadsData = commentsRepository.getCommentThreads(
-									{
-										skipNotAttached: true,
-										skipEmpty: true,
-										toJSON: true,
-									}
-								)
-								onUpdateText(editor.getData(), commentThreadsData)
+								onUpdateText(editor.getData())
 							}}
 							data={!versionLoading ? text : ''}
 							disabled={block || versionLoading}
