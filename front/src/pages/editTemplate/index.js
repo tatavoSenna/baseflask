@@ -29,6 +29,7 @@ const EditTemplate = () => {
 	const { data, loading, docPosted } = useSelector(
 		({ editTemplate }) => editTemplate
 	)
+	const loggedUser = useSelector(({ session }) => session)
 	const { id } = useHistory().location.state
 	const history = useHistory()
 	const edit = Number.isInteger(id)
@@ -154,88 +155,93 @@ const EditTemplate = () => {
 
 	return (
 		<MainLayout>
-			<Layout style={{ backgroundColor: '#fff' }}>
-				<PageHeader>
-					<BreadCrumb
-						parent="Modelos"
-						editable={true}
-						current={data.title}
-						onEdit={handleEditTitleButton}
-					/>
-				</PageHeader>
-				<Menu
-					onClick={handleNav}
-					selectedKeys={[current]}
-					mode="horizontal"
-					style={{ display: 'flex' }}>
-					<Menu.Item
-						key="form"
-						className={!inputsFilled.form ? styles.empty : undefined}
-						icon={<FormOutlined />}>
-						Formulário
-					</Menu.Item>
-					<Menu.Item
-						key="workflow"
-						className={!inputsFilled.workflow ? styles.empty : undefined}
-						icon={<NodeIndexOutlined />}>
-						Workflow
-					</Menu.Item>
-					<Menu.Item
-						key="text"
-						className={!inputsFilled.text ? styles.empty : undefined}
-						icon={<FileTextOutlined />}>
-						Texto
-					</Menu.Item>
-					<Menu.Item
-						key="signers"
-						className={!inputsFilled.signers ? styles.empty : undefined}
-						icon={<TeamOutlined />}>
-						Assinantes
-					</Menu.Item>
-				</Menu>
-				<Button
-					form="createTemplate"
-					key="button"
-					type="primary"
-					htmlType="submit"
-					className={styles.button}
-					disabled={
-						!Object.values(inputsFilled).every(Boolean) || disabledTitleTemplate
-					}>
-					Enviar
-				</Button>
-				<Layout className={styles.content}>
-					{loading ? (
-						<Spin spinning={loading} className={styles.spin} />
-					) : (
-						<Form
-							id="createTemplate"
-							form={form}
-							layout="horizontal"
-							hideRequiredMark
-							onFinish={onSubmit}>
-							{current === 'form' && (
-								<TemplateForm data={data} setInputsFilled={setInputsFilled} />
-							)}
-							{current === 'workflow' && <Workflow form={form} />}
-							{current === 'text' && (
-								<Text
-									data={data.text}
-									files={files}
-									updateFile={postFiles}
-									checked={checked}
-									setChecked={setChecked}
-									setDownloadButton={setDownloadButton}
-									setInputsFilled={setInputsFilled}
-									docPosted={docPosted}
-									removeDoc={removeDoc}
-								/>
-							)}
-							{current === 'signers' && <Signers data={data.signers} />}
-						</Form>
-					)}
+			{loggedUser.is_company_admin ? (
+				<Layout style={{ backgroundColor: '#fff' }}>
+					<PageHeader>
+						<BreadCrumb
+							parent="Modelos"
+							editable={true}
+							current={data.title}
+							onEdit={handleEditTitleButton}
+						/>
+					</PageHeader>
+					<Menu
+						onClick={handleNav}
+						selectedKeys={[current]}
+						mode="horizontal"
+						style={{ display: 'flex' }}>
+						<Menu.Item
+							key="form"
+							className={!inputsFilled.form ? styles.empty : undefined}
+							icon={<FormOutlined />}>
+							Formulário
+						</Menu.Item>
+						<Menu.Item
+							key="workflow"
+							className={!inputsFilled.workflow ? styles.empty : undefined}
+							icon={<NodeIndexOutlined />}>
+							Workflow
+						</Menu.Item>
+						<Menu.Item
+							key="text"
+							className={!inputsFilled.text ? styles.empty : undefined}
+							icon={<FileTextOutlined />}>
+							Texto
+						</Menu.Item>
+						<Menu.Item
+							key="signers"
+							className={!inputsFilled.signers ? styles.empty : undefined}
+							icon={<TeamOutlined />}>
+							Assinantes
+						</Menu.Item>
+					</Menu>
+					<Button
+						form="createTemplate"
+						key="button"
+						type="primary"
+						htmlType="submit"
+						className={styles.button}
+						disabled={
+							!Object.values(inputsFilled).every(Boolean) ||
+							disabledTitleTemplate
+						}>
+						Enviar
+					</Button>
+					<Layout className={styles.content}>
+						{loading ? (
+							<Spin spinning={loading} className={styles.spin} />
+						) : (
+							<Form
+								id="createTemplate"
+								form={form}
+								layout="horizontal"
+								hideRequiredMark
+								onFinish={onSubmit}>
+								{current === 'form' && (
+									<TemplateForm data={data} setInputsFilled={setInputsFilled} />
+								)}
+								{current === 'workflow' && <Workflow form={form} />}
+								{current === 'text' && (
+									<Text
+										data={data.text}
+										files={files}
+										updateFile={postFiles}
+										checked={checked}
+										setChecked={setChecked}
+										setDownloadButton={setDownloadButton}
+										setInputsFilled={setInputsFilled}
+										docPosted={docPosted}
+										removeDoc={removeDoc}
+									/>
+								)}
+								{current === 'signers' && <Signers data={data.signers} />}
+							</Form>
+						)}
+					</Layout>
 				</Layout>
-			</Layout>
+			) : (
+				<h2>Você não tem permissão para acessar esse recurso.</h2>
+			)}
 		</MainLayout>
 	)
 }

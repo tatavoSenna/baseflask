@@ -84,6 +84,7 @@ def list_users(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def create(logged_user):
+    check_is_company_admin(current_user=logged_user)
     fields = request.get_json()
     required_fields = set(("email", "name"))
 
@@ -110,6 +111,7 @@ def create(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def delete_user(logged_user, username):
+    check_is_company_admin(current_user=logged_user)
     cognito = boto3.client("cognito-idp")
 
     user_attributes = dict(
@@ -141,17 +143,32 @@ def delete_user(logged_user, username):
 @aws_auth.authentication_required
 @get_local_user
 def update(logged_user, username):
+    check_is_company_admin(current_user=logged_user)
     fields = request.get_json()
 
-    try:
-        edited_user = edit_user_controller(
-            username=username,
-            company_id=logged_user["company_id"],
-            group_ids=fields.get("groups", None),
-        )
-    except:
-        return {}, 500
+    # Updating groups property
+    if (fields.get("groups") != None) & (fields.get("is_company_admin") == None):
+        try:
+            edited_user = edit_user_controller(
+                username=username,
+                company_id=logged_user["company_id"],
+                group_ids=fields.get("groups", None),
+            )
+        except:
+            return {}, 500
 
+    # Updating is_company_admin property
+    elif (fields.get("groups") == None) & (fields.get("is_company_admin") != None):
+        try:
+            edited_user = edit_user_controller(
+                username=username,
+                company_id=logged_user["company_id"],
+                is_company_admin=fields.get("is_company_admin", None),
+            )
+        except:
+            return {}, 500
+
+    # Returning updated user
     return jsonify({"user": UserSerializer().dump(edited_user)})
 
 
@@ -208,6 +225,7 @@ def get_group(logged_user, group_id):
 @aws_auth.authentication_required
 @get_local_user
 def create_group(logged_user):
+    check_is_company_admin(current_user=logged_user)
     fields = request.get_json()
     required_fields = ["name"]
 
@@ -233,7 +251,7 @@ def create_group(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def delete_group(logged_user, group_id):
-
+    check_is_company_admin(current_user=logged_user)
     group = Group.query.filter_by(
         id=group_id, active=True, company_id=logged_user["company_id"]
     ).first()
@@ -284,6 +302,7 @@ def list_users_on_group(logged_user, group_id):
 @aws_auth.authentication_required
 @get_local_user
 def add_user_to_group(logged_user, group_id):
+    check_is_company_admin(current_user=logged_user)
     fields = request.get_json()
     required_fields = ["user_id"]
 
@@ -318,7 +337,7 @@ def add_user_to_group(logged_user, group_id):
 @aws_auth.authentication_required
 @get_local_user
 def remove_user_from_group(logged_user, group_id, user_id):
-
+    check_is_company_admin(current_user=logged_user)
     company = Company.query.get(logged_user["company_id"])
     if not company:
         return dict(error="Couldn't find any company for the current user"), 404
@@ -340,3 +359,9 @@ def remove_user_from_group(logged_user, group_id, user_id):
     remove_user_from_group_controller(group_id, user_id)
 
     return {}, 204
+
+
+# From LAW-744 foward we have limited template (edition, deletion), user (deletion, edition and addition to groups) and document (deletion) to users who have is_company_admin == True
+def check_is_company_admin(current_user):
+    if current_user["is_company_admin"] == False:
+        abort(401, "You dont have permission to access this resource")

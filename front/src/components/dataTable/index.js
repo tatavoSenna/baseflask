@@ -102,7 +102,7 @@ DataTable.propTypes = {
 	}).isRequired,
 	onChangePageNumber: func.isRequired,
 	placeholderSearch: string,
-	textButton: string.isRequired,
+	textButton: oneOfType([string, bool]),
 	onSearch: func.isRequired,
 	onClickButton: func.isRequired,
 	placeholderNoData: oneOfType([string, node]),

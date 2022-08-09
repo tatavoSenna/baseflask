@@ -118,6 +118,7 @@ def assign_company_to_new_user_controller(logged_user, company_id):
         sub=logged_user["sub"],
         name=logged_user["name"],
         verified=False,
+        is_company_admin=True,
     )
 
     if local_user:
