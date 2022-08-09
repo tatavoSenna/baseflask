@@ -65,6 +65,7 @@ class RemoteUser:
             sub=self.sub(),
             name=self.name(),
             verified=False,
+            is_company_admin=False,
         )
 
         if local_user:

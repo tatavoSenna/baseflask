@@ -125,12 +125,15 @@ def remove_user_from_group_controller(group_id, user_id):
     db.session.commit()
 
 
-def edit_user_controller(username, company_id=None, group_ids=None):
+def edit_user_controller(
+    username, company_id=None, group_ids=None, is_company_admin=None
+):
     user = User.query.filter_by(username=username).first()
 
     if user.company_id != company_id:
         raise Exception("Invalid company")
 
+    # Updating groups property
     if group_ids is not None:
         new_groups = {}
         for group_id in group_ids:
@@ -148,6 +151,12 @@ def edit_user_controller(username, company_id=None, group_ids=None):
         for group in new_groups.values():
             db.session.add(ParticipatesOn(group_id=group.id, user_id=user.id))
 
+        db.session.commit()
+
+    # Updating is_company_admin property
+    elif is_company_admin is not None:
+        user.is_company_admin = is_company_admin
+        db.session.add(user)
         db.session.commit()
 
     return user

@@ -9,7 +9,8 @@ export const getColumns = (
 	handleDelete,
 	setMoveNode,
 	sortTable,
-	selectedDocuments
+	selectedDocuments,
+	loggedUser
 ) => [
 	{
 		title: 'Descrição',
@@ -152,39 +153,63 @@ export const getColumns = (
 		render: (text, row) => {
 			const isSelected = selectedDocuments.includes(row.id)
 
-			return (
-				<Space size="middle">
-					{isSelected ? (
-						<Delete
-							title={`Deseja excluir os ${selectedDocuments.length} itens selecionados?`}
-							handle={() => handleDelete(selectedDocuments)}
-							tooltip={{
-								title: 'Deletar selecionados',
-							}}
-						/>
-					) : (
-						<Delete
-							title={
-								row.is_folder
-									? 'Deseja excluir essa pasta?'
-									: 'Deseja excluir esse documento?'
-							}
-							handle={() => handleDelete(row)}
-						/>
-					)}
-					<Tooltip title={isSelected ? '' : 'Mover para outra pasta'}>
-						<FolderOpenOutlined
-							style={{
-								fontSize: '20px',
-								color: isSelected ? 'lightgray' : '#1890FF',
-								verticalAlign: 'middle',
-								margin: 'auto',
-							}}
-							onClick={isSelected ? undefined : () => setMoveNode(row)}
-						/>
-					</Tooltip>
-				</Space>
-			)
+			function returnCompanyAdminNodes() {
+				return (
+					<Space size="middle">
+						{isSelected ? (
+							<Delete
+								title={`Deseja excluir os ${selectedDocuments.length} itens selecionados?`}
+								handle={() => handleDelete(selectedDocuments)}
+								tooltip={{
+									title: 'Deletar selecionados',
+								}}
+							/>
+						) : (
+							<Delete
+								title={
+									row.is_folder
+										? 'Deseja excluir essa pasta?'
+										: 'Deseja excluir esse documento?'
+								}
+								handle={() => handleDelete(row)}
+							/>
+						)}
+						<Tooltip title={isSelected ? '' : 'Mover para outra pasta'}>
+							<FolderOpenOutlined
+								style={{
+									fontSize: '20px',
+									color: isSelected ? 'lightgray' : '#1890FF',
+									verticalAlign: 'middle',
+									margin: 'auto',
+								}}
+								onClick={isSelected ? undefined : () => setMoveNode(row)}
+							/>
+						</Tooltip>
+					</Space>
+				)
+			}
+
+			function returnNormalUserNodes() {
+				return (
+					<Space size="middle">
+						<Tooltip title={isSelected ? '' : 'Mover para outra pasta'}>
+							<FolderOpenOutlined
+								style={{
+									fontSize: '20px',
+									color: isSelected ? 'lightgray' : '#1890FF',
+									verticalAlign: 'middle',
+									margin: 'auto',
+								}}
+								onClick={isSelected ? undefined : () => setMoveNode(row)}
+							/>
+						</Tooltip>
+					</Space>
+				)
+			}
+
+			return loggedUser.is_company_admin
+				? returnCompanyAdminNodes()
+				: returnNormalUserNodes()
 		},
 	},
 ]

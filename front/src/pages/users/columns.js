@@ -1,16 +1,17 @@
 import React from 'react'
-import { Tag, Space, Button, Tooltip } from 'antd'
+import { Tag, Space, Button, Tooltip, Switch } from 'antd'
 import { EditOutlined, SyncOutlined } from '@ant-design/icons'
 
 import Delete from './components/Delete'
 
 export function getColumns({
 	handleDelete,
-	loggedUsername,
 	handleEdit,
 	handleResendInvite,
+	handleToggleIsCompanyAdmin,
+	loggedUser,
 }) {
-	return [
+	const columns = [
 		{
 			title: 'Nome',
 			dataIndex: 'name',
@@ -52,17 +53,44 @@ export function getColumns({
 						<Tooltip title={'Editar'}>
 							<Button
 								icon={<EditOutlined />}
+								disabled={!loggedUser.is_company_admin}
 								onClick={() => handleEdit({ ...record, groups })}
 							/>
 						</Tooltip>
 						<Delete
 							username={record.username}
 							handleDelete={handleDelete}
-							disabled={loggedUsername === record.username}
+							disabled={
+								record.username === loggedUser.username ||
+								!loggedUser.is_company_admin
+							}
 						/>
 					</Space>
 				)
 			},
 		},
 	]
+
+	if (loggedUser.is_company_admin) {
+		columns.push({
+			title: 'Administrador',
+			dataIndex: 'is_company_admin',
+			key: 'is_company_admin',
+			render: (is_company_admin, record) => {
+				return (
+					<Switch
+						checked={is_company_admin}
+						disabled={record.username === loggedUser.username}
+						onChange={() =>
+							handleToggleIsCompanyAdmin({
+								username: record.username,
+								is_company_admin: !record.is_company_admin,
+							})
+						}
+					/>
+				)
+			},
+		})
+	}
+	return columns
 }

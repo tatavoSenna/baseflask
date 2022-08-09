@@ -31,7 +31,9 @@ const Templates = () => {
 		showModal,
 	} = useSelector(({ template }) => template)
 
-	const { company_id, is_admin } = useSelector(({ session }) => session)
+	const { company_id, is_admin, is_company_admin } = useSelector(
+		({ session }) => session
+	)
 
 	const handleCreate = (title) => {
 		dispatch(setShowModal(false))
@@ -104,43 +106,47 @@ const Templates = () => {
 
 	return (
 		<MainLayout>
-			<Layout style={{ backgroundColor: '#fff' }}>
-				<PageHeader>
-					<BreadCrumb parent="Modelos" current="Lista" />
-				</PageHeader>
+			{is_company_admin ? (
 				<Layout style={{ backgroundColor: '#fff' }}>
-					<TemplateModal
-						handleCancel={handleCancel}
-						handleCreate={handleCreate}
-						showModal={showModal}
-					/>
-					<DuplicateTemplateModal
-						showModal={showDuplicateModal}
-						handleCancel={() => setShowDuplicateModal(false)}
-						currentCompany={company_id}
-						handleDuplicate={handleDuplicateTemplate}
-						template={idTemplate}
-					/>
-					<DataTable
-						columns={getColumns(
-							handleToGo,
-							handlePublishTemplate,
-							handleDeleteTemplate,
-							handleFavoriteTemplate,
-							handleOpenModal,
-							is_admin
-						)}
-						dataSource={templates}
-						pages={pages}
-						onChangePageNumber={getTemplates}
-						onSearch={handleSearch}
-						onClickButton={handleShowModal}
-						textButton="Novo Modelo"
-						placeholderNoData={!loading ? 'Nenhum modelo encontrado' : ''}
-						loading={loading}
-					/>
+					<PageHeader>
+						<BreadCrumb parent="Modelos" current="Lista" />
+					</PageHeader>
+					<Layout style={{ backgroundColor: '#fff' }}>
+						<TemplateModal
+							handleCancel={handleCancel}
+							handleCreate={handleCreate}
+							showModal={showModal}
+						/>
+						<DuplicateTemplateModal
+							showModal={showDuplicateModal}
+							handleCancel={() => setShowDuplicateModal(false)}
+							currentCompany={company_id}
+							handleDuplicate={handleDuplicateTemplate}
+							template={idTemplate}
+						/>
+						<DataTable
+							columns={getColumns(
+								handleToGo,
+								handlePublishTemplate,
+								handleDeleteTemplate,
+								handleFavoriteTemplate,
+								handleOpenModal,
+								is_admin
+							)}
+							dataSource={templates}
+							pages={pages}
+							onChangePageNumber={getTemplates}
+							onSearch={handleSearch}
+							onClickButton={handleShowModal}
+							textButton="Novo Modelo"
+							placeholderNoData={!loading ? 'Nenhum modelo encontrado' : ''}
+							loading={loading}
+						/>
+					</Layout>
 				</Layout>
-			</Layout>
+			) : (
+				<h2>Você não tem permissão para acessar esse recurso</h2>
+			)}
 		</MainLayout>
 	)
 }
