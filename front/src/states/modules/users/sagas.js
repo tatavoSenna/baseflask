@@ -14,6 +14,9 @@ import {
 	resetNewUser,
 	updateUser,
 	resendInvite,
+	updateUserIsCompanyAdminStatus,
+	updateUserIsCompanyAdminStatusSuccess,
+	updateUserIsCompanyAdminStatusFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -22,6 +25,10 @@ export default function* rootSaga() {
 	yield takeEvery(updateUser, updateUserSaga)
 	yield takeEvery(deleteUser, deleteUserSaga)
 	yield takeEvery(resendInvite, resendInviteSaga)
+	yield takeEvery(
+		updateUserIsCompanyAdminStatus,
+		updateUserIsCompanyAdminStatusSaga
+	)
 }
 
 function* getUserListSaga({ payload = {} }) {
@@ -108,6 +115,31 @@ function* resendInviteSaga({ payload }) {
 		errorMessage({
 			content: 'Falha no reenvio do convite',
 			updateKey: 'resendInvite',
+		})
+	}
+}
+
+function* updateUserIsCompanyAdminStatusSaga({ payload }) {
+	try {
+		loadingMessage({
+			content: 'Alterando permissão do usuário...',
+			updateKey: 'updateUser',
+		})
+		const { data } = yield call(api.patch, `users/${payload.username}`, {
+			is_company_admin: payload.is_company_admin,
+		})
+		yield put(updateUserIsCompanyAdminStatusSuccess(data.user))
+		successMessage({
+			content: 'Permissão do usuário alterada com sucesso',
+			updateKey: 'updateUser',
+		})
+		yield put(getUserList())
+	} catch (error) {
+		yield put(updateUserIsCompanyAdminStatusFailure(error))
+		errorMessage({
+			content:
+				'Ocorreu um problema ao tentar alterar a permissão do usuário selecionado',
+			updateKey: 'updateUser',
 		})
 	}
 }

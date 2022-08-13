@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Layout, PageHeader } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { Auth } from 'aws-amplify'
 
 import UserModal from './components/modal'
 import GroupModal from './components/groupModal'
@@ -17,6 +16,7 @@ import {
 	deleteUser,
 	updateUser,
 	resendInvite,
+	updateUserIsCompanyAdminStatus,
 } from '~/states/modules/users'
 import {
 	getGroupList,
@@ -42,27 +42,12 @@ function Users() {
 	const { groupsList, showGroupModal, newGroup } = useSelector(
 		({ groups }) => groups
 	)
-
-	const [loggedUsername, setLoggedUsername] = useState('-')
-
-	useEffect(() => {
-		let mounted = true
-		const getUserInfo = async () => {
-			const authUserInfo = await Auth.currentUserInfo()
-			if (mounted) {
-				setLoggedUsername(authUserInfo.username)
-			}
-		}
-		getUserInfo()
-		return () => (mounted = false)
-	}, [])
+	const loggedUser = useSelector(({ session }) => session)
 
 	useEffect(() => {
-		if (loggedUsername !== '-') {
-			dispatch(getGroupList())
-			dispatch(getUserList())
-		}
-	}, [dispatch, loggedUsername])
+		dispatch(getGroupList())
+		dispatch(getUserList())
+	}, [dispatch])
 
 	const getUsers = ({ page, perPage, search }) =>
 		dispatch(getUserList({ page, perPage, search }))
@@ -133,6 +118,10 @@ function Users() {
 		dispatch(updateNewGroup(form.getFieldsValue()))
 	}
 
+	const handleToggleIsCompanyAdmin = (userData) => {
+		dispatch(updateUserIsCompanyAdminStatus(userData))
+	}
+
 	return (
 		<MainLayout>
 			<Layout style={{ backgroundColor: '#fff' }}>
@@ -163,28 +152,35 @@ function Users() {
 						showModal={showGroupModal}
 						newGroup={newGroup}
 					/>
-					<DataTable
-						dataSource={userList}
-						columns={getColumns({
-							handleDelete,
-							loggedUsername,
-							handleEdit,
-							handleResendInvite,
-						})}
-						loading={loading}
-						pages={pages}
-						onChangePageNumber={getUsers}
-						onSearch={handleSearch}
-						onClickButton={handleShowModal}
-						textButton="+ Usuário "
-						placeholderNoData={!loading ? 'Nenhum usuário encontrado' : ''}
-						buttons={[
-							{
-								title: '+ Grupo',
-								onClick: handleShowGroupModal,
-							},
-						]}
-					/>
+					{loggedUser && (
+						<DataTable
+							dataSource={userList}
+							columns={getColumns({
+								handleDelete,
+								handleEdit,
+								handleResendInvite,
+								handleToggleIsCompanyAdmin,
+								loggedUser,
+							})}
+							loading={loading}
+							pages={pages}
+							onChangePageNumber={getUsers}
+							onSearch={handleSearch}
+							onClickButton={handleShowModal}
+							textButton={loggedUser?.is_company_admin ? '+ Usuário' : false}
+							placeholderNoData={!loading ? 'Nenhum usuário encontrado' : ''}
+							buttons={
+								loggedUser?.is_company_admin
+									? [
+											{
+												title: '+ Grupo',
+												onClick: handleShowGroupModal,
+											},
+									  ]
+									: []
+							}
+						/>
+					)}
 				</Layout>
 			</Layout>
 		</MainLayout>

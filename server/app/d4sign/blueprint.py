@@ -14,6 +14,7 @@ from .controllers import (
     d4sign_send_document_for_signing_controller,
     d4sign_upload_and_send_document_for_signing_controller,
     d4sign_document_webhook_controller,
+    d4sign_cancel_document,
 )
 
 from app.serializers.document_serializers import DocumentSerializer
@@ -122,3 +123,20 @@ def d4sign_document_webhook(hmac_sha256):
     response_payload = jsonify(control)
 
     return response_payload, status_code
+
+
+@d4sign_bp.route("/cancel-document/<document_id>", methods=["PUT"])
+@authenticated_user
+def d4sign_cancel_document_route(user, document_id):
+
+    control = d4sign_cancel_document(user=user, document_id=document_id)
+
+    status_code = control.pop("status_code")
+
+    # if we receive a error string in control['data], return
+    if type(control["data"]) is str:
+        response_payload = jsonify(control)
+        return response_payload, status_code
+    else:  # if not, we should be receiving a document from the controller, serializing it and sending it back in the response body.
+        response_payload = jsonify(DocumentSerializer(many=False).dump(control["data"]))
+        return response_payload, status_code

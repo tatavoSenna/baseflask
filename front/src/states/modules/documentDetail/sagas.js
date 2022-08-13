@@ -45,6 +45,9 @@ import {
 	downloadTextDocumentVersion,
 	downloadTextDocumentVersionSuccess,
 	downloadTextDocumentVersionFailure,
+	cancelDocument,
+	cancelDocumentSuccess,
+	cancelDocumentFailure,
 } from '.'
 
 export default function* rootSaga() {
@@ -61,6 +64,7 @@ export default function* rootSaga() {
 	yield takeEvery(changeVariables, changeVariablesSaga)
 	yield takeEvery(getDocumentCertificate, getDocumentCertificateSaga)
 	yield takeEvery(downloadTextDocumentVersion, downloadTextDocumentVersionSaga)
+	yield takeEvery(cancelDocument, cancelDocumentSaga)
 }
 
 function* getDocumentCertificateSaga({ payload = {} }) {
@@ -479,5 +483,28 @@ function* downloadTextDocumentVersionSaga({ payload }) {
 			updateKey: 'downloadWordVersion',
 		})
 		yield put(downloadTextDocumentVersionFailure(error))
+	}
+}
+
+function* cancelDocumentSaga({ payload }) {
+	try {
+		loadingMessage({
+			content: 'Cancelando documento...',
+			updateKey: 'cancelDocument',
+		})
+
+		const { data } = yield call(api.put, `/d4sign/cancel-document/${payload}`)
+
+		yield put(cancelDocumentSuccess(data))
+		successMessage({
+			content: 'Documento cancelado com sucesso!',
+			updateKey: 'cancelDocument',
+		})
+	} catch (error) {
+		errorMessage({
+			content: 'Ocorreu um erro ao cancelar o documento.',
+			updateKey: 'cancelDocument',
+		})
+		yield put(cancelDocumentFailure(error))
 	}
 }

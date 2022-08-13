@@ -78,7 +78,7 @@ export const getColumns = (
 				/>
 				<Duplicate
 					isAdmin={isAdmin}
-					title="Deseja duplicar esse template?"
+					title="Deseja duplicar esse modelo?"
 					handle={() => handleDuplicateTemplate(row)}
 				/>
 			</Space>

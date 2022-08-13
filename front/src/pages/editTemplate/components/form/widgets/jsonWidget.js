@@ -32,7 +32,7 @@ export const JSONWidget = React.memo((props) => {
 						id={`json_${pageIndex}_${fieldIndex}`}
 						onBlur={(e) => {
 							try {
-								onUpdate(JSON.parse(e.json), 'field', pageIndex, fieldIndex)
+								onUpdate(JSON.parse(e.json), pageIndex, fieldIndex)
 								setError(false)
 							} catch {
 								setError(true)

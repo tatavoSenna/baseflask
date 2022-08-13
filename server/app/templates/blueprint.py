@@ -69,6 +69,7 @@ def create_template(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def edit_template(current_user, template_id):
+    check_is_company_admin(current_user)
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
 
@@ -167,6 +168,7 @@ def get_template_list(current_user):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document_template(current_user, document_template_id):
+    check_is_company_admin(current_user)
     try:
         document_template = get_template_controller(
             current_user["company_id"], document_template_id
@@ -320,3 +322,9 @@ def undelete_template(current_user, template_id):
     msg_JSON = {"message": "The template was undeleted"}
 
     return jsonify(msg_JSON), 200
+
+
+# From LAW-744 foward we have limited template (edition, deletion), user (deletion, edition and addition to groups) and document (deletion) to users who have is_company_admin == True
+def check_is_company_admin(current_user):
+    if current_user["is_company_admin"] == False:
+        abort(401, "You dont have permission to access this resource")

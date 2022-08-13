@@ -602,6 +602,7 @@ def void_envelope(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def delete_document(current_user, document_id):
+    check_is_company_admin(current_user)
     try:
         document = get_document_controller(document_id)
     except Exception:
@@ -723,6 +724,7 @@ def get_document_certificate_file(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def delete_multiple_documents(current_user):
+    check_is_company_admin(current_user)
     # check if content_type is json
     if not request.is_json:
         return jsonify({"message": "Accepts only content-type json."}), 400
@@ -756,3 +758,9 @@ def undelete_document(current_user, document_id):
     msg_JSON = {"message": "The document was undeleted"}
 
     return jsonify(msg_JSON), 200
+
+
+# From LAW-744 foward we have limited template (edition, deletion), user (deletion, edition and addition to groups) and document (deletion) to users who have is_company_admin == True
+def check_is_company_admin(current_user):
+    if current_user["is_company_admin"] == False:
+        abort(401, "You dont have permission to access this resource")

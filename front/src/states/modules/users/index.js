@@ -23,6 +23,14 @@ const initialState = {
 		per_page: 0,
 		total: 0,
 	},
+	updateIsCompanyAdmin: {
+		user: {
+			username: '',
+			is_company_admin: null,
+		},
+		error: null,
+		loading: false,
+	},
 }
 
 const { actions, reducer } = createSlice({
@@ -82,6 +90,36 @@ const { actions, reducer } = createSlice({
 		updateUser: (state) => extend(state),
 		deleteUser: (state) => extend(state),
 		resendInvite: (state) => extend(state),
+		updateUserIsCompanyAdminStatus: (state, { payload }) => {
+			extend(state, {
+				updateIsCompanyAdmin: {
+					...state.updateIsCompanyAdmin,
+					loading: true,
+					error: null,
+				},
+			})
+		},
+		updateUserIsCompanyAdminStatusSuccess: (state, { payload }) => {
+			extend(state, {
+				updateIsCompanyAdmin: {
+					...state.updateIsCompanyAdmin,
+					loading: false,
+					error: false,
+					user: {
+						username: payload.username,
+						isCompanyAdmin: payload.is_company_admin,
+					},
+				},
+			})
+		},
+		updateUserIsCompanyAdminStatusFailure: (state, { payload }) =>
+			extend(state, {
+				updateIsCompanyAdmin: {
+					...state.updateIsCompanyAdmin,
+					loading: false,
+					error: payload,
+				},
+			}),
 	},
 })
 
@@ -98,6 +136,9 @@ export const {
 	updateEditUser,
 	resetNewUser,
 	resendInvite,
+	updateUserIsCompanyAdminStatus,
+	updateUserIsCompanyAdminStatusSuccess,
+	updateUserIsCompanyAdminStatusFailure,
 } = actions
 
 export { default as usersSaga } from './sagas'

@@ -22,6 +22,9 @@ class User(db.Model):
     is_financial = db.Column(
         db.Boolean, default=False, nullable=True, server_default="false"
     )
+    is_company_admin = db.Column(
+        db.Boolean, nullable=False, default=True, server_default="true"
+    )
 
     # Belongs to
     company = db.relationship("Company", back_populates="users")

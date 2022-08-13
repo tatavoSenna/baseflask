@@ -23,6 +23,7 @@ const { Sider } = Layout
 
 function SideBar({ collapsed, handleCollapsed, isWeb }) {
 	const { data } = useSelector(({ settings }) => settings)
+	const loggedUser = useSelector(({ session }) => session)
 	const dispatch = useDispatch()
 	const history = useHistory()
 	const { pathname } = useLocation()
@@ -109,18 +110,19 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 							}>
 							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
 						</Menu.Item>
-
-						<Menu.Item
-							key="templates"
-							icon={
-								<LayoutOutlined
-									className={styles.icons}
-									style={{ fontSize: 18 }}
-								/>
-							}
-							onClick={() => handleGoTo('/templates')}>
-							<Tooltip className={styles.tooltip}>Templates</Tooltip>
-						</Menu.Item>
+						{loggedUser.is_company_admin && (
+							<Menu.Item
+								key="templates"
+								icon={
+									<LayoutOutlined
+										className={styles.icons}
+										style={{ fontSize: 18 }}
+									/>
+								}
+								onClick={() => handleGoTo('/models')}>
+								<Tooltip className={styles.tooltip}>Modelos</Tooltip>
+							</Menu.Item>
+						)}
 						<Menu.Item
 							key="databases"
 							icon={
@@ -215,8 +217,8 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 						<Menu.Item
 							key="templates"
 							icon={<LayoutOutlined />}
-							onClick={() => handleGoTo('/templates')}>
-							Templates
+							onClick={() => handleGoTo('/models')}>
+							Modelos
 						</Menu.Item>
 						<Menu.Item
 							key="settings"

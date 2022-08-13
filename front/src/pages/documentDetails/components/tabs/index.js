@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Form, Typography, Button, Spin, Menu, Steps as StepsAntd } from 'antd'
+import {
+	Form,
+	Typography,
+	Button,
+	Spin,
+	Menu,
+	Steps as StepsAntd,
+	Space,
+} from 'antd'
 import { DownloadOutlined, EditOutlined } from '@ant-design/icons'
 import {
 	array,
@@ -20,7 +28,10 @@ import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 import styled from 'styled-components'
-import { downloadTextDocumentVersion } from '~/states/modules/documentDetail'
+import {
+	downloadTextDocumentVersion,
+	cancelDocument,
+} from '~/states/modules/documentDetail'
 import InfoView from './infoView'
 
 moment.locale('pt-br')
@@ -39,6 +50,7 @@ const Tabs = ({
 	infos,
 	showAssignModal,
 	showStepModal,
+	sent,
 	signed,
 	handleVersion,
 	sentAssign,
@@ -74,6 +86,14 @@ const Tabs = ({
 
 		dispatch(downloadTextDocumentVersion(versionInfo))
 	}
+
+	const cancelDocumentHandler = () => {
+		dispatch(cancelDocument(infos.id))
+	}
+
+	const cancelledDocument = useSelector(
+		({ documentDetail }) => documentDetail.cancelledDocument
+	)
 
 	const { data: documentDetailData } = useSelector(
 		({ documentDetail }) => documentDetail
@@ -115,7 +135,7 @@ const Tabs = ({
 		}
 	}
 
-	if (!signed) {
+	if (!sent) {
 		signers.map((item) =>
 			item.fields.map((field) => {
 				if (field.valueVariable && !isVariables) {
@@ -399,14 +419,14 @@ const Tabs = ({
 						<Title
 							level={4}
 							style={{ marginTop: 30, marginBottom: 10, fontSize: 18 }}>
-							Parte {item.party}
+							{item.party}
 						</Title>
 					) : null}
 					{signers[index - 1] && item.party !== signers[index - 1].party ? (
 						<Title
 							level={4}
 							style={{ marginTop: 10, marginBottom: 10, fontSize: 18 }}>
-							Parte {item.party}
+							{item.party}
 						</Title>
 					) : null}
 					<DivContainer
@@ -439,7 +459,7 @@ const Tabs = ({
 								</div>
 							))}
 
-							{signed && (
+							{sent && (
 								<div>
 									<Paragraph style={{ color: '#000', fontSize: 12 }}>
 										Status:
@@ -466,7 +486,7 @@ const Tabs = ({
 					marginTop: 10,
 				}}>
 				<Form.Item {...tailLayout}>
-					{!signed && (
+					{!sent && (
 						<Button
 							key="editar"
 							type="primary"
@@ -476,7 +496,7 @@ const Tabs = ({
 							Cadastrar
 						</Button>
 					)}
-					{!signed && isVariables && (
+					{!sent && isVariables && (
 						<Button
 							key="assinar"
 							type="primary"
@@ -484,11 +504,23 @@ const Tabs = ({
 							{loadingSign ? <Spin spinning={loadingSign} /> : 'Assinar'}
 						</Button>
 					)}
-
-					{signed && (
-						<Button key="assinar" type="primary" onClick={downloadButton}>
-							Download do Certificado
-						</Button>
+					{sent && (
+						<Space>
+							{!signed && (
+								<Button
+									key="cancelar"
+									type="primary"
+									danger
+									loading={cancelledDocument.loading}
+									onMouseDown={(e) => e.preventDefault()}
+									onClick={cancelDocumentHandler}>
+									Cancelar Documento
+								</Button>
+							)}
+							<Button key="assinar" type="primary" onClick={downloadButton}>
+								Download do Certificado
+							</Button>
+						</Space>
 					)}
 				</Form.Item>
 			</div>
@@ -558,6 +590,7 @@ Tabs.propTypes = {
 	showAssignModal: func,
 	showStepModal: func,
 	handleVersion: func,
+	sent: bool,
 	signed: bool,
 	sentAssign: func,
 	loadingSign: bool,

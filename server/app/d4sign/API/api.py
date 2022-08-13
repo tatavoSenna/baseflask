@@ -309,3 +309,19 @@ class D4SignAPI:
         response_payload = response.json()
 
         return response_payload
+
+    def cancel_document(self, document_uuid):
+        """
+        Tells the D4sign API to cancel the document related to the document_uuid.
+        Docs: https://docapi.d4sign.com.br/docs/endpoints-2#postdocumentsuuid-documentcancel (Cancelar um documento)
+        """
+
+        url = f"{self.url}/documents/{document_uuid}/cancel"
+        url = self.put_url_credentials(url)
+
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+        response = requests.post(url, headers=headers)
+        response_payload = response.json()
+
+        return response_payload

@@ -56,6 +56,8 @@ const Contracts = () => {
 		order_by,
 	} = useSelector(({ contract }) => contract)
 
+	const loggedUser = useSelector(({ session }) => session)
+
 	const { showFolderModal, newFolder, accessFolders, moveFolderModal } =
 		useSelector(({ folder }) => folder)
 
@@ -317,7 +319,8 @@ const Contracts = () => {
 							handleDelete,
 							setMoveNode,
 							sortTable,
-							selectedContracts
+							selectedContracts,
+							loggedUser
 						)}
 						dataSource={contracts}
 						pages={pages}

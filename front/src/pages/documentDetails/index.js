@@ -275,7 +275,8 @@ const DocumentDetails = () => {
 							infos={data}
 							showStepModal={showStepModal}
 							variables={data.variables}
-							signed={data.sent}
+							signed={data.signed}
+							sent={data.sent}
 							sentAssign={handleSentAssign}
 							loadingSign={loadingSign}
 							handleVersion={handleVersion}
