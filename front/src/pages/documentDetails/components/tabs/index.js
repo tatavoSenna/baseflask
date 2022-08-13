@@ -592,7 +592,6 @@ Tabs.propTypes = {
 	handleVersion: func,
 	sent: bool,
 	signed: bool,
-	sent: bool,
 	sentAssign: func,
 	loadingSign: bool,
 	versionId: string,
@@ -615,7 +614,6 @@ Tabs.propTypes = {
 	downloadButton: func,
 	block: bool,
 	signedWorkflow: bool,
-	sent: bool,
 }
 
 export default Tabs
