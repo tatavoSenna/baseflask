@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Layout, PageHeader, Button, Input, Typography, Spin } from 'antd'
+import { Layout, PageHeader, Button, Typography, Spin } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
 import BreadCrumb from 'components/breadCrumb'
@@ -10,6 +10,8 @@ import {
 	editTextRequest,
 	getText,
 } from 'states/modules/databaseDetail'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document'
 import { func, number, oneOfType, string } from 'prop-types'
 
 const DatabaseTextEditor = ({ id, onReturnParent, onSaveText }) => {
@@ -20,8 +22,6 @@ const DatabaseTextEditor = ({ id, onReturnParent, onSaveText }) => {
 
 	const handleEditDescriptionButton = (title) =>
 		dispatch(editText({ description: title }))
-
-	const handleTextChange = (e) => dispatch(editText({ text: e.target.value }))
 
 	const handleSaveText = (e) => {
 		dispatch(editTextRequest())
@@ -71,14 +71,44 @@ const DatabaseTextEditor = ({ id, onReturnParent, onSaveText }) => {
 					<Typography.Text style={{ fontSize: '14px', paddingBottom: '8px' }}>
 						Texto
 					</Typography.Text>
-					<Input.TextArea
-						value={editedText.text}
-						disabled={editedText.loading}
-						onChange={handleTextChange}
+					<div id="toolbar-container" />
+					<div
 						style={{
-							height: '70%',
-						}}
-					/>
+							padding: 'calc(2 * var(--ck-spacing-large))',
+							border: '1px hsl(0, 0%, 82.7%) solid',
+							borderRadius: 'var(--ck-border-radius)',
+							overflowY: 'scroll',
+							height: '50vh',
+						}}>
+						<CKEditor
+							onReady={(editor) => {
+								const toolbarContainer =
+									document.querySelector('#toolbar-container')
+								if (toolbarContainer) {
+									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
+								}
+							}}
+							editor={DecoupledEditor}
+							config={{
+								removePlugins: [
+									'ImageToolbar',
+									'CKFinder',
+									'MediaEmbed',
+									'ImageToolbar',
+									'ImageUpload',
+									'EasyImage',
+									'uploadImage',
+									'mediaEmbed',
+									'Link',
+									'Autoformat',
+								],
+							}}
+							onChange={(event, editor) => {
+								dispatch(editText({ text: editor.getData() }))
+							}}
+							data={editedText.text}
+						/>
+					</div>
 				</Spin>
 			</LayoutSpinFullHeight>
 		</>
