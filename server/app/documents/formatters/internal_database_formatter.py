@@ -28,6 +28,7 @@ class InternalDatabaseFormatter:
         return_value = []
         try:
             for text_id in self._text_ids:
+                # Doing too many queries. Optimize. Suggestion make 1 call with all ids
                 return_value.append(TextItem.query.get(text_id).text)
             return return_value
         except Exception as e:
