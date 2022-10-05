@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, PageHeader, Spin, Breadcrumb } from 'antd'
+import { Layout, PageHeader, Spin, Breadcrumb, Button } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Tabs from '~/pages/documentDetails/components/tabs'
@@ -32,6 +32,8 @@ import {
 } from '~/states/modules/documentDetail'
 import { getGroupList } from '~/states/modules/groups'
 import { getUserList } from '~/states/modules/users'
+
+import { downloadTextDocumentVersion } from 'states/modules/documentDetail'
 
 import styles from '../contracts/index.module.scss'
 import MainLayout from '~/components/mainLayout'
@@ -172,6 +174,27 @@ const DocumentDetails = () => {
 		setStepModal(false)
 	}
 
+	const downloadVersionHandler = (event, item) => {
+		event.stopPropagation()
+		const versionInfo = {
+			id,
+			versionId: item.id,
+			versionName: item.description,
+			documentTitle: data.title,
+		}
+		dispatch(downloadTextDocumentVersion(versionInfo))
+	}
+
+	const handleDownloadDocDifTypes = (event) => {
+		if (data.text_type === '.txt') {
+			if (data !== undefined) {
+				downloadVersionHandler(event, data.versions[0])
+			}
+		} else {
+			getDocumentWord()
+		}
+	}
+
 	var listFolders = accessFolders.map((folder, index) => (
 		<Breadcrumb.Item
 			key={index}
@@ -200,6 +223,11 @@ const DocumentDetails = () => {
 							{data.title}
 						</Breadcrumb.Item>
 					</Breadcrumb>
+					<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+						<Button onClick={handleDownloadDocDifTypes}>
+							Baixar Documento
+						</Button>
+					</div>
 				</PageHeader>
 				<NewVersionModal
 					handleCancel={handleCancelModal}
@@ -235,18 +263,17 @@ const DocumentDetails = () => {
 					<div
 						style={{
 							display: 'flex',
-							flexWrap: 'wrap',
-							height: 'calc(100vh - 155px)',
+							height: 'calc(100vh - 180px)',
 							overflowY: 'hidden',
+							columnGap: '10px',
 						}}>
 						{data.draft ? (
 							<DraftIndicator title={data.title} onClick={handleEditDocument} />
 						) : file ? (
 							<div
 								style={{
-									marginLeft: '10px',
-									display: 'flex',
-									width: '60%',
+									height: '100%',
+									flex: 2,
 								}}>
 								<PdfReader url={file} />
 							</div>
@@ -300,6 +327,7 @@ const DocumentDetails = () => {
 							}
 							versionLoading={loadingVersion}
 							downloadButton={handleDownloadButton}
+							downloadVersionHandler={downloadVersionHandler}
 						/>
 					</div>
 				)}

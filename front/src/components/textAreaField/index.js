@@ -39,6 +39,7 @@ const TextAreaField = ({
 				autoFocus={first}
 				placeholder={placeholder}
 				disabled={disabled}
+				autoSize={{ minRows: 8 }}
 			/>
 		</Form.Item>
 	)

@@ -5,17 +5,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import { object } from 'prop-types'
 
 const DatabaseFieldText = ({ data }) => {
-	const { databaseId, label, initialValue, variable } = data
 	const dispatch = useDispatch()
 	const database = useSelector(
 		({ internalDatabaseField }) => internalDatabaseField
 	)
 
-	const dataItem = database.data[databaseId]
+	const dataItem = database.data[data.field.databaseId]
 
 	useEffect(() => {
-		dispatch(getDatabaseTexts({ id: databaseId }))
-	}, [databaseId, dispatch])
+		dispatch(getDatabaseTexts({ id: data.field.databaseId }))
+	}, [data.field.databaseId, dispatch])
 
 	const dataItemExist = dataItem !== undefined
 
@@ -23,10 +22,10 @@ const DatabaseFieldText = ({ data }) => {
 		dataItemExist &&
 		!dataItem.loading && (
 			<>
-				<StyledLabel>{label || variable.name}:</StyledLabel>
+				{data.field.label && <StyledLabel>{data.field.label}:</StyledLabel>}
 				<StyledWrapperBox>
-					{initialValue.map((value) => (
-						<StyledValue key={label + value}>
+					{data.value.map((value) => (
+						<StyledValue key={data.field.label + value}>
 							- {dataItem.texts.find((item) => item.id === value).description}
 						</StyledValue>
 					))}

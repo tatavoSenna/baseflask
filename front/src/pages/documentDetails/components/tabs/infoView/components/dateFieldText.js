@@ -6,8 +6,8 @@ import { object } from 'prop-types'
 
 const DateFieldText = ({ data }) => (
 	<>
-		<StyledLabel>{data.label || data.variable.name}</StyledLabel>
-		<StyledValue>{moment(data.initialValue).format('DD-MM-YYYY')}</StyledValue>
+		{data.field.label && <StyledLabel>{data.field.label}:</StyledLabel>}
+		<StyledValue>{moment(data.value).format('DD-MM-YYYY')}</StyledValue>
 	</>
 )
 

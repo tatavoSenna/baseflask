@@ -8,6 +8,7 @@ import PropTypes, {
 	string,
 } from 'prop-types'
 import { useState } from 'react'
+import { useCnpjAutocomplete } from './utils/cnpjAutocomplete'
 
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
@@ -51,6 +52,8 @@ const LegalPerson = ({
 		setStateAttorney,
 		'attorney_'
 	)
+
+	const setCnpj = useCnpjAutocomplete(form, fields, name, setCep)
 
 	const componentsTypes = Object.keys(components)
 
@@ -109,6 +112,11 @@ const LegalPerson = ({
 				} else if (field.field_type === 'attorney_cep') {
 					dict.onChange = (v) => {
 						setAttorneyCep(v)
+						changeCallback(v)
+					}
+				} else if (field.field_type === 'cnpj') {
+					dict.onChange = (v) => {
+						setCnpj(v)
 						changeCallback(v)
 					}
 				} else dict.onChange = changeCallback

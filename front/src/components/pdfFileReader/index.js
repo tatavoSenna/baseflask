@@ -5,8 +5,8 @@ const PdfReader = ({ url }) => {
 	return (
 		<div
 			style={{
-				margin: 5,
 				width: '100%',
+				height: '100%',
 			}}>
 			<object data={url} type="application/pdf" width="100%" height="100%">
 				<p>

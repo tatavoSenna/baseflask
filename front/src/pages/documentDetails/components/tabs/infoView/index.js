@@ -16,25 +16,50 @@ import { ContainerTabs, ScrollContent } from '../styles'
 
 const { Title } = Typography
 
+const makeVariableName = (pageIndex, fieldIndex, field) => {
+	switch (field.type) {
+		case 'variable_image':
+			return `image_${field.variable.name}`
+		case 'structured_list':
+			return `structured_list_${pageIndex}_${fieldIndex}`
+		default:
+			return field.variable.name
+	}
+}
+
+const makePageDisplay = (pageIndex, formQuestionsPage, formAnswerVariables) => {
+	const displayFields = []
+	formQuestionsPage.fields.forEach(function (field, fieldIndex) {
+		if (
+			'variable' in field &&
+			makeVariableName(pageIndex, fieldIndex, field) in formAnswerVariables
+		) {
+			const fieldData = {
+				field,
+				value:
+					formAnswerVariables[makeVariableName(pageIndex, fieldIndex, field)],
+			}
+			displayFields.push(fieldData)
+		}
+	})
+	return {
+		title: formQuestionsPage.title,
+		fields: displayFields,
+	}
+}
+
 const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
+	console.log(infos)
 	const history = useHistory()
 	const { id } = useParams()
 
-	let form = []
-
-	for (let i = 0; i < infos.form.length; i++) {
-		let page = infos.form[i]
-
-		let fields = page.fields.reduce((a, field) => {
-			if (field.variable?.name !== undefined && field.initialValue) {
-				return [...a, field]
-			} else {
-				return a
-			}
-		}, [])
-
-		if (fields.length > 0) form.push({ fields, title: page.title })
-	}
+	let formDisplay = []
+	infos.form.forEach((page, pageIndex) => {
+		page = makePageDisplay(pageIndex, page, infos.variables)
+		if (page.fields.length > 0) {
+			formDisplay.push(page)
+		}
+	})
 
 	const handleEdit = () => {
 		return history.push({
@@ -42,33 +67,6 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 			state: { current: 0 },
 		})
 	}
-
-	const textView = (item) =>
-		item.fields?.map((item, index) => {
-			const props = {
-				data: item,
-				key: item.type + index,
-			}
-
-			switch (item.type) {
-				case 'address':
-					return <AddressFieldText {...props} />
-				case 'person':
-					return <PersonFieldText {...props} />
-				case 'date':
-					return <DateFieldText {...props} />
-				case 'structured_list':
-					return <StructureListFieldText {...props} />
-				case 'checkbox':
-					return <CheckBoxFieldText {...props} />
-				case 'variable_image':
-					return <ImageFieldText {...props} />
-				case 'internal_database':
-					return <DatabaseFieldText {...props} />
-				default:
-					return <DefaultText {...props} />
-			}
-		})
 
 	const buttonEditForm = () => {
 		return (
@@ -80,18 +78,36 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 
 	return (
 		<ScrollContent>
-			{form.map((page, index) => (
+			{formDisplay.map((formPage, index) => (
 				<div key={index}>
 					<ContainerTabs key={index}>
 						<Title
 							key={index}
 							level={4}
 							style={{ marginTop: 20, fontSize: 18 }}>
-							{page.title}
+							{formPage.title}
 						</Title>
-						{textView(page)}
-
-						{form.length - 1 !== index && <Divider />}
+						{formPage.fields.map((fieldData, i) => {
+							switch (fieldData.field.type) {
+								case 'address':
+									return <AddressFieldText key={i} data={fieldData} />
+								case 'person':
+									return <PersonFieldText key={i} data={fieldData} />
+								case 'date':
+									return <DateFieldText key={i} data={fieldData} />
+								// case 'structured_list':
+								// 	return <StructureListFieldText key={i} data={fieldData} />
+								case 'checkbox':
+									return <CheckBoxFieldText key={i} data={fieldData} />
+								case 'variable_image':
+									return <ImageFieldText key={i} data={fieldData} />
+								case 'internal_database':
+									return <DatabaseFieldText key={i} data={fieldData} />
+								default:
+									return <DefaultText key={i} data={fieldData} />
+							}
+						})}
+						{formDisplay.length - 1 !== index && <Divider />}
 					</ContainerTabs>
 				</div>
 			))}

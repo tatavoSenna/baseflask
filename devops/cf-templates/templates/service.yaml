@@ -15,6 +15,14 @@ Parameters:
       - Fargate
       - EC2
 
+  CpuSize:
+    Type: Number
+    Default: 256
+
+  MemSize:
+    Type: Number
+    Default: 512
+
   TargetGroup:
     Type: String
 
@@ -170,14 +178,14 @@ Resources:
       Family: !Sub ${AWS::StackName}-lawing-api
       RequiresCompatibilities:
         - !If [Fargate, "FARGATE", "EC2"]
-      Memory: 512
-      Cpu: 256
+      Memory: 1024
+      Cpu: 512
       NetworkMode: !If [Fargate, "awsvpc", "bridge"]
       ExecutionRoleArn: !Ref TaskExecutionRole
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
         - Name: lawing-api
-          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:4e6075c8
+          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:1ce77578
           Essential: true
           LogConfiguration:
             LogDriver: awslogs

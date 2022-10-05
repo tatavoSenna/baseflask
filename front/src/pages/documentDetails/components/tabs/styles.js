@@ -7,5 +7,5 @@ export const ContainerTabs = styled.div`
 `
 export const ScrollContent = styled.div`
 	overflow-y: auto;
-	height: calc(100vh - 270px);
+	height: calc(100vh - 300px);
 `

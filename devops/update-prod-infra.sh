@@ -1,5 +1,5 @@
 #!/bin/sh
-aws s3 cp devops/cf-templates/ s3://lawing-prod-cf-templates --profile lawing-prod --recursive --acl public-read
+aws s3 cp cf-templates/ s3://lawing-prod-cf-templates --profile lawing-prod --recursive --acl public-read
 aws cloudformation update-stack \
     --stack-name \
         prod \

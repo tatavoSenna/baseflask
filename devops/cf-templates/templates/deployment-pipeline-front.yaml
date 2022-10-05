@@ -255,6 +255,8 @@ Resources:
             Value: !Ref FrontEndSentryDSN
           - Name: NODE_OPTIONS
             Value: --max-old-space-size=8192
+          - Name: REACT_APP_CNPJ_URL
+            Value: !ImportValue SerproConsultApiUrl
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole

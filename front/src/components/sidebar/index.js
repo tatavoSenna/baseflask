@@ -10,7 +10,6 @@ import {
 	LayoutOutlined,
 	SettingOutlined,
 	IdcardOutlined,
-	FileTextOutlined,
 	DatabaseOutlined,
 } from '@ant-design/icons'
 import { getSettings } from '~/states/modules/settings'
@@ -156,19 +155,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 								}
 								onClick={() => handleGoTo('/companies')}>
 								<Tooltip className={styles.tooltip}>Empresas</Tooltip>
-							</Menu.Item>
-						)}
-						{is_admin && (
-							<Menu.Item
-								key="docs"
-								icon={
-									<FileTextOutlined
-										className={styles.icons}
-										style={{ fontSize: 18 }}
-									/>
-								}
-								onClick={() => handleGoTo('/docs')}>
-								<Tooltip className={styles.tooltip}>Docs</Tooltip>
 							</Menu.Item>
 						)}
 						<Menu.Item

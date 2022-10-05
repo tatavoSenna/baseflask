@@ -17,6 +17,14 @@ Parameters:
       https://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_types.html
       to learn more about launch types.
 
+  CpuSize:
+    Type: Number
+    Default: 256
+
+  MemSize:
+    Type: Number
+    Default: 512
+
   AppDomainName:
     Type: String
     Description: >
@@ -54,17 +62,6 @@ Parameters:
     MaxLength: "41"
     AllowedPattern: "[a-zA-Z0-9]*"
     ConstraintDescription: must contain only alphanumeric characters.
-
-  MetabaseDBName:
-    Description: The metabase database name
-    Default: metabase
-    Type: String
-    MinLength: "1"
-    MaxLength: "64"
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription:
-      must begin with a letter and contain only alphanumeric
-      characters.
 
   GitHubUser:
     Type: String
@@ -316,18 +313,3 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/documents_s3.yaml"
       Parameters:
         DocumentsBucketName: !Sub "${AWS::StackName}-lawing-documents"
-
-  Metabase:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/metabaseservice.yaml"
-      Parameters:
-        Cluster: !GetAtt Cluster.Outputs.ClusterName
-        LaunchType: !Ref LaunchType
-        TargetGroup: !GetAtt LoadBalancer.Outputs.MetabaseTargetGroup
-        SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
-        Subnets: !GetAtt VPC.Outputs.Subnets
-        MBDBName: !Ref MetabaseDBName
-        MBDBHost: !GetAtt Database.Outputs.DatabaseAddress
-        MBDBUser: !Ref DBUser
-        MBDBPassword: !Ref DBPassword
