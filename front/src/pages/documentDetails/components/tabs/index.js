@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	Form,
@@ -28,10 +27,7 @@ import './step.css'
 import * as moment from 'moment'
 import 'moment/locale/pt-br'
 import styled from 'styled-components'
-import {
-	downloadTextDocumentVersion,
-	cancelDocument,
-} from '~/states/modules/documentDetail'
+import { cancelDocument } from '~/states/modules/documentDetail'
 import InfoView from './infoView'
 
 moment.locale('pt-br')
@@ -69,23 +65,11 @@ const Tabs = ({
 	blockVersion,
 	versionLoading,
 	downloadButton,
+	downloadVersionHandler,
 }) => {
 	const dispatch = useDispatch()
 	const [value, setValue] = useState('1')
 	const [isVariables, setVariables] = useState(false)
-	const { id } = useParams()
-
-	const downloadVersionHandler = (event, item) => {
-		event.stopPropagation()
-		const versionInfo = {
-			id,
-			versionId: item.id,
-			versionName: item.description,
-			documentTitle: documentDetailData.title,
-		}
-
-		dispatch(downloadTextDocumentVersion(versionInfo))
-	}
 
 	const cancelDocumentHandler = () => {
 		dispatch(cancelDocument(infos.id))
@@ -93,10 +77,6 @@ const Tabs = ({
 
 	const cancelledDocument = useSelector(
 		({ documentDetail }) => documentDetail.cancelledDocument
-	)
-
-	const { data: documentDetailData } = useSelector(
-		({ documentDetail }) => documentDetail
 	)
 
 	/**
@@ -535,7 +515,8 @@ const Tabs = ({
 				padding: 24,
 				margin: 5,
 				height: 'calc(100% - 5px)',
-				width: '35%',
+				flex: 1,
+				minWidth: '40%',
 				background: '#fff',
 				alignItems: 'center',
 				border: '1px solid #F0F0F0',
@@ -614,6 +595,7 @@ Tabs.propTypes = {
 	downloadButton: func,
 	block: bool,
 	signedWorkflow: bool,
+	downloadVersionHandler: func,
 }
 
 export default Tabs

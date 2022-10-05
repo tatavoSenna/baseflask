@@ -15,7 +15,6 @@ import DocumentDetails from './pages/documentDetails'
 import AddContractExternal from './pages/addContractExternal'
 import Settings from './pages/settings'
 import Companies from './pages/companies'
-import Documentation from './pages/documentation'
 import Home from './pages/home'
 import EditDocument from 'pages/editDocument'
 import Databases from 'pages/databases'
@@ -38,7 +37,6 @@ export const ROUTES = {
 	databaseDetails: '/databases/:id(\\d+)',
 	settings: '/settings',
 	companies: '/companies',
-	documentation: '/docs',
 }
 
 function Routes() {
@@ -57,11 +55,6 @@ function Routes() {
 						<Route exact path={ROUTES.newTemplate} component={EditTemplate} />
 						<Route exact path={ROUTES.editTemplate} component={EditTemplate} />
 						<Route exact path={ROUTES.users} component={Users} />
-						<Route
-							exact
-							path={ROUTES.documentation}
-							component={Documentation}
-						/>
 						<Route
 							exact
 							path={ROUTES.documentDetails}

@@ -5,28 +5,29 @@ import styled from 'styled-components'
 
 import { StyledLabel, StyledValue } from './styles/style'
 
-const ImageFieldText = ({ data }) => (
-	<>
-		<StyledLabel>{data.label || data.variable.name}</StyledLabel>
-		<StyledValue
-			style={{
-				display: 'flex',
-				gap: '6px',
-				flexWrap: 'wrap',
-			}}>
-			<Image.PreviewGroup>
-				{(Array.isArray(data.initialValue)
-					? data.initialValue
-					: [data.initialValue]
-				).map((img, i) => (
-					<ImageBorder key={i}>
-						<Image width="100%" src={img} />
-					</ImageBorder>
-				))}
-			</Image.PreviewGroup>
-		</StyledValue>
-	</>
-)
+const ImageFieldText = ({ data }) => {
+	return (
+		<>
+			{data.field.label && <StyledLabel>{data.field.label}:</StyledLabel>}
+			<StyledValue
+				style={{
+					display: 'flex',
+					gap: '6px',
+					flexWrap: 'wrap',
+				}}>
+				<Image.PreviewGroup>
+					{(Array.isArray(data.value) ? data.value : [data.value]).map(
+						(img, i) => (
+							<ImageBorder key={i}>
+								<Image width="100%" src={img} />
+							</ImageBorder>
+						)
+					)}
+				</Image.PreviewGroup>
+			</StyledValue>
+		</>
+	)
+}
 
 const ImageBorder = styled.div`
 	width: 104px;

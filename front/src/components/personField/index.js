@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 
@@ -30,11 +30,17 @@ const PersonField = ({
 		pageFieldsData
 
 	const _value = inputValue !== undefined ? inputValue['person_type'] : ''
+
 	const _personValue = inputValue !== undefined ? inputValue : {}
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
-	const [person, setPerson] = useState(_value)
+
+	const personTypeFromForm = useMemo(() => {
+		return form.getFieldValue([variable.name, 'PERSON_TYPE']) ?? _value
+	}, [form, _value, variable.name])
+
+	const [person, setPerson] = useState(personTypeFromForm)
 
 	useEffect(() => {
 		if (person_type.length === 1) {
@@ -50,7 +56,6 @@ const PersonField = ({
 		},
 		[setPerson, onChange]
 	)
-
 	return (
 		<Form.Item
 			key={name}

@@ -6,10 +6,10 @@ import { object } from 'prop-types'
 const CheckBoxFieldText = ({ data }) => {
 	return (
 		<>
-			<StyledLabel>{data.label || data.variable.name}:</StyledLabel>
+			{data.field.label && <StyledLabel>{data.field.label}:</StyledLabel>}
 			<StyledWrapperBox>
-				{data.initialValue.map((value) => (
-					<StyledValue key={data.label + value}>- {value}</StyledValue>
+				{data.value.map((value) => (
+					<StyledValue key={data.field.label + value}>- {value}</StyledValue>
 				))}
 			</StyledWrapperBox>
 		</>

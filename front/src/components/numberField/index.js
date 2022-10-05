@@ -71,7 +71,7 @@ NumberField.propTypes = {
 		info: string,
 	}).isRequired,
 	inputValue: string,
-	className: object,
+	className: string,
 	onChange: func,
 	first: bool,
 	disabled: bool,
@@ -80,7 +80,7 @@ NumberField.propTypes = {
 
 NumberField.defaultProps = {
 	inputValue: '',
-	className: {},
+	className: '',
 	onChange: () => null,
 	visible: true,
 }

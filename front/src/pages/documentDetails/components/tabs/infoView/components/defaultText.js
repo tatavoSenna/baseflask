@@ -4,11 +4,10 @@ import { object } from 'prop-types'
 import { StyledLabel, StyledValue } from './styles/style'
 
 const DefaultText = ({ data }) => {
-	const label = data.label || data?.variable?.name
 	return (
 		<div>
-			{label && <StyledLabel>{label}:</StyledLabel>}
-			<StyledValue>{data.initialValue}</StyledValue>
+			{data.field.label && <StyledLabel>{data.field.label}:</StyledLabel>}
+			<StyledValue>{data.value}</StyledValue>
 		</div>
 	)
 }

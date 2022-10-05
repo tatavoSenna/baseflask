@@ -4,35 +4,29 @@ import PropTypes from 'prop-types'
 import { StyledTitle, StyledLabel, StyledValue } from './styles/style'
 
 const AddressFieldText = ({ data }) => {
-	const address = {
-		cep: { field_type: 'cep', label: 'CEP', value: '' },
-		country: { field_type: 'country', label: 'País', value: '' },
-		number: { field_type: 'number', label: 'Número', value: '' },
-		street: { field_type: 'street', label: 'Logradouro', value: '' },
-		complement: { field_type: 'complement', label: 'Complemento', value: '' },
-		district: { field_type: 'district', label: 'Bairro', value: '' },
-		city: { field_type: 'city', label: 'Cidade', value: '' },
-		state: { field_type: 'state', label: 'Estado', value: '' },
-	}
-
-	let dataAddressUsed = []
-	data.fields.map((field) => {
-		if (address[field] !== undefined) {
-			address[field].value = data?.initialValue ? data.initialValue[field] : ''
-			return dataAddressUsed.push(address[field])
-		}
-		return null
-	})
+	const addressProperties = [
+		{ name: 'STREET', label: 'Logradouro' },
+		{ name: 'NUMBER', label: 'Número' },
+		{ name: 'COMPLEMENT', label: 'Complemento' },
+		{ name: 'DISTRICT', label: 'Bairro' },
+		{ name: 'CITY', label: 'Cidade' },
+		{ name: 'STATE', label: 'Estado' },
+		{ name: 'COUNTRY', label: 'País' },
+		{ name: 'CEP', label: 'cep' },
+	]
 
 	return (
 		<>
-			<StyledTitle>{data.label || data.variable.name}</StyledTitle>
-			{dataAddressUsed.map((d, i) => (
-				<div key={i}>
-					<StyledLabel>{d.label}:</StyledLabel>
-					<StyledValue>{d.value}</StyledValue>
-				</div>
-			))}
+			{data.field.label && <StyledTitle>{data.field.label}</StyledTitle>}
+			{addressProperties.map(
+				(addressProperty, i) =>
+					addressProperty.name in data.value && (
+						<div key={i}>
+							<StyledLabel>{addressProperty.label}:</StyledLabel>
+							<StyledValue>{data.value[addressProperty.name]}</StyledValue>
+						</div>
+					)
+			)}
 		</>
 	)
 }
