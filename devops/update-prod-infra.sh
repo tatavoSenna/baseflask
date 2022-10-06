@@ -25,5 +25,7 @@ aws cloudformation update-stack \
         ParameterKey=EnvironmentTag,ParameterValue=production \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
         ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \
+        ParameterKey=CpuSize,ParameterValue=512 \
+        ParameterKey=MemSize,ParameterValue=1024 \
     --profile \
         lawing-prod

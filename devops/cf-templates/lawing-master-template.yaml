@@ -297,6 +297,8 @@ Resources:
         StripeApiSecretKey: !Ref StripeApiSecretKey
         EnvironmentTag: !Ref EnvironmentTag
         BackEndSentryDSN: !Ref BackEndSentryDSN
+        CpuSize: !Ref CpuSize
+        MemSize: !Ref MemSize
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
