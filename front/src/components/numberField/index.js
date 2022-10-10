@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { string, shape, object, func, bool } from 'prop-types'
+import PropTypes, { string, shape, func, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
 import { validateNumber } from 'utils'

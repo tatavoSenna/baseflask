@@ -11,23 +11,26 @@ export const CommonFields = ({ hasDescription, ...props }) => {
 		<>
 			<div
 				style={{
-					display: 'flex',
-					justifyContent: 'space-between',
 					marginTop: '24px',
+					display: 'flex',
+					flexDirection: 'column',
 				}}>
-				<FormItem label="Título" $width={'70%'}>
+				<FormItem
+					style={{ alignSelf: 'flex-end' }}
+					label="Opcional"
+					$width={'fit-content'}
+					$labelTop={'1px'}>
+					<Switch
+						defaultChecked={data.optional}
+						onChange={(e) => update({ optional: e })}
+					/>
+				</FormItem>
+				<FormItem label="Título" $width={'100%'}>
 					<Input
 						onBlur={(e) => update({ label: e.target.value })}
 						defaultValue={data.label}
 						autoComplete="off"
 						style={{ width: '100%' }}
-					/>
-				</FormItem>
-
-				<FormItem label="Opcional" $width={'fit-content'} $labelTop={'1px'}>
-					<Switch
-						defaultChecked={data.optional}
-						onChange={(e) => update({ optional: e })}
 					/>
 				</FormItem>
 			</div>
