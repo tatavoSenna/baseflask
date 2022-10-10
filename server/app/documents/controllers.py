@@ -1,4 +1,5 @@
 import json
+import logging
 import base64
 import io
 import boto3
@@ -741,9 +742,11 @@ def create_remote_document(document, variables, document_template, company_id):
             "webhook_url": webhook.webhook,
             "text_type": webhook_text_type,
         }
-
-        response = sns.publish(
-            TargetArn=topic_arn,
-            Message=json.dumps({"default": json.dumps(message)}),
-            MessageStructure="json",
-        )
+        try:
+            response = sns.publish(
+                TargetArn=topic_arn,
+                Message=json.dumps({"default": json.dumps(message)}),
+                MessageStructure="json",
+            )
+        except Exception as e:
+            logging.exception("Could not publish message to create document SNS")
