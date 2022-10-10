@@ -49,6 +49,7 @@ const makePageDisplay = (pageIndex, formQuestionsPage, formAnswerVariables) => {
 }
 
 const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
+	console.log(infos)
 	const history = useHistory()
 	const { id } = useParams()
 

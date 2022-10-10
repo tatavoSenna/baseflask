@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	Form,
@@ -115,16 +115,29 @@ const Tabs = ({
 		}
 	}
 
-	if (!sent) {
-		signers.map((item) =>
-			item.fields.map((field) => {
-				if (field.valueVariable && !isVariables) {
-					setVariables(true)
-				}
-				return null
-			})
-		)
-	}
+	const validatingSignersFields = []
+
+	const allSystemSigners =
+		signed === false
+			? signers.map((item) => item.fields.map((field) => field)).flat()
+			: null
+
+	allSystemSigners.map((f) => {
+		if ('valueVariable' in f) {
+			if (f.valueVariable !== '') {
+				validatingSignersFields.push(true)
+			} else {
+				validatingSignersFields.push(false)
+			}
+		} else {
+			validatingSignersFields.push(false)
+		}
+		return null
+	})
+
+	useEffect(() => {
+		setVariables(validatingSignersFields.find((f) => f === false) ?? true)
+	}, [validatingSignersFields, isVariables])
 
 	const version = () => {
 		const disableButton = !(
