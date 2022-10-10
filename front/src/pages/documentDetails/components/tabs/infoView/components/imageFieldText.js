@@ -19,7 +19,7 @@ const ImageFieldText = ({ data }) => {
 					{(Array.isArray(data.value) ? data.value : [data.value]).map(
 						(img, i) => (
 							<ImageBorder key={i}>
-								<Image width="100%" src={img} />
+								<CenteredImage src={img} />
 							</ImageBorder>
 						)
 					)}
@@ -37,6 +37,18 @@ const ImageBorder = styled.div`
 	padding: 8px;
 	border: 1px solid #d9d9d9;
 	border-radius: 2px;
+
+	.ant-image {
+		height: 100%;
+		width: 100%;
+	}
+`
+
+const CenteredImage = styled(Image)`
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	margin: auto;
 `
 
 ImageFieldText.propTypes = {

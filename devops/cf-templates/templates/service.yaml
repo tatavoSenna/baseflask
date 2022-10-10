@@ -178,8 +178,13 @@ Resources:
       Family: !Sub ${AWS::StackName}-lawing-api
       RequiresCompatibilities:
         - !If [Fargate, "FARGATE", "EC2"]
+<<<<<<< HEAD
       Memory: !Ref MemSize
       Cpu: !Ref CpuSize
+=======
+      Memory: 1024
+      Cpu: 512
+>>>>>>> 9af752fc (Raise container cpu and mem)
       NetworkMode: !If [Fargate, "awsvpc", "bridge"]
       ExecutionRoleArn: !Ref TaskExecutionRole
       TaskRoleArn: !Ref TaskRole

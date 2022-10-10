@@ -95,8 +95,8 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 									return <PersonFieldText key={i} data={fieldData} />
 								case 'date':
 									return <DateFieldText key={i} data={fieldData} />
-								// case 'structured_list':
-								// 	return <StructureListFieldText key={i} data={fieldData} />
+								case 'structured_list':
+									return <StructureListFieldText key={i} data={fieldData} />
 								case 'checkbox':
 									return <CheckBoxFieldText key={i} data={fieldData} />
 								case 'variable_image':
