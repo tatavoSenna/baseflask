@@ -117,12 +117,11 @@ const Tabs = ({
 
 	const validatingSignersFields = []
 
-	const allSystemSigners =
-		signed === false
-			? signers.map((item) => item.fields.map((field) => field)).flat()
-			: null
+	const allSystemSigners = signers
+		.map((item) => item.fields.map((field) => field))
+		.flat()
 
-	allSystemSigners.map((f) => {
+	allSystemSigners.forEach((f) => {
 		if ('valueVariable' in f) {
 			if (f.valueVariable !== '') {
 				validatingSignersFields.push(true)
@@ -132,7 +131,6 @@ const Tabs = ({
 		} else {
 			validatingSignersFields.push(false)
 		}
-		return null
 	})
 
 	useEffect(() => {
