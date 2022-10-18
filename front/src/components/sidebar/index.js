@@ -72,6 +72,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 		<>
 			{isWeb ? (
 				<Sider
+					style={{ position: 'fixed' }}
 					className={styles.sider}
 					trigger={null}
 					collapsed={dynamicCollapse}

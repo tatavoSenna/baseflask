@@ -8,11 +8,12 @@ import Header from '../Header'
 import SideBar from '../sidebar'
 
 const StyledMainLayout = styled(Layout)`
-	height: '100vh';
+	height: 100%;
 	background-color: #ececec;
 `
 const StyledInternalLayout = styled(Layout)`
 	background-color: #fff;
+	margin-left: 200px;
 `
 const { Content } = Layout
 const StyledMainContent = styled(Content)`

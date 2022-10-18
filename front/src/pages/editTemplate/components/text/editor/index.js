@@ -6,12 +6,9 @@ import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import './styles.css'
 
-const Editor = ({ text, onUpdateText, block }) => {
+const Editor = ({ text, onUpdateText, block, getEditor }) => {
 	return (
-		<div
-			style={{
-				margin: 5,
-			}}>
+		<>
 			<div className={classNames(styles.documentEditor)}>
 				<div
 					id="toolbar-container"
@@ -26,6 +23,7 @@ const Editor = ({ text, onUpdateText, block }) => {
 								if (toolbarContainer) {
 									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 								}
+								getEditor(editor)
 							}}
 							editor={DecoupledEditor}
 							config={{
@@ -51,7 +49,7 @@ const Editor = ({ text, onUpdateText, block }) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	)
 }
 
@@ -59,6 +57,7 @@ Editor.propTypes = {
 	text: string,
 	onUpdateText: func,
 	block: bool,
+	getEditor: func,
 }
 
 export default Editor

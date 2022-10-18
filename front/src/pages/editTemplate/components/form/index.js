@@ -11,6 +11,7 @@ import {
 	editTemplatePageMove,
 } from '~/states/modules/editTemplate'
 import Page from './page'
+import styled from 'styled-components'
 
 const { TabPane } = Tabs
 
@@ -92,7 +93,6 @@ const DraggableTabs = ({ setCurrent, lastPage, ...props }) => {
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<Tabs
-				style={{ maxWidth: '40rem' }}
 				onEdit={add}
 				onChange={onChange}
 				activeKey={props.current}
@@ -114,7 +114,7 @@ const DraggableTabs = ({ setCurrent, lastPage, ...props }) => {
 	)
 }
 
-const TemplateForm = ({ data, setInputsFilled }) => {
+const TemplateForm = ({ data, setInputsFilled, getWidgetIndexes }) => {
 	const dispatch = useDispatch()
 	const [current, setCurrent] = useState('0')
 
@@ -163,14 +163,22 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 		}))
 	}, [data.form, setInputsFilled])
 
+	useEffect(() => {
+		getWidgetIndexes(parseInt(current))
+	}, [current, getWidgetIndexes])
+
 	return (
-		<>
+		<WidgetWrapper>
 			<DraggableTabs
 				current={current}
 				setCurrent={setCurrent}
 				lastPage={data.form.length}>
 				{data.form.map((page, index) => (
-					<TabPane key={index} tab={page.title} closable={false}>
+					<TabPane
+						style={{ heigth: '100%' }}
+						key={index}
+						tab={page.title}
+						closable={false}>
 						<Page
 							pageIndex={index}
 							data={data.form[index]}
@@ -183,7 +191,7 @@ const TemplateForm = ({ data, setInputsFilled }) => {
 			{!data.form.length && (
 				<Empty description="Sem Páginas" style={{ marginTop: '3rem' }} />
 			)}
-		</>
+		</WidgetWrapper>
 	)
 }
 
@@ -192,6 +200,7 @@ export default React.memo(TemplateForm)
 TemplateForm.propTypes = {
 	data: object,
 	setInputsFilled: func,
+	getWidgetIndexes: func,
 }
 
 DraggableTabs.propTypes = {
@@ -200,3 +209,14 @@ DraggableTabs.propTypes = {
 	lastPage: number,
 	children: any,
 }
+
+const WidgetWrapper = styled.div`
+	min-width: 600px;
+	width: 640px;
+
+	.ant-tabs.ant-tabs-top,
+	.ant-tabs.ant-tabs-top.ant-tabs-mobile,
+	.ant-tabs-content.ant-tabs-content-top {
+		height: 100%;
+	}
+`
