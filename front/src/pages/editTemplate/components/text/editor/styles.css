@@ -1,7 +1,7 @@
-.ck-editor__editable_inline {
-	min-height: 24cm;
+.ck-content h1 {
+	font-size: 18px;
 }
 
-.ck-comment__input .ck-editor__editable_inline {
-	min-height: auto;
+.ck-content h2 {
+	font-size: 16px;
 }

@@ -161,6 +161,7 @@ const DocumentDetails = () => {
 	}
 
 	const handleSaveStepChanges = (values) => {
+		console.log(values.dueDate)
 		dispatch(
 			editStep({
 				id,

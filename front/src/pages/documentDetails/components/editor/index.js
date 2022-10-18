@@ -5,6 +5,7 @@ import { string, func, bool, array } from 'prop-types'
 import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import { Spin } from 'antd'
+import './styles.css'
 
 const Editor = ({ text, onUpdateText, block, versionLoading, title }) => {
 	return (
@@ -55,6 +56,27 @@ const Editor = ({ text, onUpdateText, block, versionLoading, title }) => {
 									'Link',
 									'Autoformat',
 								],
+								heading: {
+									options: [
+										{
+											model: 'paragraph',
+											title: 'Paragraph',
+											class: 'ck-heading_paragraph',
+										},
+										{
+											model: 'heading1',
+											view: 'h1',
+											title: 'Heading 1',
+											class: 'ck-heading_heading1',
+										},
+										{
+											model: 'heading2',
+											view: 'h2',
+											title: 'Heading 2',
+											class: 'ck-heading_heading2',
+										},
+									],
+								},
 							}}
 							onChange={(event, editor) => {
 								onUpdateText(editor.getData())
