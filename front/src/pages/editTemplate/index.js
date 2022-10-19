@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Menu, Form, Button, PageHeader, Layout, Spin } from 'antd'
+import { Menu, Form, Button, PageHeader, Layout, Spin, Row } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
@@ -162,32 +162,30 @@ const EditTemplate = () => {
 			{loggedUser.is_company_admin ? (
 				<Layout
 					style={{ padding: '0', backgroundColor: '#fff', width: '100%' }}>
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'space-between',
-						}}>
-						<PageHeader>
+					<PageHeader>
+						<Row justify="space-between">
 							<BreadCrumb
 								parent="Modelos"
 								editable={true}
 								current={data.title}
 								onEdit={handleEditTitleButton}
+								propsSize="500px"
 							/>
-						</PageHeader>
-						<Button
-							form="createTemplate"
-							key="button"
-							type="primary"
-							htmlType="submit"
-							className={styles.button}
-							disabled={
-								!Object.values(inputsFilled).every(Boolean) ||
-								disabledTitleTemplate
-							}>
-							Salvar
-						</Button>
-					</div>
+							<Button
+								form="createTemplate"
+								key="button"
+								type="primary"
+								htmlType="submit"
+								className={styles.button}
+								disabled={
+									!Object.values(inputsFilled).every(Boolean) ||
+									disabledTitleTemplate
+								}>
+								Salvar
+							</Button>
+						</Row>
+					</PageHeader>
+
 					<Menu
 						onClick={handleNav}
 						selectedKeys={[current]}
