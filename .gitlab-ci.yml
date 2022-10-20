@@ -19,7 +19,7 @@ black:
 
 eslint:
   stage: eslint
-  image: node:latest
+  image: node:18
   allow_failure: false
   script:
     - cd front

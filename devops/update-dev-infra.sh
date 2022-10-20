@@ -26,6 +26,6 @@ aws cloudformation update-stack \
         ParameterKey=BackEndSentryDSN,UsePreviousValue=true \
         ParameterKey=FrontEndSentryDSN,UsePreviousValue=true \
         ParameterKey=CpuSize,ParameterValue=256 \
-        ParameterKey=MemSize,ParameterValue=512 \
+        ParameterKey=MemSize,ParameterValue=2048 \
     --profile \
         lawing-dev
