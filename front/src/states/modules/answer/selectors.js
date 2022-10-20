@@ -9,12 +9,7 @@ export const selectAnswer = (data, payload) => {
 
 	Object.entries(payload.data).forEach((answer) => {
 		var index
-		if (
-			answer[0].slice(0, 15) === 'structured_list' ||
-			answer[0].slice(0, 19) === 'structured_checkbox'
-		) {
-			index = Number(answer[0].split('_').slice(-1))
-		} else if (answer[0].slice(0, 6) === 'image_') {
+		if (answer[0].slice(0, 6) === 'image_') {
 			index = fields.findIndex((f) => 'image_' + f.variable.name === answer[0])
 		} else {
 			index = fields.findIndex((f) => f?.variable?.name === answer[0])

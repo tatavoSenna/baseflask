@@ -97,44 +97,27 @@ function* editTemplateSaga({ payload = {} }) {
 	// Applies the extractName func on variables from the structure
 	const structuredVariable = (variable) => {
 		const structVarObj = {
+			...extractName(variable),
 			structure: {},
-			main: {},
-		}
-		if (Array.isArray(variable.structure)) {
-			variable.structure.forEach((field) => {
-				if (field?.name) {
-					structVarObj.structure[field.name] = extractName(field)
-				}
-			})
-		} else {
-			structVarObj.structure[variable.structure.name] = extractName(
-				variable.structure
-			)
 		}
 
-		if (Array.isArray(variable.main)) {
-			variable.main.forEach((field) => {
-				structVarObj.main[field.name] = extractName(field)
-			})
-		} else {
-			structVarObj.main[variable.main.name] = extractName(variable.main)
-		}
+		variable.structure.forEach((field) => {
+			if (field?.name) {
+				structVarObj.structure[field.name] = extractName(field)
+			}
+		})
+
 		return structVarObj
 	}
 
 	// Iterates over the variables applying the extractName function.
-	// Structured variables are named after their specific type and index of both page and field, e.g., structured_list_0_3.
 	const arrangedVariables = (variables) => {
 		const variablesObj = {}
-		variables.forEach((page, pageIndex) => {
-			page.forEach((field, fieldIndex) => {
+		variables.forEach((page) => {
+			page.forEach((field) => {
 				if (field) {
-					if (field.structure && field.main) {
-						const type = Array.isArray(field.main)
-							? field.main[0].type
-							: field.main.type
-						variablesObj[`${type}_${pageIndex}_${fieldIndex}`] =
-							structuredVariable(field)
+					if (field.structure) {
+						variablesObj[field.name] = structuredVariable(field)
 					} else {
 						variablesObj[field.name] = extractName(field)
 					}
@@ -149,6 +132,8 @@ function* editTemplateSaga({ payload = {} }) {
 		current_node: '0',
 		created_by: '',
 	}
+
+	console.log(data.variables)
 
 	if (id === 'new') {
 		try {

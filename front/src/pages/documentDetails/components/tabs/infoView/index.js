@@ -16,28 +16,22 @@ import { ContainerTabs, ScrollContent } from '../styles'
 
 const { Title } = Typography
 
-const makeVariableName = (pageIndex, fieldIndex, field) => {
+const makeVariableName = (field) => {
 	switch (field.type) {
 		case 'variable_image':
 			return `image_${field.variable.name}`
-		case 'structured_list':
-			return `structured_list_${pageIndex}_${fieldIndex}`
 		default:
 			return field.variable.name
 	}
 }
 
-const makePageDisplay = (pageIndex, formQuestionsPage, formAnswerVariables) => {
+const makePageDisplay = (formQuestionsPage, formAnswerVariables) => {
 	const displayFields = []
-	formQuestionsPage.fields.forEach(function (field, fieldIndex) {
-		if (
-			'variable' in field &&
-			makeVariableName(pageIndex, fieldIndex, field) in formAnswerVariables
-		) {
+	formQuestionsPage.fields.forEach(function (field) {
+		if ('variable' in field && makeVariableName(field) in formAnswerVariables) {
 			const fieldData = {
 				field,
-				value:
-					formAnswerVariables[makeVariableName(pageIndex, fieldIndex, field)],
+				value: formAnswerVariables[makeVariableName(field)],
 			}
 			displayFields.push(fieldData)
 		}
@@ -54,8 +48,8 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 	const { id } = useParams()
 
 	let formDisplay = []
-	infos.form.forEach((page, pageIndex) => {
-		page = makePageDisplay(pageIndex, page, infos.variables)
+	infos.form.forEach((page) => {
+		page = makePageDisplay(page, infos.variables)
 		if (page.fields.length > 0) {
 			formDisplay.push(page)
 		}

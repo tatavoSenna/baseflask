@@ -44,76 +44,70 @@ def format_variables(variables, document_template_id):
     variables_specification = DocumentTemplate.query.get(document_template_id).variables
     text_type = DocumentTemplate.query.get(document_template_id).text_type
 
-    def format_variable(specs, variable, variables, struct_name):
+    def format_variable(specs, variable):
         variable_type = specs["type"]
         if variable_type == "string":
             if specs["doc_display_style"] == "sentence_case":
                 try:
-                    return variables[variable].capitalize()
+                    return variable.capitalize()
                 except Exception as e:
                     logging.exception(e)
 
             elif specs["doc_display_style"] == "uppercase":
                 try:
-                    return variables[variable].upper()
+                    return variable.upper()
                 except Exception as e:
                     logging.exception(e)
 
             elif specs["doc_display_style"] == "lowercase":
                 try:
-                    return variables[variable].lower()
+                    return variable.lower()
                 except Exception as e:
                     logging.exception(e)
 
             else:
                 try:
-                    return variables[variable]
+                    return variable
                 except Exception as e:
                     logging.exception(e)
 
         elif variable_type == "number":
-            return NumberFormatter(
-                variables[variable], specs.get("doc_display_style", None)
-            )
+            return NumberFormatter(variable, specs.get("doc_display_style", None))
 
         elif variable_type == "percentage":
             if specs["doc_display_style"] == "extended":
                 try:
-                    return num2words(variables[variable], lang="pt_BR") + " porcento"
+                    return num2words(variable, lang="pt_BR") + " porcento"
                 except Exception as e:
                     logging.exception(e)
             elif specs["doc_display_style"] == "plain":
                 try:
-                    return str(variables[variable]).replace(".", ",") + "%"
+                    return str(variable).replace(".", ",") + "%"
                 except Exception as e:
                     logging.exception(e)
 
         elif variable_type == "date":
             if specs["doc_display_style"] in ["date_extended", "extended"]:
                 try:
-                    list = variables[variable][0:10].split("-", 2)
+                    list = variable[0:10].split("-", 2)
                     dia = list[2]
                     mes = month_dictionary.get(int(list[1].strip("0")))
                     ano = list[0]
                     if mes != None:
                         return f"{dia} de {mes} de {ano}"
                     else:
-                        return datetime.strptime(
-                            variables[variable][0:10], "%d de %B de %Y"
-                        )
+                        return datetime.strptime(variable[0:10], "%d de %B de %Y")
                 except Exception as e:
                     logging.exception(e)
             else:
                 try:
-                    date = datetime.strptime(variables[variable][0:10], "%Y-%m-%d")
+                    date = datetime.strptime(variable[0:10], "%Y-%m-%d")
                     return date.strftime(specs["doc_display_style"])
                 except Exception as e:
                     logging.exception(e)
 
         elif variable_type == "time":
-            return TimeFormatter(
-                variables[variable], specs.get("doc_display_style", None)
-            )
+            return TimeFormatter(variable, specs.get("doc_display_style", None))
 
         elif variable_type == "database":
             try:
@@ -122,7 +116,7 @@ def format_variables(variables, document_template_id):
                 new_variables = {}
 
                 for item in response:
-                    if item[specs["search_key"]] == int(variables[variable]):
+                    if item[specs["search_key"]] == int(variable):
                         search_result = item
                         break
 
@@ -138,7 +132,7 @@ def format_variables(variables, document_template_id):
         elif variable_type == "list":
             if specs["doc_display_style"] == "commas":
                 try:
-                    list_variable = variables[variable]
+                    list_variable = variable
                     if len(list_variable) < 2:
                         return list_variable[0]
                     last_element = list_variable.pop()
@@ -150,19 +144,19 @@ def format_variables(variables, document_template_id):
             elif specs["doc_display_style"] == "bullets":
                 if text_type == ".txt":
                     try:
-                        return Markup("</li><p>").join(variables[variable])
+                        return Markup("</li><p>").join(variable)
                     except Exception as e:
                         logging.exception(e)
 
                 elif text_type == ".docx":
                     try:
-                        return "\a".join(variables[variable])
+                        return "\a".join(variable)
                     except Exception as e:
                         logging.exception(e)
 
         elif variable_type == "currency":
             try:
-                num_variable = variables[variable]
+                num_variable = variable
                 if specs["doc_display_style"] in ["currency_extended", "extended"]:
                     return (
                         format_currency(num_variable, "BRL", locale="pt_BR")
@@ -175,54 +169,53 @@ def format_variables(variables, document_template_id):
                 logging.exception(e)
 
         elif variable_type[0:11] == "structured_":
-            return StructuredListFormatter(variables[struct_name], specs)
+            return StructuredListFormatter(variable, specs)
 
         elif variable_type == "internal_database":
-            return InternalDatabaseFormatter(variables[variable])
+            return InternalDatabaseFormatter(variable)
 
     if not variables_specification:
         return variables
 
-    extra_variables = {}
-    for variable in variables:
-        if not variable in variables_specification:
+    for variable_name in variables:
+        if not variable_name in variables_specification:
             continue
 
-        if variable[0:11] == "structured_":
+        if variables_specification[variable_name]["type"] == "structured_list":
 
-            # This first loop formats the variables from the structure
-            for index, item in enumerate(variables[variable]):
-                for variable_name, specs in variables_specification[variable][
+            # This formats the variables from the structure
+            structured_variables = []
+            for item in variables[variable_name]:
+                structured_item = {}
+                for subvariable_name, specs in variables_specification[variable_name][
                     "structure"
                 ].items():
-                    formatted = format_variable(
-                        specs, variable_name, item, struct_name=None
+                    structured_item[subvariable_name] = format_variable(
+                        specs, item[subvariable_name]
                     )
-                    variables[variable][index][variable_name] = formatted
 
-            # The second loop formats the main variables
-            for variable_name, specs in variables_specification[variable][
-                "main"
-            ].items():
-                formatted = format_variable(specs, variable_name, variables, variable)
-                extra_variables[variable_name] = formatted
+                structured_variables.append(structured_item)
 
-        elif variables_specification[variable]["type"] == "person":
-
-            variables[variable]["TEXT"] = create_text_variable(
-                variables[variable], "person"
+            # This inserts the structure variables inside the final structured object
+            variables[variable_name] = format_variable(
+                variables_specification[variable_name], structured_variables
             )
 
-        elif variables_specification[variable]["type"] == "address":
+        elif variables_specification[variable_name]["type"] == "person":
+
+            variables[variable_name]["TEXT"] = create_text_variable(
+                variables[variable_name], "person"
+            )
+
+        elif variables_specification[variable_name]["type"] == "address":
             continue
 
         else:
             formatted = format_variable(
-                variables_specification[variable], variable, variables, struct_name=None
+                variables_specification[variable_name], variables[variable_name]
             )
-            variables[variable] = formatted
+            variables[variable_name] = formatted
 
-    variables.update(extra_variables)
     return variables
 
 

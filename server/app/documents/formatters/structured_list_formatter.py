@@ -82,3 +82,6 @@ class StructuredListFormatter:
             return return_variables
         except Exception as e:
             capture_exception(e)
+
+    def __getitem__(self, index):
+        return self._variables[index]
