@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
 
-import { Form } from 'antd'
+import { Form, Spin } from 'antd'
 
 import {
 	DisplayNone,
@@ -56,6 +56,16 @@ const PersonField = ({
 		},
 		[setPerson, onChange]
 	)
+
+	const [loading, setLoading] = useState(false)
+
+	const getLoading = useCallback(
+		(isLoading) => {
+			setLoading(isLoading)
+		},
+		[setLoading]
+	)
+
 	return (
 		<Form.Item
 			key={name}
@@ -94,34 +104,38 @@ const PersonField = ({
 					</PersonTitle>
 				</Form.Item>
 			)}
-			<PersonContainer>
-				{person === 'natural_person' && (
-					<NaturalPerson
-						fields={fields}
-						name={variable.name}
-						disabled={disabled}
-						visible={visible}
-						optional={optional}
-						onChange={onChange}
-						form={form}
-						first={first}
-						inputValue={_personValue}
-					/>
-				)}
-				{person === 'legal_person' && (
-					<LegalPerson
-						fields={fields}
-						name={variable.name}
-						disabled={disabled}
-						visible={visible}
-						optional={optional}
-						onChange={onChange}
-						inputValue={_personValue}
-						form={form}
-						first={first}
-					/>
-				)}
-			</PersonContainer>
+			<Spin spinning={loading} tip="Carregando dados">
+				<PersonContainer>
+					{person === 'natural_person' && (
+						<NaturalPerson
+							fields={fields}
+							name={variable.name}
+							disabled={disabled}
+							visible={visible}
+							optional={optional}
+							onChange={onChange}
+							form={form}
+							first={first}
+							inputValue={_personValue}
+							getLoading={getLoading}
+						/>
+					)}
+					{person === 'legal_person' && (
+						<LegalPerson
+							fields={fields}
+							name={variable.name}
+							disabled={disabled}
+							visible={visible}
+							optional={optional}
+							onChange={onChange}
+							inputValue={_personValue}
+							form={form}
+							first={first}
+							getLoading={getLoading}
+						/>
+					)}
+				</PersonContainer>
+			</Spin>
 		</Form.Item>
 	)
 }

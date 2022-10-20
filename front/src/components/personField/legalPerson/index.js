@@ -7,7 +7,7 @@ import PropTypes, {
 	object,
 	string,
 } from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCnpjAutocomplete } from './utils/cnpjAutocomplete'
 
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
@@ -22,6 +22,7 @@ const LegalPerson = ({
 	disabled,
 	visible,
 	first,
+	getLoading,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -44,8 +45,8 @@ const LegalPerson = ({
 	const [state, setState] = useState(fieldState)
 	const [attorneyState, setStateAttorney] = useState(fieldStateAttorney)
 
-	const setCep = useCepAutocomplete(form, fields, name, setState)
-	const setAttorneyCep = useCepAutocomplete(
+	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
+	const [setAttorneyCep, loadingCepAttorney] = useCepAutocomplete(
 		form,
 		fields,
 		name,
@@ -53,7 +54,16 @@ const LegalPerson = ({
 		'attorney_'
 	)
 
-	const setCnpj = useCnpjAutocomplete(form, fields, name, setCep)
+	const [setCnpj, loadingCnpj] = useCnpjAutocomplete(form, fields, name, setCep)
+
+	useEffect(() => {
+		if (loadingCnpj || loadingCep) getLoading(true)
+		if (!loadingCnpj && !loadingCep) getLoading(false)
+	}, [getLoading, loadingCnpj, loadingCep])
+
+	useEffect(() => {
+		getLoading(loadingCepAttorney)
+	}, [getLoading, loadingCepAttorney])
 
 	const componentsTypes = Object.keys(components)
 
@@ -136,6 +146,7 @@ LegalPerson.propTypes = {
 	visible: bool,
 	onChange: func,
 	inputValue: object,
+	getLoading: func,
 }
 
 LegalPerson.defaultProps = {
