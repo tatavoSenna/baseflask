@@ -15,6 +15,7 @@ import {
 	successMessage,
 	errorMessage,
 } from '~/services/messager'
+import { selectVisibleAnswers } from '../answer/selectors'
 
 export default function* rootSaga() {
 	yield takeEvery(verifyToken, verifyTokenSaga)
@@ -52,17 +53,20 @@ function* createContractExternalSaga({ payload }) {
 		updateKey: 'createContractExternal',
 	})
 
-	const { data, dataImg } = yield select((state) => {
-		const { answer } = state
-		return answer
+	const { answer, visible, pages } = yield select((state) => {
+		const {
+			answer,
+			question: { visible, data: pages },
+		} = state
+		return { answer, visible, pages }
 	})
 
-	const { token, visible, draft } = payload
+	const { token, draft } = payload
 
 	try {
 		yield call(api.post, '/external/create', {
 			token,
-			variables: { ...data, ...dataImg },
+			variables: selectVisibleAnswers(answer.data, pages, visible),
 			visible,
 			draft,
 		})

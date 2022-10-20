@@ -51,6 +51,28 @@ export const selectAnswer = (data, payload) => {
 	return filterEmptyValues(extend(data, answers))
 }
 
+export const selectVisibleAnswers = (answers, pages, visible) => {
+	answers = { ...answers }
+
+	for (let variable in answers) {
+		const isStructured = variable.slice(0, 11) === 'structured_'
+		if (!isStructured) {
+			for (let pageIndex = 0; pageIndex < pages.length; pageIndex++) {
+				let fieldIndex = pages[pageIndex].fields.findIndex(
+					(f) => f.variable?.name === variable.replace('image_', '')
+				)
+
+				if (fieldIndex !== -1 && visible[pageIndex][fieldIndex] === false) {
+					delete answers[variable]
+					break
+				}
+			}
+		}
+	}
+
+	return answers
+}
+
 // Creates a new data object, filtering empty values recursively
 const filterEmptyValues = (data) => {
 	let filteredData = {}

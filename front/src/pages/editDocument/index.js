@@ -18,8 +18,8 @@ const EditDocument = () => {
 	const { loading, draft } = useSelector(({ editContract }) => editContract)
 
 	const handleFinish = useCallback(
-		(visible, draft, history) => {
-			dispatch(answerModify({ id, history, visible, draft }))
+		(draft, history) => {
+			dispatch(answerModify({ id, history, draft }))
 		},
 		[dispatch, id]
 	)
