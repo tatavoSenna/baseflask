@@ -79,33 +79,9 @@ const Tabs = ({
 		({ documentDetail }) => documentDetail.cancelledDocument
 	)
 
-	/**
-	 * Checks if we can change the variables values of a .txt document.
-	 *
-	 * Currently, we only allow the update of variables in a txt document if the document has never received a update that changes its content.
-	 *
-	 * @param {*} versions
-	 *
-	 */
-	const canDocumentChangeVariables = (versions) => {
-		for (let i = 0; i < versions.length; i++) {
-			// If the version is not the "Version 0" and changes something other than the document variables values...
-			if (!versions[i].only_updated_variables) {
-				return false
-			}
-		}
-		return true
-	}
-
 	const tab = (option) => {
 		if (option === '1') {
-			return (
-				<InfoView
-					infos={infos}
-					textType={textType}
-					cantItChangeVariablesValues={canDocumentChangeVariables(versions)}
-				/>
-			)
+			return <InfoView infos={infos} />
 		} else if (option === '2') {
 			return version()
 		} else if (option === '3') {
@@ -522,15 +498,10 @@ const Tabs = ({
 	return (
 		<div
 			style={{
-				display: 'flex',
-				flexDirection: 'column',
 				padding: 24,
-				margin: 5,
-				height: 'calc(100% - 5px)',
-				flex: 1,
-				minWidth: '40%',
+				height: '100%',
+				width: '40%',
 				background: '#fff',
-				alignItems: 'center',
 				border: '1px solid #F0F0F0',
 			}}>
 			<Menu
@@ -563,10 +534,10 @@ const Tabs = ({
 
 			<div
 				style={{
-					padding: 10,
-					width: '100%',
+					padding: '10px 10px 0',
 					display: 'flex',
 					flexDirection: 'column',
+					height: '100%',
 				}}>
 				{tab(value)}
 			</div>

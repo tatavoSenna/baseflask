@@ -1,7 +1,6 @@
 import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { object, string, bool } from 'prop-types'
-import { Button, Divider, Typography } from 'antd'
+import { object } from 'prop-types'
+import { Divider, Typography } from 'antd'
 
 import DefaultText from './components/defaultText'
 import DateFieldText from './components/dateFieldText'
@@ -42,11 +41,7 @@ const makePageDisplay = (formQuestionsPage, formAnswerVariables) => {
 	}
 }
 
-const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
-	console.log(infos)
-	const history = useHistory()
-	const { id } = useParams()
-
+const InfoView = ({ infos }) => {
 	let formDisplay = []
 	infos.form.forEach((page) => {
 		page = makePageDisplay(page, infos.variables)
@@ -54,21 +49,6 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 			formDisplay.push(page)
 		}
 	})
-
-	const handleEdit = () => {
-		return history.push({
-			pathname: `/documents/${id}/edit`,
-			state: { current: 0 },
-		})
-	}
-
-	const buttonEditForm = () => {
-		return (
-			<Button onClick={handleEdit} disabled={infos.sent}>
-				Editar
-			</Button>
-		)
-	}
 
 	return (
 		<ScrollContent>
@@ -105,8 +85,6 @@ const InfoView = ({ infos, textType, cantItChangeVariablesValues }) => {
 					</ContainerTabs>
 				</div>
 			))}
-			{(textType === '.docx' || cantItChangeVariablesValues) &&
-				buttonEditForm()}
 		</ScrollContent>
 	)
 }
@@ -115,6 +93,4 @@ export default InfoView
 
 InfoView.propTypes = {
 	infos: object,
-	textType: string,
-	cantItChangeVariablesValues: bool,
 }

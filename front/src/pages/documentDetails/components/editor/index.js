@@ -11,8 +11,8 @@ const Editor = ({ text, onUpdateText, block, versionLoading, title }) => {
 	return (
 		<div
 			style={{
-				margin: 5,
-				height: 'calc(100% - 5px)',
+				height: '100%',
+				width: '100%',
 			}}>
 			<div className={classNames(styles.documentEditor)}>
 				<div

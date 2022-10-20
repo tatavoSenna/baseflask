@@ -5,3 +5,7 @@
 .ck-content h2 {
 	font-size: 16px;
 }
+
+.ck-editor__editable {
+	min-height: 640px;
+}
