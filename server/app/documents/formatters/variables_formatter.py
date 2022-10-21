@@ -111,19 +111,11 @@ def format_variables(variables, document_template_id):
 
         elif variable_type == "database":
             try:
-                response = requests.get(f'{specs["database_endpoint"]}').json()
+                response = requests.get(
+                    f'{specs["database_endpoint"]}/{variables[variable]}'
+                )
 
-                new_variables = {}
-
-                for item in response:
-                    if item[specs["search_key"]] == int(variable):
-                        search_result = item
-                        break
-
-                for key in search_result:
-                    new_variables[
-                        slugify(key).upper().replace("-", "_")
-                    ] = search_result[key]
+                new_variables = response.json()
 
                 return new_variables
             except Exception as e:
