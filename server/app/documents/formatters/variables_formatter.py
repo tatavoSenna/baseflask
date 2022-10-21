@@ -111,11 +111,10 @@ def format_variables(variables, document_template_id):
 
         elif variable_type == "database":
             try:
-                response = requests.get(
-                    f'{specs["database_endpoint"]}/{variables[variable]}'
-                )
+                response = requests.get(f'{specs["database_endpoint"]}/{variable}')
 
                 new_variables = response.json()
+                print(new_variables)
 
                 return new_variables
             except Exception as e:
