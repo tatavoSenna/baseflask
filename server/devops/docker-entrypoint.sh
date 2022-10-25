@@ -5,5 +5,5 @@ exec /bin/sh -c "\
     gunicorn wsgi:app \
         --workers 4 \
         --bind 0.0.0.0:5000 \
-        --log-level debug"
+        --timeout 90"
 exec "$@";
