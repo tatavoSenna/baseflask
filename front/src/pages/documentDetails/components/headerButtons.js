@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'antd'
-import { object, string, func } from 'prop-types'
+import { object, string, func, bool } from 'prop-types'
 
-const HeaderButtons = ({ id, history, infos, onDownload }) => {
+const HeaderButtons = ({
+	id,
+	history,
+	infos,
+	onDownload,
+	onUpdate,
+	textUpdate,
+	text,
+	loadingVersion,
+}) => {
 	const { versions, text_type, sent } = infos
 
 	const handleEdit = () =>
@@ -27,11 +36,31 @@ const HeaderButtons = ({ id, history, infos, onDownload }) => {
 		if (text_type === '.docx') setIsEditable(true)
 	}, [versions, setIsEditable, text_type])
 
+	// check if document is ready for create an new version when user type directly on ckeditor
+	const [isUpdatable, setIsUpdatable] = useState(false)
+
+	useEffect(() => {
+		if (text_type === '.txt') {
+			if (text !== textUpdate.text) {
+				setIsUpdatable(true)
+			} else {
+				setIsUpdatable(false)
+			}
+		}
+	}, [text_type, setIsUpdatable, text, textUpdate])
+
 	return (
 		<div style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
 			<Button onClick={handleEdit} disabled={sent || !isEditable}>
-				Editar
+				Editar Informações
 			</Button>
+			{text_type === '.txt' && (
+				<Button
+					disabled={sent || loadingVersion || !isUpdatable}
+					onClick={() => onUpdate(textUpdate)}>
+					Salvar modificações
+				</Button>
+			)}
 			<Button onClick={onDownload}>Baixar Documento</Button>
 		</div>
 	)
@@ -44,4 +73,8 @@ HeaderButtons.propTypes = {
 	history: object,
 	infos: object,
 	onDownload: func,
+	onUpdate: func,
+	textUpdate: object,
+	text: string,
+	loadingVersion: bool,
 }

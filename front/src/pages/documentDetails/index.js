@@ -24,10 +24,8 @@ import {
 	updateDescription,
 	newAssign,
 	sentAssign,
-	selectVersion,
 	downloadLink,
 	getDocumentWordDownload,
-	changeVariables,
 	getDocumentCertificate,
 } from '~/states/modules/documentDetail'
 import { getGroupList } from '~/states/modules/groups'
@@ -120,16 +118,8 @@ const DocumentDetails = () => {
 		dispatch(setShowAssignModal(false))
 	}
 
-	const handleVersion = (id) => {
-		dispatch(selectVersion({ id }))
-	}
-
 	const getDocumentWord = () => {
 		dispatch(getDocumentWordDownload({ id }))
-	}
-
-	const onSubmitChangeVariables = (values) => {
-		dispatch(changeVariables({ id, values }))
 	}
 
 	const handleDownloadButton = () => {
@@ -236,6 +226,11 @@ const DocumentDetails = () => {
 						history={history}
 						infos={data}
 						onDownload={handleDownloadDocDifTypes}
+						onUpdate={handleShowModal}
+						textUpdate={textUpdate}
+						version_id={version_id}
+						text={text}
+						loadingVersion={loadingVersion}
 					/>
 				</PageHeader>
 				<NewVersionModal
@@ -304,23 +299,16 @@ const DocumentDetails = () => {
 								title={data.title}
 							/>
 						)}
-
 						<Tabs
-							textType={data.text_type}
 							downloadDocument={getDocumentWord}
 							signers={data.signers}
-							versions={data.versions}
 							showAssignModal={handleShowAssignModal}
 							infos={data}
 							showStepModal={showStepModal}
-							variables={data.variables}
 							signed={data.signed}
 							sent={data.sent}
 							sentAssign={handleSentAssign}
 							loadingSign={loadingSign}
-							handleVersion={handleVersion}
-							versionId={version_id}
-							onChangeVariables={onSubmitChangeVariables}
 							current={data.workflow.current}
 							steps={data.workflow.steps}
 							onClickPrevious={getPreviousStep}
@@ -328,16 +316,6 @@ const DocumentDetails = () => {
 							onClickDownload={downloadDocument}
 							block={loadingSign || loading}
 							signedWorkflow={data.signed}
-							text={text}
-							textUpdate={textUpdate}
-							onClickUpdate={handleShowModal}
-							blockVersion={
-								loadingSign ||
-								loading ||
-								data.sent ||
-								version_id !== data.versions[0].id
-							}
-							versionLoading={loadingVersion}
 							downloadButton={handleDownloadButton}
 							downloadVersionHandler={downloadVersionHandler}
 						/>
