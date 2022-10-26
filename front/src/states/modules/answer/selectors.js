@@ -9,12 +9,7 @@ export const selectAnswer = (data, payload) => {
 
 	Object.entries(payload.data).forEach((answer) => {
 		var index
-		if (
-			answer[0].slice(0, 15) === 'structured_list' ||
-			answer[0].slice(0, 19) === 'structured_checkbox'
-		) {
-			index = Number(answer[0].split('_').slice(-1))
-		} else if (answer[0].slice(0, 6) === 'image_') {
+		if (answer[0].slice(0, 6) === 'image_') {
 			index = fields.findIndex((f) => 'image_' + f.variable.name === answer[0])
 		} else {
 			index = fields.findIndex((f) => f?.variable?.name === answer[0])
@@ -54,6 +49,28 @@ export const selectAnswer = (data, payload) => {
 		}
 	})
 	return filterEmptyValues(extend(data, answers))
+}
+
+export const selectVisibleAnswers = (answers, pages, visible) => {
+	answers = { ...answers }
+
+	for (let variable in answers) {
+		const isStructured = variable.slice(0, 11) === 'structured_'
+		if (!isStructured) {
+			for (let pageIndex = 0; pageIndex < pages.length; pageIndex++) {
+				let fieldIndex = pages[pageIndex].fields.findIndex(
+					(f) => f.variable?.name === variable.replace('image_', '')
+				)
+
+				if (fieldIndex !== -1 && visible[pageIndex][fieldIndex] === false) {
+					delete answers[variable]
+					break
+				}
+			}
+		}
+	}
+
+	return answers
 }
 
 // Creates a new data object, filtering empty values recursively

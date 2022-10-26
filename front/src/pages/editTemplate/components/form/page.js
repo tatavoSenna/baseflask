@@ -1,14 +1,9 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { object, array, number, func } from 'prop-types'
-import { Card, Form, Input, Button, Dropdown, Menu, Empty } from 'antd'
-import { PlusOutlined, DownOutlined } from '@ant-design/icons'
+import { Form, Input, Empty } from 'antd'
 import Delete from '~/components/deleteConfirm'
-import {
-	editTemplateFieldAdd,
-	editTemplateFormInfo,
-} from '~/states/modules/editTemplate'
-import { fieldStructure } from './fieldStructure'
+import { editTemplateFormInfo } from '~/states/modules/editTemplate'
 
 import { widgets } from './widgets'
 import { JSONWidget } from './widgets/jsonWidget'
@@ -19,37 +14,6 @@ import {
 
 const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	const dispatch = useDispatch()
-
-	const fieldTypes = (
-		<Menu onClick={(value) => handleAddField(value.key)}>
-			<Menu.Item key="text">Texto</Menu.Item>
-			<Menu.Item key="text_area">Parágrafo</Menu.Item>
-			<Menu.Item key="number">Número</Menu.Item>
-			<Menu.Item key="cpf">CPF</Menu.Item>
-			<Menu.Item key="cnpj">CNPJ</Menu.Item>
-			<Menu.Item key="email">Email</Menu.Item>
-			<Menu.Item key="date">Data</Menu.Item>
-			<Menu.Item key="time">Hora</Menu.Item>
-			<Menu.Item key="currency">Moeda</Menu.Item>
-			<Menu.Item key="bank">Banco</Menu.Item>
-			<Menu.Item key="cnae">CNAE</Menu.Item>
-			<Menu.Item key="dropdown">Dropdown</Menu.Item>
-			<Menu.Item key="radio">Rádio</Menu.Item>
-			<Menu.Item key="checkbox">Checkbox</Menu.Item>
-			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
-			<Menu.Item key="database">API</Menu.Item>
-			<Menu.Item key="internal_database">Banco de dados</Menu.Item>
-			<Menu.Item key="person">Pessoa</Menu.Item>
-			<Menu.Item key="address">Endereço</Menu.Item>
-			<Menu.Item key="structured_list">Lista Estruturada</Menu.Item>
-			<Menu.Item key="separator">Separador</Menu.Item>
-		</Menu>
-	)
-
-	const handleAddField = (type) => {
-		const newField = fieldStructure(type)
-		dispatch(editTemplateFieldAdd({ newField, pageIndex }))
-	}
 
 	const handleUpdateTitle = useCallback(
 		(value, pageIndex, fieldIndex) => {
@@ -84,25 +48,27 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 	)
 
 	return (
-		<Card
+		<div
 			style={{
-				marginBottom: '1rem',
-				marginTop: '2rem',
-				maxWidth: '40rem',
-				boxShadow: '0 1px 4px 0 rgba(192, 208, 230, 0.8)',
-				borderRadius: '5px',
+				height: '100%',
+				border: '2px solid #F0F0F0',
+				padding: 20,
 			}}>
 			<div
 				style={{
 					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center',
-					marginBottom: '24px',
+					alignItems: 'baseline',
+					gap: 20,
 				}}>
 				<Form.Item
 					name={`title_${pageIndex}`}
 					label="Título"
-					style={{ width: '50%', margin: '0 0 0 8px' }}
+					style={{
+						display: 'flex',
+						margin: '0 0 8px 0',
+						width: '100%',
+						alignItems: 'center',
+					}}
 					onChange={(e) => handleUpdateTitle(e.target.value, pageIndex)}
 					rules={[{ required: true, message: 'Este campo é obrigatório.' }]}>
 					<Input autoFocus value={data.title} />
@@ -115,36 +81,32 @@ const Page = ({ pageIndex, data, variables, handleRemovePage }) => {
 			{!data.fields.length ? (
 				<Empty description="Sem Campos" style={{ marginBottom: '1rem' }} />
 			) : (
-				data.fields.map((field, fieldIndex) => {
-					const el = field?.type in widgets ? widgets[field.type] : JSONWidget
-					const props = {
-						key: data.ids[fieldIndex],
-						data: field,
-						variables,
-						pageIndex,
-						fieldIndex,
-						onUpdate: handleUpdateField,
-						onRemove: handleRemoveField,
-						onValidate: handleVadidationField,
-						valid: data.valid[fieldIndex],
-					}
-
-					return React.createElement(el, props)
-				})
-			)}
-			<Dropdown overlay={fieldTypes} trigger="click">
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
+				<div
 					style={{
-						display: 'inline-block',
-						float: 'right',
+						overflowY: 'scroll',
+						height: 'calc(100% - 65px)',
+						marginTop: 10,
+						padding: '0 10px 0 0',
 					}}>
-					Novo Campo
-					<DownOutlined />
-				</Button>
-			</Dropdown>
-		</Card>
+					{data.fields.map((field, fieldIndex) => {
+						const el = field?.type in widgets ? widgets[field.type] : JSONWidget
+						const props = {
+							key: data.ids[fieldIndex],
+							data: field,
+							variables,
+							pageIndex,
+							fieldIndex,
+							onUpdate: handleUpdateField,
+							onRemove: handleRemoveField,
+							onValidate: handleVadidationField,
+							valid: data.valid[fieldIndex],
+						}
+
+						return React.createElement(el, props)
+					})}
+				</div>
+			)}
+		</div>
 	)
 }
 

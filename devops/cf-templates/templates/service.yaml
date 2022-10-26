@@ -178,19 +178,14 @@ Resources:
       Family: !Sub ${AWS::StackName}-lawing-api
       RequiresCompatibilities:
         - !If [Fargate, "FARGATE", "EC2"]
-<<<<<<< HEAD
       Memory: !Ref MemSize
       Cpu: !Ref CpuSize
-=======
-      Memory: 1024
-      Cpu: 512
->>>>>>> 9af752fc (Raise container cpu and mem)
       NetworkMode: !If [Fargate, "awsvpc", "bridge"]
       ExecutionRoleArn: !Ref TaskExecutionRole
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
         - Name: lawing-api
-          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:1ce77578
+          Image: 386235651823.dkr.ecr.sa-east-1.amazonaws.com/prod:92496e29
           Essential: true
           LogConfiguration:
             LogDriver: awslogs

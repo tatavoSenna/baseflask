@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { string, func, array, bool } from 'prop-types'
+import { string, func, array, bool, number } from 'prop-types'
 import Editor from './editor'
 import Uploader from '~/components/uploadFile'
 import { Switch, Typography, Button } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
 import { editTemplateText } from '~/states/modules/editTemplate'
+import styled from 'styled-components'
+import AddVariableModal from './modal/addVariableModal'
 
 const { Title } = Typography
 
@@ -19,8 +21,21 @@ const Text = ({
 	setInputsFilled,
 	docPosted,
 	removeDoc,
+	widgetIndexes,
 }) => {
 	const dispatch = useDispatch()
+
+	const [editor, setEditor] = useState(null)
+
+	const getEditorFromCKEditor = (editor) => {
+		setEditor(editor)
+	}
+
+	const [textVariable, setTextVariable] = useState('')
+
+	const handleClickGetVariable = (e) => {
+		setTextVariable(e)
+	}
 
 	const updateText = (e) => {
 		let value = e
@@ -28,6 +43,16 @@ const Text = ({
 			value = e.target.value
 		}
 		dispatch(editTemplateText({ value }))
+	}
+
+	const [openModalVariable, setOpenModalVariable] = useState(false)
+
+	const addVariable = () => {
+		setOpenModalVariable(true)
+	}
+
+	const handleCancel = () => {
+		setOpenModalVariable(false)
 	}
 
 	useEffect(() => {
@@ -43,32 +68,41 @@ const Text = ({
 	}, [data, files, setInputsFilled])
 
 	return (
-		<div
+		<Wrapper
+			$flexDirection="column"
 			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				flexWrap: 'wrap',
-				paddingBottom: 50,
+				flexGrow: 1,
+				minWidth: 0,
 			}}>
-			<div
+			<AddVariableModal
+				editor={editor}
+				open={openModalVariable}
+				onCancel={handleCancel}
+				handleClickGetVariable={handleClickGetVariable}
+				widgetIndexes={widgetIndexes}
+			/>
+			<Wrapper
+				$alignItems="center"
+				$justifyContent="space-between"
 				style={{
-					display: 'flex',
+					marginBottom: 15,
 				}}>
-				<Switch
-					checked={checked}
-					disabled={files.length > 0 || data}
-					onChange={setChecked}
-				/>
-				<Title style={{ marginLeft: 15, width: '50%' }} level={4}>
-					{checked ? 'Insira um arquivo' : 'Insira o texto'}
-				</Title>
-			</div>
-
+				<Wrapper $alignItems="center">
+					<Switch
+						checked={checked}
+						disabled={files.length > 0 || data}
+						onChange={setChecked}
+					/>
+					<Title style={{ margin: '0 0 0 15px' }} level={4}>
+						{checked ? 'Insira um arquivo' : 'Insira o texto'}
+					</Title>
+				</Wrapper>
+				<Button type="primary" onClick={addVariable}>
+					Nova Variável
+				</Button>
+			</Wrapper>
 			{checked ? (
-				<div
-					style={{
-						display: 'flex',
-					}}>
+				<Wrapper>
 					<Uploader
 						setFileList={(files) => {
 							updateFile(files)
@@ -90,11 +124,16 @@ const Text = ({
 							}}
 						/>
 					) : null}
-				</div>
+				</Wrapper>
 			) : (
-				<Editor text={data} onUpdateText={updateText} />
+				<Editor
+					text={data}
+					onUpdateText={updateText}
+					textVariable={textVariable}
+					getEditor={getEditorFromCKEditor}
+				/>
 			)}
-		</div>
+		</Wrapper>
 	)
 }
 
@@ -111,4 +150,12 @@ Text.propTypes = {
 	setInputsFilled: func,
 	docPosted: bool,
 	removeDoc: func,
+	widgetIndexes: number,
 }
+
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: ${({ $flexDirection = 'row' }) => $flexDirection};
+	justify-content: ${({ $justifyContent = 'normal' }) => $justifyContent};
+	align-items: ${({ $alignItems = 'normal' }) => $alignItems};
+`

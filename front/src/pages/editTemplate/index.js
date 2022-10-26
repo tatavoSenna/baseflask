@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Menu, Form, Button, PageHeader, Layout, Spin } from 'antd'
+import { Menu, Form, Button, PageHeader, Layout, Spin, Row } from 'antd'
 import {
 	FormOutlined,
 	NodeIndexOutlined,
-	FileTextOutlined,
 	TeamOutlined,
 } from '@ant-design/icons'
 import {
@@ -44,6 +43,11 @@ const EditTemplate = () => {
 	})
 	const [files, postFiles] = useState([])
 	const [checked, setChecked] = useState(false)
+	const [widgetIndexes, setWidgetIndexes] = useState(0)
+
+	const getWidgetIndexes = (values) => {
+		setWidgetIndexes(values)
+	}
 
 	const editDOCX = () => {
 		setChecked(true)
@@ -156,15 +160,32 @@ const EditTemplate = () => {
 	return (
 		<MainLayout>
 			{loggedUser.is_company_admin ? (
-				<Layout style={{ backgroundColor: '#fff' }}>
+				<Layout
+					style={{ padding: '0', backgroundColor: '#fff', width: '100%' }}>
 					<PageHeader>
-						<BreadCrumb
-							parent="Modelos"
-							editable={true}
-							current={data.title}
-							onEdit={handleEditTitleButton}
-						/>
+						<Row justify="space-between">
+							<BreadCrumb
+								parent="Modelos"
+								editable={true}
+								current={data.title}
+								onEdit={handleEditTitleButton}
+								propsSize="500px"
+							/>
+							<Button
+								form="createTemplate"
+								key="button"
+								type="primary"
+								htmlType="submit"
+								className={styles.button}
+								disabled={
+									!Object.values(inputsFilled).every(Boolean) ||
+									disabledTitleTemplate
+								}>
+								Salvar
+							</Button>
+						</Row>
 					</PageHeader>
+
 					<Menu
 						onClick={handleNav}
 						selectedKeys={[current]}
@@ -183,57 +204,46 @@ const EditTemplate = () => {
 							Workflow
 						</Menu.Item>
 						<Menu.Item
-							key="text"
-							className={!inputsFilled.text ? styles.empty : undefined}
-							icon={<FileTextOutlined />}>
-							Texto
-						</Menu.Item>
-						<Menu.Item
 							key="signers"
 							className={!inputsFilled.signers ? styles.empty : undefined}
 							icon={<TeamOutlined />}>
 							Assinantes
 						</Menu.Item>
 					</Menu>
-					<Button
-						form="createTemplate"
-						key="button"
-						type="primary"
-						htmlType="submit"
-						className={styles.button}
-						disabled={
-							!Object.values(inputsFilled).every(Boolean) ||
-							disabledTitleTemplate
-						}>
-						Enviar
-					</Button>
+
 					<Layout className={styles.content}>
 						{loading ? (
 							<Spin spinning={loading} className={styles.spin} />
 						) : (
 							<Form
+								style={{ height: '100%' }}
 								id="createTemplate"
 								form={form}
 								layout="horizontal"
 								hideRequiredMark
 								onFinish={onSubmit}>
 								{current === 'form' && (
-									<TemplateForm data={data} setInputsFilled={setInputsFilled} />
+									<div className={styles.form}>
+										<TemplateForm
+											data={data}
+											setInputsFilled={setInputsFilled}
+											getWidgetIndexes={getWidgetIndexes}
+										/>
+										<Text
+											data={data.text}
+											files={files}
+											updateFile={postFiles}
+											checked={checked}
+											setChecked={setChecked}
+											setDownloadButton={setDownloadButton}
+											setInputsFilled={setInputsFilled}
+											docPosted={docPosted}
+											removeDoc={removeDoc}
+											widgetIndexes={widgetIndexes}
+										/>
+									</div>
 								)}
 								{current === 'workflow' && <Workflow form={form} />}
-								{current === 'text' && (
-									<Text
-										data={data.text}
-										files={files}
-										updateFile={postFiles}
-										checked={checked}
-										setChecked={setChecked}
-										setDownloadButton={setDownloadButton}
-										setInputsFilled={setInputsFilled}
-										docPosted={docPosted}
-										removeDoc={removeDoc}
-									/>
-								)}
 								{current === 'signers' && <Signers data={data.signers} />}
 							</Form>
 						)}

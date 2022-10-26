@@ -55,7 +55,7 @@ const FormFactory = ({
 		if (!isLastPage && !draft) {
 			dispatch(nextPage())
 		} else {
-			onFinish(visible, draft, history)
+			onFinish(draft, history)
 		}
 	}
 

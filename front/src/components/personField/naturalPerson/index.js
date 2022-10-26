@@ -7,7 +7,7 @@ import PropTypes, {
 	object,
 	string,
 } from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
 const NaturalPerson = ({
@@ -20,6 +20,7 @@ const NaturalPerson = ({
 	disabled,
 	visible,
 	first,
+	getLoading,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -40,7 +41,11 @@ const NaturalPerson = ({
 	const [maritalState, setMaritalState] = useState(fieldMarital)
 	const [state, setState] = useState(fieldState)
 
-	const setCep = useCepAutocomplete(form, fields, name, setState)
+	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
+
+	useEffect(() => {
+		getLoading(loadingCep)
+	}, [getLoading, loadingCep])
 
 	const componentsTypes = Object.keys(components)
 

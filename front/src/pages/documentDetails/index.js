@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, PageHeader, Spin, Breadcrumb, Button } from 'antd'
+import { Layout, PageHeader, Spin, Breadcrumb } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Tabs from '~/pages/documentDetails/components/tabs'
@@ -24,10 +24,8 @@ import {
 	updateDescription,
 	newAssign,
 	sentAssign,
-	selectVersion,
 	downloadLink,
 	getDocumentWordDownload,
-	changeVariables,
 	getDocumentCertificate,
 } from '~/states/modules/documentDetail'
 import { getGroupList } from '~/states/modules/groups'
@@ -39,6 +37,7 @@ import styles from '../contracts/index.module.scss'
 import MainLayout from '~/components/mainLayout'
 import DraftIndicator from './components/draftIndicator'
 import StepModal from './components/tabs/stepModal'
+import HeaderButtons from './components/headerButtons'
 
 const DocumentDetails = () => {
 	const { id } = useParams()
@@ -119,16 +118,8 @@ const DocumentDetails = () => {
 		dispatch(setShowAssignModal(false))
 	}
 
-	const handleVersion = (id) => {
-		dispatch(selectVersion({ id }))
-	}
-
 	const getDocumentWord = () => {
 		dispatch(getDocumentWordDownload({ id }))
-	}
-
-	const onSubmitChangeVariables = (values) => {
-		dispatch(changeVariables({ id, values }))
 	}
 
 	const handleDownloadButton = () => {
@@ -210,7 +201,14 @@ const DocumentDetails = () => {
 
 	return (
 		<MainLayout>
-			<Layout style={{ padding: '0', background: '#fff', width: '100%' }}>
+			<Layout
+				style={{
+					padding: '0',
+					background: '#fff',
+					width: '100%',
+					height: '100%',
+					overflow: 'hidden',
+				}}>
 				<PageHeader>
 					<Breadcrumb>
 						<Breadcrumb.Item
@@ -223,11 +221,17 @@ const DocumentDetails = () => {
 							{data.title}
 						</Breadcrumb.Item>
 					</Breadcrumb>
-					<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-						<Button onClick={handleDownloadDocDifTypes}>
-							Baixar Documento
-						</Button>
-					</div>
+					<HeaderButtons
+						id={id}
+						history={history}
+						infos={data}
+						onDownload={handleDownloadDocDifTypes}
+						onUpdate={handleShowModal}
+						textUpdate={textUpdate}
+						version_id={version_id}
+						text={text}
+						loadingVersion={loadingVersion}
+					/>
 				</PageHeader>
 				<NewVersionModal
 					handleCancel={handleCancelModal}
@@ -263,9 +267,12 @@ const DocumentDetails = () => {
 					<div
 						style={{
 							display: 'flex',
-							height: 'calc(100vh - 180px)',
-							overflowY: 'hidden',
+							maxHeight: '100%',
+							minHeight: 0,
+							height: '100%',
 							columnGap: '10px',
+							paddingBottom: '20px',
+							width: '100%',
 						}}>
 						{data.draft ? (
 							<DraftIndicator title={data.title} onClick={handleEditDocument} />
@@ -273,7 +280,7 @@ const DocumentDetails = () => {
 							<div
 								style={{
 									height: '100%',
-									flex: 2,
+									width: '100%',
 								}}>
 								<PdfReader url={file} />
 							</div>
@@ -292,23 +299,16 @@ const DocumentDetails = () => {
 								title={data.title}
 							/>
 						)}
-
 						<Tabs
-							textType={data.text_type}
 							downloadDocument={getDocumentWord}
 							signers={data.signers}
-							versions={data.versions}
 							showAssignModal={handleShowAssignModal}
 							infos={data}
 							showStepModal={showStepModal}
-							variables={data.variables}
 							signed={data.signed}
 							sent={data.sent}
 							sentAssign={handleSentAssign}
 							loadingSign={loadingSign}
-							handleVersion={handleVersion}
-							versionId={version_id}
-							onChangeVariables={onSubmitChangeVariables}
 							current={data.workflow.current}
 							steps={data.workflow.steps}
 							onClickPrevious={getPreviousStep}
@@ -316,16 +316,6 @@ const DocumentDetails = () => {
 							onClickDownload={downloadDocument}
 							block={loadingSign || loading}
 							signedWorkflow={data.signed}
-							text={text}
-							textUpdate={textUpdate}
-							onClickUpdate={handleShowModal}
-							blockVersion={
-								loadingSign ||
-								loading ||
-								data.sent ||
-								version_id !== data.versions[0].id
-							}
-							versionLoading={loadingVersion}
 							downloadButton={handleDownloadButton}
 							downloadVersionHandler={downloadVersionHandler}
 						/>

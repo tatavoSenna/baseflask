@@ -4,7 +4,14 @@ import { Breadcrumb, Button, Input } from 'antd'
 import { EditOutlined, CheckOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 
-function BreadCrumb({ current, parent, editable, onEdit, onClickParent }) {
+function BreadCrumb({
+	current,
+	parent,
+	editable,
+	onEdit,
+	onClickParent,
+	propsSize,
+}) {
 	const [editing, setEditing] = useState(false)
 	const [title, setTitle] = useState(current)
 
@@ -43,10 +50,13 @@ function BreadCrumb({ current, parent, editable, onEdit, onClickParent }) {
 				{!editable ? (
 					current
 				) : editing ? (
-					<>
+					<div
+						style={{
+							display: 'flex',
+							width: propsSize,
+						}}>
 						<Input
 							style={{
-								width: '82%',
 								borderColor: disabled ? '#ff4d4f' : null,
 							}}
 							defaultValue={title}
@@ -59,7 +69,7 @@ function BreadCrumb({ current, parent, editable, onEdit, onClickParent }) {
 							style={{ border: 'none', marginLeft: '5px' }}
 							disabled={disabled}
 						/>
-					</>
+					</div>
 				) : (
 					<>
 						{title}
@@ -95,11 +105,13 @@ BreadCrumb.propTypes = {
 	editable: bool,
 	onEdit: func,
 	onClickParent: func,
+	propsSize: string,
 }
 
 BreadCrumb.defaultProps = {
 	parent: null,
 	editable: false,
+	propsSize: 'auto',
 }
 
 export default BreadCrumb

@@ -32,34 +32,7 @@ export const selectEdit = (data, payload) => {
 
 	let form = payload.form
 
-	const pagesList = []
-	form.forEach((page) => {
-		const pageList = []
-		page.fields.forEach((field) => {
-			if (field?.structure) {
-				let variable
-				let structure
-				if (Array.isArray(field.structure)) {
-					structure = []
-					field.structure.forEach((field) => {
-						structure.push(field.variable)
-					})
-				} else {
-					structure = field.structure.variable
-				}
-				variable = {
-					structure: structure,
-					main: field.variable,
-				}
-				pageList.push(variable)
-			} else if (field?.fields) {
-				pageList.push(getSubfieldVariables(field))
-			} else {
-				pageList.push(field.variable)
-			}
-		})
-		pagesList.push(pageList)
-	})
+	const pageVariables = form.map((page) => page.fields.map(getVariable))
 
 	form.forEach((page) => {
 		page.ids = page.fields.map(() => uuidv4())
@@ -76,9 +49,32 @@ export const selectEdit = (data, payload) => {
 		signers: extend(data.signers, {
 			parties: partiesList,
 		}),
-		variables: pagesList,
+		variables: pageVariables,
 	})
 	return temp
+}
+
+const getVariable = (field) => {
+	let variable
+	if (field.structure) {
+		let structure
+		if (Array.isArray(field.structure)) {
+			structure = field.structure.map((f) => f.variable)
+		} else {
+			structure = [field.structure.variable]
+		}
+
+		variable = {
+			...field.variable,
+			structure: structure,
+		}
+	} else if (field.fields) {
+		variable = getSubfieldVariables(field)
+	} else {
+		variable = field.variable
+	}
+
+	return variable
 }
 
 const getSubfieldVariables = (field) => {
@@ -340,27 +336,8 @@ export const selectVariable = (variables, payload) => {
 	if (payload.name === 'field') {
 		const field = payload.value
 		if (field.type !== 'separator') {
-			let variable = {}
+			let variable = getVariable(field)
 
-			if (field.structure) {
-				let structure
-				if (Array.isArray(field.structure)) {
-					structure = []
-					field.structure.forEach((field) => {
-						structure.push(field.variable)
-					})
-				} else {
-					structure = field.structure.variable
-				}
-				variable = {
-					structure: structure,
-					main: field.variable,
-				}
-			} else if (field.fields) {
-				variable = getSubfieldVariables(field)
-			} else {
-				variable = field.variable
-			}
 			const newVariables = update(variables, {
 				[payload.pageIndex]: { [payload.fieldIndex]: { $set: variable } },
 			})

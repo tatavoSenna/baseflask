@@ -16,6 +16,7 @@ import {
 } from '.'
 
 import { setResetQuestion } from '~/states/modules/question'
+import { selectVisibleAnswers } from './selectors'
 
 export default function* rootSaga() {
 	yield takeEvery(answerRequest, answerSaga)
@@ -23,20 +24,22 @@ export default function* rootSaga() {
 }
 
 function* answerSaga({ payload }) {
-	const { history, visible, draft } = payload
+	const { history, draft } = payload
 
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
 		updateKey: 'answer',
 	})
 
-	const { answer, modelId, title, parent } = yield select((state) => {
-		const {
-			answer,
-			question: { modelId, title, parent },
-		} = state
-		return { answer, modelId, title, parent }
-	})
+	const { answer, modelId, title, parent, pages, visible } = yield select(
+		(state) => {
+			const {
+				answer,
+				question: { modelId, title, parent, data: pages, visible },
+			} = state
+			return { answer, modelId, title, parent, pages, visible }
+		}
+	)
 
 	try {
 		const { data } = yield call(api.post, '/documents/', {
@@ -45,7 +48,7 @@ function* answerSaga({ payload }) {
 			title,
 			visible,
 			draft,
-			variables: answer.data,
+			variables: selectVisibleAnswers(answer.data, pages, visible),
 		})
 		yield put(answerSuccess(data))
 		successMessage({
@@ -65,18 +68,24 @@ function* answerSaga({ payload }) {
 }
 
 function* answerModifySaga({ payload }) {
-	const { id, history, visible, draft } = payload
+	const { id, history, draft } = payload
 
 	loadingMessage({
 		content: 'Nossos robôs estão trabalhando para gerar seu documento',
 		updateKey: 'answer',
 	})
 
-	const answer = yield select(({ answer }) => answer)
+	const { answer, pages, visible } = yield select((state) => {
+		const {
+			answer,
+			question: { modelId, title, parent, data: pages, visible },
+		} = state
+		return { answer, modelId, title, parent, pages, visible }
+	})
 
 	try {
 		const { data } = yield call(api.post, `documents/${id}/modify`, {
-			variables: { ...answer.data, ...answer.dataImg },
+			variables: selectVisibleAnswers(answer.data, pages, visible),
 			visible,
 			draft,
 		})
@@ -90,6 +99,7 @@ function* answerModifySaga({ payload }) {
 		yield put(setResetAnswer())
 		yield put(setResetQuestion())
 	} catch (error) {
+		console.log(error)
 		yield put(answerFailure(error))
 		errorMessage({
 			content: 'A edição de documento falhou',

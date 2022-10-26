@@ -3,8 +3,8 @@
 	border-radius: var(--ck-border-radius);
 	display: flex;
 	flex-flow: column nowrap;
-	max-width: 800px;
-	max-height: 29.7cm;
+	max-height: 19cm;
+	min-height: 0;
 }
 
 .documentEditorToolbar {

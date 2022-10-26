@@ -1,7 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
 
-
 Parameters:
   GitHubRepo:
     Type: String
@@ -211,7 +210,6 @@ Resources:
               InputArtifacts:
                 - Name: BuildOutput
               RunOrder: 1
-
 
 Outputs:
   PipelineUrl:

@@ -48,8 +48,8 @@ const AddContractExternal = () => {
 	}, [dispatch, token])
 
 	const handleFinish = useCallback(
-		(visible, draft) => {
-			dispatch(createContractExternal({ token, visible, draft }))
+		(draft) => {
+			dispatch(createContractExternal({ token, draft }))
 		},
 		[dispatch, token]
 	)

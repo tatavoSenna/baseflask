@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAddressInfo } from 'states/modules/addressField'
 import { getStateField } from 'states/modules/stateField'
@@ -15,11 +15,16 @@ export const useCepAutocomplete = (
 
 	const [cep, setCep] = useState('')
 
-	const addressInfo = useSelector(({ addressInfo }) => addressInfo.data[cep])
+	const info = useSelector(({ addressInfo }) => addressInfo)
+	const addressInfo = info.data[cep]
+	const loading = info.loading
 
-	const formattedSetCep = (cep) => {
-		setCep(cep.replace(/[^0-9]/g, ''))
-	}
+	const formattedSetCep = useCallback(
+		(cep) => {
+			setCep(cep.replace(/[^0-9]/g, ''))
+		},
+		[setCep]
+	)
 
 	useEffect(() => {
 		if (cep.length === 8) {
@@ -58,5 +63,5 @@ export const useCepAutocomplete = (
 		}
 	}, [form, fields, addressInfo, name, stateFields, setState, prefix])
 
-	return formattedSetCep
+	return [formattedSetCep, loading]
 }

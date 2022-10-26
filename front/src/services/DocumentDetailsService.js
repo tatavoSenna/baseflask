@@ -17,8 +17,7 @@ class DocumentDetailsService {
 			.get(`/documents/${id}/text?version=${versionId}`)
 			.then((response) => response.data)
 			.then(async (data) => {
-				const url =
-					'https://nqq34a754i.execute-api.us-east-1.amazonaws.com/dev/generate-document'
+				const url = process.env.REACT_APP_HTML_DOCX_URL
 				const headers = {
 					'Content-Type': 'application/json',
 					Accept:

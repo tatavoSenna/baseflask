@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import PropTypes, { string, shape, array, bool, object, func } from 'prop-types'
-import { Form, Typography } from 'antd'
+import { Form, Spin, Typography } from 'antd'
 import Fields from './fields'
 
 const { Title } = Typography
@@ -24,6 +24,15 @@ const AddressField = ({
 	const varname = isObj ? variable.type : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
 
+	const [loading, setLoading] = useState(false)
+
+	const getLoading = useCallback(
+		(isLoading) => {
+			setLoading(isLoading)
+		},
+		[setLoading]
+	)
+
 	return (
 		<Form.Item
 			label={null}
@@ -39,19 +48,22 @@ const AddressField = ({
 				</Form.Item>
 			</DisplayNone>
 			<Lebal>{label}</Lebal>
-			<AddressContainer>
-				<Fields
-					fields={fields}
-					name={variable.name}
-					disabled={disabled}
-					visible={visible}
-					optional={optional}
-					onChange={onChange}
-					inputValue={_addressValue}
-					form={form}
-					first={first}
-				/>
-			</AddressContainer>
+			<Spin spinning={loading} tip="Carregando dados">
+				<AddressContainer>
+					<Fields
+						fields={fields}
+						name={variable.name}
+						disabled={disabled}
+						visible={visible}
+						optional={optional}
+						onChange={onChange}
+						inputValue={_addressValue}
+						form={form}
+						first={first}
+						getLoading={getLoading}
+					/>
+				</AddressContainer>
+			</Spin>
 		</Form.Item>
 	)
 }

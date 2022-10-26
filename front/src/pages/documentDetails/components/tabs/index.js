@@ -9,7 +9,7 @@ import {
 	Steps as StepsAntd,
 	Space,
 } from 'antd'
-import { DownloadOutlined, EditOutlined } from '@ant-design/icons'
+import { EditOutlined } from '@ant-design/icons'
 import {
 	array,
 	bool,
@@ -29,29 +29,26 @@ import 'moment/locale/pt-br'
 import styled from 'styled-components'
 import { cancelDocument } from '~/states/modules/documentDetail'
 import InfoView from './infoView'
+import VersionView from './versionView'
 
 moment.locale('pt-br')
 
-const { Title, Text, Paragraph } = Typography
+const { Title, Paragraph } = Typography
 const tailLayout = {
 	wrapperCol: { span: 24 },
 }
 const { Step } = StepsAntd
 
 const Tabs = ({
-	textType,
 	downloadDocument,
 	signers,
-	versions,
 	infos,
 	showAssignModal,
 	showStepModal,
 	sent,
 	signed,
-	handleVersion,
 	sentAssign,
 	loadingSign,
-	versionId,
 	steps,
 	current,
 	onClickPrevious,
@@ -59,11 +56,6 @@ const Tabs = ({
 	onClickDownload,
 	block,
 	signedWorkflow,
-	text,
-	textUpdate,
-	onClickUpdate,
-	blockVersion,
-	versionLoading,
 	downloadButton,
 	downloadVersionHandler,
 }) => {
@@ -79,35 +71,17 @@ const Tabs = ({
 		({ documentDetail }) => documentDetail.cancelledDocument
 	)
 
-	/**
-	 * Checks if we can change the variables values of a .txt document.
-	 *
-	 * Currently, we only allow the update of variables in a txt document if the document has never received a update that changes its content.
-	 *
-	 * @param {*} versions
-	 *
-	 */
-	const canDocumentChangeVariables = (versions) => {
-		for (let i = 0; i < versions.length; i++) {
-			// If the version is not the "Version 0" and changes something other than the document variables values...
-			if (!versions[i].only_updated_variables) {
-				return false
-			}
-		}
-		return true
-	}
-
 	const tab = (option) => {
 		if (option === '1') {
+			return <InfoView infos={infos} />
+		} else if (option === '2') {
 			return (
-				<InfoView
+				<VersionView
 					infos={infos}
-					textType={textType}
-					cantItChangeVariablesValues={canDocumentChangeVariables(versions)}
+					downloadVersionHandler={downloadVersionHandler}
+					downloadDocument={downloadDocument}
 				/>
 			)
-		} else if (option === '2') {
-			return version()
 		} else if (option === '3') {
 			return workflow()
 		} else {
@@ -137,104 +111,6 @@ const Tabs = ({
 		setVariables(validatingSignersFields.find((f) => f === false) ?? true)
 	}, [validatingSignersFields, isVariables])
 
-	const version = () => {
-		const disableButton = !(
-			text !== textUpdate.text &&
-			!blockVersion &&
-			!versionLoading
-		)
-		const isItNotDocX = !(textType === '.docx')
-
-		return (
-			<ScrollContent>
-				{isItNotDocX && (
-					<div
-						style={{ display: 'flex', justifyContent: 'left', paddingTop: 20 }}>
-						<Form.Item>
-							<Button
-								type="primary"
-								htmlType="button"
-								onClick={() => onClickUpdate(textUpdate)}
-								disabled={disableButton}>
-								Criar nova versão
-							</Button>
-						</Form.Item>
-					</div>
-				)}
-
-				<StyledMenu
-					onClick={(item) =>
-						isItNotDocX ? handleVersion(item.key) : undefined
-					}
-					$docxverification={isItNotDocX}
-					selectedKeys={[versionId]}
-					mode="vertical">
-					{versions.map((item) => (
-						<ItemContainer
-							key={item.id}
-							$propscolor={item.id === versionId}
-							$propsdifferentpadding={isItNotDocX}
-							$propsbordertop={isItNotDocX}>
-							{isItNotDocX ? (
-								<ContainerDiv>
-									<ContainerIcon>
-										<StyledText style={{ fontSize: 14 }}>
-											{item.description}
-										</StyledText>
-										<Button
-											shape="circle"
-											icon={<DownloadOutlined />}
-											htmlType="button"
-											onClick={(event) => downloadVersionHandler(event, item)}
-											onMouseDown={(event) => event.preventDefault()}
-										/>
-									</ContainerIcon>
-									<StyledText style={{ display: 'block', padding: '5px 0' }}>
-										Por: <StyledText>{item.created_by}</StyledText>
-									</StyledText>
-								</ContainerDiv>
-							) : (
-								<ContainerIcon
-									$changeopacity={
-										item.id === Object.keys(versions)[versions.length - 1]
-									}>
-									<StyledText style={{ padding: '0 0 5px', fontSize: 14 }}>
-										Por:{' '}
-										<StyledText style={{ fontSize: 14 }}>
-											{item.email}
-										</StyledText>
-									</StyledText>
-									{item.id === Object.keys(versions)[versions.length - 1] && (
-										<DownloadIcon
-											style={{ fontSize: 25, padding: 5 }}
-											onClick={(e) => {
-												e.stopPropagation()
-												downloadDocument()
-											}}
-										/>
-									)}
-								</ContainerIcon>
-							)}
-							<StyledText
-								$changeopacity={
-									!isItNotDocX
-										? item.id === Object.keys(versions)[versions.length - 1]
-											? true
-											: 'otherversion'
-										: undefined
-								}>
-								Data:{' '}
-								<StyledText>
-									{moment(item.created_at).format('DD/MM/YYYY')}
-								</StyledText>
-							</StyledText>
-						</ItemContainer>
-					))}
-				</StyledMenu>
-			</ScrollContent>
-		)
-	}
-
 	const getStepDescription = (item, index, current) => {
 		if (index < current) {
 			return (
@@ -249,6 +125,7 @@ const Tabs = ({
 				return user.name
 			})
 			if (item.due_date) {
+				console.log(item.due_date)
 				const dateFormatter = (date) => {
 					if (!date) {
 						return null
@@ -521,15 +398,10 @@ const Tabs = ({
 	return (
 		<div
 			style={{
-				display: 'flex',
-				flexDirection: 'column',
 				padding: 24,
-				margin: 5,
-				height: 'calc(100% - 5px)',
-				flex: 1,
-				minWidth: '40%',
+				height: '100%',
+				width: '40%',
 				background: '#fff',
-				alignItems: 'center',
 				border: '1px solid #F0F0F0',
 			}}>
 			<Menu
@@ -562,10 +434,10 @@ const Tabs = ({
 
 			<div
 				style={{
-					padding: 10,
-					width: '100%',
+					padding: '10px 10px 0',
 					display: 'flex',
 					flexDirection: 'column',
+					height: '100%',
 				}}>
 				{tab(value)}
 			</div>
@@ -623,84 +495,4 @@ const DivContainer = styled.div`
 			border: solid #cccccc;
 			border-width: 1px 0 0 0;
 		`}
-`
-
-const StyledMenu = styled(Menu)`
-	width: 100%;
-	border: none;
-
-	*:not(:first-child) {
-		border-top: none;
-	}
-
-	* {
-		margin: 0 !important;
-	}
-
-	*:hover {
-		cursor: ${(props) =>
-			props.$docxverification === true ? `pointer` : `default`};
-	}
-`
-
-const StyledText = styled(Text)`
-	font-size: 0.75rem;
-	line-height: 2;
-	color: #000;
-	opacity: 0.65;
-
-	opacity: ${(props) => props.$changeopacity === true && `1`};
-	font-weight: ${(props) => props.$changeopacity === true && `700`};
-
-	* {
-		opacity: ${(props) => props.$changeopacity === true && `1`};
-	}
-`
-
-const ItemContainer = styled(Menu.Item)`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-
-	background-color: #ffffff !important;
-	border: solid #cccccc;
-
-	border-width: ${(props) =>
-		props.$propsbordertop === true ? `1px 0` : `0 0 1px`} !important;
-	border-width: ${(props) =>
-		props.$propsbordertop === false ? `0 0 1px` : `1px 0`} !important;
-
-	padding: ${(props) =>
-		props.$propsdifferentpadding === false
-			? `70px 5px`
-			: `60px 5px`} !important;
-
-	* {
-		color: ${(props) => props.$propscolor && `#0099ff`};
-		opacity: ${(props) => props.$propscolor && `1`};
-	}
-`
-
-const ContainerIcon = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-
-	* {
-		font-weight: ${(props) =>
-			props.$changeopacity === true ? `700` : `500`} !important;
-		opacity: ${(props) => props.$changeopacity === true && `1`};
-	}
-`
-
-const ContainerDiv = styled.div`
-	* {
-		font-weight: 700 !important;
-	}
-`
-
-const DownloadIcon = styled(DownloadOutlined)`
-	*:hover {
-		cursor: pointer;
-	}
 `

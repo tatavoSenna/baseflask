@@ -75,7 +75,7 @@ export const ThinDivider = styled(Divider)`
 `
 
 export const FormItem = styled(Form.Item)`
-	margin-bottom: 16px;
+	margin-bottom: ${({ $marginBottom = '16px' }) => $marginBottom};
 
 	width: ${({ $width = '100%' }) => $width};
 
@@ -150,4 +150,20 @@ export const styleIconValidation = (component) => styled(component)`
 	user-select: none;
 	font-size: 24px;
 	color: ${(props) => (props.$error ? '#ff4d4f' : '#52c41a')};
+`
+
+export const InputWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-bottom: ${({ $marginBottom = '16px' }) => $marginBottom};
+	label {
+		padding: 0 0 8px;
+	}
+`
+
+export const ButtonWrapper = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
 `

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCepAutocomplete } from './utils/addressChanges'
 import { getAllClasses, getAllComponents } from './utils/dictsImport'
 
@@ -12,6 +12,7 @@ const Fields = ({
 	inputValue,
 	form,
 	first,
+	getLoading,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -26,7 +27,11 @@ const Fields = ({
 
 	const [state, setState] = useState(fieldState)
 
-	const setCep = useCepAutocomplete(form, fields, name, setState)
+	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
+
+	useEffect(() => {
+		getLoading(loadingCep)
+	}, [getLoading, loadingCep])
 
 	const componentsTypes = Object.keys(components)
 

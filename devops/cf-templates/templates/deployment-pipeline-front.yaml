@@ -115,6 +115,7 @@ Resources:
       FunctionName: CloudFrontInvalidator
       Handler: index.lambda_handler
       Runtime: python3.7
+      Timeout: 10
       Code:
         ZipFile: |
           import boto3
@@ -257,6 +258,8 @@ Resources:
             Value: --max-old-space-size=8192
           - Name: REACT_APP_CNPJ_URL
             Value: !ImportValue SerproConsultApiUrl
+          - Name: REACT_APP_HTML_DOCX_URL
+            Value: !ImportValue GenerateDocxApiUrl
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole

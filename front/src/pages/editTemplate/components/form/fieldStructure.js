@@ -1,10 +1,10 @@
-export const fieldStructure = (type) => {
+export const fieldStructure = (type, label = '', name = '') => {
 	let field = {
 		type: `${type}`,
-		label: '',
+		label: label,
 		info: '',
 		variable: {
-			name: '',
+			name: name,
 		},
 		initialValue: '',
 		optional: false,
@@ -50,7 +50,6 @@ export const fieldStructure = (type) => {
 			break
 		case 'person':
 			field.variable.type = 'person'
-			field.label = ''
 			field.person_type = ['legal_person', 'natural_person']
 			field.fields = [
 				'nationality',
@@ -105,7 +104,6 @@ export const fieldStructure = (type) => {
 			break
 		case 'address':
 			field.variable.type = 'address'
-			field.label = ''
 			field.fields = [
 				'cep',
 				'country',

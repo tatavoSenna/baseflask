@@ -6,12 +6,9 @@ import { classNames } from '~/utils'
 import styles from './index.module.scss'
 import './styles.css'
 
-const Editor = ({ text, onUpdateText, block }) => {
+const Editor = ({ text, onUpdateText, block, getEditor }) => {
 	return (
-		<div
-			style={{
-				margin: 5,
-			}}>
+		<>
 			<div className={classNames(styles.documentEditor)}>
 				<div
 					id="toolbar-container"
@@ -26,6 +23,7 @@ const Editor = ({ text, onUpdateText, block }) => {
 								if (toolbarContainer) {
 									toolbarContainer.appendChild(editor.ui.view.toolbar.element)
 								}
+								getEditor(editor)
 							}}
 							editor={DecoupledEditor}
 							config={{
@@ -41,6 +39,27 @@ const Editor = ({ text, onUpdateText, block }) => {
 									'Link',
 									'Autoformat',
 								],
+								heading: {
+									options: [
+										{
+											model: 'paragraph',
+											title: 'Paragraph',
+											class: 'ck-heading_paragraph',
+										},
+										{
+											model: 'heading1',
+											view: 'h1',
+											title: 'Heading 1',
+											class: 'ck-heading_heading1',
+										},
+										{
+											model: 'heading2',
+											view: 'h2',
+											title: 'Heading 2',
+											class: 'ck-heading_heading2',
+										},
+									],
+								},
 							}}
 							onChange={(event, editor) =>
 								onUpdateText(editor.getData(), 'text')
@@ -51,7 +70,7 @@ const Editor = ({ text, onUpdateText, block }) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	)
 }
 
@@ -59,6 +78,7 @@ Editor.propTypes = {
 	text: string,
 	onUpdateText: func,
 	block: bool,
+	getEditor: func,
 }
 
 export default Editor

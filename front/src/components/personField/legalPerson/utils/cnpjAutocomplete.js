@@ -1,17 +1,26 @@
+import { message } from 'antd'
 import Axios from 'axios'
 import { useEffect, useState } from 'react'
 
 export const useCnpjAutocomplete = (form, fields, name, setCep) => {
 	const [legalField, setLegalField] = useState({})
 	const [cnpj, setCnpj] = useState('')
+	const [loading, setLoading] = useState(false)
 
 	const item = legalField[cnpj]
 
 	useEffect(() => {
 		if (cnpj.length === 14) {
-			Axios.get(
-				`${process.env.REACT_APP_CNPJ_URL}/consult-cnpj?cnpj=${cnpj}`
-			).then((response) => setLegalField({ [cnpj]: response.data.data }))
+			setLoading(true)
+			Axios.get(`${process.env.REACT_APP_CNPJ_URL}/consult-cnpj?cnpj=${cnpj}`)
+				.then((response) => {
+					setLoading(false)
+					setLegalField({ [cnpj]: response.data.data })
+				})
+				.catch((error) => {
+					setLoading(false)
+					message.error('Dados do CNPJ indisponíveis!')
+				})
 		}
 	}, [cnpj])
 
@@ -54,5 +63,5 @@ export const useCnpjAutocomplete = (form, fields, name, setCep) => {
 		}
 	}, [form, item, name, fields, setCep])
 
-	return formattedSetCnpj
+	return [formattedSetCnpj, loading]
 }
