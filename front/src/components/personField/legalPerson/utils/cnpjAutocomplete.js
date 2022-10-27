@@ -10,17 +10,25 @@ export const useCnpjAutocomplete = (form, fields, name, setCep) => {
 	const item = legalField[cnpj]
 
 	useEffect(() => {
+		const cancelToken = Axios.CancelToken.source()
 		if (cnpj.length === 14) {
 			setLoading(true)
-			Axios.get(`${process.env.REACT_APP_CNPJ_URL}/consult-cnpj?cnpj=${cnpj}`)
+			Axios.get(`${process.env.REACT_APP_CNPJ_URL}/consult-cnpj?cnpj=${cnpj}`, {
+				cancelToken: cancelToken.token,
+			})
 				.then((response) => {
-					setLoading(false)
 					setLegalField({ [cnpj]: response.data.data })
 				})
 				.catch((error) => {
-					setLoading(false)
 					message.error('Dados do CNPJ indisponíveis!')
 				})
+				.finally(() => {
+					setLoading(false)
+				})
+		}
+
+		return () => {
+			cancelToken.cancel()
 		}
 	}, [cnpj])
 
