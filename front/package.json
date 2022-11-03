@@ -54,7 +54,8 @@
 		"build": "react-app-rewired build",
 		"test": "react-app-rewired test",
 		"test:ci": "react-app-rewired test --colors --coverage",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"format": "prettier . --write"
 	},
 	"prettier": {
 		"tabWidth": 2,
@@ -91,7 +92,11 @@
 	},
 	"lint-staged": {
 		"*.{js,jsx}": [
-			"eslint . --fix"
+			"eslint . --fix",
+			"yarn run format"
+		],
+		"*.{css,scss}": [
+			"yarn run format"
 		]
 	},
 	"devDependencies": {
