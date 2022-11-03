@@ -134,6 +134,8 @@ export const fieldStructure = (type, label = '', name = '') => {
 					type: 'text',
 					label: '',
 					info: '',
+					optional: false,
+					placeholder: '',
 					variable: {
 						name: '',
 						type: 'string',
