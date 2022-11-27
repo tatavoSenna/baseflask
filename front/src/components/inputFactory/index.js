@@ -390,6 +390,7 @@ function InputFactory({
 						pageFieldsData={pageFieldsData[i]}
 						className={isVisible}
 						visible={visible[i]}
+						form={form}
 						first={first}
 					/>
 				)

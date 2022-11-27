@@ -1,10 +1,10 @@
 import React from 'react'
-import { array, func, number } from 'prop-types'
+import { array, func, number, object } from 'prop-types'
 import { Card, Badge, Divider } from 'antd'
 import InputFactory from '~/components/inputFactory'
 import Delete from '~/components/deleteConfirm'
 
-const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
+const StructuredVariable = ({ name, fieldKey, remove, structure, form }) => {
 	return (
 		<Card key={fieldKey} style={{ marginBottom: '20px' }}>
 			{structure.map((field, i) => {
@@ -15,6 +15,7 @@ const StructuredVariable = ({ name, fieldKey, remove, structure }) => {
 						key={i}
 						data={[pageFieldsData]}
 						visible={[true]}
+						form={form}
 						// disabled={!isEdit}
 					/>
 				)
@@ -54,4 +55,5 @@ StructuredVariable.propTypes = {
 	fieldKey: number,
 	remove: func,
 	structure: array,
+	form: object,
 }

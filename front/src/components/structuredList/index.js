@@ -12,10 +12,12 @@ const StructuredList = ({
 	pageIndex,
 	fieldIndex,
 	visible,
+	form,
 }) => {
-	const { label, variable, structure, type, id, info, optional } =
+	const { label, variable, structure, type, id, info, initialValue, optional } =
 		pageFieldsData
 	const isObj = typeof variable === 'object'
+
 	return (
 		<Form.Item
 			key={`${isObj ? variable.name : variable}_${id}`}
@@ -31,7 +33,7 @@ const StructuredList = ({
 				]
 			}>
 			<Card>
-				<Form.List name={variable.name}>
+				<Form.List name={variable.name} initialValue={initialValue || []}>
 					{(fields, { add, remove }) => {
 						return (
 							<>
@@ -44,6 +46,7 @@ const StructuredList = ({
 										restField={restField}
 										remove={remove}
 										structure={structure}
+										form={form}
 									/>
 								))}
 
@@ -72,15 +75,15 @@ StructuredList.propTypes = {
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	pageIndex: number,
 	fieldIndex: number,
 	visible: bool,
+	form: object,
 }
 
 StructuredList.defaultProps = {
-	className: {},
 	onChange: () => null,
 	visible: true,
 }

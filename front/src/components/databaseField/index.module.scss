@@ -1,0 +1,24 @@
+.form-search {
+	> :first-child > * {
+		width: 100% !important;
+	}
+}
+
+.search-label {
+	font-weight: 500;
+}
+
+.loading {
+	text-align: center;
+	padding: 10px;
+}
+
+.error {
+	font-weight: 500;
+	color: #ff4d4f;
+}
+
+.no-content {
+	font-weight: 500;
+	color: #444950;
+}

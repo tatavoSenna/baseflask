@@ -7,9 +7,7 @@ export const selectAllDocumentDetail = (payload) => {
 			...page,
 			fields: page.fields
 				.map((field) => {
-					if (
-						!['structured_list', 'structured_checkbox'].includes(field.type)
-					) {
+					if (!['structured_checkbox'].includes(field.type)) {
 						if (field.variable?.name) {
 							if (payload.variables[field.variable.name]) {
 								if (
@@ -31,7 +29,6 @@ export const selectAllDocumentDetail = (payload) => {
 									payload.variables['image_' + field.variable.name]
 							}
 						}
-
 						return field
 					}
 					return null

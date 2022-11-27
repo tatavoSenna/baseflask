@@ -37,28 +37,33 @@ export const useCepAutocomplete = (
 	}, [dispatch])
 
 	useEffect(() => {
+		const setValue = (field, value) =>
+			form.setFieldsValue({
+				[name]: { [field.toUpperCase()]: value },
+			})
+
 		if (form && addressInfo) {
 			fields.forEach((field) => {
-				if (field === `${prefix}street`)
-					form.setFieldsValue({
-						[name]: { [field.toUpperCase()]: addressInfo.logradouro },
-					})
+				if (field === `${prefix}country`) {
+					setValue(field, 'Brasil')
+				}
+				if (field === `${prefix}street`) {
+					setValue(field, addressInfo.logradouro)
+				}
 				if (field === `${prefix}state`)
 					if (stateFields) {
 						const newValue = stateFields.data.find(
 							(item) => item.stateInitials === addressInfo.uf
 						).state
-						form.setFieldsValue({ [name]: { [field.toUpperCase()]: newValue } })
+						setValue(field, newValue)
 						setState(newValue)
 					}
-				if (field === `${prefix}city`)
-					form.setFieldsValue({
-						[name]: { [field.toUpperCase()]: addressInfo.localidade },
-					})
-				if (field === `${prefix}district`)
-					form.setFieldsValue({
-						[name]: { [field.toUpperCase()]: addressInfo.bairro },
-					})
+				if (field === `${prefix}city`) {
+					setValue(field, addressInfo.localidade)
+				}
+				if (field === `${prefix}district`) {
+					setValue(field, addressInfo.bairro)
+				}
 			})
 		}
 	}, [form, fields, addressInfo, name, stateFields, setState, prefix])

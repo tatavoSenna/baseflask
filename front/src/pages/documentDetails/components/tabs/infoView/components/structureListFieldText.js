@@ -3,13 +3,19 @@ import { StyledTitle, StyledLabel, StyledValue } from './styles/style'
 import { object } from 'prop-types'
 
 const StructureListFieldText = ({ data }) => {
+	const { field, value } = data
+
 	return (
 		<>
-			<StyledTitle>{data.label}</StyledTitle>
-			{data.structure.map((d, i) => (
+			<StyledTitle>{field.label}</StyledTitle>
+			{value.map((item, i) => (
 				<div key={i}>
-					<StyledLabel>{d.label}</StyledLabel>
-					<StyledValue>{d.initialValue}</StyledValue>
+					{field.structure.map((data, j) => (
+						<div key={i + j}>
+							<StyledLabel>{data.label}</StyledLabel>
+							<StyledValue>{item[data.variable.name]}</StyledValue>
+						</div>
+					))}
 				</div>
 			))}
 		</>
