@@ -33,7 +33,7 @@ const DateField = ({
 			initialValue={validateDate(inputValue)}
 			colon={false}>
 			<DatePicker
-				format="DD-MM-YYYY"
+				format="DD/MM/YYYY"
 				placeholder={''}
 				allowClear
 				disabled={disabled}
