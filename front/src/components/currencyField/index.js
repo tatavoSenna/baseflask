@@ -2,7 +2,7 @@ import React from 'react'
 import { string, shape, object, func, number, bool } from 'prop-types'
 import { Form, InputNumber } from 'antd'
 import InfoField from '~/components/infoField'
-import { currencyFormatter, currencyParser } from './currencyUtils'
+import { currencyFormatter } from './currencyUtils'
 
 const CurrencyField = ({
 	pageFieldsData,
@@ -49,13 +49,18 @@ const CurrencyField = ({
 				min={0}
 				placeholder=""
 				formatter={currencyFormatter(currency, locale)}
-				parser={currencyParser(locale)}
-				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
-				disabled={disabled}
 				onChange={onChange}
+				parser={(value) => parse(value)}
+				disabled={disabled}
+				style={{ width: '100%', currency: 'BRL', style: 'currency' }}
 			/>
 		</Form.Item>
 	)
+}
+
+function parse(value) {
+	value = value ? value : 0.0
+	return value.replace(/\D/g, '') / 100
 }
 
 CurrencyField.propTypes = {
@@ -65,7 +70,7 @@ CurrencyField.propTypes = {
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	inputValue: number,
 	disabled: bool,
