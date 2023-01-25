@@ -22,10 +22,7 @@ export const CurrencyWidget = React.memo((props) => {
 				<div>
 					<CommonFields data={data} update={update} />
 					<FormItem label="Valor inicial">
-						<CurrencyInput
-							onBlur={(v) => update({ initialValue: v })}
-							defaultValue={data.initialValue}
-						/>
+						<CurrencyInput update={update} defaultValue={data.initialValue} />
 					</FormItem>
 				</div>
 			}

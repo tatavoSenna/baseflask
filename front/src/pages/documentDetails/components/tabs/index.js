@@ -125,7 +125,6 @@ const Tabs = ({
 				return user.name
 			})
 			if (item.due_date) {
-				console.log(item.due_date)
 				const dateFormatter = (date) => {
 					if (!date) {
 						return null

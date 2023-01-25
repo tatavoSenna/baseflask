@@ -133,8 +133,6 @@ function* editTemplateSaga({ payload = {} }) {
 		created_by: '',
 	}
 
-	console.log(data.variables)
-
 	if (id === 'new') {
 		try {
 			const response = yield call(api.post, '/templates/', {

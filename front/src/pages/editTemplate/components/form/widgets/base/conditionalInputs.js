@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 
 import { array, func, number, object, oneOfType, string } from 'prop-types'
 import { InputNumber, Select } from 'antd'
-import {
-	currencyFormatter,
-	currencyParser,
-} from 'components/currencyField/currencyUtils'
+import { currencyFormatter } from 'components/currencyField/currencyUtils'
 
 export const TextInput = ({ changeCallback, defaultValue, ...props }) => {
 	const [options, setOptions] = useState([])
@@ -44,17 +41,20 @@ export const NumberInput = ({ changeCallback, ...props }) => (
 	/>
 )
 
-export const CurrencyInput = ({ defaultValue, changeCallback, style = {} }) => {
-	const parser = currencyParser()
-
+export const CurrencyInput = ({ defaultValue, update, style = {} }) => {
+	const [value, setValue] = useState(defaultValue)
 	return (
 		<InputNumber
 			min={0}
 			placeholder=""
 			formatter={currencyFormatter()}
-			parser={parser}
+			parser={(value) => {
+				value = value.replace(/\D/g, '') / 100
+				setValue(value)
+				return value
+			}}
+			onBlur={() => update({ initialValue: value })}
 			style={{ width: '100%', currency: 'BRL', style: 'currency', ...style }}
-			onBlur={(e) => changeCallback(Number(parser(e.target.value)))}
 			defaultValue={defaultValue}
 			autoComplete="off"
 		/>
@@ -99,7 +99,7 @@ NumberInput.propTypes = {
 
 CurrencyInput.propTypes = {
 	defaultValue: number,
-	changeCallback: func,
+	update: func,
 	style: object,
 }
 
