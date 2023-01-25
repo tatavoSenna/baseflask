@@ -87,6 +87,10 @@ def create_document_controller(
     # Specify version 0 to create Document object
     current_date = datetime.now().astimezone().replace(microsecond=0).isoformat()
     current_user = User.query.filter_by(id=user_id).first()
+
+    # creating variables thats not made by the user
+    received_variables["DATA_GERACAO_CONTRATO"] = current_date
+
     if draft:
         version = [
             {
@@ -186,18 +190,6 @@ def create_folder_controller(
     db.session.commit()
 
     return document
-
-
-def get_current_date_dict():
-    date = {}
-
-    now = datetime.now()
-    date["day"] = str(now.day).zfill(2)
-    date["month"] = months[now.month - 1]
-    date["year"] = now.year
-    date["today"] = f'{ date["day"] }/{ date["month"] }/{ date["year"] }'
-
-    return date
 
 
 def get_document_controller(document_id):
@@ -686,11 +678,9 @@ def undelete_document_controller(document):
 def create_remote_document(document, variables, document_template, company_id):
     company = Company.query.filter_by(id=company_id).first()
 
-    current_date_dict = get_current_date_dict()
     remote_document = RemoteDocument()
     variables = copy.deepcopy(variables)
     variables = format_variables(variables, document_template.id)
-    variables.update(current_date_dict)
     if document_template.text_type == ".txt":
         text_template = remote_document.download_text_from_template(document)
         filled_text = fill_text_with_variables(text_template, variables).encode()
