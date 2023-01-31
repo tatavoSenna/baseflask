@@ -85,3 +85,6 @@ class StructuredListFormatter:
 
     def __getitem__(self, index):
         return self._variables[index]
+
+    def __len__(self):
+        return len(self._variables)
