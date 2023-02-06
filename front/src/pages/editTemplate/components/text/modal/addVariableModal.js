@@ -59,12 +59,14 @@ const AddVariableModal = ({ open, onCancel, widgetIndexes, editor }) => {
 		const newField = fieldStructure(field, question, name)
 		dispatch(editTemplateFieldAdd({ newField, pageIndex: widgetIndexes }))
 
-		editor.model.change((writer) => {
-			writer.insertText(
-				`{{ ${name} }}`,
-				editor.model.document.selection.getFirstPosition()
-			)
-		})
+		if (editor !== null) {
+			editor.model.change((writer) => {
+				writer.insertText(
+					`{{ ${name} }}`,
+					editor.model.document.selection.getFirstPosition()
+				)
+			})
+		}
 
 		setValues({
 			name: '',

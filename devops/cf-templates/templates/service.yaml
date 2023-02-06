@@ -194,14 +194,6 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
           Environment:
-            - Name: AWS_COGNITO_DOMAIN
-              Value: !Join
-                - ""
-                - - "https://"
-                  - !Ref CognitoUserPoolDomain
-                  - "-lawing.auth."
-                  - !Ref AWS::Region
-                  - ".amazoncognito.com"
             - Name: AWS_COGNITO_USER_POOL_ID
               Value: !Ref CognitoUserPool
             - Name: AWS_COGNITO_USER_POOL_CLIENT_ID
