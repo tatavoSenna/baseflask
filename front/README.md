@@ -1,20 +1,17 @@
-## Run with yarn
+## Setting up your frontend for development
+    
+1. Install dependencies
 
-### `yarn`
+```
+yarn
+```
 
-To install all the dependencies listed in **package.json**
+2. Make your owncopy of .env
+```
+cp .env.sample .env
+```
 
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test [-u]`
-
-Launches the test runner in the interactive watch mode.<br />
-Using the flag `-u` you can update the snapshots.
-
-<i class="fas fa-rocket"></i>
+3. Start the react app development server on localhost:3000
+```
+yarn start
+```
