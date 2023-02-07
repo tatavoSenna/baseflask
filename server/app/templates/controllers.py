@@ -184,7 +184,7 @@ def duplicate_template(template, user_id, company_id=None, outside_duplication=F
         data["company_id"] = company_id
 
     if outside_duplication:
-        data["workflow"] = {"created_by": "", "current_node": "0", "node": {}}
+        data["workflow"] = {"created_by": "", "current_node": "0", "nodes": {}}
 
     data["user_id"] = user_id
 
