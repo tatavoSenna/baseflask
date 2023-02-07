@@ -21,6 +21,7 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_COGNITO_USER_POOL_ID = os.environ.get("AWS_COGNITO_USER_POOL_ID")
     AWS_COGNITO_USER_POOL_CLIENT_ID = os.environ.get("AWS_COGNITO_USER_POOL_CLIENT_ID")
+    AWS_COGNITO_DOMAIN = "dummyvalue"
     AWS_COGNITO_USER_POOL_CLIENT_SECRET = "dummyvalue"
     AWS_COGNITO_REDIRECT_URL = "dummyvalue"
     AWS_S3_DOCUMENTS_BUCKET = os.environ.get("AWS_S3_DOCUMENTS_BUCKET")
