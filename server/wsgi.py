@@ -4,6 +4,7 @@ from app import db, models
 
 app = create_app()
 
+
 # Auto-import all models on shell
 @app.shell_context_processor
 def make_shell_context():

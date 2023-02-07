@@ -36,7 +36,6 @@ from .remote import RemoteDocument
 
 
 def get_document_template_list_controller(company_id):
-
     document_templates = (
         DocumentTemplate.query.filter_by(company_id=company_id, deleted=False)
         .filter_by(published=True)
@@ -50,7 +49,6 @@ def get_document_template_list_controller(company_id):
 
 
 def get_document_template_details_controller(company_id, template_id):
-
     document_template = DocumentTemplate.query.filter_by(
         company_id=company_id, id=template_id
     ).first()
@@ -176,7 +174,6 @@ def create_document_controller(
 def create_folder_controller(
     user_id, user_email, company_id, title, username, parent_id, is_folder
 ):
-
     document = Document(
         user_id=user_id,
         company_id=company_id,
@@ -596,7 +593,6 @@ def update_variables(document, document_template, company_id, variables):
 
 
 def fill_docx_with_variables(document, docx_io, variables):
-
     doc = docxDocument(docx_io)
 
     for key in list(variables):

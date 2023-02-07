@@ -81,7 +81,6 @@ def sign_document_controller(
         )
 
     if len(signers_data) > 0:
-
         if current_document.text_type == ".txt":
             document = DocusignDocument(
                 name=current_document.title,

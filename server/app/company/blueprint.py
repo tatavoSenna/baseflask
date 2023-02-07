@@ -79,7 +79,6 @@ def download_logo_url(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def get_company_list(logged_user):
-
     if not logged_user["is_admin"]:
         return {}, 403
 
@@ -238,7 +237,6 @@ def edit_webhook(logged_user, webhook_id):
 @aws_auth.authentication_required
 @get_local_user
 def create_checkout_session(logged_user):
-
     fields = request.get_json()
     if not "price_id" in fields:
         raise BadRequest(description="No price id sent.")
@@ -309,7 +307,6 @@ def create_checkout_session(logged_user):
 @aws_auth.authentication_required
 @get_local_user
 def customer_portal(logged_user):
-
     customer = stripe.Customer.list(email=logged_user["email"])
     try:
         customer_id = customer.data[0].id

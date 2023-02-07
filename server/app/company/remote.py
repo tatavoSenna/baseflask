@@ -5,7 +5,6 @@ import base64
 
 
 class RemoteCompany:
-
     s3_client = boto3.client("s3")
 
     def upload_logo(self, company_id, logo_img_base64):

@@ -120,7 +120,6 @@ def get_text_item_controller(user, text_item_id):
 def list_text_items_from_internal_db_controller(
     user, db_id, page, per_page, search_term, order_by, order, tag_ids=[]
 ):
-
     text_items_query = TextItem.query.filter_by(internal_database_id=db_id)
 
     for tag_id in tag_ids:

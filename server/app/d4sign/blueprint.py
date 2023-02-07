@@ -128,7 +128,6 @@ def d4sign_document_webhook(hmac_sha256):
 @d4sign_bp.route("/cancel-document/<document_id>", methods=["PUT"])
 @authenticated_user
 def d4sign_cancel_document_route(user, document_id):
-
     control = d4sign_cancel_document(user=user, document_id=document_id)
 
     status_code = control.pop("status_code")

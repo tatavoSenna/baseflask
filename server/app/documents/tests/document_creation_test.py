@@ -28,7 +28,6 @@ def user():
 @pytest.fixture
 def document_template():
     def _document_template(text_type, fields):
-
         if not isinstance(fields, list):
             fields = [fields]
         variables = {}
@@ -375,7 +374,6 @@ class TestDocumentCreation:
         test_txt_template,
         test_variables,
     ):
-
         document_title = "default title"
 
         document_txt = create_document_controller(
@@ -402,7 +400,6 @@ class TestDocumentCreation:
         test_txt_template_without_workflow,
         test_variables,
     ):
-
         document_title = "default title"
 
         document_txt = create_document_controller(
@@ -437,7 +434,6 @@ class TestDocumentCreation:
         test_form,
         test_variables,
     ):
-
         company = factories.CompanyFactory(id=17)
         user = factories.UserFactory(company=company, email="testemail@gmail.com")
 
@@ -531,7 +527,6 @@ class TestDocumentCreation:
         test_txt_template,
         test_variables,
     ):
-
         document_title = "default title"
 
         document_txt = create_document_controller(

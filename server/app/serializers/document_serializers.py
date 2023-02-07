@@ -144,7 +144,7 @@ def generate_steps(obj_workflow, ordered_nodes):
             user_name_list = obj_workflow["nodes"][node].get(
                 "responsible_users_name", ""
             )
-            for (user_id, user_name) in zip(responsible_users, user_name_list):
+            for user_id, user_name in zip(responsible_users, user_name_list):
                 responsible_users_list.append({"id": user_id, "name": user_name})
             responsible_group_dict = {
                 "id": obj_workflow["nodes"][node].get("responsible_group", ""),

@@ -7,7 +7,6 @@ from app.users.remote import RemoteUser
 
 
 def create_user_controller(email, name, group_ids=None, company_id=None):
-
     if group_ids:
         groups = {}
         for group_id in group_ids:
@@ -96,7 +95,6 @@ def add_user_to_group_controller(group_id, user_id):
 
 
 def list_users_on_group_controller(group_id, page=1, per_page=20, search_param=""):
-
     participations = ParticipatesOn.query.filter_by(group_id=group_id).all()
     user_id_list = list(
         map(lambda participation: participation.user_id, participations)

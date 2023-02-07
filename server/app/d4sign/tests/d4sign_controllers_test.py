@@ -327,7 +327,6 @@ def test_d4sign_upload_and_send_document_for_signing_controller(
     download_pdf_from_documents,
     document,
 ):
-
     download_pdf_from_documents.return_value = None
     upload_document_file.return_value = {"uuid": "a1-b2-c3"}
     register_document_webhook.return_value = {

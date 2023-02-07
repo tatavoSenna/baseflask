@@ -80,7 +80,6 @@ def test_download_logo(download_logo_mock):
 
 
 def test_update_webhook():
-
     # Create fake company and fake webhook
     id = 123
     company_id = 123

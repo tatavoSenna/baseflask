@@ -16,7 +16,6 @@ stripe.api_key = os.environ.get("STRIPE_API_SECRET_KEY")
 def save_company_keys_controller(
     company_id, docusign_integration_key, docusign_secret_key, docusign_account_id
 ):
-
     company = Company.query.get(company_id)
 
     company.signatures_provider = "docusign"

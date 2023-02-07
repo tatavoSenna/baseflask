@@ -5,7 +5,6 @@ import base64
 
 
 class RemoteTemplate:
-
     s3_client = boto3.client("s3")
 
     def upload_template(self, template_text, template_id, company_id):

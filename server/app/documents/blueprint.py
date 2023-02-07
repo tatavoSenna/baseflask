@@ -298,7 +298,6 @@ def create(current_user):
 
     # Check if content being created is a folder
     if is_folder:
-
         folder = Document.query.filter_by(
             parent_id=parent,
             title=title,
@@ -441,7 +440,6 @@ def previous_document_status(current_user, document_id):
 @aws_auth.authentication_required
 @get_local_user
 def documents(current_user):
-
     document_templates = get_document_template_list_controller(
         current_user["company_id"]
     )

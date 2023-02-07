@@ -259,7 +259,6 @@ def test_download_document_text(download_document_text_mock):
 
 @patch("app.documents.controllers.RemoteDocument.upload_filled_text_to_documents")
 def test_upload_document_text(upload_document_text_mock):
-
     document = factories.DocumentFactory(id=1)
 
     document_text = "test text"
@@ -483,7 +482,6 @@ def test_change_document_variables(update_variables_mock):
 
 
 def test_edit_document_workflow_controller():
-
     document = factories.DocumentFactory()
 
     user1 = factories.UserFactory()

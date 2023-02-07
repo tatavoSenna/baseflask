@@ -21,11 +21,9 @@ from app.serializers.user_serializers import UserSerializer
 
 
 class RemoteUser:
-
     client = boto3.client("cognito-idp")
 
     def __init__(self, request_headers=None, access_token=None):
-
         if request_headers:
             self.user = self.client.get_user(
                 AccessToken=cognito_utils.extract_access_token(request_headers)
@@ -101,7 +99,6 @@ class RemoteUser:
     """
 
     def create(self, email, name, company_id):
-
         user_attributes = dict(
             UserPoolId=current_app.config["AWS_COGNITO_USER_POOL_ID"],
             Username=email,

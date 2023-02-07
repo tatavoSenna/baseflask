@@ -4,7 +4,6 @@ from num2words import num2words
 
 class NumberFormatter:
     def __init__(self, value, default_display_style=None):
-
         self._default_display_style = default_display_style
         self._value = value
 

@@ -173,7 +173,6 @@ def format_variables(variables, document_template_id):
             continue
 
         if variables_specification[variable_name]["type"] == "structured_list":
-
             # This formats the variables from the structure
             structured_variables = []
             for item in variables[variable_name]:
@@ -193,7 +192,6 @@ def format_variables(variables, document_template_id):
             )
 
         elif variables_specification[variable_name]["type"] == "person":
-
             variables[variable_name]["TEXT"] = create_text_variable(
                 variables[variable_name], "person"
             )

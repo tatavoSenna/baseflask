@@ -21,7 +21,6 @@ from flask import current_app
 
 
 class RemoteDocument:
-
     s3_client = boto3.client("s3")
 
     def delete_document(self, document):
@@ -185,7 +184,6 @@ class RemoteDocument:
         return document_url
 
     def upload_pdf(self, pdf_io, remote_path):
-
         self.s3_client.upload_fileobj(
             pdf_io,
             current_app.config["AWS_S3_DOCUMENTS_BUCKET"],
