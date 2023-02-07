@@ -34,7 +34,6 @@ const Widget = ({
 	const variableNames = variables.map((x) => x?.name || x?.main?.name)
 
 	const [validVariableName, setValidVariableName] = useState(false)
-	const [validVariableStyle, setValidVariableStyle] = useState(false)
 	const [validConditionals, setValidConditionals] = useState(true)
 
 	useEffect(() => {
@@ -44,21 +43,13 @@ const Widget = ({
 				name !== '' &&
 				variableNames.indexOf(name) === variableNames.lastIndexOf(name)
 
-			const style = data.variable.doc_display_style
-			let validStyle =
-				!displayStyles ||
-				!('doc_display_style' in data.variable) ||
-				displayStyles.map((s) => s.value).includes(style) ||
-				(displayStyles.length === 0 && style.length > 0 && !style.includes('|'))
-
 			setValidVariableName(validName)
-			setValidVariableStyle(validStyle)
 		}
 	}, [data, variableNames, displayStyles])
 
 	useEffect(() => {
-		onValidate(validVariableName && validVariableStyle && validConditionals)
-	}, [validVariableName, validVariableStyle, validConditionals, onValidate])
+		onValidate(validVariableName && validConditionals)
+	}, [validVariableName, validConditionals, onValidate])
 
 	const update = useUpdate({ data, pageIndex, fieldIndex, onUpdate })
 
@@ -97,6 +88,7 @@ const Widget = ({
 								$error={!validVariableName}
 								autoComplete="chrome-off"
 							/>
+
 							{displayStyles ? (
 								<ValidatedSelect
 									placeholder="Display Style"
@@ -104,12 +96,11 @@ const Widget = ({
 									defaultValue={
 										data.variable?.doc_display_style
 											? data.variable?.doc_display_style.includes('|')
-												? null
+												? displayStyles[0].value
 												: data.variable?.doc_display_style
 											: null
 									}
-									onChange={(v) => updateVariable('doc_display_style', v)}
-									$error={!validVariableStyle}>
+									onChange={(v) => updateVariable('doc_display_style', v)}>
 									{displayStyles.map(({ value, name }, i) => (
 										<Select.Option value={value} key={i}>
 											{name}
