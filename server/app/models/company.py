@@ -39,6 +39,7 @@ class Company(db.Model):
 
     stripe_company_email = db.Column(db.String(255), nullable=True)
     remaining_documents = db.Column(db.Integer, nullable=False, server_default="20")
+    base_document = db.Column(db.String(255), nullable=False, server_default="")
 
     def __repr__(self):
         return "<Company %r>" % self.name

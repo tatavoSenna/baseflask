@@ -4,6 +4,7 @@ import os
 from werkzeug.exceptions import BadRequest, Unauthorized, NotFound, Forbidden
 from flask import request, Blueprint, jsonify, current_app, abort, redirect
 from sentry_sdk import capture_exception
+from werkzeug.utils import secure_filename
 
 from app import aws_auth, db
 from app.users.remote import get_local_user, authenticated_user
@@ -46,6 +47,26 @@ def save_keys(logged_user):
 def get_keys(logged_user):
     company = Company.query.get(logged_user["company_id"])
     return jsonify({"company": CompanySerializer().dump(company)})
+
+
+@company_bp.route("/basedocument/upload", methods=["POST"])
+@aws_auth.authentication_required
+@get_local_user
+def upload_base_document(logged_user):
+    company_id = logged_user.get("company_id")
+
+    if not company_id:
+        return {}, 404
+
+    uploaded_file = request.files["file"]
+    file_name = secure_filename(uploaded_file.filename)
+
+    if file_name == "":
+        abort(400, "Missing file")
+
+    upload_base_document_controller(company_id, uploaded_file, file_name)
+
+    return jsonify({"message": "Successfully upload base document file"})
 
 
 @company_bp.route("/upload", methods=["POST"])
@@ -376,6 +397,7 @@ def get_company_info(logged_user):
             "name": company.name,
             "stripe_company_email": company.stripe_company_email,
             "remaining_documents": company.remaining_documents,
+            "base_document": company.base_document,
         }
 
         return company_info

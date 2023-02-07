@@ -9,6 +9,7 @@ class DocumentDetailsService {
 		versionId,
 		versionName,
 		documentTitle,
+		companyId,
 	}) {
 		const slug = slugify(documentTitle + ' ' + versionName)
 		const documentName = slug + '.docx'
@@ -23,7 +24,10 @@ class DocumentDetailsService {
 					Accept:
 						'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 				}
-				const payload = JSON.stringify({ text: data.text })
+				const payload = JSON.stringify({
+					text: data.text,
+					companyId: companyId,
+				})
 				const res = await axios.post(url, payload, {
 					headers,
 					responseType: 'blob',
@@ -35,6 +39,7 @@ class DocumentDetailsService {
 					id: data.version_id,
 					comments: data.comments,
 					text: data.text,
+					companyId: companyId,
 				}
 			})
 			.catch((error) => {

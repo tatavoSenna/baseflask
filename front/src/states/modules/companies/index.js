@@ -19,6 +19,7 @@ const initialState = {
 		name: '',
 		stripeCompanyEmail: '',
 		remainingDocuments: 0,
+		baseDocument: '',
 	},
 }
 
@@ -66,6 +67,7 @@ const { actions, reducer } = createSlice({
 					name: payload.name,
 					stripeDocumentEmail: payload.stripe_document_email,
 					remainingDocuments: payload.remaining_documents,
+					baseDocument: payload.base_document,
 				}),
 			})
 		},

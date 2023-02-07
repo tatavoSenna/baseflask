@@ -30,6 +30,7 @@ import {
 } from '~/states/modules/documentDetail'
 import { getGroupList } from '~/states/modules/groups'
 import { getUserList } from '~/states/modules/users'
+import { getCompanyInfo } from '~/states/modules/companies'
 
 import { downloadTextDocumentVersion } from 'states/modules/documentDetail'
 
@@ -62,6 +63,9 @@ const DocumentDetails = () => {
 	const { accessFolders } = useSelector(({ folder }) => folder)
 	const { groupsList } = useSelector(({ groups }) => groups)
 	const { userList } = useSelector(({ users }) => users)
+	const { id: companyId, baseDocument } = useSelector(
+		({ companies }) => companies.companyInfo
+	)
 
 	useEffect(() => {
 		dispatch(getGroupList())
@@ -69,6 +73,10 @@ const DocumentDetails = () => {
 
 	useEffect(() => {
 		dispatch(getUserList())
+	}, [dispatch])
+
+	useEffect(() => {
+		dispatch(getCompanyInfo())
 	}, [dispatch])
 
 	const createDocumentVersion = (form) => {
@@ -172,6 +180,7 @@ const DocumentDetails = () => {
 			versionId: item.id,
 			versionName: item.description,
 			documentTitle: data.title,
+			companyId: companyId,
 		}
 		dispatch(downloadTextDocumentVersion(versionInfo))
 	}
@@ -225,6 +234,7 @@ const DocumentDetails = () => {
 						id={id}
 						history={history}
 						infos={data}
+						baseDocument={baseDocument}
 						onDownload={handleDownloadDocDifTypes}
 						onUpdate={handleShowModal}
 						textUpdate={textUpdate}

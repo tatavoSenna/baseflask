@@ -6,6 +6,7 @@ import {
 	NodeIndexOutlined,
 	DeploymentUnitOutlined,
 	EditOutlined,
+	ArrowUpOutlined,
 } from '@ant-design/icons'
 import { useLocation } from 'react-router-dom'
 
@@ -13,10 +14,11 @@ import BreadCrumb from '~/components/breadCrumb'
 import CompanyConfiguration from './components/companyConfiguration'
 import Webhook from './components/webhook'
 import Integration from './components/integration'
+import Signature from './components/signature'
+import BaseDocument from './components/baseDocument'
 
 import styles from './index.module.scss'
 import MainLayout from '~/components/mainLayout'
-import Signature from './components/signature'
 
 const Settings = () => {
 	const { search } = useLocation()
@@ -64,12 +66,16 @@ const Settings = () => {
 							Planos e pagamentos
 						</Menu.Item>
 					)}
+					<Menu.Item key="baseDocument" icon={<ArrowUpOutlined />}>
+						Documento base
+					</Menu.Item>
 				</Menu>
 				<Layout className={styles.content}>
 					{current === 'companyConfiguration' && <CompanyConfiguration />}
 					{current === 'webhook' && <Webhook />}
 					{current === 'integration' && <Integration />}
 					{current === 'signature' && <Signature />}
+					{current === 'baseDocument' && <BaseDocument />}
 				</Layout>
 			</Layout>
 		</MainLayout>

@@ -21,14 +21,14 @@ services:
       - dev-network
     tmpfs:
       - /tmp
-    command: bash -c "flask db upgrade --directory app/migrations && flask run"
+    command: bash
 
   postgres:
     image: postgres:12.2
     environment:
-        - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
-        - POSTGRES_USER=lawing_user
-        - POSTGRES_PASSWORD=lawing_pass
+      - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
+      - POSTGRES_USER=lawing_user
+      - POSTGRES_PASSWORD=lawing_pass
     volumes:
       - ./devops/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
       - pgdata:/var/lib/postgresql/data
@@ -46,7 +46,7 @@ services:
     ports:
       - 9000:9000
     networks:
-        - dev-network
+      - dev-network
     links:
       - postgres
     depends_on:

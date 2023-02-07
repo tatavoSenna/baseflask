@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-	Card,
-	Typography,
-	Form,
-	Button,
-	Input,
-	Table,
-	Empty,
-	Checkbox,
-} from 'antd'
+import { Typography, Form, Button, Input, Table, Empty, Checkbox } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -19,6 +10,7 @@ import {
 	editWebhooks,
 } from '~/states/modules/settings'
 import { getColumns } from './columns'
+import { Container, SCard } from 'pages/settings/styles'
 
 function Webhook() {
 	const dispatch = useDispatch()
@@ -72,72 +64,65 @@ function Webhook() {
 
 	return (
 		<div>
-			<Card
-				style={{
-					maxWidth: '800px',
-					width: '100%',
-					background: 'white',
-				}}>
-				<Title style={{ marginBottom: 30 }} level={4}>
-					{'Criar novo webhook'}
-				</Title>
-				<Form
-					form={form}
-					id="webhookForm"
-					onChange={() => handleNewWebhook(form)}>
-					<Form.Item label="Novo Webhook" name="webhook">
-						<Input value={newWebhook.url} />
-					</Form.Item>
-					<Checkbox checked={docx} onChange={onChangeDocx}>
-						Word
-					</Checkbox>
-					<Checkbox checked={pdf} onChange={onChangePDF}>
-						PDF
-					</Checkbox>
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'flex-end',
-						}}>
-						<Form.Item>
-							<Button
-								type="primary"
-								htmlType="submit"
-								form="webhookForm"
-								key="criar"
-								onClick={() => {
-									handleSaveWebhooks(form)
-								}}
-								disabled={!newWebhook.url}>
-								Adicionar
-							</Button>
+			<SCard>
+				<Container>
+					<Title style={{ marginBottom: 30 }} level={4}>
+						{'Criar novo webhook'}
+					</Title>
+					<Form
+						form={form}
+						id="webhookForm"
+						onChange={() => handleNewWebhook(form)}>
+						<Form.Item label="Novo Webhook" name="webhook">
+							<Input value={newWebhook.url} />
 						</Form.Item>
-					</div>
-				</Form>
-			</Card>
-			<Card
-				style={{
-					maxWidth: '800px',
-					width: '100%',
-					background: 'white',
-					marginTop: '50px',
-				}}>
-				<Title style={{ marginBottom: 30 }} level={4}>
-					{'Webhooks Criados'}
-				</Title>
-				<Table
-					columns={columns}
-					dataSource={webhookList}
-					locale={{
-						emptyText: (
-							<Empty
-								description={!loading ? 'Nenhum webhook encontrado' : ''}
-							/>
-						),
-					}}
-					loading={loading}
-				/>
-			</Card>
+						<Checkbox checked={docx} onChange={onChangeDocx}>
+							Word
+						</Checkbox>
+						<Checkbox checked={pdf} onChange={onChangePDF}>
+							PDF
+						</Checkbox>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'flex-end',
+							}}>
+							<Form.Item>
+								<Button
+									type="primary"
+									htmlType="submit"
+									form="webhookForm"
+									key="criar"
+									onClick={() => {
+										handleSaveWebhooks(form)
+									}}
+									disabled={!newWebhook.url}>
+									Adicionar
+								</Button>
+							</Form.Item>
+						</div>
+					</Form>
+				</Container>
+			</SCard>
+			<SCard>
+				<Container>
+					<Title style={{ marginBottom: 30 }} level={4}>
+						{'Webhooks Criados'}
+					</Title>
+					<Table
+						columns={columns}
+						dataSource={webhookList}
+						locale={{
+							emptyText: (
+								<Empty
+									description={!loading ? 'Nenhum webhook encontrado' : ''}
+								/>
+							),
+						}}
+						loading={loading}
+					/>
+				</Container>
+			</SCard>
 		</div>
 	)
 }

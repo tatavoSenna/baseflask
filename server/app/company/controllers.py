@@ -34,6 +34,15 @@ def save_company_keys_controller(
     return company
 
 
+def upload_base_document_controller(company_id, document, file_name):
+    company = Company.query.get(company_id)
+    company.base_document = file_name
+    db.session.commit()
+
+    remote_company = RemoteCompany()
+    remote_company.upload_base_document(company_id, document)
+
+
 def upload_logo_controller(company_id, logo_img):
     remote_company = RemoteCompany()
     url = remote_company.upload_logo(company_id, logo_img)

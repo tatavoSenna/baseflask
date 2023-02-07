@@ -1,8 +1,9 @@
 import React from 'react'
-import { Card, Button, Typography, Upload, Form } from 'antd'
+import { Button, Typography, Upload, Form } from 'antd'
 import { useDispatch } from 'react-redux'
 import { saveSettings } from '~/states/modules/settings'
 import { UploadOutlined } from '@ant-design/icons'
+import { Container, SCard } from 'pages/settings/styles'
 
 const { Title } = Typography
 
@@ -18,43 +19,40 @@ const CompanyConfiguration = () => {
 	}
 
 	return (
-		<Card
-			style={{
-				maxWidth: '800px',
-				width: '100%',
-				background: 'white',
-			}}>
-			<Title style={{ marginBottom: 30 }} level={4}>
-				{'Configurações da Empresa'}
-			</Title>
-			<Form>
-				<Form.Item label="Upload da logo: ">
-					<Upload
-						accept=".png, .jpg"
-						showUploadList={false}
-						multiple={false}
-						beforeUpload={(file) => {
-							const reader = new FileReader()
-							reader.readAsDataURL(file)
-							reader.onload = function (e) {
-								logo = e.target.result
-							}
-							return false
+		<SCard>
+			<Container>
+				<Title style={{ marginBottom: 30 }} level={4}>
+					{'Configurações da Empresa'}
+				</Title>
+				<Form>
+					<Form.Item label="Upload da logo: ">
+						<Upload
+							accept=".png, .jpg"
+							showUploadList={false}
+							multiple={false}
+							beforeUpload={(file) => {
+								const reader = new FileReader()
+								reader.readAsDataURL(file)
+								reader.onload = function (e) {
+									logo = e.target.result
+								}
+								return false
+							}}>
+							<Button icon={<UploadOutlined />}>Upload</Button>
+						</Upload>
+					</Form.Item>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'flex-end',
 						}}>
-						<Button icon={<UploadOutlined />}>Upload</Button>
-					</Upload>
-				</Form.Item>
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'flex-end',
-					}}>
-					<Button type="primary" htmlType="submit" onClick={saveSettingsLogo}>
-						Salvar
-					</Button>
-				</div>
-			</Form>
-		</Card>
+						<Button type="primary" htmlType="submit" onClick={saveSettingsLogo}>
+							Salvar
+						</Button>
+					</div>
+				</Form>
+			</Container>
+		</SCard>
 	)
 }
 

@@ -29,3 +29,14 @@ class RemoteCompany:
             ExpiresIn=3600,
         )
         return logo_url
+
+    def upload_base_document(self, company_id, document):
+        remote_path = f"{company_id}/base.docx"
+
+        document_data = document.read()
+
+        document_io = io.BytesIO(document_data)
+
+        self.s3_client.upload_fileobj(
+            document_io, current_app.config["AWS_S3_DOCUMENTS_BUCKET"], remote_path
+        )

@@ -11,6 +11,7 @@ const HeaderButtons = ({
 	textUpdate,
 	text,
 	loadingVersion,
+	baseDocument,
 }) => {
 	const { versions, text_type, sent } = infos
 
@@ -61,7 +62,11 @@ const HeaderButtons = ({
 					Salvar modificações
 				</Button>
 			)}
-			<Button onClick={onDownload}>Baixar Documento</Button>
+			{(!text_type || text_type === '.txt') && !baseDocument ? (
+				<></>
+			) : (
+				<Button onClick={onDownload}>Baixar Documento</Button>
+			)}
 		</div>
 	)
 }
@@ -77,4 +82,5 @@ HeaderButtons.propTypes = {
 	textUpdate: object,
 	text: string,
 	loadingVersion: bool,
+	baseDocument: string,
 }
