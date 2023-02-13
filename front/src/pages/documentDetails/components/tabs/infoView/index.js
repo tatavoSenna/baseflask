@@ -10,6 +10,7 @@ import CheckBoxFieldText from './components/checkboxFieldText'
 import DatabaseFieldText from './components/databaseFieldText'
 import StructureListFieldText from './components/structureListFieldText'
 import ImageFieldText from './components/imageFieldText'
+import CurrencyFieldText from './components/currencyFieldText'
 
 import { ContainerTabs, ScrollContent } from '../styles'
 
@@ -77,6 +78,8 @@ const InfoView = ({ infos }) => {
 									return <ImageFieldText key={i} data={fieldData} />
 								case 'internal_database':
 									return <DatabaseFieldText key={i} data={fieldData} />
+								case 'currency':
+									return <CurrencyFieldText key={i} data={fieldData} />
 								default:
 									return <DefaultText key={i} data={fieldData} />
 							}

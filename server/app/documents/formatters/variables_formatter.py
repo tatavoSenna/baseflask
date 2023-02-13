@@ -169,7 +169,9 @@ def format_variables(variables, document_template_id):
 
     for variable_name in variables:
         if not variable_name in variables_specification:
-            constants_variables_formatter(variables, variable_name, format_variable)
+            variables[variable_name] = constants_variables_formatter(
+                variables, variable_name, format_variable
+            )
             continue
 
         if variables_specification[variable_name]["type"] == "structured_list":
@@ -232,17 +234,16 @@ def create_text_variable(variables, variable_type):
 
 # Formatting variables with don't have previously specifications
 def constants_variables_formatter(variables, variable_name, format_variable):
+    variable_formatted = {}
+
     if variable_name == "DATA_GERACAO_CONTRATO":
         specifications = {"type": "date", "doc_display_style": ""}
         variable_value = variables[variable_name]
 
-        variables[variable_name] = {}
         specifications["doc_display_style"] = "extended"
-        variables[variable_name]["extenso"] = format_variable(
-            specifications, variable_value
-        )
+        variable_formatted["extenso"] = format_variable(specifications, variable_value)
 
         specifications["doc_display_style"] = "%d/%m/%Y"
-        variables[variable_name]["curto"] = format_variable(
-            specifications, variable_value
-        )
+        variable_formatted["curto"] = format_variable(specifications, variable_value)
+
+    return variable_formatted
