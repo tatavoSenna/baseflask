@@ -169,9 +169,10 @@ def format_variables(variables, document_template_id):
 
     for variable_name in variables:
         if not variable_name in variables_specification:
-            variables[variable_name] = constants_variables_formatter(
-                variables, variable_name, format_variable
-            )
+            if not variable_name.startswith("image_"):
+                variables[variable_name] = constants_variables_formatter(
+                    variables, variable_name, format_variable
+                )
             continue
 
         if variables_specification[variable_name]["type"] == "structured_list":
