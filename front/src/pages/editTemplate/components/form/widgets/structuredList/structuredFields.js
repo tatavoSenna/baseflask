@@ -25,7 +25,6 @@ const StructuredFieldsWrapper = ({ children, num, update, structure }) => {
 			<Menu.Item key="radio">Rádio</Menu.Item>
 			<Menu.Item key="checkbox">Checkbox</Menu.Item>
 			<Menu.Item key="variable_image">Upload de imagem</Menu.Item>
-			<Menu.Item key="database">API</Menu.Item>
 		</Menu>
 	)
 
