@@ -50,6 +50,8 @@ import {
 	cancelDocumentFailure,
 } from '.'
 
+import axios from 'axios'
+
 export default function* rootSaga() {
 	yield takeEvery(getDocumentDetail, getDocumentDetailSaga)
 	yield takeEvery(newVersion, newVersionSaga)
@@ -348,14 +350,33 @@ function* getDocumentWordDownloadSaga({ payload = {} }) {
 		content: 'Realizando download do documento...',
 		updateKey: 'downloadWord',
 	})
-	const { id } = payload
+	const { id, filename = 'document.docx' } = payload
 	try {
 		const { data } = yield call(api.get, `documents/${id}/docx`)
-		const link = document.createElement('a')
-		link.href = data.download_url
-		document.body.appendChild(link)
-		link.click()
-		document.body.removeChild(link)
+
+		axios
+			.get(data.download_url, { responseType: 'blob' })
+			.then(
+				(response) =>
+					new Blob([response.data], { type: response.headers['content-type'] })
+			)
+			.then((blob) => {
+				const href = window.URL.createObjectURL(blob)
+
+				const link = document.createElement('a')
+				link.setAttribute('href', href)
+				link.setAttribute('download', filename)
+
+				let clickEvent = new MouseEvent('click', {
+					view: window,
+					bubbles: true,
+					cancelable: false,
+				})
+
+				link.dispatchEvent(clickEvent)
+			})
+			.catch((err) => console.error(err))
+
 		successMessage({
 			content: 'Download realizado com sucesso.',
 			updateKey: 'downloadWord',

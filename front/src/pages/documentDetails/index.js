@@ -127,7 +127,7 @@ const DocumentDetails = () => {
 	}
 
 	const getDocumentWord = () => {
-		dispatch(getDocumentWordDownload({ id }))
+		dispatch(getDocumentWordDownload({ id, filename: `${data.title}.docx` }))
 	}
 
 	const handleDownloadButton = () => {
