@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 
 export const selectAllDocumentDetail = (payload) => {
 	let formatingInitialValue
@@ -20,6 +21,33 @@ export const selectAllDocumentDetail = (payload) => {
 									)
 								} else {
 									field.initialValue = payload.variables[field.variable.name]
+
+									if (field.type === 'structured_list') {
+										const clonedInitialValue = [].concat(
+											payload.variables[field.variable.name]
+										)
+
+										clonedInitialValue.map((element) => {
+											for (let key in element) {
+												// sees if value is date by regex analysis
+												// regex sees if value has - T00:00:00.000Z with is part of ISO-8601 date representation
+
+												if (
+													/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(
+														element[key]
+													)
+												)
+													// formatting date and transform in moment object
+													element[key] = moment(
+														moment(element[key]).utc().format('DD/MM/YYYY'),
+														'DD/MM/YYYY'
+													)
+											}
+											return element
+										})
+
+										field.initialValue = clonedInitialValue
+									}
 								}
 							} else if (
 								field.type === 'variable_image' &&

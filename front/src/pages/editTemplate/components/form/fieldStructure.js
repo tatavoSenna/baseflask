@@ -25,7 +25,7 @@ export const fieldStructure = (type, label = '', name = '') => {
 			break
 		case 'date':
 			field.variable.type = 'date'
-			field.variable.doc_display_style = '%d/%m/%Y | extended'
+			field.variable.doc_display_style = '%d/%m/%Y'
 			break
 		case 'checkbox':
 			field.variable.type = 'list'
