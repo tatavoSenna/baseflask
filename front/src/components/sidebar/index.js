@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { bool, func } from 'prop-types'
+import { bool, func, string } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
@@ -20,7 +20,7 @@ import { setInitialFolder } from '~/states/modules/folder'
 
 const { Sider } = Layout
 
-function SideBar({ collapsed, handleCollapsed, isWeb }) {
+function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 	const { data } = useSelector(({ settings }) => settings)
 	const loggedUser = useSelector(({ session }) => session)
 	const dispatch = useDispatch()
@@ -95,7 +95,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb }) {
 					<Menu
 						className={styles.menu}
 						mode="inline"
-						defaultSelectedKeys={['1']}>
+						defaultSelectedKeys={[selectedKey]}>
 						<Menu.Item
 							key="/"
 							onClick={() => {
@@ -224,6 +224,7 @@ SideBar.propTypes = {
 	collapsed: bool.isRequired,
 	handleCollapsed: func.isRequired,
 	isWeb: bool,
+	selectedKey: string,
 }
 
 SideBar.deafultProps = {

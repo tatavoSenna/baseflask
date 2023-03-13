@@ -250,7 +250,7 @@ const Contracts = () => {
 	const [selectedContracts, setSelectedContracts] = useState([])
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'/'}>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<Breadcrumb>

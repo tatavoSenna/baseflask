@@ -45,7 +45,7 @@ const DatabaseDetails = () => {
 	}
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'databases'}>
 			<Layout style={{ padding: '0', background: '#fff', width: '100%' }}>
 				{!editedText ? (
 					<DatabaseItemsListing

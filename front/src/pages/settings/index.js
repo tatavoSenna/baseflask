@@ -42,7 +42,7 @@ const Settings = () => {
 	}
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'settings'}>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<BreadCrumb parent="Configurações" current={breadCrumpCurrent} />

@@ -58,7 +58,7 @@ const Databases = () => {
 	}, [dispatch])
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'databases'}>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<BreadCrumb current="Bancos de textos" />

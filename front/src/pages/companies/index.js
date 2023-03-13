@@ -59,7 +59,7 @@ function Companies() {
 	const columns = getColumns(handleChangeUserCompany, company_id)
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'empresas'}>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<BreadCrumb parent="Empresas" current="Lista" />

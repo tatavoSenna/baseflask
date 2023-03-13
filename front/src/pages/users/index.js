@@ -123,7 +123,7 @@ function Users() {
 	}
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'users'}>
 			<Layout style={{ backgroundColor: '#fff' }}>
 				<PageHeader>
 					<BreadCrumb parent="Usuários" current="Lista" />

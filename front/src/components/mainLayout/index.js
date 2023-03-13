@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { node } from 'prop-types'
+import { node, string } from 'prop-types'
 import { Layout } from 'antd'
 import { useMediaQuery } from 'react-responsive'
 import styled from 'styled-components'
@@ -22,8 +22,9 @@ const StyledMainContent = styled(Content)`
 	padding: 0 24px;
 `
 
-function MainLayout({ children }) {
+function MainLayout({ selectedKey, children }) {
 	const [collapsed, setCollapsed] = useState(false)
+
 	const isDesktopOrLaptop = useMediaQuery({
 		query: '(min-device-width: 1224px)',
 	})
@@ -43,6 +44,7 @@ function MainLayout({ children }) {
 			<SideBar
 				collapsed={collapsed}
 				handleCollapsed={handleCollapsed}
+				selectedKey={selectedKey}
 				isWeb={isDesktopOrLaptop}
 			/>
 			<StyledInternalLayout>
@@ -57,6 +59,7 @@ function MainLayout({ children }) {
 
 MainLayout.propTypes = {
 	children: node.isRequired,
+	selectedKey: string,
 }
 
 export default MainLayout

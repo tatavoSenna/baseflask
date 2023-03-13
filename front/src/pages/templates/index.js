@@ -105,7 +105,7 @@ const Templates = () => {
 	}, [dispatch])
 
 	return (
-		<MainLayout>
+		<MainLayout selectedKey={'templates'}>
 			{is_company_admin ? (
 				<Layout style={{ backgroundColor: '#fff' }}>
 					<PageHeader>
