@@ -115,6 +115,16 @@ export const selectForm = (form, payload) => {
 	}
 }
 
+export const addPage = (form, newPage, currentIndex, reference) => {
+	const formCopy = form.map((item) => ({ ...item }))
+	formCopy.splice(parseInt(currentIndex) + 1, 0, {
+		...reference[0],
+		...newPage,
+	})
+
+	return formCopy
+}
+
 export const addField = (form, payload) => {
 	return form.map((page, index) => {
 		if (index === payload.pageIndex) {

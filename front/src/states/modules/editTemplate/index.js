@@ -16,6 +16,7 @@ import {
 	selectVariable,
 	move,
 	movePage,
+	addPage,
 } from './selectors'
 
 const initialState = {
@@ -84,10 +85,12 @@ const { actions, reducer } = createSlice({
 		editTemplatePageAdd: (state, { payload }) =>
 			extend(state, {
 				data: extend(state.data, {
-					form: [
-						...state.data.form,
-						{ ...initialState.data.form[0], ...payload.newPage },
-					],
+					form: addPage(
+						state.data.form,
+						payload.newPage,
+						payload.currentIndex,
+						initialState.data.form
+					),
 					variables: [...state.data.variables, []],
 				}),
 			}),

@@ -53,7 +53,7 @@ const WrapTabNode = DropTarget('DND_NODE', cardTarget, (connect) => ({
 	}))(TabNode)
 )
 
-const DraggableTabs = ({ setCurrent, lastPage, ...props }) => {
+const DraggableTabs = ({ setCurrent, ...props }) => {
 	const dispatch = useDispatch()
 
 	const moveTabNode = (dragKey, hoverKey) => {
@@ -86,8 +86,8 @@ const DraggableTabs = ({ setCurrent, lastPage, ...props }) => {
 			title: 'Nova Página',
 			fields: [],
 		}
-		dispatch(editTemplatePageAdd({ newPage }))
-		setCurrent(`${lastPage}`)
+		dispatch(editTemplatePageAdd({ newPage, currentIndex: props.current }))
+		setCurrent(`${parseInt(props.current) + 1}`)
 	}
 
 	return (
@@ -169,10 +169,7 @@ const TemplateForm = ({ data, setInputsFilled, getWidgetIndexes }) => {
 
 	return (
 		<WidgetWrapper>
-			<DraggableTabs
-				current={current}
-				setCurrent={setCurrent}
-				lastPage={data.form.length}>
+			<DraggableTabs current={current} setCurrent={setCurrent}>
 				{data.form.map((page, index) => (
 					<TabPane
 						style={{ heigth: '100%' }}
@@ -206,7 +203,6 @@ TemplateForm.propTypes = {
 DraggableTabs.propTypes = {
 	current: string,
 	setCurrent: func,
-	lastPage: number,
 	children: any,
 }
 
