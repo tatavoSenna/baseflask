@@ -207,7 +207,7 @@ const EditTemplate = () => {
 							key="signers"
 							className={!inputsFilled.signers ? styles.empty : undefined}
 							icon={<TeamOutlined />}>
-							Assinantes
+							Signatários
 						</Menu.Item>
 					</Menu>
 

@@ -203,7 +203,7 @@ function* sentAssignSaga({ payload = {} }) {
 			} else {
 				errorMessage({
 					content:
-						'Envio para docusign falhou, favor revisar os dados de assinantes.',
+						'Envio para docusign falhou, favor revisar os dados dos signatários.',
 					updateKey: 'sentAssign',
 				})
 			}

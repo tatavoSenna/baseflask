@@ -426,7 +426,7 @@ const Tabs = ({
 				)}
 				{signers.length > 0 && (
 					<Menu.Item style={{ textAlign: 'center' }} key="4">
-						Assinantes
+						Assinatura
 					</Menu.Item>
 				)}
 			</Menu>
