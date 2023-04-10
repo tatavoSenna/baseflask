@@ -5,12 +5,14 @@ import { selectAllWebhooks } from './selectors'
 const initialState = {
 	loading: false,
 	priceId: '',
+	data: { url: '' },
 	isCanceled: false,
 	expireAt: 0,
 	webhookList: [],
 	newWebhook: {
 		url: '',
 	},
+	error: false,
 }
 
 const { actions, reducer } = createSlice({
@@ -20,15 +22,16 @@ const { actions, reducer } = createSlice({
 		getSettings: (state) =>
 			extend(state, {
 				loading: true,
+				error: false,
 			}),
 		getSettingsSuccess: (state, { payload }) =>
 			extend(state, {
 				loading: false,
-				data: payload,
+				data: { ...state.data, url: payload },
 			}),
 		getSettingsFailure: (state, { payload }) =>
 			extend(state, {
-				error: payload.error,
+				error: payload,
 				loading: false,
 			}),
 		getStripePlan: (state) =>
@@ -81,10 +84,10 @@ const { actions, reducer } = createSlice({
 		saveSettings: (state) =>
 			extend(state, {
 				loading: true,
+				error: false,
 			}),
-		saveSettingsSuccess: (state, { payload }) =>
+		saveSettingsSuccess: (state) =>
 			extend(state, {
-				data: payload,
 				loading: false,
 			}),
 		saveSettingsFailure: (state, { payload }) =>

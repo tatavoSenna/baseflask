@@ -37,6 +37,7 @@ import {
 	uploadStripePlanPortalSuccess,
 	uploadStripePlanPortalFailure,
 } from '.'
+import Axios from 'axios'
 
 export default function* rootSaga() {
 	yield takeEvery(saveSettings, saveSettingsSaga)
@@ -53,7 +54,11 @@ export default function* rootSaga() {
 function* getSettingsSaga() {
 	try {
 		const { data } = yield call(api.get, `/company/download`)
-		yield put(getSettingsSuccess(data))
+
+		// checking if the url is valid
+		const response = yield Axios.get(data.url)
+
+		if (response) yield put(getSettingsSuccess(data.url))
 	} catch (error) {
 		yield put(getSettingsFailure(error))
 	}
@@ -97,12 +102,13 @@ function* saveSettingsSaga({ payload }) {
 			updateKey: 'saveSettings',
 		})
 
-		const response = yield call(api.post, `/company/upload`, payload)
+		yield call(api.post, `/company/upload`, payload)
 		successMessage({
 			content: 'Dados salvos com sucesso',
 			updateKey: 'saveSettings',
 		})
-		yield put(saveSettingsSuccess(response.data))
+
+		yield put(saveSettingsSuccess())
 	} catch (error) {
 		yield put(saveSettingsFailure(error))
 		errorMessage({

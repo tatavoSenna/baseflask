@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { bool, func, string } from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
 import { Menu, Layout, Tooltip } from 'antd'
 import {
@@ -17,18 +16,18 @@ import styles from './index.module.scss'
 import logoBlack from '~/assets/logo-dark.svg'
 import logoSmall from '~/assets/logo-small.png'
 import { setInitialFolder } from '~/states/modules/folder'
+import { Link } from 'react-router-dom'
 
 const { Sider } = Layout
 
 function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
-	const { data } = useSelector(({ settings }) => settings)
+	const { data, error, loading } = useSelector(({ settings }) => settings)
 	const loggedUser = useSelector(({ session }) => session)
 	const dispatch = useDispatch()
-	const history = useHistory()
-	const { pathname } = useLocation()
+
 	useEffect(() => {
-		if (!data) dispatch(getSettings())
-	}, [dispatch, data])
+		if (!data.url && !loading && !error) dispatch(getSettings())
+	}, [dispatch, data.url, error, loading])
 
 	const { is_admin } = useSelector(({ session }) => session)
 
@@ -40,18 +39,11 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 		}
 	}
 
-	function handleGoTo(path) {
-		if (!isWeb) {
-			handleCollapsed()
-		}
-		return history.push(path)
-	}
-
 	const logoSideBar = useMemo(() => {
-		if (data) {
+		if (data.url) {
 			return (
 				<img
-					src={typeof data !== 'string' ? data.url : data}
+					src={data.url}
 					alt="logo"
 					className={styles.logo}
 					onError={(e) => {
@@ -62,7 +54,7 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 			)
 		}
 		return <img src={logoSmall} alt="logo" className={styles.logo} />
-	}, [data])
+	}, [data.url])
 
 	const dynamicCollapse = useMediaQuery({
 		query: '(max-width: 1200px)',
@@ -100,7 +92,6 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 							key="/"
 							onClick={() => {
 								handleFolderRowBack()
-								handleGoTo('/documents')
 							}}
 							icon={
 								<FolderOpenOutlined
@@ -108,7 +99,9 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 									style={{ fontSize: 18 }}
 								/>
 							}>
-							<Tooltip className={styles.tooltip}>Documentos</Tooltip>
+							<Link to="/documents">
+								<Tooltip className={styles.tooltip}>Documentos</Tooltip>
+							</Link>
 						</Menu.Item>
 						{loggedUser.is_company_admin && (
 							<Menu.Item
@@ -118,9 +111,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 										className={styles.icons}
 										style={{ fontSize: 18 }}
 									/>
-								}
-								onClick={() => handleGoTo('/models')}>
-								<Tooltip className={styles.tooltip}>Modelos</Tooltip>
+								}>
+								<Link to="/models">
+									<Tooltip className={styles.tooltip}>Modelos</Tooltip>
+								</Link>
 							</Menu.Item>
 						)}
 						<Menu.Item
@@ -130,9 +124,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 									className={styles.icons}
 									style={{ fontSize: 18 }}
 								/>
-							}
-							onClick={() => handleGoTo('/databases')}>
-							<Tooltip className={styles.tooltip}>Bancos de Textos</Tooltip>
+							}>
+							<Link to="/databases">
+								<Tooltip className={styles.tooltip}>Bancos de Textos</Tooltip>
+							</Link>
 						</Menu.Item>
 						<Menu.Item
 							key="users"
@@ -141,9 +136,10 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 									className={styles.icons}
 									style={{ fontSize: 18 }}
 								/>
-							}
-							onClick={() => handleGoTo('/users')}>
-							<Tooltip className={styles.tooltip}>Usuários</Tooltip>
+							}>
+							<Link to="/users">
+								<Tooltip className={styles.tooltip}>Usuários</Tooltip>
+							</Link>
 						</Menu.Item>
 						{is_admin && (
 							<Menu.Item
@@ -153,16 +149,16 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 										className={styles.icons}
 										style={{ fontSize: 18 }}
 									/>
-								}
-								onClick={() => handleGoTo('/companies')}>
-								<Tooltip className={styles.tooltip}>Empresas</Tooltip>
+								}>
+								<Link to="/companies">
+									<Tooltip className={styles.tooltip}>Empresas</Tooltip>
+								</Link>
 							</Menu.Item>
 						)}
-						<Menu.Item
-							key="settings"
-							icon={<SettingOutlined />}
-							onClick={() => handleGoTo('/settings')}>
-							<Tooltip className={styles.tooltip}>Configurações</Tooltip>
+						<Menu.Item key="settings" icon={<SettingOutlined />}>
+							<Link to="/settings">
+								<Tooltip className={styles.tooltip}>Configurações</Tooltip>
+							</Link>
 						</Menu.Item>
 					</Menu>
 				</Sider>
@@ -183,35 +179,23 @@ function SideBar({ collapsed, handleCollapsed, isWeb, selectedKey }) {
 					<div className={styles.logoWrapper}>
 						<img src={logoBlack} alt="logo" className={styles.logo} />
 					</div>
-					<Menu
-						defaultSelectedKeys={[`${pathname.split('/')[1] || '/'}`]}
-						mode="inline">
+					<Menu defaultSelectedKeys={[selectedKey]} mode="inline">
 						<Menu.Item
 							key="/"
 							onClick={() => {
 								handleFolderRowBack()
-								handleGoTo('/')
 							}}
 							icon={<FolderOpenOutlined />}>
-							Documentos
+							<Link to="/documents">Documentos</Link>
 						</Menu.Item>
-						<Menu.Item
-							key="users"
-							icon={<TeamOutlined />}
-							onClick={() => handleGoTo('/users')}>
-							Usuários
+						<Menu.Item key="users" icon={<TeamOutlined />}>
+							<Link to="/users">Usuários</Link>
 						</Menu.Item>
-						<Menu.Item
-							key="templates"
-							icon={<LayoutOutlined />}
-							onClick={() => handleGoTo('/models')}>
-							Modelos
+						<Menu.Item key="templates" icon={<LayoutOutlined />}>
+							<Link to="/models">Modelos</Link>
 						</Menu.Item>
-						<Menu.Item
-							key="settings"
-							icon={<SettingOutlined />}
-							onClick={() => handleGoTo('/settings')}>
-							Configurações
+						<Menu.Item key="settings" icon={<SettingOutlined />}>
+							<Link to="/settings">Configurações</Link>
 						</Menu.Item>
 					</Menu>
 				</Sider>
