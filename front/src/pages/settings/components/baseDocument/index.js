@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Typography, Upload } from 'antd'
 import { Container, SCard } from 'pages/settings/styles'
 import { UploadOutlined } from '@ant-design/icons'
@@ -8,11 +8,19 @@ import styled from 'styled-components'
 const { Title, Paragraph } = Typography
 
 const BaseDocument = () => {
-	const { loadingName, baseDocument, uploadFile } = BaseDocumentService()
+	const { loading, loadingName, baseDocument, uploadFile } =
+		BaseDocumentService()
+
+	// controlling loading upload and loading document name
+	const [loadingsController, setLoadingsController] = useState(loadingName)
+
+	useEffect(() => {
+		setLoadingsController(loading || loadingName)
+	}, [setLoadingsController, loading, loadingName])
 
 	const status = baseDocument ? baseDocument : 'Nenhum documento disponível'
 	return (
-		<SCard loading={loadingName}>
+		<SCard loading={loadingsController}>
 			<Container>
 				<Title style={{ margin: 0 }} level={4}>
 					Documento base

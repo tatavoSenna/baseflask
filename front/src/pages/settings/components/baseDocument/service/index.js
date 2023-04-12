@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { message } from 'antd'
 import { useState } from 'react'
@@ -14,6 +14,8 @@ const BaseDocumentService = () => {
 	)
 	const { baseDocument } = companyInfo
 
+	const documentNameRef = useRef()
+
 	const uploadFile = (file) => {
 		setLoading(true)
 		setError(false)
@@ -23,6 +25,7 @@ const BaseDocumentService = () => {
 		api
 			.post('/company/basedocument/upload', form)
 			.then((response) => {
+				documentNameRef.current = file.name
 				message.success(response.data.message)
 			})
 			.catch((error) => {
@@ -39,7 +42,13 @@ const BaseDocumentService = () => {
 		dispatch(getCompanyInfo())
 	}, [dispatch])
 
-	return { loading, loadingName, error, baseDocument, uploadFile }
+	return {
+		loading,
+		loadingName,
+		error,
+		baseDocument: documentNameRef.current ?? baseDocument,
+		uploadFile,
+	}
 }
 
 export default BaseDocumentService
