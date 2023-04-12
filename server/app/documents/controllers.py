@@ -32,7 +32,12 @@ from app.workflow.services import (
     format_workflow_responsible_users,
 )
 from app.documents.formatters.variables_formatter import format_variables
+from app.documents.jinja_filters.custom_filters import env_custom_filters
+
 from .remote import RemoteDocument
+
+
+jinja_env.filters.update(env_custom_filters())
 
 
 def get_document_template_list_controller(company_id):
@@ -625,7 +630,7 @@ def fill_docx_with_variables(document, docx_io, variables):
 
     doc.save(docx_io)
     docx_template = DocxTemplate(docx_io)
-    docx_template.render(variables)
+    docx_template.render(variables, jinja_env)
 
     filled_text_io = io.BytesIO()
     docx_template.save(filled_text_io)

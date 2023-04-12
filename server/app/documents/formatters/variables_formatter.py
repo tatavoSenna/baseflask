@@ -5,12 +5,12 @@ from datetime import datetime
 from slugify import slugify
 from flask import Markup
 from num2words import num2words
-from babel.numbers import format_currency
 
 from app import jinja_env
 from app.models.documents import DocumentTemplate
 from app.documents.formatters.structured_list_formatter import StructuredListFormatter
 from app.documents.formatters.number_formatter import NumberFormatter
+from app.documents.formatters.currency_formatter import CurrencyFormatter
 from app.documents.formatters.time_formatter import TimeFormatter
 from app.documents.formatters.internal_database_formatter import (
     InternalDatabaseFormatter,
@@ -145,18 +145,7 @@ def format_variables(variables, document_template_id):
                         logging.exception(e)
 
         elif variable_type == "currency":
-            try:
-                num_variable = variable
-                if specs["doc_display_style"] in ["currency_extended", "extended"]:
-                    return (
-                        format_currency(num_variable, "BRL", locale="pt_BR")
-                        + " ("
-                        + num2words(num_variable, lang="pt_BR", to="currency")
-                        + ")"
-                    )
-                return format_currency(num_variable, "BRL", locale="pt_BR")
-            except Exception as e:
-                logging.exception(e)
+            return CurrencyFormatter(variable, specs.get("doc_display_style", None))
 
         elif variable_type[0:11] == "structured_":
             return StructuredListFormatter(variable, specs)

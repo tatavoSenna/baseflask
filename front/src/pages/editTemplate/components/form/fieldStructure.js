@@ -34,7 +34,7 @@ export const fieldStructure = (type, label = '', name = '') => {
 		case 'currency':
 			field.initialValue = 0
 			field.variable.type = 'currency'
-			field.variable.doc_display_style = 'plain | extended'
+			field.variable.doc_display_style = 'plain'
 			break
 		case 'database':
 			field.variable.type = 'database'

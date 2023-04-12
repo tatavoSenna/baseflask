@@ -24,7 +24,6 @@ from docxtpl import DocxTemplate
 from slugify import slugify
 from sqlalchemy import desc, asc
 
-
 from app import db, aws_auth
 from app.serializers.document_serializers import (
     DocumentSerializer,
@@ -73,10 +72,11 @@ from app.d4sign.controllers import (
 )
 from app.docusign.controllers import sign_document_controller, void_envelope_controller
 
+
 from app.documents.formatters.variables_formatter import (
     format_variables,
-    create_text_variable,
 )
+
 
 documents_bp = Blueprint("documents", __name__)
 
