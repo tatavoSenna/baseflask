@@ -30,7 +30,7 @@ const Fields = ({
 	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
 
 	useEffect(() => {
-		getLoading(loadingCep)
+		getLoading(loadingCep ? true : false)
 	}, [getLoading, loadingCep])
 
 	const componentsTypes = Object.keys(components)
@@ -44,6 +44,7 @@ const Fields = ({
 			visible,
 			optional,
 			form,
+			variableListName: name,
 		}
 
 		if (typeof field === 'string') {

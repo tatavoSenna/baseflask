@@ -8,6 +8,8 @@ export const useCepAutocomplete = (
 	fields,
 	name,
 	setState,
+	personList = false,
+	variableListName = '',
 	prefix = ''
 ) => {
 	const dispatch = useDispatch()
@@ -17,7 +19,7 @@ export const useCepAutocomplete = (
 
 	const info = useSelector(({ addressInfo }) => addressInfo)
 	const addressInfo = info.data[cep]
-	const loading = info.loading
+	const loading = info.loading[cep]
 
 	const formattedSetCep = useCallback(
 		(cep) => {
@@ -37,10 +39,21 @@ export const useCepAutocomplete = (
 	}, [dispatch])
 
 	useEffect(() => {
-		const setValue = (field, value) =>
-			form.setFieldsValue({
+		const setValue = (field, value) => {
+			if (personList) {
+				const fields = form.getFieldsValue()[variableListName]
+
+				const update = { ...fields[name], [field.toUpperCase()]: value }
+				fields[name] = update
+
+				return form.setFieldsValue({
+					[variableListName]: fields,
+				})
+			}
+			return form.setFieldsValue({
 				[name]: { [field.toUpperCase()]: value },
 			})
+		}
 
 		if (form && addressInfo) {
 			fields.forEach((field) => {
@@ -50,7 +63,7 @@ export const useCepAutocomplete = (
 				if (field === `${prefix}street`) {
 					setValue(field, addressInfo.logradouro)
 				}
-				if (field === `${prefix}state`)
+				if (field === `${prefix}state`) {
 					if (stateFields) {
 						const newValue = stateFields.data.find(
 							(item) => item.stateInitials === addressInfo.uf
@@ -58,6 +71,7 @@ export const useCepAutocomplete = (
 						setValue(field, newValue)
 						setState(newValue)
 					}
+				}
 				if (field === `${prefix}city`) {
 					setValue(field, addressInfo.localidade)
 				}
@@ -66,7 +80,17 @@ export const useCepAutocomplete = (
 				}
 			})
 		}
-	}, [form, fields, addressInfo, name, stateFields, setState, prefix])
+	}, [
+		form,
+		fields,
+		addressInfo,
+		name,
+		stateFields,
+		setState,
+		prefix,
+		variableListName,
+		personList,
+	])
 
 	return [formattedSetCep, loading]
 }

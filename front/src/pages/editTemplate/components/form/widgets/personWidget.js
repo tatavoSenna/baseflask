@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { object } from 'prop-types'
+import { bool, func, object } from 'prop-types'
 import { useUpdate, useValidation, Widget } from './base/widget'
-import { styleIconValidation, ThinDivider } from './base/styles'
+import { FormItem, styleIconValidation, ThinDivider } from './base/styles'
 import { UserOutlined } from '@ant-design/icons'
 import { CommonFields } from './base/widgetCommonFields'
 import { fieldsTypes } from './person/personFieldsTypes'
 import PersonFields from './person/personFields'
+import { Switch } from 'antd'
 
 export const PersonWidget = React.memo((props) => {
 	const { data } = props
@@ -91,9 +92,16 @@ export const PersonWidget = React.memo((props) => {
 			onValidate={setValidWidget}
 			formItems={
 				<div>
-					<CommonFields data={data} update={update} hasDescription={false} />
+					<CommonFields
+						data={data}
+						update={update}
+						hasDescription={false}
+						extraFields={
+							<ExtraFieldList personList={data.person_list} update={update} />
+						}
+					/>
 					<ThinDivider $noTopMargin orientation="left">
-						Capos
+						Campos
 					</ThinDivider>
 					{fieldsTypes.map((fields, key) => (
 						<PersonFields
@@ -112,8 +120,33 @@ export const PersonWidget = React.memo((props) => {
 	)
 })
 
+function ExtraFieldList({ personList, update }) {
+	return (
+		<FormItem
+			style={{ alignSelf: 'flex-end', marginRight: 48 }}
+			label="Lista"
+			$width={'fit-content'}
+			$labelWidth={'66px'}
+			$labelTop={'1px'}>
+			<Switch
+				defaultChecked={personList}
+				onChange={(e) =>
+					update({
+						person_list: e,
+					})
+				}
+			/>
+		</FormItem>
+	)
+}
+
 const Icon = styleIconValidation(UserOutlined)
 
 PersonWidget.propTypes = {
 	data: object,
+}
+
+ExtraFieldList.propTypes = {
+	personList: bool,
+	update: func,
 }

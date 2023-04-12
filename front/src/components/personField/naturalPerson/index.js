@@ -21,6 +21,9 @@ const NaturalPerson = ({
 	visible,
 	first,
 	getLoading,
+	personList,
+	variableListName,
+	listLabelChange,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -41,11 +44,18 @@ const NaturalPerson = ({
 	const [maritalState, setMaritalState] = useState(fieldMarital)
 	const [state, setState] = useState(fieldState)
 
-	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
+	const [setCep, loadingCep] = useCepAutocomplete(
+		form,
+		fields,
+		name,
+		setState,
+		personList,
+		variableListName
+	)
 
 	useEffect(() => {
-		getLoading(loadingCep)
-	}, [getLoading, loadingCep])
+		getLoading(loadingCep ? true : false, name)
+	}, [getLoading, loadingCep, name])
 
 	const componentsTypes = Object.keys(components)
 
@@ -59,6 +69,7 @@ const NaturalPerson = ({
 			visible,
 			optional,
 			form,
+			variableListName,
 		}
 
 		if (typeof field === 'string') {
@@ -77,7 +88,12 @@ const NaturalPerson = ({
 
 				let changeCallback = (v) => onChange(v, dict.fieldType.toUpperCase())
 
-				if (field.field_type === 'state')
+				if (field.field_type === 'name') {
+					dict.onChange = (v) => {
+						listLabelChange(v, name)
+						changeCallback(v)
+					}
+				} else if (field.field_type === 'state')
 					dict.onChange = (v) => {
 						setState(v)
 						changeCallback(v)
@@ -118,7 +134,7 @@ NaturalPerson.propTypes = {
 	disabled: bool,
 	visible: bool,
 	onChange: func,
-	inputValue: object,
+	inputValue: PropTypes.oneOfType([array, object]),
 }
 
 NaturalPerson.defaultProps = {

@@ -1,7 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledTitle, StyledLabel, StyledValue } from './styles/style'
+import {
+	StyledTitle,
+	StyledLabel,
+	StyledValue,
+	StyledPanel,
+	StyledCollapse,
+} from './styles/style'
 
 const attorneyProperties = [
 	{ name: 'ATTORNEY_NATIONALITY', label: 'Nacionalidade' },
@@ -24,10 +30,18 @@ const attorneyProperties = [
 	{ NAME: 'ATTORNEY_CEP', label: 'CEP' },
 ]
 
-const personProperties = [
-	{ name: 'SOCIETY_NAME', label: 'Razão Social' },
-	{ name: 'CNPJ', label: 'CNPJ' },
-	{ name: 'ACTIVITY', label: 'Área da atividade' },
+const addressProps = [
+	{ name: 'STREET', label: 'Logradouro' },
+	{ name: 'NUMBER', label: 'Número' },
+	{ name: 'COMPLEMENT', label: 'Complemento' },
+	{ name: 'DISTRICT', label: 'Bairro' },
+	{ name: 'CITY', label: 'Cidade' },
+	{ name: 'STATE', label: 'Estado' },
+	{ name: 'COUNTRY', label: 'País' },
+	{ name: 'CEP', label: 'cep' },
+]
+
+const naturalPersonProps = [
 	{ name: 'NATIONALITY', label: 'Nacionalidade' },
 	{ name: 'CPF', label: 'CPF' },
 	{ name: 'PRONOUN', label: 'Pronome' },
@@ -40,30 +54,76 @@ const personProperties = [
 	{ name: 'MARITAL_STATE', label: 'Estado Civil' },
 	{ name: 'PROPERTY_REGIME', label: 'Regime de bens' },
 	{ name: 'PROFESSION', label: 'Profissão' },
-	{ name: 'STREET', label: 'Logradouro' },
-	{ name: 'NUMBER', label: 'Número' },
-	{ name: 'COMPLEMENT', label: 'Complemento' },
-	{ name: 'DISTRICT', label: 'Bairro' },
-	{ name: 'CITY', label: 'Cidade' },
-	{ name: 'STATE', label: 'Estado' },
-	{ name: 'COUNTRY', label: 'País' },
-	{ name: 'CEP', label: 'cep' },
+	...addressProps,
+]
+
+const legalPersonProps = [
+	{ name: 'LEGAL_NATIONALITY', label: 'Nacionalidade' },
+	{ name: 'SOCIETY_NAME', label: 'Razão Social' },
+	{ name: 'CNPJ', label: 'CNPJ' },
+	{ name: 'ACTIVITY', label: 'Área da atividade' },
+	...addressProps,
 ]
 
 const PersonFieldText = ({ data }) => {
+	const { field, value } = data
+
+	return (
+		<>
+			{field.label && <StyledTitle $margin="10px 0">{field.label}</StyledTitle>}
+			{field.person_list ? (
+				<StyledCollapse bordered={false}>
+					{value.map((val, i) => (
+						<StyledPanel
+							header={
+								val.SOCIETY_NAME ||
+								val.PRONOUN + ' ' + val.NAME + ' ' + val.SURNAME
+							}
+							key={i}>
+							<PersonField
+								{...data}
+								value={val}
+								key={i}
+								personProperties={
+									val.PERSON_TYPE === 'natural_person'
+										? naturalPersonProps
+										: legalPersonProps
+								}
+							/>
+						</StyledPanel>
+					))}
+				</StyledCollapse>
+			) : (
+				<PersonField
+					{...data}
+					personProperties={
+						value.PERSON_TYPE === 'natural_person'
+							? naturalPersonProps
+							: legalPersonProps
+					}
+				/>
+			)}
+		</>
+	)
+}
+
+const PersonField = ({ value, personProperties }) => {
 	const hasAttorney =
-		Object.keys(data.value).filter((property) => property.includes('ATTORNEY'))
+		Object.keys(value).filter((property) => property.includes('ATTORNEY'))
 			.length > 0
 
 	return (
 		<>
-			{data.field.label && <StyledTitle>{data.field.label}</StyledTitle>}
-			{personProperties.map(
+			{personProperties?.map(
 				(personProperty, i) =>
-					personProperty.name in data.value && (
+					personProperty.name in value && (
 						<div key={i}>
-							<StyledLabel>{personProperty.label}:</StyledLabel>
-							<StyledValue>{data.value[personProperty.name]}</StyledValue>
+							{value[personProperty.name] !== '' && (
+								<>
+									<StyledLabel>{personProperty.label}:</StyledLabel>
+									<StyledValue>{value[personProperty.name]}</StyledValue>
+								</>
+							)}
 						</div>
 					)
 			)}
@@ -71,10 +131,10 @@ const PersonFieldText = ({ data }) => {
 			{hasAttorney &&
 				attorneyProperties.map(
 					(attorneyProperty, i) =>
-						attorneyProperty.name in data.value && (
+						attorneyProperty.name in value && (
 							<div key={i}>
 								<StyledLabel>{attorneyProperty.label}:</StyledLabel>
-								<StyledValue>{data.value[attorneyProperty.name]}</StyledValue>
+								<StyledValue>{value[attorneyProperty.name]}</StyledValue>
 							</div>
 						)
 				)}
@@ -86,4 +146,9 @@ export default PersonFieldText
 
 PersonFieldText.propTypes = {
 	data: PropTypes.object,
+}
+
+PersonField.propTypes = {
+	value: PropTypes.object,
+	personProperties: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 }

@@ -49,6 +49,7 @@ export const fieldStructure = (type, label = '', name = '') => {
 			field.variable.width = 8.0
 			break
 		case 'person':
+			field.person_list = false
 			field.variable.type = 'person'
 			field.person_type = ['legal_person', 'natural_person']
 			field.fields = [

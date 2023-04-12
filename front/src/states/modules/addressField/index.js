@@ -2,7 +2,7 @@ import extend from 'lodash/extend'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	loading: false,
+	loading: {},
 	error: {},
 	data: {},
 }
@@ -11,16 +11,21 @@ const { actions, reducer } = createSlice({
 	name: 'addressInfo',
 	initialState,
 	reducers: {
-		getAddressInfo: (state) => extend(state, { loading: true }),
-		getAddressInfoSuccess: (state, { payload }) => {
-			const keyCep = payload.cep.replace(/[^0-9]/g, '')
-			return extend(state, {
-				data: { ...state.data, [keyCep]: payload },
-				loading: false,
-			})
-		},
+		getAddressInfo: (state, { payload }) =>
+			extend(state, {
+				...state,
+				loading: { ...state.loading, [payload]: true },
+			}),
+		getAddressInfoSuccess: (state, { payload }) =>
+			extend(state, {
+				data: { ...state.data, [payload.keyCep]: payload.data },
+				loading: { ...state.loading, [payload.keyCep]: false },
+			}),
 		getAddressInfoFailure: (state, { payload }) =>
-			extend(state, { error: payload.error, loading: false }),
+			extend(state, {
+				error: payload.error,
+				loading: { ...state.loading, [payload.keyCep]: false },
+			}),
 	},
 })
 

@@ -2,7 +2,15 @@ import { message } from 'antd'
 import Axios from 'axios'
 import { useEffect, useState } from 'react'
 
-export const useCnpjAutocomplete = (form, fields, name, setCep) => {
+export const useCnpjAutocomplete = (
+	form,
+	fields,
+	name,
+	setCep,
+	personList,
+	variableListName,
+	listLabelChange
+) => {
 	const [legalField, setLegalField] = useState({})
 	const [cnpj, setCnpj] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -41,15 +49,27 @@ export const useCnpjAutocomplete = (form, fields, name, setCep) => {
 	}
 
 	useEffect(() => {
-		const setValue = (field, value) =>
-			form.setFieldsValue({
+		const setValue = (field, value) => {
+			if (personList) {
+				const fields = form.getFieldsValue()[variableListName]
+
+				const update = { ...fields[name], [field.toUpperCase()]: value }
+				fields[name] = update
+
+				return form.setFieldsValue({
+					[variableListName]: fields,
+				})
+			}
+			return form.setFieldsValue({
 				[name]: { [field.toUpperCase()]: value },
 			})
+		}
 
 		if (form && item) {
 			fields.forEach((field) => {
 				if (field === 'society_name') {
 					setValue(field, item.nomeEmpresarial)
+					listLabelChange(item.nomeEmpresarial, name)
 				}
 				if (field === 'activity') {
 					setValue(field, item.cnaePrincipal.descricao)
@@ -69,7 +89,16 @@ export const useCnpjAutocomplete = (form, fields, name, setCep) => {
 				}
 			})
 		}
-	}, [form, item, name, fields, setCep])
+	}, [
+		form,
+		item,
+		name,
+		fields,
+		setCep,
+		personList,
+		variableListName,
+		listLabelChange,
+	])
 
 	return [formattedSetCnpj, loading]
 }

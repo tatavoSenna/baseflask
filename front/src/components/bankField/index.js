@@ -55,7 +55,7 @@ BankField.propTypes = {
 		type: string.isRequired,
 		info: string,
 	}).isRequired,
-	className: object,
+	className: string,
 	onChange: func,
 	inputValue: string,
 	disabled: bool,
@@ -63,7 +63,6 @@ BankField.propTypes = {
 }
 
 BankField.defaultProps = {
-	className: {},
 	onChange: () => null,
 	visible: true,
 }

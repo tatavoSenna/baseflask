@@ -11,13 +11,17 @@ export default function* rootSaga() {
 	yield takeEvery(getAddressInfo, getAddressInfoSaga)
 }
 
-function* getAddressInfoSaga({ payload }) {
+function* getAddressInfoSaga({ payload: keyCep }) {
 	try {
-		const { data } = yield call(api.get, `/ws/${payload}/json`)
+		const { data } = yield call(api.get, `/ws/${keyCep}/json`)
 
-		yield put(getAddressInfoSuccess(data))
+		if (data.erro) {
+			throw data.erro
+		}
+
+		yield put(getAddressInfoSuccess({ data, keyCep }))
 	} catch (error) {
-		yield put(getAddressInfoFailure(error))
+		yield put(getAddressInfoFailure({ error, keyCep }))
 		errorMessage({
 			content: `Não foi encontrado informações de endereço de acordo com o cep digitado`,
 		})

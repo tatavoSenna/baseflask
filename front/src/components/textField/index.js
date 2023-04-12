@@ -22,7 +22,7 @@ const TextField = ({
 	const returnLabel = () => {
 		if (label.length > 0) {
 			return <InfoField label={label} info={info} />
-		} else if (OutsideLabel.length > 0) {
+		} else if (OutsideLabel?.length > 0) {
 			return <InfoField label={OutsideLabel} info={info} />
 		}
 		return null

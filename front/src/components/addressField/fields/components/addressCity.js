@@ -3,8 +3,15 @@ import PropTypes, { bool, number, string } from 'prop-types'
 
 import CityField from 'components/cityField'
 
-const AddressCity = ({ name, optional, fieldType, ...fieldProps }) => {
+const AddressCity = ({
+	name,
+	optional,
+	fieldType,
+	variableListName,
+	...fieldProps
+}) => {
 	const pageFieldsData = {
+		listName: variableListName,
 		info: '',
 		type: 'city',
 		label: 'Cidade',
@@ -24,6 +31,7 @@ AddressCity.propTypes = {
 	name: PropTypes.oneOfType([number, string]),
 	optional: bool,
 	fieldType: string,
+	variableListName: string,
 }
 
 export default AddressCity

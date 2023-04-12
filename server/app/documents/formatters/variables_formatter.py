@@ -2,11 +2,9 @@ import requests
 import logging
 
 from datetime import datetime
-from slugify import slugify
 from flask import Markup
 from num2words import num2words
 
-from app import jinja_env
 from app.models.documents import DocumentTemplate
 from app.documents.formatters.structured_list_formatter import StructuredListFormatter
 from app.documents.formatters.number_formatter import NumberFormatter
@@ -15,12 +13,7 @@ from app.documents.formatters.time_formatter import TimeFormatter
 from app.documents.formatters.internal_database_formatter import (
     InternalDatabaseFormatter,
 )
-from app.documents.formatters.person_variable_text import (
-    LegalPersonText,
-    LegalPersonTextVariable,
-    NaturalPersonText,
-    NaturalPersonTextVariable,
-)
+from app.documents.formatters.person_formatter import create_person_variable
 
 
 month_dictionary = {
@@ -153,6 +146,9 @@ def format_variables(variables, document_template_id):
         elif variable_type == "internal_database":
             return InternalDatabaseFormatter(variable)
 
+        elif variable_type == "person":
+            return create_person_variable(variable)
+
     if not variables_specification:
         return variables
 
@@ -183,11 +179,6 @@ def format_variables(variables, document_template_id):
                 variables_specification[variable_name], structured_variables
             )
 
-        elif variables_specification[variable_name]["type"] == "person":
-            variables[variable_name]["TEXT"] = create_text_variable(
-                variables[variable_name], "person"
-            )
-
         elif variables_specification[variable_name]["type"] == "address":
             continue
 
@@ -198,28 +189,6 @@ def format_variables(variables, document_template_id):
             variables[variable_name] = formatted
 
     return variables
-
-
-def create_text_variable(variables, variable_type):
-    text_variable = {}
-    filled_text = ""
-    if variable_type == "person":
-        if variables["PERSON_TYPE"] == "legal_person":
-            person_text_variable = LegalPersonTextVariable
-            person_text = LegalPersonText
-        else:
-            person_text_variable = NaturalPersonTextVariable
-            person_text = NaturalPersonText
-
-        for value in variables:
-            if value in person_text_variable:
-                jinja_template = jinja_env.from_string(person_text_variable[value])
-                filled_text = jinja_template.render(variables)
-                text_variable[value] = filled_text
-
-        jinja_template = jinja_env.from_string(person_text)
-        filled_text = jinja_template.render(text_variable)
-    return filled_text
 
 
 # Formatting variables with don't have previously specifications

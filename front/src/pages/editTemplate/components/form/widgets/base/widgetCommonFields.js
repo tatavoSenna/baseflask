@@ -1,11 +1,11 @@
 import React from 'react'
 import { bool, func, object } from 'prop-types'
-import { Input, Switch } from 'antd'
+import { Col, Input, Row, Switch } from 'antd'
 
 import { FormItem } from './styles'
 
 export const CommonFields = ({ hasDescription, ...props }) => {
-	const { data, update } = props
+	const { data, update, extraFields } = props
 
 	return (
 		<>
@@ -15,16 +15,21 @@ export const CommonFields = ({ hasDescription, ...props }) => {
 					display: 'flex',
 					flexDirection: 'column',
 				}}>
-				<FormItem
-					style={{ alignSelf: 'flex-end' }}
-					label="Opcional"
-					$width={'fit-content'}
-					$labelTop={'1px'}>
-					<Switch
-						defaultChecked={data.optional}
-						onChange={(e) => update({ optional: e })}
-					/>
-				</FormItem>
+				<Row justify="end">
+					<Col>{extraFields}</Col>
+					<Col>
+						<FormItem
+							style={{ alignSelf: 'flex-end' }}
+							label="Opcional"
+							$width={'fit-content'}
+							$labelTop={'1px'}>
+							<Switch
+								defaultChecked={data.optional}
+								onChange={(e) => update({ optional: e })}
+							/>
+						</FormItem>
+					</Col>
+				</Row>
 				<FormItem label="Título" $width={'100%'}>
 					<Input
 						onBlur={(e) => update({ label: e.target.value })}
@@ -51,4 +56,5 @@ CommonFields.propTypes = {
 	hasDescription: bool,
 	update: func,
 	data: object,
+	extraFields: object,
 }

@@ -37,11 +37,13 @@ export const PanelWrapper = styled.div`
 `
 
 export const FormItemFields = styled(Form.Item)`
-	flex-direction: column;
+	flex-direction: ${({ $direction = 'column' }) => $direction};
 	flex: ${({ $flex = '1 0 100%' }) => $flex};
+	align-items: ${({ $align = 'stretch' }) => $align};
+	margin: ${({ $margin = '0 0 16px' }) => $margin};
 
 	.ant-form-item-label {
-		width: 100%;
+		width: ${({ $width = '100%' }) => $width};
 		text-align: left;
 	}
 `

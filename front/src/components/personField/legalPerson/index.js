@@ -23,6 +23,9 @@ const LegalPerson = ({
 	visible,
 	first,
 	getLoading,
+	personList,
+	variableListName,
+	listLabelChange,
 }) => {
 	const components = getAllComponents()
 	const classNames = getAllClasses()
@@ -45,27 +48,50 @@ const LegalPerson = ({
 	const [state, setState] = useState(fieldState)
 	const [attorneyState, setStateAttorney] = useState(fieldStateAttorney)
 
-	const [setCep, loadingCep] = useCepAutocomplete(form, fields, name, setState)
+	const [setCep, loadingCep] = useCepAutocomplete(
+		form,
+		fields,
+		name,
+		setState,
+		personList,
+		variableListName
+	)
+
 	const [setAttorneyCep, loadingCepAttorney] = useCepAutocomplete(
 		form,
 		fields,
 		name,
 		setStateAttorney,
+		personList,
+		variableListName,
 		'attorney_'
 	)
 
-	const [setCnpj, loadingCnpj] = useCnpjAutocomplete(form, fields, name, setCep)
+	const [setCnpj, loadingCnpj] = useCnpjAutocomplete(
+		form,
+		fields,
+		name,
+		setCep,
+		personList,
+		variableListName,
+		listLabelChange
+	)
 
 	useEffect(() => {
-		if (loadingCnpj || loadingCep) getLoading(true)
-		if (!loadingCnpj && !loadingCep) getLoading(false)
-	}, [getLoading, loadingCnpj, loadingCep])
+		getLoading(loadingCnpj || loadingCep ? true : false, name)
+	}, [getLoading, loadingCnpj, loadingCep, name])
 
 	useEffect(() => {
-		getLoading(loadingCepAttorney)
-	}, [getLoading, loadingCepAttorney])
+		getLoading(loadingCepAttorney ? true : false, name)
+	}, [getLoading, loadingCepAttorney, name])
 
 	const componentsTypes = Object.keys(components)
+
+	let hasAttorney = fields.find((f) => f.includes('attorney_')) ? true : false
+
+	const custom_fields = hasAttorney
+		? [...fields, 'attorney_title']
+		: [...fields]
 
 	return componentsTypes.map((field, i) => {
 		const dict = {
@@ -78,6 +104,7 @@ const LegalPerson = ({
 			visible,
 			optional,
 			form,
+			variableListName,
 		}
 
 		if (typeof field === 'string') {
@@ -88,8 +115,8 @@ const LegalPerson = ({
 			dict.first = first
 		}
 
-		for (let i = 0; i < fields.length; i++) {
-			if (field.field_type === fields[i]) {
+		for (let i = 0; i < custom_fields.length; i++) {
+			if (field.field_type === custom_fields[i]) {
 				dict.inputValue = field.value
 				dict.className = classNames[field.field_type]
 				dict.fieldType = field.field_type
@@ -104,7 +131,12 @@ const LegalPerson = ({
 					dict.state = attorneyState
 				}
 
-				if (field.field_type === 'cep') {
+				if (field.field_type === 'society_name') {
+					dict.onChange = (v) => {
+						listLabelChange(v, name)
+						changeCallback(v)
+					}
+				} else if (field.field_type === 'cep') {
 					dict.onChange = (v) => {
 						setCep(v)
 						changeCallback(v)
@@ -145,7 +177,7 @@ LegalPerson.propTypes = {
 	disabled: bool,
 	visible: bool,
 	onChange: func,
-	inputValue: object,
+	inputValue: PropTypes.oneOfType([array, object]),
 	getLoading: func,
 }
 

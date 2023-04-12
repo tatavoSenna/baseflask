@@ -16,7 +16,8 @@ const CityField = ({
 	disabled,
 	visible,
 }) => {
-	const { label, variable, type, id, info, list, optional } = pageFieldsData
+	const { label, variable, type, id, info, list, optional, listName } =
+		pageFieldsData
 	const isObj = typeof variable === 'object'
 	const varname = isObj ? variable.name : variable
 	const name = id !== undefined ? `${varname}_${id}` : varname
@@ -45,7 +46,13 @@ const CityField = ({
 
 	useEffect(() => {
 		if (form) {
-			const value = form.getFieldsValue()[list][name] ?? ''
+			let value = ''
+			if (listName !== list) {
+				value = form.getFieldsValue()[listName][list][name] ?? ''
+			} else {
+				value = form.getFieldsValue()[list][name] ?? ''
+			}
+
 			if (data && value) {
 				const city = data.find((item) => value === item.city)
 				if (state && city?.state !== state) {
@@ -53,7 +60,7 @@ const CityField = ({
 				}
 			}
 		}
-	}, [state, data, form, list, name])
+	}, [listName, state, data, form, list, name])
 
 	return (
 		<Form.Item

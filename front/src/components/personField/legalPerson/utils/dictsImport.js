@@ -21,8 +21,8 @@ import IdentityOrg from '../../components/identityOrg'
 import IdentityDate from '../../components/identityDate'
 import AddressDistrict from 'components/addressField/fields/components/addressDistrict'
 import CPF from 'components/personField/components/CPF'
-import AttorneyNationality from 'components/personField/attorneyField/attoneyNationality'
 import LegalNationality from '../components/legalNationality'
+import TitleSeparator from 'components/personField/components/titleSeparator'
 
 const components = {
 	legal_nationality: LegalNationality,
@@ -37,7 +37,8 @@ const components = {
 	district: AddressDistrict,
 	state: AddressState,
 	city: AddressCity,
-	attorney_nationality: AttorneyNationality,
+	attorney_title: TitleSeparator,
+	attorney_nationality: LegalNationality,
 	attorney_cpf: CPF,
 	attorney_pronoun: Pronoun,
 	attorney_name: Name,
@@ -70,6 +71,7 @@ const classNames = {
 	state: styles['state'],
 	district: styles['district'],
 	city: styles['city'],
+	attorney_title: styles['attorney_title'],
 	attorney_nationality: styles['attorney-nationality'],
 	attorney_cpf: styles['attorney-cpf'],
 	attorney_pronoun: styles['attorney-pronoun'],
@@ -90,10 +92,6 @@ const classNames = {
 	attorney_city: styles['attorney-city'],
 }
 
-export const getAllComponents = () => {
-	return components
-}
+export const getAllComponents = () => components
 
-export const getAllClasses = () => {
-	return classNames
-}
+export const getAllClasses = () => classNames
