@@ -2,7 +2,14 @@ import React from 'react'
 import { Form, Select, Spin } from 'antd'
 import styles from './index.module.scss'
 import InfoField from 'components/infoField'
-import { string, shape, object, func, bool, number } from 'prop-types'
+import PropTypes, {
+	string,
+	shape,
+	object,
+	func,
+	bool,
+	number,
+} from 'prop-types'
 
 const SearchSelect = ({
 	pageFieldsData,
@@ -15,11 +22,7 @@ const SearchSelect = ({
 	state,
 }) => {
 	const { loading, error, starting } = state
-	const { label, variable, type, options, id, info, list, optional } =
-		pageFieldsData
-	const isObj = typeof variable === 'object'
-	const varname = isObj ? variable.name : variable
-	const name = id !== undefined ? `${varname}_${id}` : varname
+	const { label, type, options, info, list, optional } = pageFieldsData
 
 	const returnLabel = () => {
 		if (label.length > 0) {
@@ -90,8 +93,8 @@ const SearchSelect = ({
 
 	return (
 		<Form.Item
-			key={name}
-			name={list !== undefined ? [list, name] : name}
+			key={list + 'INDICE'}
+			name={[list, 'INDICE']}
 			label={returnLabel()}
 			hasFeedback
 			className={`${className} ${styles['form-search']}`}
@@ -102,7 +105,13 @@ const SearchSelect = ({
 			}
 			type={type}
 			colon={false}
-			initialValue={!inputValue ? '' : inputValue}>
+			initialValue={
+				!inputValue
+					? ''
+					: typeof inputValue === 'object'
+					? inputValue.indice
+					: inputValue
+			}>
 			<Select
 				filterOption={false}
 				showSearch={true}
@@ -127,7 +136,7 @@ SearchSelect.propTypes = {
 	form: object,
 	className: string,
 	onChange: func,
-	inputValue: number,
+	inputValue: PropTypes.oneOfType([number, string, object]),
 	disabled: bool,
 	visible: bool,
 	onSearch: func,
