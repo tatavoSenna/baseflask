@@ -1,5 +1,12 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react'
-import { string, shape, object, func, bool, number } from 'prop-types'
+import PropTypes, {
+	string,
+	shape,
+	object,
+	func,
+	bool,
+	number,
+} from 'prop-types'
 import Axios from 'axios'
 import {
 	errorMessage,
@@ -9,6 +16,7 @@ import {
 } from './utils/searchReducer'
 import { ACTION_TYPES } from './utils/searchActionTypes'
 import SearchSelect from './searchSelect'
+import { Form, Input } from 'antd'
 
 const DatabaseField = ({
 	pageFieldsData,
@@ -19,13 +27,22 @@ const DatabaseField = ({
 	disabled,
 	visible,
 }) => {
-	const { variable } = pageFieldsData
+	const { variable, id } = pageFieldsData
+
+	const isObj = typeof variable === 'object'
+	const varname = isObj ? variable.name : variable
+	const name = id !== undefined ? `${varname}_${id}` : varname
+
 	const url = variable?.database_endpoint
 	const search_key = variable?.search_key
 	const display_key = variable?.display_key
 
 	const [dataSearch, setDataSearch] = useState('')
+	const [labelValue, setLabelValue] = useState(
+		typeof inputValue === 'object' ? inputValue.exibicao : ''
+	)
 	const waitTimeout = useRef()
+	const loadedOneTime = useRef(false)
 
 	const [state, dispatch] = useReducer(optionsReducer, INITIAL_STATE)
 
@@ -61,13 +78,60 @@ const DatabaseField = ({
 		}, 500)
 	}
 
+	// make an array of one option to input with informations from inputValue
+	useEffect(() => {
+		if (
+			inputValue !== '' &&
+			!loadedOneTime.current &&
+			typeof inputValue === 'object'
+		) {
+			loadedOneTime.current = true
+			dispatch({
+				type: ACTION_TYPES.FETCH_SUCCESS,
+				payload: [{ label: inputValue.exibicao, value: inputValue.indice }],
+			})
+		}
+	}, [inputValue])
+
+	useEffect(() => {
+		if (form) {
+			form.setFieldsValue({
+				[name]: { ...form.getFieldsValue()[name], EXIBICAO: labelValue },
+			})
+		}
+	}, [form, name, labelValue])
+
+	const handleChange = (e) => {
+		let label = state.options[0].label
+		if (state.options.length > 1) {
+			label = state.options.find((option) => option.value === e).label
+		}
+		setLabelValue(label)
+		onChange(e)
+	}
+
 	return (
-		<SearchSelect
-			pageFieldsData={{ ...pageFieldsData, options: state.options }}
-			state={state}
-			onSearch={handleSearch}
-			{...{ className, onChange, inputValue, disabled, visible, form }}
-		/>
+		<>
+			<Form.Item
+				style={{ display: 'none' }}
+				name={[name, 'EXIBICAO']}
+				initialValue={
+					typeof inputValue === 'object' ? inputValue.exibicao : ''
+				}>
+				<Input />
+			</Form.Item>
+			<SearchSelect
+				pageFieldsData={{
+					...pageFieldsData,
+					options: state.options,
+					list: name,
+				}}
+				state={state}
+				onSearch={handleSearch}
+				onChange={handleChange}
+				{...{ className, inputValue, disabled, visible, form }}
+			/>
+		</>
 	)
 }
 
@@ -81,7 +145,7 @@ DatabaseField.propTypes = {
 	form: object,
 	className: string,
 	onChange: func,
-	inputValue: number,
+	inputValue: PropTypes.oneOfType([number, string, object]),
 	disabled: bool,
 	visible: bool,
 }

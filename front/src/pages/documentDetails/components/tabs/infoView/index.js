@@ -13,6 +13,7 @@ import ImageFieldText from './components/imageFieldText'
 import CurrencyFieldText from './components/currencyFieldText'
 
 import { ContainerTabs, ScrollContent } from '../styles'
+import ApiFieldText from './components/apiFieldText'
 
 const { Title } = Typography
 
@@ -80,6 +81,8 @@ const InfoView = ({ infos }) => {
 									return <DatabaseFieldText key={i} data={fieldData} />
 								case 'currency':
 									return <CurrencyFieldText key={i} data={fieldData} />
+								case 'database':
+									return <ApiFieldText key={i} data={fieldData} />
 								default:
 									return <DefaultText key={i} data={fieldData} />
 							}
