@@ -14,6 +14,7 @@ class CurrencyFormatter:
                 return getattr(self, self._default_display_style)
             except Exception as e:
                 logging.exception(e)
+                return self.plain
         else:
             return self.default
 
