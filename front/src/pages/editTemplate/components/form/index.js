@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { object, string, func, number, any } from 'prop-types'
+import { object, string, func, any } from 'prop-types'
 import { Tabs, Empty, Button } from 'antd'
 import { DndProvider, DragSource, DropTarget } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'

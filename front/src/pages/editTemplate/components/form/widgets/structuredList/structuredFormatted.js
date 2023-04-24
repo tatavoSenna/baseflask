@@ -60,8 +60,8 @@ const StructuredFormatted = ({ data, update }) => {
 					{variablesList.length > 0 && (
 						<FormItemFields label="Variáveis adicionadas">
 							<VariablesWrapper>
-								{variablesList.map((item) => (
-									<Variables onClick={() => handleVariableInText(item)}>
+								{variablesList.map((item, i) => (
+									<Variables key={i} onClick={() => handleVariableInText(item)}>
 										{item}
 									</Variables>
 								))}

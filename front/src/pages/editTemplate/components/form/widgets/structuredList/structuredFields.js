@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Collapse, Badge, Button, Dropdown, Menu } from 'antd'
 
 import styled from 'styled-components'
-import { array, func, number, object } from 'prop-types'
+import PropTypes, { array, func, number, object } from 'prop-types'
 import { fieldStructure } from '../../fieldStructure'
 import { widgets } from '../index'
 import { JSONWidget } from '../jsonWidget'
@@ -138,7 +138,7 @@ StructuredFields.propTypes = {
 }
 
 StructuredFieldsWrapper.propTypes = {
-	children: object,
+	children: PropTypes.oneOfType([array, object]),
 	num: number,
 	update: func,
 	structure: array,
