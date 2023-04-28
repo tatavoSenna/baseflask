@@ -17,6 +17,7 @@ import {
 import { ACTION_TYPES } from './utils/searchActionTypes'
 import SearchSelect from './searchSelect'
 import { Form, Input } from 'antd'
+import { Auth } from 'aws-amplify'
 
 const DatabaseField = ({
 	pageFieldsData,
@@ -46,24 +47,41 @@ const DatabaseField = ({
 
 	const [state, dispatch] = useReducer(optionsReducer, INITIAL_STATE)
 
+	/*
+		const session = await Auth.currentSession()
+		const accessToken = session.getIdToken()
+		const jwtToken = accessToken.getJwtToken()
+		config.headers['Authorization'] = `Bearer ${jwtToken}`
+	*/
 	useEffect(() => {
 		const cancelToken = Axios.CancelToken.source()
-		if (dataSearch.length >= 3) {
-			dispatch({ type: ACTION_TYPES.FETCH_START })
-			Axios.get(`${url}?search=${dataSearch}`, {
-				cancelToken: cancelToken.token,
-			})
-				.then((response) => {
-					const data = populateData(response, display_key, search_key)
-					dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data })
+
+		async function axiosRequestIntegration() {
+			const session = await Auth.currentSession()
+			const accessToken = session.getIdToken()
+			const jwtToken = accessToken.getJwtToken()
+
+			if (dataSearch.length >= 3) {
+				dispatch({ type: ACTION_TYPES.FETCH_START })
+				Axios.get(`${url}?search=${dataSearch}`, {
+					cancelToken: cancelToken.token,
+					headers: {
+						Authorization: `Bearer ${jwtToken}`,
+					},
 				})
-				.catch((error) => {
-					dispatch({ type: ACTION_TYPES.FETCH_ERROR })
-					errorMessage(Axios, error)
-				})
-		} else {
-			dispatch({ type: ACTION_TYPES.FETCH_CLEAR })
+					.then((response) => {
+						const data = populateData(response, display_key, search_key)
+						dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data })
+					})
+					.catch((error) => {
+						dispatch({ type: ACTION_TYPES.FETCH_ERROR })
+						errorMessage(Axios, error)
+					})
+			} else {
+				dispatch({ type: ACTION_TYPES.FETCH_CLEAR })
+			}
 		}
+		axiosRequestIntegration()
 
 		return () => {
 			cancelToken.cancel()

@@ -11,7 +11,7 @@ api.interceptors.request.use(async (config) => {
 	// and add it as an atuh beare token to the api
 	try {
 		const session = await Auth.currentSession()
-		const accessToken = session.getAccessToken()
+		const accessToken = session.getIdToken()
 		const jwtToken = accessToken.getJwtToken()
 		config.headers['Authorization'] = `Bearer ${jwtToken}`
 	} catch (error) {
