@@ -108,7 +108,7 @@ def format_variables(variables, document_template_id):
                 variable_index = variable["INDICE"]
                 response = requests.get(
                     f'{specs["database_endpoint"]}/{variable_index}',
-                    headers={"Authorization": auth_header}
+                    headers={"Authorization": auth_header},
                 )
 
                 new_variables = response.json()
