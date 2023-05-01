@@ -2,7 +2,7 @@ import requests
 import logging
 
 from datetime import datetime
-from flask import Markup
+from flask import Markup, request
 from num2words import num2words
 
 from app.models.documents import DocumentTemplate
@@ -103,10 +103,12 @@ def format_variables(variables, document_template_id):
             return TimeFormatter(variable, specs.get("doc_display_style", None))
 
         elif variable_type == "database":
+            auth_header = request.headers.get("Authorization")
             try:
                 variable_index = variable["INDICE"]
                 response = requests.get(
-                    f'{specs["database_endpoint"]}/{variable_index}'
+                    f'{specs["database_endpoint"]}/{variable_index}',
+                    headers={"Authorization": auth_header}
                 )
 
                 new_variables = response.json()
