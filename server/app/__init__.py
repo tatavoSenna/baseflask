@@ -4,12 +4,8 @@ from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import IntegrityError
-from config import init_dotenv
-from jinja2 import Environment, PackageLoader, environment, select_autoescape
-import click
+from jinja2 import Environment, PackageLoader, select_autoescape
 import sentry_sdk
-from sentry_sdk.integrations.flask import FlaskIntegration
 import os
 
 db = SQLAlchemy()
@@ -29,19 +25,7 @@ def bad_request(e):
 
 
 def create_app():
-    env_tag = os.environ.get("ENVIRONMENT_TAG", None)
-    if env_tag and env_tag != "local":
-        sentry_sdk.init(
-            dsn=os.environ.get("SENTRY_DSN"),
-            integrations=[FlaskIntegration()],
-            traces_sample_rate=1.0 if env_tag == "develop" else 0.7,
-            environment=env_tag,
-        )
-    else:
-        init_dotenv(app)
-
     app = Flask(__name__, instance_relative_config=False)
-
     app.config.from_object("config.Config")
 
     CORS(app)
@@ -85,7 +69,7 @@ def create_app():
         with sentry_sdk.configure_scope() as scope:
             if scope.transaction:
                 scope.transaction.sampled = False
-        return "Welcome to Doing.law API"
+        return "Welcome to the Lawing API"
 
     from .scripts.blueprint import scripts_bp
 

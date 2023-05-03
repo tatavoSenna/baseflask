@@ -1,13 +1,11 @@
-import logging
-
 import boto3
-import botocore
 
 from flask import request, Blueprint, jsonify, current_app, abort
 from sqlalchemy import select, delete
+from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import BadRequest
 
-from app import aws_auth, db, IntegrityError
+from app import aws_auth, db
 from app.users.remote import RemoteUser, get_local_user
 from app.models.user import User, Group, ParticipatesOn
 from app.serializers.user_serializers import UserSerializer, GroupSerializer
