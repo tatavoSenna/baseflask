@@ -3,7 +3,7 @@ from __future__ import with_statement
 import logging
 
 from logging.config import fileConfig
-from os import path, curdir
+from os import path, curdir, environ
 
 from alembic import context
 from sqlalchemy import engine_from_config
@@ -26,7 +26,7 @@ from flask import current_app
 
 from app import db
 
-config.set_main_option("sqlalchemy.url", str(db.engine.url).replace("%", "%%"))
+config.set_main_option("sqlalchemy.url", environ.get("SQLALCHEMY_DATABASE_URI"))
 target_metadata = db.metadata
 
 # other values from the config, defined by the needs of env.py,
