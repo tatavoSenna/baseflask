@@ -103,12 +103,15 @@ def format_variables(variables, document_template_id):
             return TimeFormatter(variable, specs.get("doc_display_style", None))
 
         elif variable_type == "database":
-            auth_header = request.headers.get("Authorization")
+            headers = {}
+            auth_header = request.headers.get("Authorization", None)
+            if auth_header:
+                headers["Authorization"] = auth_header
             try:
                 variable_index = variable["INDICE"]
                 response = requests.get(
                     f'{specs["database_endpoint"]}/{variable_index}',
-                    headers={"Authorization": auth_header},
+                    headers=headers,
                 )
 
                 new_variables = response.json()
