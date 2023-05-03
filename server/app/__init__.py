@@ -29,7 +29,7 @@ def bad_request(e):
 
 
 def create_app():
-    env_tag = os.environ.get("ENVIRONMENT_TAG")
+    env_tag = os.environ.get("ENVIRONMENT_TAG", None)
     if env_tag and env_tag != "local":
         sentry_sdk.init(
             dsn=os.environ.get("SENTRY_DSN"),
@@ -37,11 +37,10 @@ def create_app():
             traces_sample_rate=1.0 if env_tag == "develop" else 0.7,
             environment=env_tag,
         )
+    else:
+        init_dotenv()
 
     app = Flask(__name__, instance_relative_config=False)
-
-    if app.config["ENV"] != "production":
-        init_dotenv(app)
 
     app.config.from_object("config.Config")
 
