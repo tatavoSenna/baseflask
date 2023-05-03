@@ -38,7 +38,7 @@ def create_app():
             environment=env_tag,
         )
     else:
-        init_dotenv()
+        init_dotenv(app)
 
     app = Flask(__name__, instance_relative_config=False)
 
