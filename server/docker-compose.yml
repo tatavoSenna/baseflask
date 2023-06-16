@@ -1,17 +1,15 @@
 version: "3.7"
 
 services:
-  app:
+  app_base:
     build:
       context: .
       dockerfile: ./devops/Dockerfile.dev
     image: lawing_flask:latest
     restart: always
     tty: true
-    depends_on:
-      - postgres
     links:
-      - postgres
+      - postgres_base
     ports:
       - 5000:5000
     volumes:
@@ -23,7 +21,7 @@ services:
       - /tmp
     command: bash
 
-  postgres:
+  postgres_base:
     image: postgres:12.2
     environment:
       - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"
@@ -36,21 +34,6 @@ services:
       - 5432:5432
     networks:
       - dev-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: dev@parafernalia.net.br
-      PGADMIN_DEFAULT_PASSWORD: 123456
-      PGADMIN_LISTEN_PORT: 9000
-    ports:
-      - 9000:9000
-    networks:
-      - dev-network
-    links:
-      - postgres
-    depends_on:
-      - postgres
 
 networks:
   dev-network:
