@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
-    AppDomainName:
-        Type: String
-    AppCertificate:
-        Type: String
+    # AppDomainName:
+    #     Type: String
+    # AppCertificate:
+    #     Type: String
     AppBucketName:
         Type: String
 
@@ -50,8 +50,8 @@ Resources:
         Type: AWS::CloudFront::Distribution
         Properties:
             DistributionConfig:
-                Aliases: 
-                    - !Ref AppDomainName
+                # Aliases: 
+                #     - !Ref AppDomainName
                 Origins:
                     - 
                         # Use the Website as the CDN origin
@@ -69,9 +69,9 @@ Resources:
                 DefaultRootObject: index.html
             ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
             # Configure the caching behavior for our CDN
-                ViewerCertificate:
-                    AcmCertificateArn:  !Ref AppCertificate
-                    SslSupportMethod: sni-only
+                # ViewerCertificate:
+                #     AcmCertificateArn:  !Ref AppCertificate
+                #     SslSupportMethod: sni-only
                 DefaultCacheBehavior: 
                     AllowedMethods:
                     - GET

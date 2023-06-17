@@ -8,18 +8,11 @@ Parameters:
   GitHubBranch:
     Type: String
 
-  GitHubToken:
-    Type: String
-    NoEcho: true
-
-  GitHubUser:
-    Type: String
-
   Cluster:
     Type: String
 
-  Service:
-    Type: String
+  # Service:
+  #   Type: String
 
   RepositoryName:
     Type: String
@@ -111,6 +104,10 @@ Resources:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
                   - iam:PassRole
+              - Resource: arn:aws:codestar-connections:sa-east-1:076340260396:connection/517f5b6c-5fc1-4904-9349-76a84eb49255
+                Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
 
   ArtifactBucket:
     Type: AWS::S3::Bucket
@@ -128,7 +125,6 @@ Resources:
           phases:
             pre_build:
               commands:
-                - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 340326915472.dkr.ecr.us-east-1.amazonaws.com
                 - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "${AWS_DEFAULT_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
                 - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
                 - IMAGE_URI="${REPOSITORY_URI}:${TAG}"
@@ -138,7 +134,7 @@ Resources:
             post_build:
               commands:
                 - docker push "$IMAGE_URI"
-                - printf '[{"name":"lawing-api","imageUri":"%s"}]' "$IMAGE_URI" > images.json
+                - printf '[{"name":"flask-api","imageUri":"%s"}]' "$IMAGE_URI" > images.json
           artifacts:
             files: images.json
       Environment:
@@ -169,14 +165,13 @@ Resources:
             - Name: App
               ActionTypeId:
                 Category: Source
-                Owner: ThirdParty
+                Owner: AWS
                 Version: 1
-                Provider: GitHub
+                Provider: CodeStarSourceConnection
               Configuration:
-                Owner: !Ref GitHubUser
-                Repo: !Ref GitHubRepo
-                Branch: !Ref GitHubBranch
-                OAuthToken: !Ref GitHubToken
+                FullRepositoryId: !Ref GitHubRepo
+                BranchName: !Ref GitHubBranch
+                ConnectionArn: arn:aws:codestar-connections:sa-east-1:076340260396:connection/517f5b6c-5fc1-4904-9349-76a84eb49255
               OutputArtifacts:
                 - Name: App
               RunOrder: 1
@@ -195,21 +190,21 @@ Resources:
               OutputArtifacts:
                 - Name: BuildOutput
               RunOrder: 1
-        - Name: Deploy
-          Actions:
-            - Name: Deploy
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: 1
-                Provider: ECS
-              Configuration:
-                ClusterName: !Ref Cluster
-                ServiceName: !Ref Service
-                FileName: images.json
-              InputArtifacts:
-                - Name: BuildOutput
-              RunOrder: 1
+        # - Name: Deploy
+        #   Actions:
+        #     - Name: Deploy
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Version: 1
+        #         Provider: ECS
+        #       Configuration:
+        #         ClusterName: !Ref Cluster
+        #         ServiceName: !Ref Service
+        #         FileName: images.json
+        #       InputArtifacts:
+        #         - Name: BuildOutput
+        #       RunOrder: 1
 
 Outputs:
   PipelineUrl:

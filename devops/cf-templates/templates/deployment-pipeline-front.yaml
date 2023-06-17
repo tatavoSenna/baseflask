@@ -8,42 +8,35 @@ Parameters:
   GitHubBranch:
     Type: String
 
-  GitHubToken:
-    Type: String
-    NoEcho: true
-
-  GitHubUser:
-    Type: String
-
   AppBucket:
     Type: String
 
   CloudFrontDistribution:
     Type: String
 
-  AppDomainName:
-    Type: String
+  # AppDomainName:
+  #   Type: String
 
-  ApiDomainName:
-    Type: String
+  # ApiDomainName:
+  #   Type: String
 
-  UserPoolId:
-    Type: String
+  # UserPoolId:
+  #   Type: String
 
-  UserPoolClientId:
-    Type: String
+  # UserPoolClientId:
+  #   Type: String
 
-  IdentityPoolId:
-    Type: String
+  # IdentityPoolId:
+  #   Type: String
 
-  SignUpOn:
-    Type: String
+  # SignUpOn:
+  #   Type: String
 
-  EnvironmentTag:
-    Type: String
+  # EnvironmentTag:
+  #   Type: String
 
-  FrontEndSentryDSN:
-    Type: String
+  # FrontEndSentryDSN:
+  #   Type: String
 
 Resources:
   CodeBuildServiceRole:
@@ -74,6 +67,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
+
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -188,6 +182,10 @@ Resources:
                 Effect: Allow
                 Action:
                   - lambda:InvokeFunction
+              - Resource: arn:aws:codestar-connections:sa-east-1:076340260396:connection/517f5b6c-5fc1-4904-9349-76a84eb49255
+                Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
 
   ArtifactBucket:
     Type: AWS::S3::Bucket
@@ -205,16 +203,16 @@ Resources:
           phases:
             install: 
               runtime-versions:
-                nodejs: 14
+                nodejs: 18
             build:
               commands:
                 - cd front
-                - yarn install
-                - yarn build
+                - npm install
+                - npm run build
           artifacts:
             files:
               - '**/*'
-            base-directory: 'front/build'
+            base-directory: 'front/out'
       Environment:
         ComputeType: BUILD_GENERAL1_MEDIUM
         Image: aws/codebuild/standard:5.0
@@ -222,44 +220,33 @@ Resources:
         EnvironmentVariables:
           - Name: NODE_ENV
             Value: production
-          - Name: REACT_APP_API_URL
-            Value: !Join
-              - ""
-              - - "https://"
-                - !Ref ApiDomainName
-          - Name: REACT_APP_BASE_URL
-            Value: !Join
-              - ""
-              - - "https://"
-                - !Ref AppDomainName
-          - Name: REACT_APP_DOCUSIGN_REDIRECT_URL
-            Value: !Join
-              - ""
-              - - "https://"
-                - !Ref AppDomainName
-                - "/docusign-token"
-          - Name: REACT_APP_DOCUSIGN_OAUTH_URL
-            Value: https://account.docusign.com/oauth
+          # - Name: REACT_APP_API_URL
+          #   Value: !Join
+          #     - ""
+          #     - - "https://"
+          #       - !Ref ApiDomainName
+          # - Name: REACT_APP_BASE_URL
+          #   Value: !Join
+          #     - ""
+          #     - - "https://"
+          #       - !Ref AppDomainName
           - Name: REACT_APP_AWS_REGION
             Value: !Ref AWS::Region
-          - Name: REACT_APP_AWS_USER_POOL
-            Value: !Ref UserPoolId
-          - Name: REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID
-            Value: !Ref UserPoolClientId
-          - Name: REACT_APP_AWS_IDENTITY_POOL_ID
-            Value: !Ref IdentityPoolId
-          - Name: REACT_APP_SIGNUP_ON
-            Value: !Ref SignUpOn
-          - Name: REACT_APP_ENVIRONMENT_TAG
-            Value: !Ref EnvironmentTag
-          - Name: REACT_APP_SENTRY_DSN
-            Value: !Ref FrontEndSentryDSN
+          # - Name: REACT_APP_AWS_USER_POOL
+          #   Value: !Ref UserPoolId
+          # - Name: REACT_APP_AWS_USER_POOL_WEB_CLIENT_ID
+          #   Value: !Ref UserPoolClientId
+          # - Name: REACT_APP_AWS_IDENTITY_POOL_ID
+          #   Value: !Ref IdentityPoolId
+          # - Name: REACT_APP_SIGNUP_ON
+          #   Value: !Ref SignUpOn
+          # - Name: REACT_APP_ENVIRONMENT_TAG
+          #   Value: !Ref EnvironmentTag
+          # - Name: REACT_APP_SENTRY_DSN
+          #   Value: !Ref FrontEndSentryDSN
           - Name: NODE_OPTIONS
             Value: --max-old-space-size=8192
-          - Name: REACT_APP_CNPJ_URL
-            Value: !ImportValue SerproConsultApiUrl
-          - Name: REACT_APP_HTML_DOCX_URL
-            Value: !ImportValue GenerateDocxApiUrl
+
 
       Name: !Ref AWS::StackName
       ServiceRole: !Ref CodeBuildServiceRole
@@ -277,14 +264,13 @@ Resources:
             - Name: App
               ActionTypeId:
                 Category: Source
-                Owner: ThirdParty
+                Owner: AWS
                 Version: 1
-                Provider: GitHub
+                Provider: CodeStarSourceConnection
               Configuration:
-                Owner: !Ref GitHubUser
-                Repo: !Ref GitHubRepo
-                Branch: !Ref GitHubBranch
-                OAuthToken: !Ref GitHubToken
+                FullRepositoryId: !Ref GitHubRepo
+                BranchName: !Ref GitHubBranch
+                ConnectionArn: arn:aws:codestar-connections:sa-east-1:076340260396:connection/517f5b6c-5fc1-4904-9349-76a84eb49255
               OutputArtifacts:
                 - Name: App
               RunOrder: 1

@@ -1,25 +1,11 @@
-# Lawing
+## Create a new environment
+1. pick a domain for your appand your api. For example:
+    - app.example.com
+    - api.example.com
+2. Create an ssl certificate on AWS Certificate Manager and take note of the certificate url
+3. Create a github v2 code start connection to this repository. Take note of the connection arn.
 
-## Flask Back-end
-
-### Development setup
-
-
-
-1. First, make your own copy of .env file.
-```
-$ cp .env.sample .env
-```
-2. Now you have to add aws access information to .env. Ask your system admin to create one for you.
-```
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-```
-3. Build and start the Docker images
-```
-$ cd server
-$ docker-compose up
-```
-Docker will create 3 containers. The flask app, the postgres server and a pgadmin.
-
-3. Point your browser to *http://127.0.0.0:5000* and you should see the message, "Welcome to lawing api"
+## Update this infrastructure
+- upgrade the node version in front deploy pipeline
+- create a docker repo on ecs and push the latest python image
+- update the base image of server/devops/dockerfile.prod to the puthon image om aws repo

@@ -35,38 +35,34 @@ Parameters:
     Description: >
       The url to access the lawing's api. I will be included as an alternative domain name in Cloudfront Distribution.
 
-  DBName:
-    Description: The database name
-    Default: lawingdb
-    Type: String
-    MinLength: "1"
-    MaxLength: "64"
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription:
-      must begin with a letter and contain only alphanumeric
-      characters.
-  DBUser:
-    Description: The database admin account username
-    Type: String
-    MinLength: "1"
-    MaxLength: "16"
-    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
-    ConstraintDescription:
-      must begin with a letter and contain only alphanumeric
-      characters.
-  DBPassword:
-    NoEcho: "true"
-    Description: The database admin account password
-    Type: String
-    MinLength: "8"
-    MaxLength: "41"
-    AllowedPattern: "[a-zA-Z0-9]*"
-    ConstraintDescription: must contain only alphanumeric characters.
+  # DBName:
+  #   Description: The database name
+  #   Default: lawingdb
+  #   Type: String
+  #   MinLength: "1"
+  #   MaxLength: "64"
+  #   AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+  #   ConstraintDescription:
+  #     must begin with a letter and contain only alphanumeric
+  #     characters.
+  # DBUser:
+  #   Description: The database admin account username
+  #   Type: String
+  #   MinLength: "1"
+  #   MaxLength: "16"
+  #   AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+  #   ConstraintDescription:
+  #     must begin with a letter and contain only alphanumeric
+  #     characters.
+  # DBPassword:
+  #   NoEcho: "true"
+  #   Description: The database admin account password
+  #   Type: String
+  #   MinLength: "8"
+  #   MaxLength: "41"
+  #   AllowedPattern: "[a-zA-Z0-9]*"
+  #   ConstraintDescription: must contain only alphanumeric characters.
 
-  GitHubUser:
-    Type: String
-    Description: The repository owner.
-    Default: parafernalia
 
   GitHubRepo:
     Type: String
@@ -78,23 +74,18 @@ Parameters:
     Default: master
     Description: The branch of the repo to continuously deploy.
 
-  GitHubToken:
-    Type: String
-    NoEcho: true
-    Description: >
-      Token for the user specified above. (https://github.com/settings/tokens)
 
-  ApiLBCertificate:
-    Type: String
-    Description: The ARN of the certificate for the api load balance. It must be in the same region where this stack is being created.
+  # ApiLBCertificate:
+  #   Type: String
+  #   Description: The ARN of the certificate for the api load balance. It must be in the same region where this stack is being created.
 
-  AppCertificate:
-    Type: String
-    Description: The ARN of the certificate for the app Cloud Formation. It must be created in the N. Virginia Region.
+  # AppCertificate:
+  #   Type: String
+  #   Description: The ARN of the certificate for the app Cloud Formation. It must be created in the N. Virginia Region.
 
   TemplateBucket:
     Type: String
-    Default: lawing-templates
+    Default: cf-flask-react-templates
     Description: >
       The S3 bucket from which to fetch the templates used by this stack.
 
@@ -103,58 +94,54 @@ Parameters:
     NoEcho: true
     Description: The Flask Secret.
 
-  ConvertApiSecretKey:
-    NoEcho: true
-    Description: The Convert api scret key.
-    Type: String
+  # ConvertApiSecretKey:
+  #   NoEcho: true
+  #   Description: The Convert api scret key.
+  #   Type: String
 
-  SendGridApiKey:
-    Type: String
-    NoEcho: true
-    Description: The Send Grid api secret key.
+  # SendGridApiKey:
+  #   Type: String
+  #   NoEcho: true
+  #   Description: The Send Grid api secret key.
 
-  D4SignApiURL:
-    Type: String
-    Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1
+  # D4SignApiURL:
+  #   Type: String
+  #   Description: The Url of D4SignAPI. It can be https://secure.d4sign.com.br/api/v1
 
-  SignUpOn:
-    Type: String
-    Description: Set to true to enable the sign up form on the frontend
-    AllowedValues:
-      - true
-      - false
-    Default: "true"
+  # SignUpOn:
+  #   Type: String
+  #   Description: Set to true to enable the sign up form on the frontend
+  #   AllowedValues:
+  #     - true
+  #     - false
+  #   Default: "true"
 
-  StripeApiSecretKey:
-    Type: String
-    NoEcho: true
-    Description: The Stripe Secret.
+  # StripeApiSecretKey:
+  #   Type: String
+  #   NoEcho: true
+  #   Description: The Stripe Secret.
 
-  EnvironmentTag:
-    Type: String
-    Description: Tag to differentiate develop and production environments for sentry.
+  # EnvironmentTag:
+  #   Type: String
+  #   Description: Tag to differentiate develop and production environments for sentry.
 
-  BackEndSentryDSN:
-    NoEcho: true
-    Type: String
-    Description: Sentry api key for the backend.
+  # BackEndSentryDSN:
+  #   NoEcho: true
+  #   Type: String
+  #   Description: Sentry api key for the backend.
 
-  FrontEndSentryDSN:
-    NoEcho: true
-    Type: String
-    Description: Sentry api key for the frontend.
+  # FrontEndSentryDSN:
+  #   NoEcho: true
+  #   Type: String
+  #   Description: Sentry api key for the frontend.
 
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterLabels:
-      GitHubUser:
-        default: "User"
       GitHubRepo:
-        default: "Repo"
+        default: "repo"
       GitHubBranch:
-        default: "Branch"
-      GitHubToken:
-        default: "Personal Access Token"
+        default: "main"
       LaunchType:
         default: "Launch Type"
       DBName:
@@ -181,34 +168,34 @@ Metadata:
           default: Stack Configuration
         Parameters:
           - TemplateBucket
-      - Label:
-          default: Domains and certificates
-        Parameters:
-          - ApiLBCertificate
-          - AppCertificate
-          - AppDomainName
-          - APIDomainName
+      # - Label:
+      #     default: Domains and certificates
+      #   Parameters:
+      #     - ApiLBCertificate
+      #     - AppCertificate
+      #     - AppDomainName
+      #     - APIDomainName
 
 Resources:
-  UserPool:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cognito.yaml"
-      Parameters:
-        AuthName: !Ref AWS::StackName
-        AppDomainName: !Ref AppDomainName
-        SignUpOn: !Ref SignUpOn
+  # UserPool:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cognito.yaml"
+  #     Parameters:
+  #       AuthName: !Ref AWS::StackName
+  #       AppDomainName: !Ref AppDomainName
+  #       SignUpOn: !Ref SignUpOn
 
-  Database:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/rds-postgres.yaml"
-      Parameters:
-        DBName: !Ref DBName
-        DBUser: !Ref DBUser
-        DBPassword: !Ref DBPassword
-        Subnets: !GetAtt VPC.Outputs.Subnets
-        VpcId: !GetAtt VPC.Outputs.VpcId
+  # Database:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/rds-postgres.yaml"
+  #     Parameters:
+  #       DBName: !Ref DBName
+  #       DBUser: !Ref DBUser
+  #       DBPassword: !Ref DBPassword
+  #       Subnets: !GetAtt VPC.Outputs.Subnets
+  #       VpcId: !GetAtt VPC.Outputs.VpcId
 
   Cluster:
     Type: AWS::CloudFormation::Stack
@@ -226,9 +213,7 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/deployment-pipeline.yaml"
       Parameters:
         Cluster: !GetAtt Cluster.Outputs.ClusterName
-        Service: !GetAtt Service.Outputs.Service
-        GitHubUser: !Ref GitHubUser
-        GitHubToken: !Ref GitHubToken
+        # Service: !GetAtt Service.Outputs.Service
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
         RepositoryName: !Ref AWS::StackName
@@ -238,20 +223,18 @@ Resources:
     Properties:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/deployment-pipeline-front.yaml"
       Parameters:
-        GitHubUser: !Ref GitHubUser
-        GitHubToken: !Ref GitHubToken
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
         AppBucket: !GetAtt CloudFront.Outputs.WebsiteBucket
         CloudFrontDistribution: !GetAtt CloudFront.Outputs.CloudFrontDistribution
-        AppDomainName: !Ref AppDomainName
-        ApiDomainName: !Ref ApiDomainName
-        UserPoolId: !GetAtt UserPool.Outputs.UserPoolId
-        UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
-        IdentityPoolId: !GetAtt UserPool.Outputs.IdentityPoolId
-        SignUpOn: !Ref SignUpOn
-        EnvironmentTag: !Ref EnvironmentTag
-        FrontEndSentryDSN: !Ref FrontEndSentryDSN
+        # AppDomainName: !Ref AppDomainName
+        # ApiDomainName: !Ref ApiDomainName
+        # UserPoolId: !GetAtt UserPool.Outputs.UserPoolId
+        # UserPoolClientId: !GetAtt UserPool.Outputs.UserPoolClientId
+        # IdentityPoolId: !GetAtt UserPool.Outputs.IdentityPoolId
+        # SignUpOn: !Ref SignUpOn
+        # EnvironmentTag: !Ref EnvironmentTag
+        # FrontEndSentryDSN: !Ref FrontEndSentryDSN
 
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
@@ -261,7 +244,7 @@ Resources:
         LaunchType: !Ref LaunchType
         Subnets: !GetAtt VPC.Outputs.Subnets
         VpcId: !GetAtt VPC.Outputs.VpcId
-        ApiLBCertificate: !Ref ApiLBCertificate
+        # ApiLBCertificate: !Ref ApiLBCertificate
 
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -273,45 +256,39 @@ Resources:
         Subnet1CIDR: 10.215.10.0/24
         Subnet2CIDR: 10.215.20.0/24
 
-  Service:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/service.yaml"
-      Parameters:
-        Cluster: !GetAtt Cluster.Outputs.ClusterName
-        LaunchType: !Ref LaunchType
-        TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
-        SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
-        Subnets: !GetAtt VPC.Outputs.Subnets
-        DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
-        CognitoUserPoolDomain: !Ref AWS::StackName
-        CognitoUserPool: !GetAtt UserPool.Outputs.UserPoolId
-        UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
-        AppDomainName: !Ref AppDomainName
-        ApiDomainName: !Ref ApiDomainName
-        DocumentsBucket: !GetAtt DocumentBucket.Outputs.DocumentsBucket
-        FlaskSecretKey: !Ref FlaskSecretKey
-        ConvertApiSecretKey: !Ref ConvertApiSecretKey
-        SendGridApiKey: !Ref SendGridApiKey
-        D4SignApiURL: !Ref D4SignApiURL
-        StripeApiSecretKey: !Ref StripeApiSecretKey
-        EnvironmentTag: !Ref EnvironmentTag
-        BackEndSentryDSN: !Ref BackEndSentryDSN
-        CpuSize: !Ref CpuSize
-        MemSize: !Ref MemSize
+  # Service:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/service.yaml"
+  #     Parameters:
+  #       Cluster: !GetAtt Cluster.Outputs.ClusterName
+  #       LaunchType: !Ref LaunchType
+  #       TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
+  #       SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
+  #       Subnets: !GetAtt VPC.Outputs.Subnets
+  #       # DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
+  #       # CognitoUserPoolDomain: !Ref AWS::StackName
+  #       # CognitoUserPool: !GetAtt UserPool.Outputs.UserPoolId
+  #       # UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
+  #       # AppDomainName: !Ref AppDomainName
+  #       # ApiDomainName: !Ref ApiDomainName
+  #       DocumentsBucket: !GetAtt DocumentBucket.Outputs.DocumentsBucket
+  #       FlaskSecretKey: !Ref FlaskSecretKey
+  #       CpuSize: !Ref CpuSize
+  #       MemSize: !Ref MemSize
 
   CloudFront:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/cloudfront.yaml"
       Parameters:
-        AppDomainName: !Ref AppDomainName
-        AppCertificate: !Ref AppCertificate
+        # AppDomainName: !Ref AppDomainName
+        # AppCertificate: !Ref AppCertificate
         AppBucketName: !Sub "lawing-${AWS::StackName}-app"
 
   DocumentBucket:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/documents_s3.yaml"
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/s3_storage.yaml"
       Parameters:
-        DocumentsBucketName: !Sub "${AWS::StackName}-lawing-documents"
+        DocumentsBucketName: !Sub "${AWS::StackName}-storage"
