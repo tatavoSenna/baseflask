@@ -1,6 +1,5 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-import sentry_sdk
 
 
 def bad_request(e):
@@ -17,9 +16,6 @@ def create_app():
 
     @app.route("/", methods=["GET"])
     def home():
-        with sentry_sdk.configure_scope() as scope:
-            if scope.transaction:
-                scope.transaction.sampled = False
         return "Welcome to the API"
 
     return app

@@ -1,5 +1,5 @@
 #!/bin/sh
-aws s3 cp devops/cf-templates/ s3:/cf-templates --profile lawing-prod --recursive --acl public-read
+aws s3 cp devops/cf-templates/ s3:/cf-templates --profile lawing-prod --recursive 
 aws cloudformation create-stack \
     --stack-name prod \
     --template-url https://lawing-prod-cf-templates.s3.amazonaws.com/lawing-master-template.yaml \

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "620f2a8aaf8befc462c786cce27a5a56e59be62548bfe290cbab3ed686a62308"
+            "sha256": "eb5dade268e4de6c283171f6890192067b164aa82f67ee5a0788311a7efbe020"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -73,12 +73,11 @@
         },
         "flask-cors": {
             "hashes": [
-                "sha256:55eb3864b4290f939ff19a2250fcb47d8c0f63d250c6780b922629299d011ec8",
-                "sha256:62ebc5ad80dc21ca0ea9f57466c2c74e24a62274af890b391790c260eb7b754b",
-                "sha256:ac4b81b3d90f5f18714c995c807f94501df8c9bbc22ef4261c1cd850748c3850"
+                "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438",
+                "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"
             ],
             "index": "pypi",
-            "version": "==3.0.3"
+            "version": "==3.0.10"
         },
         "flask-script": {
             "hashes": [
@@ -380,13 +379,6 @@
             ],
             "index": "pypi",
             "version": "==2.3.2"
-        },
-        "flask-dotenv": {
-            "hashes": [
-                "sha256:8ef7d21877fdebdb46276da07ccb9a55b45fa657e476b0c7b7f5f1fa071057f6"
-            ],
-            "index": "pypi",
-            "version": "==0.1.2"
         },
         "importlib-metadata": {
             "hashes": [

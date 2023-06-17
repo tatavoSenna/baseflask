@@ -213,7 +213,7 @@ Resources:
       TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/deployment-pipeline.yaml"
       Parameters:
         Cluster: !GetAtt Cluster.Outputs.ClusterName
-        # Service: !GetAtt Service.Outputs.Service
+        Service: !GetAtt Service.Outputs.Service
         GitHubRepo: !Ref GitHubRepo
         GitHubBranch: !Ref GitHubBranch
         RepositoryName: !Ref AWS::StackName
@@ -256,26 +256,26 @@ Resources:
         Subnet1CIDR: 10.215.10.0/24
         Subnet2CIDR: 10.215.20.0/24
 
-  # Service:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/service.yaml"
-  #     Parameters:
-  #       Cluster: !GetAtt Cluster.Outputs.ClusterName
-  #       LaunchType: !Ref LaunchType
-  #       TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
-  #       SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
-  #       Subnets: !GetAtt VPC.Outputs.Subnets
-  #       # DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
-  #       # CognitoUserPoolDomain: !Ref AWS::StackName
-  #       # CognitoUserPool: !GetAtt UserPool.Outputs.UserPoolId
-  #       # UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
-  #       # AppDomainName: !Ref AppDomainName
-  #       # ApiDomainName: !Ref ApiDomainName
-  #       DocumentsBucket: !GetAtt DocumentBucket.Outputs.DocumentsBucket
-  #       FlaskSecretKey: !Ref FlaskSecretKey
-  #       CpuSize: !Ref CpuSize
-  #       MemSize: !Ref MemSize
+  Service:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${TemplateBucket}/templates/service.yaml"
+      Parameters:
+        Cluster: !GetAtt Cluster.Outputs.ClusterName
+        LaunchType: !Ref LaunchType
+        TargetGroup: !GetAtt LoadBalancer.Outputs.TargetGroup
+        SourceSecurityGroup: !GetAtt LoadBalancer.Outputs.SecurityGroup
+        Subnets: !GetAtt VPC.Outputs.Subnets
+        # DatabaseConnectionString: !GetAtt Database.Outputs.DatabaseURI
+        # CognitoUserPoolDomain: !Ref AWS::StackName
+        # CognitoUserPool: !GetAtt UserPool.Outputs.UserPoolId
+        # UserPoolClient: !GetAtt UserPool.Outputs.UserPoolClientId
+        # AppDomainName: !Ref AppDomainName
+        # ApiDomainName: !Ref ApiDomainName
+        DocumentsBucket: !GetAtt DocumentBucket.Outputs.DocumentsBucket
+        FlaskSecretKey: !Ref FlaskSecretKey
+        CpuSize: !Ref CpuSize
+        MemSize: !Ref MemSize
 
   CloudFront:
     Type: AWS::CloudFormation::Stack

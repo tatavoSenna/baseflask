@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 ipdb = "==0.13.3"
 factory-boy = "==3.0.1"
-Flask-DotEnv = "==0.1.2"
 pytest-dotenv = "*"
 pytest-faker= "==2.0.0"
 pytest-flask = "*"
@@ -19,9 +18,9 @@ black = "*"
 boto3 = "~=1.24.86"
 gunicorn = "==20.0.4"
 requests = "==2.23.0"
-Flask-Cors = "==3.0.3"
 Flask-Script = "==2.0.6"
 flask = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.8"
