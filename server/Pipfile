@@ -15,12 +15,17 @@ pylint = "*"
 black = "*"
 
 [packages]
-boto3 = "~=1.24.86"
+boto3 = "*"
 gunicorn = "==20.0.4"
-requests = "==2.23.0"
+requests = "*"
 Flask-Script = "==2.0.6"
 flask = "*"
 flask-cors = "*"
+numpy = "*"
+openpyxl = "*"
+pandas = "*"
+xlsxwriter = "*"
+xmltodict = "*"
 
 [requires]
 python_version = "3.8"

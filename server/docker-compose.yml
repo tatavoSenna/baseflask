@@ -1,15 +1,15 @@
 version: "3.7"
 
 services:
-  app_base:
+  app_relais:
     build:
       context: .
       dockerfile: ./devops/Dockerfile.dev
-    image: lawing_flask:latest
+    image: relais_app:latest
     restart: always
     tty: true
     links:
-      - postgres_base
+      - postgres_relais
     ports:
       - 5000:5000
     volumes:
@@ -21,7 +21,7 @@ services:
       - /tmp
     command: bash
 
-  postgres_base:
+  postgres_relais:
     image: postgres:12.2
     environment:
       - POSTGRES_MULTIPLE_DATABASES="lawing_dev","lawing_test"

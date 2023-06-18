@@ -14,6 +14,10 @@ def create_app():
 
     app.register_error_handler(400, bad_request)
 
+    from .ceee.blueprint import ccee_bp
+
+    app.register_blueprint(ccee_bp, url_prefix="/ccee")
+
     @app.route("/", methods=["GET"])
     def home():
         return "Welcome to the API"
