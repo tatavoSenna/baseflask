@@ -1,4 +1,4 @@
-FROM 076340260396.dkr.ecr.sa-east-1.amazonaws.com/python:3.11.4-slim
+FROM 076340260396.dkr.ecr.sa-east-1.amazonaws.com/python:3.9-slim
 
 EXPOSE 5000
 
